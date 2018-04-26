@@ -8,3 +8,4 @@ dist/
 *.so
 *.egg-info
 *.swp
+.pytest_cache
