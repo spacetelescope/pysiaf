@@ -16,10 +16,10 @@ Authors
 
 """
 
+import numpy as np
 import os
 
-import numpy as np
-import git
+# import git
 import lxml.etree as ET
 from astropy.time import Time
 from astropy.table import Table, Column
@@ -27,10 +27,12 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Color
 from openpyxl.styles import Alignment
 
-from ..constants import PACKAGE_VERSION, _JWST_TEMPORARY_ROOT
+from ..version import __version__
+from ..constants import _JWST_TEMPORARY_ROOT
+# from ..constants import PACKAGE_VERSION, _JWST_TEMPORARY_ROOT
 from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED, SIAF_XML_FIELD_FORMAT, FLOAT_ATTRIBUTES
 
-
+# dictionary used to set field precision in SIAF.XML
 xml_decimal_precision = {}
 field_names = list(SIAF_XML_FIELD_FORMAT['field_name'])
 for attr in PRD_REQUIRED_ATTRIBUTES_ORDERED:
@@ -111,12 +113,12 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
             # add generation info as comment to SIAFXML
             root.append(ET.Comment('Generated {} {}'.format(timestamp.isot, timestamp.scale)))
             root.append(ET.Comment('{}@{}'.format(username, hostname)))
-            try:
-                repo = git.Repo(os.path.abspath(__file__), search_parent_directories=True)
-                git_version = git.Git(repo.working_dir).describe()
-                root.append(ET.Comment('pysiaf git-version {}'.format(git_version)))
-            except git.exc.InvalidGitRepositoryError:
-                root.append(ET.Comment('pysiaf package-version {}'.format(PACKAGE_VERSION)))
+            # try:
+            #     repo = git.Repo(os.path.abspath(__file__), search_parent_directories=True)
+            #     git_version = git.Git(repo.working_dir).describe()
+            #     root.append(ET.Comment('pysiaf git-version {}'.format(git_version)))
+            # except git.exc.InvalidGitRepositoryError:
+            root.append(ET.Comment('pysiaf version {}'.format(__version__)))
 
             for aperture_name in aperture_names:
 

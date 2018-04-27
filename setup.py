@@ -116,7 +116,7 @@ setup(
         'numpy>=1.9',
         'matplotlib>=1.4.3',
         'lxml>=3.6.4',
-        'gitpython>=2.1',
+        # 'gitpython>=2.1',
         'openpyxl>=2.4'
     ],
     tests_require=['pytest'],
