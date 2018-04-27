@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.com/Johannes-Sahlmann/pysiaf.svg?token=7TqWq6XCJswLuigCjy2Y&branch=master
+    :target: https://travis-ci.com/Johannes-Sahlmann/pysiaf
+
 pysiaf
 --------------------------------------------------------------
 Handling of Science Instrument Aperture Files (SIAF) for space telescopes
