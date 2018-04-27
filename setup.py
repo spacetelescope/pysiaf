@@ -112,11 +112,20 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=[
-        'astropy',
+        'astropy>=1.2',
+        'numpy>=1.9',
+        'matplotlib>=1.4.3',
+        'lxml>=3.6.4',
+        'gitpython>=2.1',
+        'openpyxl>=2.4'
     ],
     tests_require=['pytest'],
     packages=find_packages(),
-    package_data={PACKAGENAME: ['pars/*']},
+    package_data={PACKAGENAME: ['pars/*',
+                                'prd_data/HST/*/*.dat',
+                                'prd_data/JWST/*/*/*/*.xlsx',
+                                'prd_data/JWST/*/*/*/*.xml'
+                                ]},
     cmdclass={
         'test': PyTest,
         'build_sphinx': BuildSphinx

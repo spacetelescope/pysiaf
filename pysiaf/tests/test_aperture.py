@@ -8,8 +8,8 @@ Authors
 
 """
 
-import pytest
 import numpy as np
+import pytest
 
 from ..aperture import HstAperture #, VALIDATION_ATTRIBUTES JwstAperture,
 from ..siaf import Siaf #, ApertureCollection
@@ -33,7 +33,6 @@ def test_hst_aperture_init():
     hst_aperture = HstAperture()
     hst_aperture.a_v2_ref = -100.
     assert hst_aperture.a_v2_ref == hst_aperture.V2Ref #, 'HST aperture initialisation failed')
-
 
 def test_jwst_aperture_transforms(siaf_objects, verbose=False):
     """Test transformations between frames.
@@ -63,7 +62,8 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False):
             aperture = siaf[aper_name]
 
             if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (
-                    siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and aperture.AperType == 'SLIT'):
+                    siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and
+                    aperture.AperType == 'SLIT'):
                 skip = True
 
             if skip is False:
@@ -80,12 +80,9 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False):
                     y_mean_error = np.mean(np.abs(y_sci - y_out))
                     for i, error in enumerate([x_mean_error, y_mean_error]):
                         if verbose:
-                            print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
+                            print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
+                                siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                         assert error < threshold
-
-                        # self.assertAlmostEqual(np.mean(XIdl_vertices), np.mean(XIdl_vertices_rederived), delta=0.1)
-                        # self.assertAlmostEqual(np.mean(YIdl_vertices), np.mean(YIdl_vertices_rederived), delta=0.1)
-
 
 def test_jwst_aperture_vertices(siaf_objects):
     """Test the JwstAperture vertices by rederiving them and comparing to SIAF.
@@ -105,7 +102,9 @@ def test_jwst_aperture_vertices(siaf_objects):
             #aperture
             aperture = siaf[aper_name]
 
-            if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and aperture.AperType == 'SLIT'):
+            if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or \
+                    (siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec']
+                     and aperture.AperType == 'SLIT'):
                 skip = True
 
             if skip is False:
@@ -113,7 +112,8 @@ def test_jwst_aperture_vertices(siaf_objects):
                     print('testing {} {}'.format(siaf.instrument, aper_name))
 
                 # Idl corners from Sci attributes (XSciRef, XSciSize etc.)
-                x_idl_vertices_rederived, y_idl_vertices_rederived = aperture.corners('idl', rederive=True)
+                x_idl_vertices_rederived, y_idl_vertices_rederived = aperture.corners('idl',
+                                                                                      rederive=True)
 
                 # Idl corners from SIAFXML
                 x_idl_vertices = np.array([getattr(aperture, 'XIdlVert{:d}'.format(j)) for j in [1, 2, 3, 4]])
