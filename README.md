@@ -42,11 +42,11 @@ Frame transformations:
     
 Plotting:
     
-![NIRISS apertures](examples/figures/NIRISS_apertures.png =200x)
+![NIRISS apertures](examples/figures/NIRISS_apertures.png)
 
-![JWST apertures](examples/figures/JWST_master_apertures.png =200x)
+![JWST apertures](examples/figures/JWST_master_apertures.png)
 
-![HST apertures](examples/figures/HST_apertures.png =200x)
+![HST apertures](examples/figures/HST_apertures.png)
 
 ### Disclaimer
 
