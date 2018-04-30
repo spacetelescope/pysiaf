@@ -41,6 +41,11 @@ Frame transformations:
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
     
 Plotting:
+
+<p align="center">
+  <img src="examples/figures/NIRISS_apertures.png" width="100"/>
+  <img src="examples/figures/JWST_master_apertures.png" width="100"/>
+</p>
     
 ![NIRISS apertures](examples/figures/NIRISS_apertures.png)
 
