@@ -44,8 +44,8 @@ Plotting:
 
 <p align="center">
   <img src="examples/figures/NIRISS_apertures.png" width="200"/>
-  <img src="examples/figures/JWST_master_apertures.png" width="450"/>
-  <img src="examples/figures/HST_apertures.png" width="250"/>
+  <img src="examples/figures/JWST_master_apertures.png" width="430"/>
+  <img src="examples/figures/HST_apertures.png" width="230"/>
 </p>
     
 ### Disclaimer
