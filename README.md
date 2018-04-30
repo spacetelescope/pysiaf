@@ -43,16 +43,11 @@ Frame transformations:
 Plotting:
 
 <p align="center">
-  <img src="examples/figures/NIRISS_apertures.png" width="100"/>
-  <img src="examples/figures/JWST_master_apertures.png" width="100"/>
+  <img src="examples/figures/NIRISS_apertures.png" width="200"/>
+  <img src="examples/figures/JWST_master_apertures.png" width="400"/>
+  <img src="examples/figures/HST_apertures.png" width="200"/>
 </p>
     
-![NIRISS apertures](examples/figures/NIRISS_apertures.png)
-
-![JWST apertures](examples/figures/JWST_master_apertures.png)
-
-![HST apertures](examples/figures/HST_apertures.png)
-
 ### Disclaimer
 
 Distortion and other transformations in pysiaf are of sufficient accuracy for operations, but do not necessarily have science-grade quality. For instance, generally only one filter solution is carried per aperture.
