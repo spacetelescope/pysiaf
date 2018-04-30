@@ -6,7 +6,7 @@ Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF 
 
 pysiaf is a python package to access, interpret, maintain, and generate SIAF, in particular for JWST. Tools for applying the frame transformations, plotting, comparison, and validation are provided.
 
-#### Functionalities
+### Functionalities
 
 * Captures current PRD content, i.e. pysiaf includes a copy of the SIAF XML files. These are maintained to be synchronized with the PRD.
 * Transformations between the SIAF frames (Detector, Science, Ideal, Telelescope/V) are pre-loaded and easily accessible.
@@ -18,7 +18,7 @@ pysiaf is a python package to access, interpret, maintain, and generate SIAF, in
 * Supports working with HST SIAF (read-only).
  
 
-#### Usage
+### Usage
 Check which PRD version is in use:
 
     print(pysiaf.JWST_PRD_VERSION)
@@ -43,25 +43,27 @@ Frame transformations:
 Plotting:
     
 ![NIRISS apertures](examples/figures/NIRISS_apertures.png =200x)
+
 ![JWST apertures](examples/figures/JWST_master_apertures.png =200x)
+
 ![HST apertures](examples/figures/HST_apertures.png =200x)
 
-#### Disclaimer
+### Disclaimer
 
 Distortion and other transformations in pysiaf are of sufficient accuracy for operations, but do not necessarily have science-grade quality. For instance, generally only one filter solution is carried per aperture.
 For science-grade transformations, please consult the science pipelines and their documentation, e.g.     
 
 All parameter values in pysiaf are subject to change. JWST values are preliminary until the JWST observatory commissioning has concluded.    
 
-#### Documentation
+### Documentation
 
-#### References
+### References
 The pysiaf prototype was developed on gitlab (STScI internal access only) and is kept there for reference: https://grit.stsci.edu/ins-tel/jwst_siaf_prototype
 
 pysiaf partially recycles code from https://github.com/mperrin/jwxml
 
 
-#### Installation
+### Installation
 This package was developed in a python 3.5 environment. 
 
 Clone the repository
@@ -74,7 +76,7 @@ Install pysiaf:
 
 ``python setup.py install``
 
-#### KNOWN INSTALLATION ISSUE
+### KNOWN INSTALLATION ISSUE
 
 If you get an error upon
     
