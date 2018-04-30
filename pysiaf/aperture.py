@@ -526,13 +526,12 @@ class Aperture(object):
             ax.plot([x_ref], [y_ref], marker='+',
                     color=ax.lines[-1].get_color(), **kwargs)
 
-        if frame == 'tel':
+        if (frame == 'tel') and (self.observatory == 'JWST'):
             # ensure V2 increases to the left
             ax = pl.gca()
             xlim = ax.get_xlim()
-
             if xlim[0] < xlim[1]:
-                ax.set_xlim(xlim[::-1])
+                ax.invert_xaxis()
 
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
         """ Mark on the plot the various detector readout channels

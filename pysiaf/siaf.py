@@ -208,6 +208,7 @@ def plot_master_apertures(**kwargs):
 
     # ensure V2 increases to the left
     ax = pl.gca()
+    ax.set_aspect('equal')
     xlim = ax.get_xlim()
     if xlim[0] < xlim[1]:
         ax.set_xlim(xlim[::-1])
