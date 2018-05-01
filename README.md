@@ -15,7 +15,7 @@ pysiaf is a python package to access, interpret, maintain, and generate SIAF, in
 * Supports working with HST SIAF (read-only).
  
 
-### Usage
+### Example usage
 Check which PRD version is in use:  
     `print(pysiaf.JWST_PRD_VERSION)`
 
@@ -30,16 +30,20 @@ Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames):
     # select single aperture by name
     nis_cen = siaf['NIS_CEN']  
     
-
     # coordinates in Science frame
     sci_x = np.array([0, 2047, 2047, 0])
     sci_y = np.array([0, 0, 2047, 2047])  
     
-
     # transform from Science frame to Ideal frame
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
 ````    
 Plotting (only a small subset of options is illustrated):  
+<p align="center">
+  <img src="examples/figures/NIRISS_apertures.png" width="200"/>
+  <img src="examples/figures/JWST_master_apertures.png" width="430"/>
+  <img src="examples/figures/HST_apertures.png" width="230"/>
+</p>
+
 ````
     import pylab as pl
     
@@ -59,8 +63,8 @@ Plotting (only a small subset of options is illustrated):
     pl.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); pl.clf()
     plot_master_apertures(mark_ref=True)
     pl.show()
- ````
- ````
+````
+````
     # plot HST apertures
     siaf = pysiaf.Siaf('HST')
     aperture_names = ['FGS1', 'FGS2', 'FGS3', 'IUVIS1FIX', 'IUVIS2FIX', 'JWFC1FIX', 'JWFC2FIX']
@@ -74,11 +78,6 @@ Plotting (only a small subset of options is illustrated):
     pl.show()
 
 ````
-<p align="center">
-  <img src="examples/figures/NIRISS_apertures.png" width="200"/>
-  <img src="examples/figures/JWST_master_apertures.png" width="430"/>
-  <img src="examples/figures/HST_apertures.png" width="230"/>
-</p>
     
 ### Disclaimer
 
