@@ -8,3 +8,5 @@ dist/
 *.so
 *.egg-info
 *.swp
+.pytest_cache
+pysiaf/temporary_data

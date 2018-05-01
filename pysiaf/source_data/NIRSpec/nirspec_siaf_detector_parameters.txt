@@ -1,0 +1,9 @@
+# NIRSpec detector parameter definition file for SIAF
+# 
+# This file contains the basic detector characteristics.
+# 
+# Generated 2018-04-10T14:40:45.911 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+InstrName , AperShape , XDetSize , YDetSize
+  NIRSPEC ,      QUAD ,     2048 ,     2048
