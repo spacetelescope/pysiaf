@@ -1,0 +1,43 @@
+# NIRISS aperture definition file for SIAF
+# 
+# This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary information (DDC mapping, wedge offsets, ...)
+# This file also defines the order in which the apertures are presented.
+# 
+# Originally based on PRDOPSSOC-H-014.
+# 
+# Generated 2018-02-21T01:39:06.462 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+       AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef , parent_apertures , dependency_type
+    NIS_CEN_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,          NIS_CEN ,     oss_default
+        NIS_CEN ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,             None ,            None
+       NIS_AMI1 , SUBARRAY ,   959.0 ,  2008.0 ,       80 ,       80 ,    46.0 ,    41.0 ,          NIS_CEN ,         default
+       NIS_AMI2 , SUBARRAY ,   987.0 ,  1991.0 ,       80 ,       80 ,    18.0 ,    58.0 ,          NIS_CEN ,         default
+       NIS_AMI3 , SUBARRAY ,   987.0 ,  2024.0 ,       80 ,       80 ,    18.0 ,    25.0 ,          NIS_CEN ,         default
+       NIS_AMI4 , SUBARRAY ,   945.0 ,  2025.0 ,       80 ,       80 ,    60.0 ,    24.0 ,          NIS_CEN ,         default
+      NIS_AMITA , SUBARRAY ,   963.0 ,  1936.0 ,       64 ,       64 ,    33.0 ,    33.0 ,          NIS_CEN ,         default
+     NIS_SOSSTA , SUBARRAY ,    94.0 ,   850.0 ,       64 ,       64 ,    33.0 ,    33.0 ,          NIS_CEN ,         default
+NIS_WFSS_OFFSET ,  FULLSCA ,  1026.5 ,  1027.9 ,     2048 ,     2048 ,  1022.5 ,  1021.1 ,          NIS_CEN ,         default
+     NIS_WFSS64 , SUBARRAY ,    32.5 ,    32.5 ,     2048 ,     2048 ,  2016.5 ,  2016.5 ,          NIS_CEN ,         default
+    NIS_WFSS64R , SUBARRAY ,    32.5 ,  1253.0 ,       64 ,     2048 ,    32.5 ,   796.0 ,          NIS_CEN ,         default
+   NIS_WFSS64R3 , SUBARRAY ,    32.5 ,   300.0 ,       64 ,     2048 ,    32.5 ,  1749.0 ,          NIS_CEN ,         default
+    NIS_WFSS64C , SUBARRAY ,  1253.0 ,    32.5 ,     2048 ,       64 ,   796.0 ,    32.5 ,          NIS_CEN ,         default
+   NIS_WFSS64C3 , SUBARRAY ,   300.0 ,    32.5 ,     2048 ,       64 ,  1749.0 ,    32.5 ,          NIS_CEN ,         default
+    NIS_WFSS128 , SUBARRAY ,    80.0 ,    80.0 ,     2048 ,     2048 ,  1969.0 ,  1969.0 ,          NIS_CEN ,         default
+   NIS_WFSS128R , SUBARRAY ,    64.5 ,  1253.0 ,      128 ,     2048 ,    64.5 ,   796.0 ,          NIS_CEN ,         default
+  NIS_WFSS128R3 , SUBARRAY ,    64.5 ,   300.0 ,      128 ,     2048 ,    64.5 ,  1749.0 ,          NIS_CEN ,         default
+   NIS_WFSS128C , SUBARRAY ,  1253.0 ,    64.5 ,     2048 ,      128 ,   796.0 ,    64.5 ,          NIS_CEN ,         default
+  NIS_WFSS128C3 , SUBARRAY ,   300.0 ,    64.5 ,     2048 ,      128 ,  1749.0 ,    64.5 ,          NIS_CEN ,         default
+      NIS_SUB64 , SUBARRAY ,    32.5 ,    32.5 ,       64 ,       64 ,    32.5 ,    32.5 ,          NIS_CEN ,         default
+     NIS_SUB128 , SUBARRAY ,    64.5 ,    64.5 ,      128 ,      128 ,    64.5 ,    64.5 ,          NIS_CEN ,         default
+     NIS_SUB256 , SUBARRAY ,   128.5 ,   128.5 ,      256 ,      256 ,   128.5 ,   128.5 ,          NIS_CEN ,         default
+  NIS_SUBAMPCAL , SUBARRAY ,  1024.5 ,  1024.5 ,      512 ,     1792 ,  1024.5 ,  1024.5 ,          NIS_CEN ,         default
+ NIS_SUBSTRIP96 , SUBARRAY ,    94.0 ,   850.0 ,     2098 ,      317 ,  1980.0 ,   258.0 ,          NIS_CEN ,         default
+NIS_SUBSTRIP256 , SUBARRAY ,    94.0 ,   850.0 ,     2098 ,      477 ,  1980.0 ,   258.0 ,          NIS_CEN ,         default
+    NIS_FP1MIMF ,  FULLSCA ,  1024.0 ,  1036.0 ,     2048 ,     2048 ,  1025.0 ,  1013.0 ,          NIS_CEN ,         default
+    NIS_FP2MIMF ,  FULLSCA ,   330.0 ,  1392.0 ,     2048 ,     2048 ,  1719.0 ,   657.0 ,          NIS_CEN ,         default
+    NIS_FP3MIMF ,  FULLSCA ,  1965.0 ,  1852.0 ,     2048 ,     2048 ,    84.0 ,   197.0 ,          NIS_CEN ,         default
+    NIS_FP4MIMF ,  FULLSCA ,  1694.0 ,   180.0 ,     2048 ,     2048 ,   355.0 ,  1869.0 ,          NIS_CEN ,         default
+    NIS_FP5MIMF ,  FULLSCA ,   100.0 ,   100.0 ,     2048 ,     2048 ,  1949.0 ,  1949.0 ,          NIS_CEN ,         default
+    NIS_AMIFULL ,  FULLSCA ,   959.0 ,  2008.0 ,     2048 ,     2048 ,  1090.0 ,    41.0 ,          NIS_CEN ,         default
+   NIS_SOSSFULL ,  FULLSCA ,    94.0 ,   850.0 ,     2048 ,     2048 ,  1955.0 ,  1199.0 ,          NIS_CEN ,         default

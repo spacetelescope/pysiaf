@@ -27,7 +27,6 @@ References
 from collections import OrderedDict
 import os
 
-from astropy.time import Time
 from astropy.table import Table
 import numpy as np
 
