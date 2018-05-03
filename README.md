@@ -1,14 +1,14 @@
 [![Build Status](https://travis-ci.com/spacetelescope/pysiaf.svg?token=7TqWq6XCJswLuigCjy2Y&branch=master)](https://travis-ci.com/spacetelescope/pysiaf)
 
 # pysiaf
-Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed focal plane and pointing models for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  
+Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  
 pysiaf is a python package to access, interpret, maintain, and generate SIAF, in particular for JWST. Tools for applying the frame transformations, plotting, comparison, and validation are provided.  
 
 ### Functionalities
 * Captures current PRD content, i.e. pysiaf includes a copy of the SIAF XML files. These are maintained to be synchronized with the PRD.
 * Transformations between the SIAF frames (Detector, Science, Ideal, Telelescope/V) are pre-loaded and easily accessible.
 * Tools for plotting, validation, and comparison of SIAF apertures and files.
-* Support for pointing and attitude calculations is provided.
+* Support for implementing transformations between celestial (RA, Dec) and telescope/V (V2, V3) coordinate systems is provided.
 * Input/output: reading SIAF XML, writing XML/Excel/csv etc.
 * Captures SI source data and code to generate the SIAF apertures
 * Standard python package with installation script, unit tests, documentation.
@@ -86,14 +86,34 @@ All parameter values in pysiaf are subject to change. JWST values are preliminar
 Distortion and other transformations in pysiaf are of sufficient accuracy for operations, but do not necessarily have science-grade quality. For instance, generally only one filter solution is carried per aperture.
 For science-grade transformations, please consult the science pipelines and their reference files (see https://jwst-docs.stsci.edu/display/JDAT/JWST+Data+Reduction+Pipeline)     
 
-For science observation planning, the focal plane prescriptions of the APT (http://www.stsci.edu/hst/proposing/apt) take precedence.  
+For science observation planning, the focal plane geometry implemented in the latest APT (http://www.stsci.edu/hst/proposing/apt) takes precedence.  
 
-The STScI Telescopes Branch provides full support of pysiaf for functional purposes only.
+The STScI Telescopes Branch provides full support of pysiaf for S&OC operational systems only.
 
 ### Documentation
 The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*. 
 
-pysiaf is documented on readthedocs.  
+pysiaf will be documented at *TBD*.  
+
+### Contributing
+Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
+ Do you have feedback and feature requests? Is there something missing you would like to see? Please open an issue or send an email to the maintainers. This package follows the Spacetelescope [Code of Conduct](CODE_OF_CONDUCT.md) strives to provide a welcoming community to all of our users and contributors. 
+ 
+The following describes the typical work flow for contributing to the pysiaf project (adapted from JWQL):
+0. Do not commit any sensitive information (e.g. STScI-internal path structures, machine names, user names, passwords, etc.) to this public repository. Git history cannot be erased.
+1. Create a fork off of the `spacetelescope` `pysiaf` repository on your personal github space.
+2. Make a local clone of your fork.
+3. Ensure your personal fork is pointing `upstream` to https://github.com/spacetelescope/pysiaf
+4. Open an issue on `spacetelescope` `pysiaf` that describes the need for and nature of the changes you plan to make. This is not necessary for minor changes and fixes. 
+5. Create a branch on that personal fork.
+6. Make your software changes.
+7. Push that branch to your personal GitHub repository, i.e. to `origin`.
+8. On the `spacetelescope` `pysiaf` repository, create a pull request that merges the branch into `spacetelescope:master`.
+9. Assign a reviewer from the team for the pull request.
+10. Iterate with the reviewer over any needed changes until the reviewer accepts and merges your branch.
+11. Delete your local copy of your branch.
+
+
 
 ### References
 The pysiaf prototype was developed on gitlab (STScI internal access only) and is kept there for reference: https://grit.stsci.edu/ins-tel/jwst_siaf_prototype
@@ -110,7 +130,7 @@ Install pysiaf:
 `cd pysiaf`  
 `python setup.py install` or  
 `pip install .`
-### KNOWN INSTALLATION ISSUE
+### Known installation issue
 
 If you get an error upon  
 `import pysiaf`  

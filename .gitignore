@@ -10,3 +10,4 @@ dist/
 *.swp
 .pytest_cache
 pysiaf/temporary_data
+docs/_build
