@@ -93,7 +93,7 @@ The STScI Telescopes Branch provides full support of pysiaf for S&OC operational
 ### Documentation
 The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*. 
 
-pysiaf is documented on readthedocs.  
+pysiaf will be documented at *TBD*.  
 
 ### Contributing
 Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
