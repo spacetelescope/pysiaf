@@ -309,7 +309,7 @@ class Siaf(ApertureCollection):
         """ List of aperture names defined in this SIAF"""
         return self.apertures.keys()
 
-    def plot(self, frame='Tel', names=None, label=True, units=None, clear=True, annotate=False,
+    def plot(self, frame='tel', names=None, label=True, units=None, clear=True, annotate=False,
              mark_ref=False, subarrays=True, **kwargs):
         """ Plot all apertures in this SIAF
 

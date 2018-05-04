@@ -14,7 +14,7 @@ Authors
 References
 ----------
 
-    This code was adapted from Colin Cox' nirspecpcf.py, msa.py, and slits.ipynb.
+    This code was partially adapted from Colin Cox' nirspecpcf.py, msa.py, and slits.ipynb.
 
     For a detailed description of the NIRSpec SIAF, the underlying reference files, and the
     transformations, see Proffitt et al., 2017: The Pre-Flight SI Aperture File, Part 4: NIRSpec

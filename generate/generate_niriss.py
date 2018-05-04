@@ -12,6 +12,9 @@ References
 
     Parts of the code were adapted from Colin Cox' makeSIAF.py
 
+    For a detailed description of the NIRISS SIAF, the underlying reference files, and the
+    transformations, see Goudfrooij & Cox, 2018: The Pre-Flight SI Aperture File, Part 5: NIRISS
+    (JWST-STScI-006317).
 """
 
 from collections import OrderedDict
