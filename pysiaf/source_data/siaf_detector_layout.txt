@@ -3,7 +3,7 @@
 # These apertures act as parent apertures of all other SI apertures and their parameters are thus inherited.
 # 
 # Generated 2018-04-19T16:44:22.903 utc
-# jsahlmann@nereus.stsci.edu
+# jsahlmann
 # 
 InstrName ,   AperName , DetSciYAngle , DetSciParity , VIdlParity
    NIRCAM , NRCA1_FULL ,          0.0 ,           -1 ,         -1

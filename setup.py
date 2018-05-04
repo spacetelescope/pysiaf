@@ -79,7 +79,8 @@ except ImportError:
             pass
 
         def run(self):
-            print('!\n! Sphinx is not installed!\n!', file=sys.stderr)
+            # print('!\n! Sphinx is not installed!\n!', file=sys.stderr)
+            raise RuntimeError('!\n! Sphinx is not installed!\n!')
             exit(1)
 
 class PyTest(TestCommand):
@@ -97,7 +98,8 @@ class PyTest(TestCommand):
 
 setup(
     name=PACKAGENAME,
-    version=version.pep386,
+    # version=version.pep386,
+    version=version.short,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,

@@ -6,7 +6,7 @@
 # Originally based on PRDOPSSOC-H-014.
 # 
 # Generated 2018-02-21T01:39:06.462 utc
-# jsahlmann@nereus.local.stsci.edu
+# jsahlmann
 # 
        AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef , parent_apertures , dependency_type
     NIS_CEN_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,          NIS_CEN ,     oss_default

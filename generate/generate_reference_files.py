@@ -42,7 +42,6 @@ from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION
 from pysiaf.utils import polynomial, tools
 from pysiaf import iando
 
-hostname = os.uname()[1]
 username = os.getlogin()
 timestamp = Time.now()
 
@@ -188,7 +187,7 @@ def generate_initial_siaf_aperture_definitions(instrument):
     comments.append('Originally based on {}.'.format(JWST_PRD_VERSION))
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('{}'.format(username))
     comments.append('')
     siaf_definitions.meta['comments'] = comments
     siaf_definitions.write(siaf_definitions_file_name, format='ascii.fixed_width', delimiter=',',
@@ -252,7 +251,7 @@ def generate_siaf_ddc_mapping_reference_file(instrument):
     comments.append('This file contains the DDC aperture mapping.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     ddc_mapping_table.meta['comments'] = comments
     ddc_mapping_table.write(ddc_mapping_file, format='ascii.fixed_width', delimiter=',',
@@ -305,7 +304,7 @@ def generate_siaf_detector_layout():
     comments.append('These apertures act as parent apertures of all other SI apertures and their parameters are thus inherited.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     layout.meta['comments'] = comments
     layout.write(layout_file, format='ascii.fixed_width', delimiter=',',
@@ -338,7 +337,7 @@ def generate_siaf_detector_reference_file(instrument):
     comments.append('This file contains the basic detector characteristics.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     configuration.meta['comments'] = comments
     configuration.write(configuration_file, format='ascii.fixed_width', delimiter=',',
@@ -373,7 +372,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     comments.append('This file contains the wedge offsets.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     wedge_offsets.meta['comments'] = comments
     wedge_offsets.write(wedge_file, format='ascii.fixed_width', delimiter=',',
@@ -402,7 +401,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     comments.append('This file contains the grism parameters.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     grism_parameters.meta['comments'] = comments
     grism_parameters.write(grism_file, format='ascii.fixed_width', delimiter=',',
@@ -483,7 +482,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
             #         'These parameters are stored in the currently (January 2018) active SIAF (PRDOPSSOC-G-012). ')
             comments.append('')
             comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-            comments.append('{}@{}'.format(username, hostname))
+            comments.append('by {}'.format(username))
             comments.append('')
             distortion_reference_table.meta['comments'] = comments
             distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width',
@@ -512,7 +511,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     comments.append('during FGS-SI alignment.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     siaf_alignment.meta['comments'] = comments
     siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
@@ -960,7 +959,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
                 comments.append('These parameters are stored in PRDOPSSOC-H-014.')
             comments.append('')
             comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-            comments.append('{}@{}'.format(username, hostname))
+            comments.append('by {}'.format(username))
             comments.append('')
             distortion_reference_table.meta['comments'] = comments
             # distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
@@ -974,7 +973,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
     comments.append('This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     siaf_alignment.meta['comments'] = comments
     siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
@@ -1084,7 +1083,7 @@ def generate_siaf_xml_field_format_reference_files(verbose=False):
         comments.append('precision of float fields is specified.')
         comments.append('')
         comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-        comments.append('{}@{}'.format(username, hostname))
+        comments.append('by {}'.format(username))
         comments.append('')
         T.meta['comments'] = comments
         T.write(outfile, format='ascii.fixed_width', delimiter=',',
