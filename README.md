@@ -131,9 +131,11 @@ pysiaf partially recycles code from https://github.com/mperrin/jwxml
 
 ### Installation  
 This package was developed in a python 3.5 environment.   
-Clone the repository:  
-`git clone https://github.com/spacetelescope/pysiaf`
 
+`pip install pysiaf`
+
+Clone the repository:  
+`git clone https://github.com/spacetelescope/pysiaf`  
 Install pysiaf:  
 `cd pysiaf`  
 `python setup.py install` or  
