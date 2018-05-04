@@ -7,7 +7,7 @@
 # These parameters are stored in PRDOPSSOC-H-014.
 # 
 # Generated 2018-02-21T01:33:49.873 utc
-# jsahlmann@nereus.local.stsci.edu
+# jsahlmann
 # 
 AperName , siaf_index , exponent_x , exponent_y ,                Sci2IdlX ,                Sci2IdlY ,                Idl2SciX ,                Idl2SciY
  NIS_CEN ,         00 ,          0 ,          0 ,                    -0.0 ,                     0.0 ,                     0.0 ,                     0.0

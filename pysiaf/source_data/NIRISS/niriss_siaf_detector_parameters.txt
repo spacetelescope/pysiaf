@@ -3,7 +3,7 @@
 # This file contains the basic detector characteristics.
 # 
 # Generated 2018-02-05T20:07:25.260 utc
-# jsahlmann@nereus.local.stsci.edu
+# jsahlmann
 # 
 InstrName , AperShape , XDetSize , YDetSize
    NIRISS ,      QUAD ,     2048 ,     2048

@@ -85,7 +85,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
         name_seed = instrument + '_SIAF'
 
     filenames = []
-    hostname = os.uname()[1]
+    # hostname = os.uname()[1]
     username = os.getlogin()
     timestamp = Time.now()
 
@@ -112,7 +112,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
 
             # add generation info as comment to SIAFXML
             root.append(ET.Comment('Generated {} {}'.format(timestamp.isot, timestamp.scale)))
-            root.append(ET.Comment('{}@{}'.format(username, hostname)))
+            root.append(ET.Comment('by {}'.format(username)))
             # try:
             #     repo = git.Repo(os.path.abspath(__file__), search_parent_directories=True)
             #     git_version = git.Git(repo.working_dir).describe()

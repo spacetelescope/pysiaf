@@ -3,7 +3,7 @@
 # This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.
 # 
 # Generated 2018-02-21T01:33:49.873 utc
-# jsahlmann@nereus.local.stsci.edu
+# jsahlmann
 # 
                       AperName ,        V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,  V2Ref ,  V3Ref
                        NIS_CEN , 0.5698701825418142 , -89.69171766828843 ,  0.5698701825418142 , -290.1 , -697.5

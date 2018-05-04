@@ -5,7 +5,7 @@
 # precision of float fields is specified.
 # 
 # Generated 2018-02-20T02:00:15.117 utc
-# jsahlmann@nereus.local.stsci.edu
+# by jsahlmann
 # 
 field_nr ,           field_name ,     format ,   pyformat ,                        example
      1.1 ,            InstrName ,     string ,            ,                         NIRCAM
