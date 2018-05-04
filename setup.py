@@ -128,8 +128,8 @@ setup(
                                 'prd_data/HST/*/*.dat',
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
-                                'source_data/*'
-                                'tests/test_data/*'
+                                'source_data/*/*'
+                                'tests/test_data/*/*/*/*'
                                 ]},
     cmdclass={
         'test': PyTest,
