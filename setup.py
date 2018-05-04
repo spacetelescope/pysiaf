@@ -98,7 +98,8 @@ class PyTest(TestCommand):
 
 setup(
     name=PACKAGENAME,
-    version=version.pep386,
+    # version=version.pep386,
+    version=version.short,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
