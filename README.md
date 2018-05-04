@@ -30,6 +30,14 @@ Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames):
     # select single aperture by name
     nis_cen = siaf['NIS_CEN']  
     
+    # access SIAF parameters
+    print('{} V2Ref = {}'.format(nis_cen.AperName, nis_cen.V2Ref))
+    print('{} V3Ref = {}'.format(nis_cen.AperName, nis_cen.V3Ref))
+    
+    for attribute in ['InstrName', 'AperShape']:
+        print('{} {} = {}'.format(nis_cen.AperName, attribute, getattr(nis_cen, attribute)))
+    
+    
     # coordinates in Science frame
     sci_x = np.array([0, 2047, 2047, 0])
     sci_y = np.array([0, 0, 2047, 2047])  

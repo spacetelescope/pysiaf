@@ -315,7 +315,7 @@ class Aperture(object):
             # raise NotImplementedError('NIRSpec were transformations not yet implemented.')
 
         if from_frame not in FRAMES or to_frame not in FRAMES:
-            raise ValueError("You must specify a from_frame value: {}".format(', '.join(FRAMES)))
+            raise ValueError("from_frame value must be one of: [{}]".format(', '.join(FRAMES)))
 
         if from_frame == to_frame:
             return X, Y  # null transformation
@@ -429,11 +429,10 @@ class Aperture(object):
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
     def plot(self, frame='tel', name_label=False, ax=None, title=False, units='arcsec',
-             annotate=False,
-             mark_ref=False, color='b', fill=True, fill_color='cyan', line_style='-',
-             line_label=None, **kwargs):
-        """ Plot this one aperture
-        partially adapted from https://github.com/mperrin/jwxml
+             annotate=False, mark_ref=False, fill=True, fill_color='cyan', **kwargs):
+        """Plot this aperture.
+
+        Partially adapted from https://github.com/mperrin/jwxml
 
         Parameters
         -----------
@@ -500,10 +499,11 @@ class Aperture(object):
             raise ValueError("Unknown units: " + units)
 
         # convert arcsec to arcmin and plot
-        if color is not None:
-            ax.plot(x2 * scale, y2 * scale, color=color, ls=line_style, label=line_label)
-        else:
-            ax.plot(x2 * scale, y2 * scale, ls=line_style, label=line_label)
+        # if color is not None:
+        #     ax.plot(x2 * scale, y2 * scale, color=color, ls=line_style, label=line_label)
+        # else:
+        # ax.plot(x2 * scale, y2 * scale, ls=line_style, label=line_label)
+        ax.plot(x2 * scale, y2 * scale, **kwargs)
 
         if name_label:
             # partially mitigate overlapping NIRCam labels
@@ -513,8 +513,7 @@ class Aperture(object):
                 verticalalignment='center',
                 horizontalalignment='center',
                 rotation=rotation,
-                color=ax.lines[-1].get_color(), **kwargs
-            )
+                color=ax.lines[-1].get_color())
         if fill:
             pl.fill(x2, y2, color=fill_color, zorder=-40)
         if title:
@@ -523,8 +522,7 @@ class Aperture(object):
             self.plot_detector_origin(frame)
         if mark_ref:
             x_ref, y_ref = self.reference_point(frame)
-            ax.plot([x_ref], [y_ref], marker='+',
-                    color=ax.lines[-1].get_color(), **kwargs)
+            ax.plot([x_ref], [y_ref], marker='+', color=ax.lines[-1].get_color())
 
         if (frame == 'tel') and (self.observatory == 'JWST'):
             # ensure V2 increases to the left

@@ -186,7 +186,7 @@ def read_hst_siaf(file=None):#, AperNames=None):
                 # HST FGS are special in the sense that the idl_to_tel transformation is implemented via the TVS matrix
                 # and not the standard way
                 # a.set_fgs_tel_reference_point(a.a_v2_ref, a.a_v2_ref)
-                a.set_idl_reference_point(a.a_v2_ref, a.a_v3_ref, verbose=True)
+                a.set_idl_reference_point(a.a_v2_ref, a.a_v3_ref, verbose=False)
                 # pass
 
             if (a.a_shape == 'PICK') | (a.a_shape == 'CIRC'):
