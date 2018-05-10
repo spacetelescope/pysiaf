@@ -11,8 +11,10 @@ Authors
 import numpy as np
 import pytest
 
-from ..aperture import HstAperture #, VALIDATION_ATTRIBUTES JwstAperture,
-from ..siaf import Siaf #, ApertureCollection
+from ..aperture import HstAperture
+from ..iando import read
+from ..siaf import Siaf, get_jwst_apertures
+from ..utils.tools import get_grid_coordinates
 
 @pytest.fixture(scope='module')
 def siaf_objects():
@@ -132,3 +134,35 @@ def test_jwst_aperture_vertices(siaf_objects):
 
                 assert x_mean_error < threshold
                 assert y_mean_error < threshold
+
+def test_raw_transformations(verbose=False):
+    """Test raw_to_sci and sci_to_raw transformations"""
+    siaf_detector_layout = read.read_siaf_detector_layout()
+    master_aperture_names = siaf_detector_layout['AperName'].data
+    apertures_dict = {'instrument': siaf_detector_layout['InstrName'].data}
+    apertures_dict['pattern'] = master_aperture_names
+    apertures = get_jwst_apertures(apertures_dict, exact_pattern_match=True)
+
+    grid_amplitude = 2048
+    x_raw, y_raw = get_grid_coordinates(10, (grid_amplitude/2, grid_amplitude/2), grid_amplitude)
+
+    labels = ['X', 'Y']
+    threshold = 0.1
+    from_frame = 'raw'
+    to_frame = 'sci'
+
+    # compute roundtrip error
+    for aper_name, aperture in apertures.apertures.items():
+        forward_transform = getattr(aperture, '{}_to_{}'.format(from_frame, to_frame))
+        backward_transform = getattr(aperture, '{}_to_{}'.format(to_frame, from_frame))
+
+        x_out, y_out = backward_transform(*forward_transform(x_raw, y_raw))
+        x_mean_error = np.mean(np.abs(x_raw - x_out))
+        y_mean_error = np.mean(np.abs(y_raw - y_out))
+        for i, error in enumerate([x_mean_error, y_mean_error]):
+            if verbose:
+                print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
+                    aperture.InstrName, aper_name, from_frame, to_frame, labels[i], error))
+            assert error < threshold
+
+

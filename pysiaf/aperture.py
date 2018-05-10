@@ -51,6 +51,7 @@ import os
 import numpy as np
 import pylab as pl
 import subprocess
+import sys
 
 from astropy.modeling import models
 from astropy.table import Table
@@ -58,6 +59,7 @@ import astropy.units as u
 import matplotlib
 
 from .utils import rotations
+from .utils.tools import an_to_tel
 from .iando import read
 
 # global variables
@@ -323,6 +325,7 @@ class Aperture(object):
         else:
 
             # With valid from_frame and to_frame, this method must exist:
+            # print('calling {}_to_{}'.format(from_frame.lower(), to_frame.lower()))
             conversion_method = getattr(self,
                                         '{}_to_{}'.format(from_frame.lower(), to_frame.lower()))
 
@@ -378,7 +381,7 @@ class Aperture(object):
         #     self.det_closed_polygon_points =
         #     self.det_vertices =
 
-    def corners(self, to_frame, rederive=False):
+    def corners(self, to_frame, rederive=True):
         """
         Return coordinates of the aperture outline in the specified frame.
         """
@@ -555,19 +558,26 @@ class Aperture(object):
         # if self.InstrName in ['NIRISS','FGS']: # channels have wrong orientation
         #     raise NotImplementedError
 
-        # import matplotlib
-        if self.InstrName == 'MIRI':
-            npixels = 1024
-        else:
-            npixels = 2048
+        npixels = self.XDetSize
+        # if self.InstrName == 'MIRI':
+        #     npixels = 1024
+        # else:
+        #     npixels = 2048
         ch = npixels / 4
 
         ax = pl.gca()
-        pts = ((0, 0), (ch, 0), (ch, npixels), (0, npixels))
+        if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
+            pts = ((0, 0), (0, ch), (npixels, ch), (npixels, 0))
+        else:
+            pts = ((0, 0), (ch, 0), (ch, npixels), (0, npixels))
         for chan in range(4):
             plotpoints = np.zeros((4, 2))
             for i, xy in enumerate(pts):
-                plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
+                if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
+                    # plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
+                    plotpoints[i] = self.convert(xy[0], xy[1] + chan * ch, 'det', frame)
+                else:
+                    plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
             chan_alpha = alpha if chan % 2 == 1 else alpha * evenoddratio
             rect = matplotlib.patches.Polygon(
                 plotpoints,
@@ -895,6 +905,113 @@ class Aperture(object):
     def tel_to_det(self, *args):
         return self.sci_to_det(*self.idl_to_sci(*self.tel_to_idl(*args)))
 
+    def raw_to_sci(self, x_raw, y_raw):
+        """Convert from raw/native coordinates to SIAF-Science coordinates (same as DMS coordinates
+        for FULLSCA apertures).
+
+        Implements the fits_generator description described the table attached to
+        https://jira.stsci.edu/browse/JWSTSIAF-25
+
+        see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
+
+        see also JWST-STScI-002566, JWST-STScI-003222 Rev A
+
+        """
+        if self.AperType == 'FULLSCA':
+
+            if (self.DetSciYAngle == 0) and (self.DetSciParity == -1):
+                if 'FGS' not in self.AperName:
+                    # Flip in the x direction
+                    x_sci = self.XDetSize - x_raw + 1
+                    y_sci = y_raw
+                else:
+                    # Flip across x=y, then flip in the y direction
+                    x_temp = y_raw
+                    y_temp = x_raw
+                    x_sci = x_temp
+                    y_sci = self.YDetSize - y_temp + 1
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
+                # Flip in the y direction
+                x_sci = x_raw
+                y_sci = self.YDetSize - y_raw + 1
+
+            elif (self.DetSciYAngle == 0) and (self.DetSciParity == +1):
+                if 'NRS1' not in self.AperName:
+                    # No flip or rotation
+                    x_sci = x_raw
+                    y_sci = y_raw
+                else:
+                    # Flip across line x=y
+                    x_sci = y_raw
+                    y_sci = x_raw
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
+                # Flip across line x=y, then 180 degree rotation
+                x_temp = y_raw
+                y_temp = x_raw
+                x_sci = self.XDetSize - x_temp + 1
+                y_sci = self.YDetSize - y_temp + 1
+
+            return x_sci, y_sci
+
+        else:
+            raise NotImplementedError
+
+    def sci_to_raw(self, x_sci, y_sci):
+        """Convert from Science coordinates to raw/native coordinates.
+
+        Implements the fits_generator description described the table attached to
+        https://jira.stsci.edu/browse/JWSTSIAF-25
+
+        see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
+
+        see also JWST-STScI-002566, JWST-STScI-003222 Rev A
+
+        """
+        if self.AperType == 'FULLSCA':
+
+            if (self.DetSciYAngle == 0) and (self.DetSciParity == -1):
+                if 'FGS' not in self.AperName:
+                    # Flip in the x direction
+                    x_raw = self.XDetSize - x_sci + 1
+                    y_raw = y_sci
+                else:
+                    # flip in the y direction, then Flip across x=y
+                    x_temp = x_sci
+                    y_temp = self.YDetSize - y_sci + 1
+                    x_raw = y_temp
+                    y_raw = x_temp
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
+                # Flip in the y direction
+                x_raw = x_sci
+                y_raw = self.YDetSize - y_sci + 1
+
+            elif (self.DetSciYAngle == 0) and (self.DetSciParity == +1):
+                if 'NRS1' not in self.AperName:
+                    # No flip or rotation
+                    x_raw = x_sci
+                    y_raw = y_sci
+                else:
+                    # Flip across line x=y
+                    x_raw = y_sci
+                    y_raw = x_sci
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
+                # 180 degree rotation, then flip across line x=y
+
+                x_temp = self.XDetSize - x_sci + 1
+                y_temp = self.YDetSize - y_sci + 1
+                x_raw = y_temp
+                y_raw = x_temp
+
+            return x_raw, y_raw
+
+        else:
+            raise NotImplementedError
+
+
     def validate(self):
         """
         Verify that the set attributes fully qualify an aperture
@@ -941,6 +1058,8 @@ class Aperture(object):
                 assert getattr(self, 'Idl2SciY{:d}{:d}'.format(ii, jj)) is not None
 
         setattr(self, '_initial_attributes_validated', True)
+
+
 
 
 def get_hst_to_jwst_coefficient_order(polynomial_degree):
@@ -1379,23 +1498,6 @@ class NirspecAperture(JwstAperture):
         super().__init__()
         self.observatory = 'JWST'
 
-    def sci_to_gwa(self, XSci, YSci):
-        """NIRSpec transformation from Science frame to GWA detector side
-
-        Parameters
-        ----------
-        XSci
-        YSci
-
-        Returns
-        -------
-
-        """
-
-        X_model, Y_model = self.distortion_transform('sci', 'idl')
-        return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
-                                                                          YSci - self.YSciRef)
-
     def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
         """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
 
@@ -1417,6 +1519,67 @@ class NirspecAperture(JwstAperture):
         transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
         X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl')
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
+
+    def gwain_to_gwaout(self, x_gwa, y_gwa, tilt=None):
+        """Transform from GWA detector side to GWA skyward side. Effect of mirror.
+
+        Parameters
+        ----------
+        x_gwa
+        y_gwa
+        tilt
+
+        Returns
+        -------
+
+        """
+        if tilt is None:
+            return -1* x_gwa, -1*y_gwa
+
+    def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
+        """Special implementation for NIRSpec, taking detour via tel frame.
+
+        Parameters
+        ----------
+        x_sci
+        y_sci
+        filter_name
+
+        Returns
+        -------
+
+        """
+        v2, v3 = self.sci_to_tel(x_sci, y_sci, filter_name=filter_name)
+        return self.tel_to_idl(v2, v3)
+
+
+    def sci_to_gwa(self, XSci, YSci):
+        """NIRSpec transformation from Science frame to GWA detector side
+
+        Parameters
+        ----------
+        XSci
+        YSci
+
+        Returns
+        -------
+
+        """
+
+        X_model, Y_model = self.distortion_transform('sci', 'idl')
+        return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
+                                                                          YSci - self.YSciRef)
+    def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
+        """Overwriting standard behaviour for NIRSpec specific transformation."""
+
+        # self.sci_to_idl(*self.det_to_sci(*args))
+        # print('Applying NIRSpec sci_to_tel')
+        x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
+        x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
+        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out, filter_name=filter_name)
+
+        return an_to_tel(x_ote_deg*3600., y_ote_deg*3600.)
+
 
 def points_on_arc(x0, y0, radius, phi1_deg, phi2_deg, N=100):
     """
@@ -1480,6 +1643,65 @@ def to_distortion_model(coefficients, degree=5):
 
     return models.Polynomial2D(degree, **c)
 
+def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False):
+    """Compare the attributes of two apertures.
+
+    Parameters
+    ----------
+    reference_aperture
+    comparison_aperture
+    absolute_tolerance
+    attribute_list
+    print_file
+    fractional_tolerance
+    verbose
+
+    Returns
+    -------
+
+    """
+    if attribute_list is None:
+        attribute_list = PRD_REQUIRED_ATTRIBUTES_ORDERED
+
+    comparison_table = Table(names=('aperture', 'attribute', 'reference', 'comparison', 'difference', 'percent'), dtype=['S50']*6)
+
+    add_blank_line = False
+    for attribute in attribute_list:
+        show = False
+        reference_attr = getattr(reference_aperture, attribute)
+        comparison_attr = getattr(comparison_aperture, attribute)
+        if verbose:
+            print('Comparing {} {}: {}{} {}{}'.format(reference_aperture, attribute, type(reference_attr), reference_attr, type(comparison_attr), comparison_attr))
+        if reference_attr != comparison_attr:
+            show = True
+            # if isinstance(reference_attr, float) and isinstance(comparison_attr, float):
+            if (type(reference_attr) in [int, float, np.float64]) and (type(comparison_attr) in [int, float, np.float64]):
+                difference = np.abs(comparison_attr - reference_attr)
+                fractional_difference = difference / np.max(
+                    [np.abs(reference_attr), np.abs(comparison_attr)])
+                if verbose:
+                    print('difference={}, fractional_difference={}'.format(difference, fractional_difference))
+                if (absolute_tolerance is not None) and math.isclose(reference_attr, comparison_attr, abs_tol=absolute_tolerance):
+                    show = False
+                elif fractional_difference <= fractional_tolerance:
+                    show = False
+                else:
+                    fractional_difference_percent_string = '{:.4f}'.format(fractional_difference*100.)
+                    difference_string = '{:.6f}'.format(difference)
+            else:
+                difference_string = 'N/A'
+                fractional_difference_percent_string = 'N/A'
+
+        if show:
+            add_blank_line = True
+            print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format(reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string), file=print_file)
+            # add comparison data to table
+            comparison_table.add_row([reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string])
+
+    if add_blank_line:
+        print('', file=print_file)
+
+    return comparison_table
 
 
 
