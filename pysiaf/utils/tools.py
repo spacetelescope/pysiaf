@@ -15,16 +15,31 @@ References
 
 import copy
 import math
-import sys
 
-from astropy.table import Table
+# from astropy.table import Table
 import numpy as np
 
-from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
+# from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
+from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
 from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly
 
 
+def an_to_tel(xan_arcsec, yan_arcsec):
+    """Convert from XAN, YAN to V2, V3."""
+
+    v2_arcsec = xan_arcsec
+    v3_arcsec = -1*yan_arcsec - V3_TO_YAN_OFFSET_DEG * 3600
+
+    return v2_arcsec, v3_arcsec
+
+def tel_to_an(v2_arcsec, v3_arcsec):
+    """Convert from V2, V3 to XAN, YAN."""
+
+    xan_arcsec = v2_arcsec
+    yan_arcsec = -1*v3_arcsec - V3_TO_YAN_OFFSET_DEG * 3600
+
+    return xan_arcsec, yan_arcsec
 
 def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
     """Test whether the forward and inverse transformations are consistent.
@@ -417,62 +432,3 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
     return v3sciyangle
 
 
-def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False):
-    """Compare the attributes of two apertures.
-
-    Parameters
-    ----------
-    reference_aperture
-    comparison_aperture
-    absolute_tolerance
-    attribute_list
-    print_file
-    fractional_tolerance
-    verbose
-
-    Returns
-    -------
-
-    """
-    if attribute_list is None:
-        attribute_list = PRD_REQUIRED_ATTRIBUTES_ORDERED
-
-    comparison_table = Table(names=('aperture', 'attribute', 'reference', 'comparison', 'difference', 'percent'), dtype=['S50']*6)
-
-    add_blank_line = False
-    for attribute in attribute_list:
-        show = False
-        reference_attr = getattr(reference_aperture, attribute)
-        comparison_attr = getattr(comparison_aperture, attribute)
-        if verbose:
-            print('Comparing {} {}: {}{} {}{}'.format(reference_aperture, attribute, type(reference_attr), reference_attr, type(comparison_attr), comparison_attr))
-        if reference_attr != comparison_attr:
-            show = True
-            # if isinstance(reference_attr, float) and isinstance(comparison_attr, float):
-            if (type(reference_attr) in [int, float, np.float64]) and (type(comparison_attr) in [int, float, np.float64]):
-                difference = np.abs(comparison_attr - reference_attr)
-                fractional_difference = difference / np.max(
-                    [np.abs(reference_attr), np.abs(comparison_attr)])
-                if verbose:
-                    print('difference={}, fractional_difference={}'.format(difference, fractional_difference))
-                if (absolute_tolerance is not None) and math.isclose(reference_attr, comparison_attr, abs_tol=absolute_tolerance):
-                    show = False
-                elif fractional_difference <= fractional_tolerance:
-                    show = False
-                else:
-                    fractional_difference_percent_string = '{:.4f}'.format(fractional_difference*100.)
-                    difference_string = '{:.6f}'.format(difference)
-            else:
-                difference_string = 'N/A'
-                fractional_difference_percent_string = 'N/A'
-
-        if show:
-            add_blank_line = True
-            print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format(reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string), file=print_file)
-            # add comparison data to table
-            comparison_table.add_row([reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string])
-
-    if add_blank_line:
-        print('', file=print_file)
-
-    return comparison_table
