@@ -59,7 +59,7 @@ import astropy.units as u
 import matplotlib
 
 from .utils import rotations
-from .utils.tools import an_to_tel
+from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
 # global variables
@@ -652,7 +652,7 @@ class Aperture(object):
 
         return x_model, y_model
 
-    def distortion_transform(self, from_system, to_system):
+    def distortion_transform(self, from_system, to_system, include_offset=True):
         """
         return transformation corresponding to aperture.
 
@@ -725,9 +725,8 @@ class Aperture(object):
             elif axis == 'Y':
                 Y_model = to_distortion_model(coeffs, degree)
 
-        if label == 'Idl2Sci':
+        if (label == 'Idl2Sci') and (include_offset):
             # add constant model, see JWST-001550 Sect. 4.2
-            # print(self.XSciRef, self.YSciRef)
             X_offset = models.Shift(self.XSciRef)
             Y_offset = models.Shift(self.YSciRef)
 
@@ -911,7 +910,9 @@ class Aperture(object):
         for FULLSCA apertures).
 
         Implements the fits_generator description described the table attached to
-        https://jira.stsci.edu/browse/JWSTSIAF-25
+        https://jira.stsci.edu/browse/JWSTSIAF-25 (except for Guider 2)
+        and implemented in
+        https://github.com/STScI-JWST/jwst/blob/master/jwst/fits_generator/create_dms_data.py
 
         see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
 
@@ -922,33 +923,37 @@ class Aperture(object):
 
             if (self.DetSciYAngle == 0) and (self.DetSciParity == -1):
                 if 'FGS' not in self.AperName:
+                    # NRCA1, NRCA3, NRCALONG, NRCB2, NRCB4
                     # Flip in the x direction
                     x_sci = self.XDetSize - x_raw + 1
                     y_sci = y_raw
                 else:
-                    # Flip across x=y, then flip in the y direction
-                    x_temp = y_raw
-                    y_temp = x_raw
-                    x_sci = x_temp
-                    y_sci = self.YDetSize - y_temp + 1
+                    # FGS2, GUIDER2
+                    # rotate 90 degrees anticlockwise
+                    x_sci = -1*y_raw
+                    y_sci = x_raw
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
+                # NRCA2, NRCA4, NRCB1, NRCB3, NRCBLONG
                 # Flip in the y direction
                 x_sci = x_raw
                 y_sci = self.YDetSize - y_raw + 1
 
             elif (self.DetSciYAngle == 0) and (self.DetSciParity == +1):
                 if 'NRS1' not in self.AperName:
+                    # MIRI
                     # No flip or rotation
                     x_sci = x_raw
                     y_sci = y_raw
                 else:
+                    # NIRSpec NRS1
                     # Flip across line x=y
                     x_sci = y_raw
                     y_sci = x_raw
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
                 # Flip across line x=y, then 180 degree rotation
+                # NIRISS, FGS1, NIRSpec NRS2
                 x_temp = y_raw
                 y_temp = x_raw
                 x_sci = self.XDetSize - x_temp + 1
@@ -963,7 +968,9 @@ class Aperture(object):
         """Convert from Science coordinates to raw/native coordinates.
 
         Implements the fits_generator description described the table attached to
-        https://jira.stsci.edu/browse/JWSTSIAF-25
+        https://jira.stsci.edu/browse/JWSTSIAF-25 (except for Guider 2)
+        and implemented in
+        https://github.com/STScI-JWST/jwst/blob/master/jwst/fits_generator/create_dms_data.py
 
         see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
 
@@ -978,11 +985,10 @@ class Aperture(object):
                     x_raw = self.XDetSize - x_sci + 1
                     y_raw = y_sci
                 else:
-                    # flip in the y direction, then Flip across x=y
-                    x_temp = x_sci
-                    y_temp = self.YDetSize - y_sci + 1
-                    x_raw = y_temp
-                    y_raw = x_temp
+                    # GUIDER2, FGS2
+                    # rotate 90 degrees clockwise
+                    x_raw = y_sci
+                    y_raw = -1*x_sci
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
                 # Flip in the y direction
@@ -1001,7 +1007,7 @@ class Aperture(object):
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
                 # 180 degree rotation, then flip across line x=y
-
+                # e.g. NIRISS
                 x_temp = self.XDetSize - x_sci + 1
                 y_temp = self.YDetSize - y_sci + 1
                 x_raw = y_temp
@@ -1499,8 +1505,16 @@ class NirspecAperture(JwstAperture):
         super().__init__()
         self.observatory = 'JWST'
 
+    # def __getattribute__(self, item):
+    #     print('getattr: {}'.format(item))
+        # super().__getattribute__(self, item)
+        # super().__init__()
+
+
     def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
         """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
+
+        output is in degreed
 
         Parameters
         ----------
@@ -1518,8 +1532,32 @@ class NirspecAperture(JwstAperture):
                 'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
 
         transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
-        X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl')
+        X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl', include_offset=False)
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
+
+    def ote_to_gwa(self, ote_x, ote_y, filter_name):
+        """NIRSpec transformation from OTE frame XAN, YAN to GWA sky side
+
+        Inputs must be in degrees
+
+        Parameters
+        ----------
+        ote_x
+        ote_y
+
+        Returns
+        -------
+
+        """
+
+        filter_list = 'CLEAR F110W F140X'.split()
+        if filter_name not in filter_list:
+            raise RuntimeError(
+                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        X_model, Y_model = transform_aperture.distortion_transform('idl', 'sci', include_offset=False)
+        return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
 
     def gwain_to_gwaout(self, x_gwa, y_gwa, tilt=None):
         """Transform from GWA detector side to GWA skyward side. Effect of mirror.
@@ -1535,7 +1573,23 @@ class NirspecAperture(JwstAperture):
 
         """
         if tilt is None:
-            return -1* x_gwa, -1*y_gwa
+            return -1*x_gwa, -1*y_gwa
+
+    def gwaout_to_gwain(self, x_gwa, y_gwa, tilt=None):
+        """Transform from GWA skyward side to GWA detector side. Effect of mirror.
+
+        Parameters
+        ----------
+        x_gwa
+        y_gwa
+        tilt
+
+        Returns
+        -------
+
+        """
+        if tilt is None:
+            return -1*x_gwa, -1*y_gwa
 
     def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
         """Special implementation for NIRSpec, taking detour via tel frame.
@@ -1554,6 +1608,24 @@ class NirspecAperture(JwstAperture):
         return self.tel_to_idl(v2, v3)
 
 
+    def idl_to_sci(self, x_idl, y_idl, filter_name='CLEAR'):
+        """Special implementation for NIRSpec, taking detour via tel frame.
+
+        Parameters
+        ----------
+        x_idl
+        y_idl
+        filter_name
+
+        Returns
+        -------
+
+        """
+        v2, v3 = self.idl_to_tel(x_idl, y_idl)
+        x_sci, y_sci = self.tel_to_sci(v2, v3, filter_name=filter_name)
+        return x_sci, y_sci
+
+
     def sci_to_gwa(self, XSci, YSci):
         """NIRSpec transformation from Science frame to GWA detector side
 
@@ -1570,16 +1642,54 @@ class NirspecAperture(JwstAperture):
         X_model, Y_model = self.distortion_transform('sci', 'idl')
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
+
+    def gwa_to_sci(self, x_gwa, y_gwa):
+        """NIRSpec transformation from GWA detector side to Science frame
+
+        Parameters
+        ----------
+        XSci
+        YSci
+
+        Returns
+        -------
+
+        """
+
+        X_model, Y_model = self.distortion_transform('idl', 'sci')
+        return X_model(x_gwa, y_gwa), Y_model(x_gwa, y_gwa)
+
     def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
         """Overwriting standard behaviour for NIRSpec specific transformation."""
 
-        # self.sci_to_idl(*self.det_to_sci(*args))
-        # print('Applying NIRSpec sci_to_tel')
         x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
         x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
         x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out, filter_name=filter_name)
 
         return an_to_tel(x_ote_deg*3600., y_ote_deg*3600.)
+
+
+    def tel_to_sci(self, x_tel, y_tel, filter_name='CLEAR'):
+        """Overwriting standard behaviour for NIRSpec specific transformation.
+
+        Parameters
+        ----------
+        x_tel : in arcsec
+        y_tel : in arcsec
+        filter_name
+
+        Returns
+        -------
+
+        """
+        x_an, y_an = tel_to_an(x_tel, y_tel)
+        x_ote_deg, y_ote_deg = x_an/3600., y_an/3600.
+
+        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg, filter_name=filter_name)
+        x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
+        x_sci, y_sci = self.gwa_to_sci(x_gwa_in, y_gwa_in)
+
+        return x_sci, y_sci
 
 
 def points_on_arc(x0, y0, radius, phi1_deg, phi2_deg, N=100):

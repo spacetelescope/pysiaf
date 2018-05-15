@@ -120,3 +120,57 @@ def test_against_test_data():
                             pl.show()
 
             index += 1
+
+
+def test_nirspec_aperture_transforms(verbose=False):
+    """Test transformations between frames.
+
+    Transform back and forth between frames and verify that input==output.
+
+    Parameters
+    ----------
+    verbose
+
+    """
+
+    siaf = Siaf(instrument)
+
+    labels = ['X', 'Y']
+    threshold = 0.2
+
+    from_frame = 'sci'
+    to_frames = 'det gwa idl tel'.split()
+
+    x_sci = np.linspace(-10, 10, 3)
+    y_sci = np.linspace(10, -10, 3)
+
+    for aper_name in siaf.apertures.keys():
+        skip = False
+
+        # aperture
+        aperture = siaf[aper_name]
+
+        if (aperture.AperType in ['COMPOUND', 'TRANSFORM', 'SLIT']) or ('_FULL' not in aper_name):
+            skip = True
+        # if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (
+        #         siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and
+        #         aperture.AperType == 'SLIT'):
+        #     skip = True
+
+        if skip is False:
+            # test transformations
+            if verbose:
+                print('testing {} {}'.format(siaf.instrument, aper_name))
+
+            for to_frame in to_frames:
+                forward_transform = getattr(aperture, '{}_to_{}'.format(from_frame, to_frame))
+                backward_transform = getattr(aperture, '{}_to_{}'.format(to_frame, from_frame))
+
+                x_out, y_out = backward_transform(*forward_transform(x_sci, y_sci))
+                x_mean_error = np.mean(np.abs(x_sci - x_out))
+                y_mean_error = np.mean(np.abs(y_sci - y_out))
+                for i, error in enumerate([x_mean_error, y_mean_error]):
+                    if verbose:
+                        print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
+                            siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
+                    assert error < threshold
