@@ -122,7 +122,7 @@ def test_against_test_data():
             index += 1
 
 
-def test_nirspec_aperture_transforms(verbose=True):
+def test_nirspec_aperture_transforms(verbose=False):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.

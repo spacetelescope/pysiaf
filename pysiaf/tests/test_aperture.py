@@ -24,7 +24,7 @@ def siaf_objects():
     """
     # for instrument in 'NIRISS NIRCam MIRI FGS NIRSpec'.split():
     siafs = []
-    for instrument in 'NIRISS FGS'.split():
+    for instrument in 'NIRCam NIRISS FGS MIRI'.split():
         siaf = Siaf(instrument)
         siafs.append(siaf)
     return siafs
@@ -48,7 +48,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False):
 
     """
     labels = ['X', 'Y']
-    threshold = 0.1
+
 
     from_frame = 'sci'
     to_frames = 'det idl tel'.split()
@@ -57,6 +57,12 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False):
     y_sci = np.linspace(10, -10, 3)
 
     for siaf in siaf_objects:
+        if siaf.instrument in ['MIRI']:
+            threshold = 0.2
+        elif siaf.instrument in ['NIRCam']:
+            threshold = 42.
+        else:
+            threshold = 0.1
         for aper_name in siaf.apertures.keys():
             skip = False
 
