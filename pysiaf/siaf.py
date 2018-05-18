@@ -22,6 +22,7 @@ References
     (https://github.com/mperrin/jwxml).
 
 """
+from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import re
 
@@ -249,7 +250,7 @@ class Siaf(ApertureCollection):
             Alternative method to specify a specific SIAF XML file.
 
         """
-        super().__init__()
+        super(Siaf, self).__init__()
 
         if instrument is None:
             return

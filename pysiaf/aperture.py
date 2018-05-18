@@ -46,6 +46,9 @@ TODO
 
 """
 
+
+from __future__ import absolute_import, print_function, division
+
 import copy
 import os
 import numpy as np
@@ -1119,7 +1122,7 @@ class HstAperture(Aperture):
     _accepted_aperture_types = ['QUAD', 'RECT', 'CIRC']
 
     def __init__(self):
-        super().__init__()
+        super(HstAperture,self).__init__()
         self.observatory = 'HST'
 
     # dictionary that allows to set attributes using JWST naming convention
@@ -1322,7 +1325,7 @@ class HstAperture(Aperture):
             v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
             return v[1], v[2]
         else:
-            return super().idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
+            return super(HstAperture, self).idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
                                       V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
@@ -1425,7 +1428,7 @@ class JwstAperture(Aperture):
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
     def __init__(self):
-        super().__init__()
+        super(JwstAperture, self).__init__()
         self.observatory = 'JWST'
 
 def linear_transform_model(from_system, to_system, parity, angle_deg):
@@ -1502,7 +1505,7 @@ class NirspecAperture(JwstAperture):
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
     def __init__(self):
-        super().__init__()
+        super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
 
     # def __getattribute__(self, item):

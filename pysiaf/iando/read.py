@@ -25,8 +25,6 @@ import os
 from astropy.table import Table
 import lxml.etree as ET
 
-from .. import aperture
-from .. import siaf
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT
 
 
@@ -44,6 +42,7 @@ def get_siaf(input_siaf, observatory='JWST'):
         Siaf object
 
     """
+    from pysiaf import siaf # runtime import to avoid circular import on startup
     if type(input_siaf) == str:
         aperture_collection = read_jwst_siaf(filename=input_siaf)
 
@@ -85,6 +84,7 @@ def read_hst_siaf(file=None):#, AperNames=None):
         Dictionary of apertures
 
     """
+    from pysiaf import aperture # runtime import to avoid circular import on startup
     if file is None:
         file = os.path.join(HST_PRD_DATA_ROOT, 'siaf.dat')
 
@@ -267,6 +267,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         dictionary of apertures
 
     """
+    from pysiaf import aperture # runtime import to avoid circular import on startup
     if (filename is None) and (instrument is None):
         raise ValueError('Specify either input instrument or filename')
 
