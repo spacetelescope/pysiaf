@@ -326,7 +326,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
     if instrument.upper() == 'NIRSPEC':
 
         # Fundamental aperture definitions: names, types, reference positions, dependencies
-        siaf_aperture_definitions = read_siaf_aperture_definitions(instrument)
+        siaf_aperture_definitions = read_siaf_aperture_definitions('NIRSpec')
 
         for AperName in apertures:
             jwst_aperture = apertures[AperName]
