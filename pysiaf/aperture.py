@@ -1508,10 +1508,9 @@ class NirspecAperture(JwstAperture):
         super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
 
-    # def __getattribute__(self, item):
-    #     print('getattr: {}'.format(item))
-        # super().__getattribute__(self, item)
-        # super().__init__()
+
+    def corners(self, to_frame, rederive=True):
+        return super(NirspecAperture, self).corners(to_frame, rederive=False)
 
 
     def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
@@ -1538,6 +1537,7 @@ class NirspecAperture(JwstAperture):
         X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl', include_offset=False)
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
 
+
     def ote_to_gwa(self, ote_x, ote_y, filter_name):
         """NIRSpec transformation from OTE frame XAN, YAN to GWA sky side
 
@@ -1558,9 +1558,14 @@ class NirspecAperture(JwstAperture):
             raise RuntimeError(
                 'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
 
+        # if self.AperType in ['FULLSCA', 'OSS']:
         transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        # elif self.AperType in ['SLIT']:
+        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+
         X_model, Y_model = transform_aperture.distortion_transform('idl', 'sci', include_offset=False)
         return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
+
 
     def gwain_to_gwaout(self, x_gwa, y_gwa, tilt=None):
         """Transform from GWA detector side to GWA skyward side. Effect of mirror.
@@ -1577,6 +1582,7 @@ class NirspecAperture(JwstAperture):
         """
         if tilt is None:
             return -1*x_gwa, -1*y_gwa
+
 
     def gwaout_to_gwain(self, x_gwa, y_gwa, tilt=None):
         """Transform from GWA skyward side to GWA detector side. Effect of mirror.
@@ -1662,6 +1668,23 @@ class NirspecAperture(JwstAperture):
         X_model, Y_model = self.distortion_transform('idl', 'sci')
         return X_model(x_gwa, y_gwa), Y_model(x_gwa, y_gwa)
 
+
+    def det_to_sci(self, XDet, YDet, *args):
+        """Use parent aperture if SLIT."""
+        if self.AperType == 'SLIT':
+            return self._parent_aperture.det_to_sci(self, XDet, YDet, *args)
+        else:
+            return super(NirspecAperture, self).det_to_sci(XDet, YDet, *args)
+
+
+    def sci_to_det(self, XSci, YSci, *args):
+        """Use parent aperture if SLIT."""
+        if self.AperType == 'SLIT':
+            return self._parent_aperture.sci_to_det(XSci, YSci, *args)
+        else:
+            return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
+
+
     def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
         """Overwriting standard behaviour for NIRSpec specific transformation."""
 
@@ -1690,7 +1713,11 @@ class NirspecAperture(JwstAperture):
 
         x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg, filter_name=filter_name)
         x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
-        x_sci, y_sci = self.gwa_to_sci(x_gwa_in, y_gwa_in)
+        if self.AperType == 'SLIT':
+            # call transformation of parent aperture
+            x_sci, y_sci = self._parent_aperture.gwa_to_sci(x_gwa_in, y_gwa_in)
+        else:
+            x_sci, y_sci = self.gwa_to_sci(x_gwa_in, y_gwa_in)
 
         return x_sci, y_sci
 
