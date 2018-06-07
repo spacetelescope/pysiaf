@@ -1671,16 +1671,26 @@ class NirspecAperture(JwstAperture):
 
     def det_to_sci(self, XDet, YDet, *args):
         """Use parent aperture if SLIT."""
-        if self.AperType == 'SLIT':
-            return self._parent_aperture.det_to_sci(self, XDet, YDet, *args)
+        if self.AperType == 'TRANSFORM':
+            raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
+        elif self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                return self._parent_aperture.det_to_sci(self, XDet, YDet, *args)
         else:
             return super(NirspecAperture, self).det_to_sci(XDet, YDet, *args)
 
 
     def sci_to_det(self, XSci, YSci, *args):
         """Use parent aperture if SLIT."""
-        if self.AperType == 'SLIT':
-            return self._parent_aperture.sci_to_det(XSci, YSci, *args)
+        if self.AperType == 'TRANSFORM':
+            raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
+        elif self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                return self._parent_aperture.sci_to_det(XSci, YSci, *args)
         else:
             return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
 
@@ -1714,8 +1724,11 @@ class NirspecAperture(JwstAperture):
         x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg, filter_name=filter_name)
         x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
         if self.AperType == 'SLIT':
-            # call transformation of parent aperture
-            x_sci, y_sci = self._parent_aperture.gwa_to_sci(x_gwa_in, y_gwa_in)
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                # call transformation of parent aperture
+                x_sci, y_sci = self._parent_aperture.gwa_to_sci(x_gwa_in, y_gwa_in)
         else:
             x_sci, y_sci = self.gwa_to_sci(x_gwa_in, y_gwa_in)
 

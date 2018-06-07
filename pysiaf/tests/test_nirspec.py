@@ -174,3 +174,14 @@ def test_nirspec_aperture_transforms(verbose=False):
                         print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                             siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                     assert error < threshold
+
+
+def test_nirspec_points():
+    """Test transformations of reference points and corners."""
+    siaf = Siaf(instrument)
+    for aper_name in 'NRS_S1600A1_SLIT NRS_S200B1_SLIT NRS_FIELD1_MSA4 NRS1_FULL'.split():
+        aperture = siaf[aper_name]
+        print(aperture.reference_point('tel'))
+        print(aperture.reference_point('det'))
+        print(aperture.corners('idl'))
+        print(aperture.corners('det'))
