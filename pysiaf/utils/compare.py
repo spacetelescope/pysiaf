@@ -27,7 +27,7 @@ from ..constants import JWST_PRD_VERSION
 from ..iando.read import get_siaf
 from ..siaf import Siaf
 from ..utils import tools
-
+from ..aperture import compare_apertures
 
 def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_siaf_input=None,
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
@@ -125,7 +125,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     for aperture_name in modified_apertures.keys():
         if (selected_aperture_name is not None) and (aperture_name not in selected_aperture_name):
             continue
-        comparison_table = tools.compare_apertures(reference_siaf[aperture_name], comparison_siaf[aperture_name], fractional_tolerance=fractional_tolerance, print_file=print_file, verbose=False)
+        comparison_table = compare_apertures(reference_siaf[aperture_name], comparison_siaf[aperture_name], fractional_tolerance=fractional_tolerance, print_file=print_file, verbose=False)
         if report_table is None:
             report_table = comparison_table.copy()
         else:
