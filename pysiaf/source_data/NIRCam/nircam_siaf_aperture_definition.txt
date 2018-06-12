@@ -7,7 +7,11 @@
 # 
 # Generated 2018-06-12T13:57:29.020 utc
 # jsahlmann
-# 
+#
+# jsahlmann 2018-06-12:
+# Modified XDetRef,YDetRef of COMPOUND apertures NRCAS_FULL, NRCBS_FULL, NRCALL_FULL to be able
+# to derive the V2,V3 reference point from a pixel coordinate on a detector.
+#
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
             NRCA1_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCA1_FULL ,         default
             NRCA2_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCA2_FULL ,         default
@@ -19,14 +23,14 @@
             NRCB3_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCB3_FULL ,         default
             NRCB4_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCB4_FULL ,         default
             NRCB5_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCB5_FULL ,         default
-               NRCALL_FULL , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None , NRCA1_FULL; NRCB2_FULL; NRCB1_FULL; NRCA2_FULL , nircam_compound
-                NRCAS_FULL , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None , NRCA1_FULL; NRCA3_FULL; NRCA4_FULL; NRCA2_FULL , nircam_compound
+               NRCALL_FULL , COMPOUND ,  2713.5 ,  2057.5 ,     None ,     None ,    None ,    None , NRCA1_FULL; NRCB2_FULL; NRCB1_FULL; NRCA2_FULL , nircam_compound
+                NRCAS_FULL , COMPOUND ,  1964.0 ,  1978.5 ,     None ,     None ,    None ,    None , NRCA1_FULL; NRCA3_FULL; NRCA4_FULL; NRCA2_FULL , nircam_compound
                 NRCA1_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCA2_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCA3_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCA4_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCA5_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
-                NRCBS_FULL , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None , NRCB4_FULL; NRCB2_FULL; NRCB1_FULL; NRCB3_FULL , nircam_compound
+                NRCBS_FULL , COMPOUND ,    87.0 ,  1974.0 ,     None ,     None ,    None ,    None , NRCB4_FULL; NRCB2_FULL; NRCB1_FULL; NRCB3_FULL , nircam_compound
                 NRCB1_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCB2_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
                 NRCB3_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master

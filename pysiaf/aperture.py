@@ -270,13 +270,13 @@ class Aperture(object):
     def __repr__(self):
         return "<pysiaf.Aperture object AperName={0} >".format(self.AperName)
 
-    def closed_polygon_points(self, to_frame):
+    def closed_polygon_points(self, to_frame, rederive=True):
         """
         Compute closed polygon points of aperture outline. Used for plotting and path generation.
         :param to_frame:
         :return:
         """
-        points_x, points_y = self.corners(to_frame)
+        points_x, points_y = self.corners(to_frame, rederive=rederive)
         return points_x[np.append(np.arange(len(points_x)), 0)], points_y[
             np.append(np.arange(len(points_y)), 0)]
 
@@ -492,8 +492,8 @@ class Aperture(object):
                 ax.set_xlabel('X pixels ({0})'.format(frame))
                 ax.set_ylabel('Y pixels ({0})'.format(frame))
 
-        x, y = self.corners(frame)
-        x2, y2 = self.closed_polygon_points(frame)
+        x, y = self.corners(frame, rederive=False)
+        x2, y2 = self.closed_polygon_points(frame, rederive=False)
 
         if units.lower() == 'arcsec':
             scale = 1
@@ -1445,10 +1445,8 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
     np.deg2rad(theta_deg))
 
     """
-    if type(angle_deg) != float:
-        raise TypeError('Angle has to be a float. It is {}'.format(angle_deg))
-    # print(angle_deg)
-
+    if type(angle_deg) not in [float, np.float64]:
+        raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(type(angle_deg), angle_deg))
 
     # check for allowed system pairs
     if (from_system == 'det' and to_system != 'sci') or (

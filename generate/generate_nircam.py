@@ -16,37 +16,14 @@ References
 
 from collections import OrderedDict
 import os
-import sys
 
 import numpy as np
 from astropy.table import Table
 
-import pysiaf
-
-# try:
-#     import pysiaf
-# except ImportError:
-#     if __name__ == '__main__' and __package__ is None:
-#         sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# import pysiaf
-from pysiaf.utils import polynomial, tools, compare
-# from pysiaf.aperture import compare_apertures
-# from pysiaf.certify import compare
+from pysiaf import iando
+from pysiaf.utils import tools, compare
 import generate_reference_files
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
-
-# import importlib
-# importlib.reload(generate_reference_files)
-# importlib.reload(pysiaf.iando)
-# importlib.reload(pysiaf.aperture)
-# importlib.reload(pysiaf.iando.read)
-# importlib.reload(pysiaf.utils.polynomial)
-# importlib.reload(pysiaf.utils.tools)
-# importlib.reload(pysiaf.certify.compare)
-#
-# from pysiaf.utils import polynomial
-from pysiaf import iando
 import pysiaf.aperture
 
 instrument = 'NIRCam'
@@ -56,6 +33,7 @@ instrument = 'NIRCam'
 if 0:
     generate_reference_files.generate_siaf_detector_reference_file(instrument)
     generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
+
 _ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
 
 siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file(instrument)
@@ -75,13 +53,9 @@ if 0:
     1/0
 
 
-
-
 siaf_detector_layout = iando.read.read_siaf_detector_layout()
 siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
 siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
-
-
 # print(siaf_aperture_definitions)
 siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
 
@@ -189,7 +163,7 @@ for AperName in aperture_name_list:
             aperture.complement()
 
         elif dependency_type == 'nircam_compound':
-            # COMPOUND apertures: V2,V3 reference points from averages of individual apertures
+            # COMPOUND apertures: V2,V3 reference points are linked to specific det points of one individual aperture
             # the order of the parent_apertures is defined by the sequence of corners
 
             aperture._parent_apertures = [s.strip() for s in parent_apertures.split(';')]
@@ -197,10 +171,22 @@ for AperName in aperture_name_list:
             for attribute in 'VIdlParity'.split():  # DetSciYAngle Sci2IdlDeg  DetSciParity
                 setattr(aperture, attribute, getattr(aperture_dict[aperture._parent_apertures[0]], attribute))
 
-            aperture.V2Ref = np.mean([aperture_dict[aperture_name].V2Ref for aperture_name in
-                                                     aperture._parent_apertures])
-            aperture.V3Ref = np.mean([aperture_dict[aperture_name].V3Ref for aperture_name in
-                                                     aperture._parent_apertures])
+            if AperName in ['NRCAS_FULL']:
+                defining_aperture = aperture_dict['NRCA3_FULL']
+            elif AperName in ['NRCBS_FULL', 'NRCALL_FULL']:
+                defining_aperture = aperture_dict['NRCB4_FULL']
+
+            aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+            XDetRef = siaf_aperture_definitions['XDetRef'][aperture_definitions_index]
+            YDetRef = siaf_aperture_definitions['YDetRef'][aperture_definitions_index]
+
+            # set V2/V3 reference point corresponding to a detector pixel in one SCA
+            aperture.V2Ref, aperture.V3Ref = defining_aperture.det_to_tel(XDetRef, YDetRef)
+
+            # aperture.V2Ref = np.mean([aperture_dict[aperture_name].V2Ref for aperture_name in
+            #                                          aperture._parent_apertures])
+            # aperture.V3Ref = np.mean([aperture_dict[aperture_name].V3Ref for aperture_name in
+            #                                          aperture._parent_apertures])
 
             # compute IdlCorners from V2V3 corners of individual apertures (which themselves are derived from the respective idl corners)
             compound_corners_Tel_x = np.zeros(4)
@@ -330,6 +316,7 @@ new_siaf = pysiaf.Siaf(instrument, filenames[0])
 
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
+# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCAS_FULL NRCBS_FULL NRCALL_FULL'.split())
 compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
 
 # compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf)

@@ -175,10 +175,10 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='Tel', name_label=label, **kwargs)
+            ap.plot(color=col, frame='tel', name_label=label, **kwargs)
             if detector_channels:
                 try:
-                    ap.plot_detector_channels('Tel')
+                    ap.plot_detector_channels('tel')
                 except TypeError:
                     pass
 
