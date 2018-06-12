@@ -676,18 +676,7 @@ class Aperture(object):
         y_model : astropy.modeling.Model
             Correction in y
 
-        Examples
-        --------
-
-
-
-        HAS TO BE TESTED AGAINST COLIN's code
-
         """
-
-        # if self.InstrName.lower() == 'nirspec':
-        #     raise NotImplementedError('NIRSpec case not yet implemented.')
-
         if from_system not in ['idl', 'sci']:
             raise ValueError('Requested from_system of {} not recognized.'.format(from_system))
 
@@ -709,7 +698,6 @@ class Aperture(object):
         # the reference pixel location.
 
         # degree of distortion polynomial
-        #             degree = np.int(getattr(self, '{}Deg'.format(label)))
         degree = np.int(getattr(self, 'Sci2IdlDeg'))
 
         number_of_coefficients = np.int((degree + 1) * (degree + 2) / 2)
@@ -720,7 +708,6 @@ class Aperture(object):
             coeff_keys.sort()
             coeff = np.array([getattr(self, c) for c in coeff_keys[0:number_of_coefficients]])
             coeffs = Table(coeff, names=(coeff_keys[0:number_of_coefficients].tolist()))
-            # print(coeffs)
 
             # create the model for the transformation
             if axis == 'X':
@@ -1677,7 +1664,7 @@ class NirspecAperture(JwstAperture):
             if self._parent_apertures is None:
                 raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
             else:
-                return self._parent_aperture.det_to_sci(self, XDet, YDet, *args)
+                return self._parent_aperture.det_to_sci(XDet, YDet, *args)
         else:
             return super(NirspecAperture, self).det_to_sci(XDet, YDet, *args)
 
@@ -1698,7 +1685,16 @@ class NirspecAperture(JwstAperture):
     def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
         """Overwriting standard behaviour for NIRSpec specific transformation."""
 
-        x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
+        if self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                # call transformation of parent aperture
+                x_gwa_in, y_gwa_in = self._parent_aperture.sci_to_gwa(x_sci, y_sci)
+        else:
+            x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
+
+        # x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
         x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
         x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out, filter_name=filter_name)
 

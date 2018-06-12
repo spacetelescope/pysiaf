@@ -152,10 +152,6 @@ def test_nirspec_aperture_transforms(verbose=False):
 
         if (aperture.AperType in ['COMPOUND', 'TRANSFORM', 'SLIT']) or ('_FULL' not in aper_name):
             skip = True
-        # if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (
-        #         siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and
-        #         aperture.AperType == 'SLIT'):
-        #     skip = True
 
         if skip is False:
             # test transformations
@@ -176,12 +172,95 @@ def test_nirspec_aperture_transforms(verbose=False):
                     assert error < threshold
 
 
-def test_nirspec_points():
-    """Test transformations of reference points and corners."""
+def test_nirspec_slit_transformations(verbose=False):
+    """Test that slit to detector transforms give the same answer as the equivalent SCA transform.
+
+    Check that reference_point and corners work for slit.
+
+    Parameters
+    ----------
+    verbose : bool
+
+    Authors
+    -------
+    Charles Proffitt
+    Johannes Sahlmann
+
+    """
     siaf = Siaf(instrument)
-    for aper_name in 'NRS_S1600A1_SLIT NRS_S200B1_SLIT NRS_FIELD1_MSA4 NRS1_FULL'.split():
+
+    threshold = 0.1
+
+    labels = ['X', 'Y']
+    from_frame = 'sci'
+    to_frames = 'det tel'.split()
+    x_sci = np.linspace(-10, 10, 3)
+    y_sci = np.linspace(10, -10, 3)
+
+
+    # for aper_name in 'NRS_S1600A1_SLIT NRS_S200B1_SLIT NRS_FIELD1_MSA4 NRS1_FULL'.split():
+    for aper_name in siaf.apertures.keys():
+        skip = False
         aperture = siaf[aper_name]
-        print(aperture.reference_point('tel'))
-        print(aperture.reference_point('det'))
-        print(aperture.corners('idl'))
-        print(aperture.corners('det'))
+
+        if (aperture.AperType not in ['SLIT']) or ('MIMF' in aper_name) or (
+        not hasattr(aperture, '_parent_aperture')):
+            skip = True
+
+        if skip is False:
+            parent_aperture = siaf[aperture._parent_aperture.AperName]
+            if verbose:
+                print(
+                'testing {} {} parent {}'.format(siaf.instrument, aper_name, parent_aperture.AperName))
+
+            # verify that correct reference point can be retrieved
+            v2ref, v3ref = aperture.reference_point('tel')
+            assert np.abs(v2ref - aperture.V2Ref) < 0.01 * threshold
+            assert np.abs(v3ref - aperture.V3Ref) < 0.01 * threshold
+
+            # verify that we get the same tel to sci transform whether using slit or parent
+            # aperture name
+            xsciref, ysciref = aperture.reference_point('sci')
+            xscidref, yscidref = parent_aperture.tel_to_sci(v2ref, v3ref)
+            xsciaref, ysciaref = aperture.tel_to_sci(v2ref, v3ref)
+            error = np.sqrt((xsciref - xscidref) ** 2 + (ysciref - yscidref) ** 2)
+            if verbose:
+                print(
+                '{} {}: Error in ref. pnt. {:02.6f} pixels.'.format(siaf.instrument, aper_name,
+                                                                    error))
+            assert error < threshold
+
+            # verify that corners can be retrieved and check 1st vertice
+            ixc, iyc = aperture.corners('idl')
+            assert np.abs(ixc[0] - aperture.XIdlVert1) < 0.01 * threshold
+            assert np.abs(iyc[0] - aperture.YIdlVert1) < 0.01 * threshold
+
+            # verify that we get the same tel to det transform whether using slit or parent
+            # aperture name
+            v2c, v3c = aperture.corners('tel')
+            xc, yc = aperture.corners('det')
+            xdc, ydc = parent_aperture.tel_to_det(v2c, v3c)
+            xac, yac = aperture.tel_to_det(v2c, v3c)
+            xic, yic = aperture.idl_to_det(ixc, iyc)
+            error = np.max(np.abs(
+                np.concatenate((xc - xdc, yc - ydc, xc - xac, yc - yac, xc - xic, yc - yic))))
+            if verbose:
+                print(
+                '{} {}: Max error in corners {:02.6f} pixels.'.format(siaf.instrument, aper_name,
+                                                                      error))
+            assert error < threshold
+
+            #testing roundtrip error
+            for to_frame in to_frames:
+                forward_transform = getattr(aperture, '{}_to_{}'.format(from_frame, to_frame))
+                backward_transform = getattr(aperture, '{}_to_{}'.format(to_frame, from_frame))
+
+                x_out, y_out = backward_transform(*forward_transform(x_sci, y_sci))
+                x_mean_error = np.mean(np.abs(x_sci - x_out))
+                y_mean_error = np.mean(np.abs(y_sci - y_out))
+                for i, error in enumerate([x_mean_error, y_mean_error]):
+                    if verbose:
+                        print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
+                            siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
+                    assert error < threshold
+
