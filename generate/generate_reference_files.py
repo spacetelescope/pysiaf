@@ -340,6 +340,7 @@ def generate_siaf_detector_reference_file(instrument):
     comments.append('by {}'.format(username))
     comments.append('')
     configuration.meta['comments'] = comments
+    print('Writing to {}'.format(configuration_file))
     configuration.write(configuration_file, format='ascii.fixed_width', delimiter=',',
                                      delimiter_pad=' ', bookend=False)
 

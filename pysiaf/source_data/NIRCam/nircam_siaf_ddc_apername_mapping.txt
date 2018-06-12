@@ -1,0 +1,16 @@
+# NIRCam DDC mapping definition file for SIAF
+# 
+# This file contains the DDC aperture mapping.
+# 
+# Generated 2018-06-12T13:57:29.020 utc
+# by jsahlmann
+# 
+     SIAF_NAME ,     DDC_NAME
+    NRCBS_FULL ,    NRCB_CNTR
+   NRCALL_FULL ,  NRCALL_CNTR
+NRCA5_MASK430R , NRC_MASK430R
+NRCA5_MASK335R , NRC_MASK335R
+ NRCA5_MASKLWB ,  NRC_MASKLWB
+ NRCA4_MASKSWB ,  NRC_MASKSWB
+    NRCAS_FULL ,    NRCA_CNTR
+NRCA2_MASK210R , NRC_MASK210R
