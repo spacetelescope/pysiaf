@@ -27,7 +27,6 @@ import lxml.etree as ET
 
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT
 
-
 def get_siaf(input_siaf, observatory='JWST'):
     """Return a Siaf object corresponding to input_siaf which can be a string path or a Siaf object.
 
@@ -325,12 +324,30 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
     # handle special case of NIRSpec, where auxiliary TRANSFORM apertures are defined and hold transformation parameters
     # simple workaround is to attach the TRANSFORM aperture as attribute to the respective NIRSpec aperture
     if instrument.upper() == 'NIRSPEC':
+
+        # Fundamental aperture definitions: names, types, reference positions, dependencies
+        siaf_aperture_definitions = read_siaf_aperture_definitions('NIRSpec')
+
         for AperName in apertures:
             jwst_aperture = apertures[AperName]
             if jwst_aperture.AperType in ['FULLSCA', 'OSS']:
                 for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
                     setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
                 apertures[AperName] = jwst_aperture
+            elif jwst_aperture.AperType in ['SLIT']:
+                # attach TA apertures
+                for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
+                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
+
+                # attach parent aperture (name stored in _parent_apertures, aperture object stored in _parent_aperture)
+                index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+                parent_aperture_name = siaf_aperture_definitions['parent_apertures'][index]
+                if (parent_aperture_name is not None) and (not np.ma.is_masked(parent_aperture_name)):
+                    jwst_aperture._parent_apertures = parent_aperture_name
+                    jwst_aperture._parent_aperture = apertures[jwst_aperture._parent_apertures]
+
+                apertures[AperName] = jwst_aperture
+
 
     return apertures
 
