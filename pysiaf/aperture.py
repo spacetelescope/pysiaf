@@ -1567,6 +1567,8 @@ class NirspecAperture(JwstAperture):
         """
         if tilt is None:
             return -1*x_gwa, -1*y_gwa
+        else:
+            pass
 
 
     def gwaout_to_gwain(self, x_gwa, y_gwa, tilt=None):
