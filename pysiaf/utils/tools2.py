@@ -16,6 +16,7 @@ import sys
 import numpy as np
 from math import *
 import copy
+import pylab as pl
 
 from astropy.table import Table
 
@@ -33,13 +34,16 @@ def checkinv(A, B, C, D):
     x2 = poly(C,v2,v3,5)
     y2 = poly(D,v2,v3,5)
 
-    print()
+
+    print ('     x         y          V2        V3        xp        yp       dx        dy')
+    ######   -200.0000 -200.0000  -12.5849  -12.5939 -199.7371 -200.2741    0.2629   -0.2741
+    
     for i in range(9):
         print(8*'%10.4f' %(x[i],y[i],v2[i],v3[i],x2[i],y2[i], x2[i]-x[i], y2[i]-y[i]))
 
     # Summary
     print ('\nShifts', (x2-x).mean(), (y2-y).mean())
-    print ('RMS', (x2-x).std(), (y2-y).std())
+    print ('RMS {:10.2e} {:10.2e}'.format( (x2-x).std(), (y2-y).std() ))
     print()
 
     return
@@ -83,7 +87,7 @@ def matchV2V3(apName1, apName2):
         print ('Detector ', apName1[:5])
         newXDetRef = ap1.XDetRef
         newYDetRef = ap1.YDetRef
-        newXSciRef = ap2.XSciRef + xSign*(newXDetRef-ap2.XDetRef)
+        newXSciRef = ap2.XSciRef + xSign*(newXDetRef-ap2.XDetRef) 
         newYSciRef = ap2.YSciRef + ySign*(newYDetRef-ap2.YDetRef)
         newV3SciXAngle = ap1.V3SciXAngle
         newV3SciYAngle = ap1.V3SciYAngle
@@ -98,7 +102,7 @@ def matchV2V3(apName1, apName2):
                                                                                         newXSciRef,newYSciRef, newV3SciXAngle, newV3SciYAngle, newV3IdlYAngle))
     else:
         # Need to work in aperture 2 Ideal coordinate system
-        print ('Detector1', ap1.AperName[:5], '  Detector2', ap2.AperName[:5])
+        print ('Detector 1', ap1.AperName[:5], '  Detector 2', ap2.AperName[:5])
         V2Ref2 = ap2.V2Ref
         V3Ref2 = ap2.V3Ref
         theta0 = ap2.V3IdlYAngle
@@ -166,7 +170,7 @@ def matchV2V3(apName1, apName2):
         triangle(CS,order)
         print('DS')
         triangle(DS, order)
-        print('\nASBCD')
+        print('\nABCDS')
         checkinv(AS,BS,CS,DS)
 
         # For NIRCam only, adjust angles
@@ -192,10 +196,9 @@ def matchV2V3(apName1, apName2):
             print ('Zero centered coeffs ')
             checkinv(AS, BS, CS, DS)
 
-            #newC = RotateCoeffs(CS, newV3IdlYAngle, order)
-            #newD = RotateCoeffs(DS, newV3IdlYAngle, order)
-            newC = RotateCoeffs(CS, 0.0, order)
-            newD = RotateCoeffs(DS, 0.0, order)
+            newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
+            newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
+            print ('Rotate Coeffs by newV3IdlYAngle')
             print('newC')
             triangle(newC, order)
             print ('newD')
