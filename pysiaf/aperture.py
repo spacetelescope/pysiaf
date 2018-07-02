@@ -1560,7 +1560,6 @@ class NirspecAperture(JwstAperture):
         ----------
         x_gwa
         y_gwa
-        tilt
 
         Returns
         -------
@@ -1569,7 +1568,8 @@ class NirspecAperture(JwstAperture):
         if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
         else:
-            gwa_xtil, gwa_ytil = self.tilt            
+            gwa_xtil, gwa_ytil = self.tilt
+            
             filter_name = 'CLEAR'
             #filter_name = self.filter_name
             
@@ -1579,7 +1579,7 @@ class NirspecAperture(JwstAperture):
             ry0 = getattr(transform_aperture, 'YSciRef')
             ax = getattr(transform_aperture, 'XSciScale')
             ay = getattr(transform_aperture, 'YSciScale')
-            
+           
             delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
             delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
             
@@ -1622,7 +1622,46 @@ class NirspecAperture(JwstAperture):
         """
         if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
-        #else:
+        else:
+            gwa_xtil, gwa_ytil = self.tilt
+
+            filter_name = 'CLEAR'
+            #filter_name = self.filter_name
+            
+            # need to pull correct coefficients from transform row
+            transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(transform_aperture, 'XSciRef')
+            ry0 = getattr(transform_aperture, 'YSciRef')
+            ax = getattr(transform_aperture, 'XSciScale')
+            ay = getattr(transform_aperture, 'YSciScale')
+           
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+
+            # calculate direction cosines of xt, yt, (xgwa, ygwa)   
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x3 = x_gwa / v
+            y3 = y_gwa / v
+            z3 = 1.0 / v
+            # do inverse rotation around the x-axis
+            x2 = x3
+            y2 = y3 + delta_theta_x*z3
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = x2 - delta_theta_y*z2 # try changing - to +???
+            y1 = y2
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to reference GWA coordinate system (use small angle approx.),
+            # first with an inverse rotation around the y-axis:
+            x0 = -1.0*x1 + delta_theta_y * np.sqrt(1.0 - x1*x1 - (y1+delta_theta_x*z1)*(y1+delta_theta_x*z1))
+            y0 = -1.0*y1 - delta_theta_x*z1
+            z0 = np.sqrt(1.0 - x0*x0 - y0*y0)
+            
+            x_gwap = x0/z0
+            y_gwap = y0/z0
+            
+            return x_gwap, y_gwap
+            
 
     def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
         """Special implementation for NIRSpec, taking detour via tel frame.
