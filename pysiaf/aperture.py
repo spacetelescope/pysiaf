@@ -1489,9 +1489,10 @@ class NirspecAperture(JwstAperture):
 
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
-    def __init__(self):
+    def __init__(self, tilt=None):
         super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
+        self.tilt = tilt
 
 
     def corners(self, to_frame, rederive=True):
@@ -1552,7 +1553,7 @@ class NirspecAperture(JwstAperture):
         return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
 
 
-    def gwain_to_gwaout(self, x_gwa, y_gwa, tilt=None):
+    def gwain_to_gwaout(self, x_gwa, y_gwa):
         """Transform from GWA detector side to GWA skyward side. Effect of mirror.
 
         Parameters
@@ -1565,13 +1566,48 @@ class NirspecAperture(JwstAperture):
         -------
 
         """
-        if tilt is None:
+        if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
         else:
-            pass
+            gwa_xtil, gwa_ytil = self.tilt            
+            filter_name = 'CLEAR'
+            #filter_name = self.filter_name
+            
+            # need to pull correct coefficients from transform row
+            transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(transform_aperture, 'XSciRef')
+            ry0 = getattr(transform_aperture, 'YSciRef')
+            ax = getattr(transform_aperture, 'XSciScale')
+            ay = getattr(transform_aperture, 'YSciScale')
+            
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+            
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x0 = x_gwa / v
+            y0 = y_gwa / v
+            z0 = 1.0 / v
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = -1 * (x0 - delta_theta_y * np.sqrt(1.0 - x0*x0 - (y0+delta_theta_x*z0)*(y0+delta_theta_x*z0)))
+            y1 = -1 * (y0 + delta_theta_x * z0)
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to ref GWA coord system with small angle approx., 
+            # but first with an inverse rotation around the y-axis
+            x2 = x1 + delta_theta_y * z1
+            y2 = y1
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # now do an inverse rotation around the x-axis
+            x3 = x2
+            y3 = y2 - delta_theta_x * z2     
+            z3 = np.sqrt(1.0 - x3*x3 - y3*y3)
+            # compute the cosines from direction cosines
+            x_gwap = x3 / z3
+            y_gwap = y3 / z3
+ 
+            return x_gwap, y_gwap
 
 
-    def gwaout_to_gwain(self, x_gwa, y_gwa, tilt=None):
+    def gwaout_to_gwain(self, x_gwa, y_gwa):
         """Transform from GWA skyward side to GWA detector side. Effect of mirror.
 
         Parameters
@@ -1584,8 +1620,9 @@ class NirspecAperture(JwstAperture):
         -------
 
         """
-        if tilt is None:
+        if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
+        #else:
 
     def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
         """Special implementation for NIRSpec, taking detour via tel frame.
