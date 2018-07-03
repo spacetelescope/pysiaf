@@ -25,21 +25,20 @@ from .polynomial import poly, ShiftCoeffs, Rotate, FlipY, FlipX, rotate_coeffici
 from ..siaf import Siaf
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
-def checkinv(A, B, C, D):
+def checkinv(A, B, C, D, order):
     '''Check that forward and inverse transformations are consistent'''
-    x = np.array([-200.0, 0.0, 200.0, -200.0, 0.0, 200.0, -200.0, 0.0, 200.0])
-    y = np.array([-200.0, -200.0, -200.0, 0.0, 0.0, 0.0, 200.0, 200.0, 200.0])
-    v2 = poly(A,x,y,5)
-    v3 = poly(B,x,y,5)
-    x2 = poly(C,v2,v3,5)
-    y2 = poly(D,v2,v3,5)
-
+    [x,y] = np.mgrid[-200:201:200, -200:201:200]
+    v2 = poly(A, x, y, order)
+    v3 = poly(B, x, y, order)
+    x2 = poly(C, v2, v3, order)
+    y2 = poly(D, v2, v3, order)
 
     print ('     x         y          V2        V3        xp        yp       dx        dy')
     ######   -200.0000 -200.0000  -12.5849  -12.5939 -199.7371 -200.2741    0.2629   -0.2741
-    
-    for i in range(9):
-        print(8*'%10.4f' %(x[i],y[i],v2[i],v3[i],x2[i],y2[i], x2[i]-x[i], y2[i]-y[i]))
+
+    for i in range(3):
+        for j in range(3):
+            print(8*'%10.4f' %(x[i,j],y[i,j],v2[i,j],v3[i,j],x2[i,j],y2[i,j], x2[i,j]-x[i,j], y2[i,j]-y[i,j]))
 
     # Summary
     print ('\nShifts', (x2-x).mean(), (y2-y).mean())
@@ -127,7 +126,7 @@ def matchV2V3(apName1, apName2):
         print('D')
         triangle(D,5)
         print ('\nCheck Inverses for initial polynomials')
-        checkinv(A,B,C,D)
+        checkinv(A,B,C,D, order)
 
         xPixel = poly(C, XIdl2, YIdl2, order)
         yPixel = poly(D, XIdl2, YIdl2, order)
@@ -171,7 +170,7 @@ def matchV2V3(apName1, apName2):
         print('DS')
         triangle(DS, order)
         print('\nABCDS')
-        checkinv(AS,BS,CS,DS)
+        checkinv(AS,BS,CS,DS, order)
 
         # For NIRCam only, adjust angles
         if ins == 'NIRCam':
@@ -194,7 +193,7 @@ def matchV2V3(apName1, apName2):
             CS[0] = 0.0
             DS[0] = 0.0
             print ('Zero centered coeffs ')
-            checkinv(AS, BS, CS, DS)
+            checkinv(AS, BS, CS, DS, order)
 
             newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
             newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
@@ -204,7 +203,7 @@ def matchV2V3(apName1, apName2):
             print ('newD')
             triangle(newD, order)
             print ('\nTest final coefficients')
-            checkinv(newA, newB, newC, newD)
+            checkinv(newA, newB, newC, newD, order)
             newV3SciXAngle = ap2.V3SciXAngle + newV3IdlYAngle
             newV3SciYAngle = ap2.V3SciYAngle + newV3IdlYAngle
             newV3IdlYAngle = ap2.V3IdlYAngle + newV3IdlYAngle
