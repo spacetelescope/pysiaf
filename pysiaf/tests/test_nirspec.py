@@ -40,10 +40,12 @@ def test_against_test_data():
     test_data_dir = os.path.join(TEST_DATA_ROOT, instrument)
 
 
-    include_tilt = False
+    include_tilt = True
 
     if include_tilt is False:
         ta_transform_data_dir = os.path.join(test_data_dir, 'testDataSet_TA', 'testDataNoTilt')
+    else:
+        ta_transform_data_dir = os.path.join(test_data_dir, 'testDataSet_TA', 'testDataWithGWATilt')
 
     filter_list = 'CLEAR F110W F140X'.split()
     sca_list = ['SCA491', 'SCA492']
@@ -58,6 +60,11 @@ def test_against_test_data():
 
             test_data_file = os.path.join(ta_transform_data_dir, 'testDataTA_{}{}.fits'.format(sca_name, filter_name))
             test_data = Table(fits.getdata(test_data_file))
+            if include_tilt is False:
+                tilt = None
+            else:
+                test_header = fits.getheader(test_data_file)
+                tilt = (np.float(test_header['GWA_XTIL']), np.float(test_header['GWA_YTIL']))
 
             if sca_name == 'SCA491':
                 AperName = 'NRS1_FULL_OSS'
@@ -65,6 +72,8 @@ def test_against_test_data():
                 AperName = 'NRS2_FULL_OSS'
 
             aperture = siaf[AperName]
+            aperture.filter_name = filter_name
+            aperture.tilt = tilt
 
             if 0:
                 pl.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); pl.clf()
@@ -80,14 +89,11 @@ def test_against_test_data():
             test_data['pysiaf_GWAout_X'], test_data['pysiaf_GWAout_Y'] = aperture.sci_to_gwa(test_data['SCA_X'], test_data['SCA_Y'])
 
             # effect of mirror, transform from GWA detector side to GWA skyward side
-            if include_tilt is False:
-                # last equation in Secion 5.5.2
-                test_data['pysiaf_GWAin_X'] = -1 * test_data['pysiaf_GWAout_X']
-                test_data['pysiaf_GWAin_Y'] = -1 * test_data['pysiaf_GWAout_Y']
+            test_data['pysiaf_GWAin_X'], test_data['pysiaf_GWAin_Y'] = aperture.gwaout_to_gwain(test_data['pysiaf_GWAout_X'] , test_data['pysiaf_GWAout_Y'])
 
             # transform to OTE frame (XAN, YAN)
             test_data['pysiaf_XAN'], test_data['pysiaf_YAN'] = aperture.gwa_to_ote(
-                test_data['pysiaf_GWAin_X'], test_data['pysiaf_GWAin_Y'], filter_name)
+                test_data['pysiaf_GWAin_X'], test_data['pysiaf_GWAin_Y'])
 
             for axis_name in ['X', 'Y']:
                 for parameter_name in ['{}AN'.format(axis_name)]:
@@ -149,6 +155,13 @@ def test_nirspec_aperture_transforms(verbose=False):
 
         # aperture
         aperture = siaf[aper_name]
+        # offset slightly from default tilt values
+       
+        if(aperture.AperType != 'TRANSFORM'):
+            gwa_aperture = getattr(aperture, '_CLEAR_GWA_OTE')
+            rx0 = getattr(gwa_aperture, 'XSciRef')
+            ry0 = getattr(gwa_aperture, 'YSciRef')
+            aperture.tilt = (ry0 - 0.002, rx0 - 0.01)
 
         if (aperture.AperType in ['COMPOUND', 'TRANSFORM', 'SLIT']) or ('_FULL' not in aper_name):
             skip = True
@@ -189,7 +202,8 @@ def test_nirspec_slit_transformations(verbose=False):
     """
     siaf = Siaf(instrument)
 
-    threshold = 0.1
+    threshold = 0.012  # 12 mas
+    pixel_threshold = 10 * threshold
 
     labels = ['X', 'Y']
     from_frame = 'sci'
@@ -215,8 +229,8 @@ def test_nirspec_slit_transformations(verbose=False):
 
             # verify that correct reference point can be retrieved
             v2ref, v3ref = aperture.reference_point('tel')
-            assert np.abs(v2ref - aperture.V2Ref) < 0.01 * threshold
-            assert np.abs(v3ref - aperture.V3Ref) < 0.01 * threshold
+            assert np.abs(v2ref - aperture.V2Ref) < threshold
+            assert np.abs(v3ref - aperture.V3Ref) < threshold
 
             # verify that we get the same tel to sci transform whether using slit or parent
             # aperture name
@@ -228,12 +242,12 @@ def test_nirspec_slit_transformations(verbose=False):
                 print(
                 '{} {}: Error in ref. pnt. {:02.6f} pixels.'.format(siaf.instrument, aper_name,
                                                                     error))
-            assert error < threshold
+            assert error < pixel_threshold
 
             # verify that corners can be retrieved and check 1st vertice
             ixc, iyc = aperture.corners('idl')
-            assert np.abs(ixc[0] - aperture.XIdlVert1) < 0.01 * threshold
-            assert np.abs(iyc[0] - aperture.YIdlVert1) < 0.01 * threshold
+            assert np.abs(ixc[0] - aperture.XIdlVert1) < pixel_threshold
+            assert np.abs(iyc[0] - aperture.YIdlVert1) < pixel_threshold
 
             # verify that we get the same tel to det transform whether using slit or parent
             # aperture name
@@ -248,7 +262,7 @@ def test_nirspec_slit_transformations(verbose=False):
                 print(
                 '{} {}: Max error in corners {:02.6f} pixels.'.format(siaf.instrument, aper_name,
                                                                       error))
-            assert error < threshold
+            assert error < pixel_threshold
 
             #testing roundtrip error
             for to_frame in to_frames:
@@ -262,5 +276,5 @@ def test_nirspec_slit_transformations(verbose=False):
                     if verbose:
                         print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                             siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
-                    assert error < threshold
+                    assert error < pixel_threshold
 

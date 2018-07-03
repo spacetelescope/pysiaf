@@ -315,8 +315,8 @@ class Aperture(object):
         Adapted from jwxml package.
         """
 
-        if self.InstrName.lower() == 'nirspec':
-            print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
+        #if self.InstrName.lower() == 'nirspec':
+            #print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
             # raise NotImplementedError('NIRSpec were transformations not yet implemented.')
 
         if from_frame not in FRAMES or to_frame not in FRAMES:
@@ -1489,17 +1489,18 @@ class NirspecAperture(JwstAperture):
 
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
-    def __init__(self, tilt=None):
+    def __init__(self, tilt=None, filter_name='CLEAR'):
         super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
         self.tilt = tilt
+        self.filter_name = filter_name
 
 
     def corners(self, to_frame, rederive=True):
         return super(NirspecAperture, self).corners(to_frame, rederive=False)
 
 
-    def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
+    def gwa_to_ote(self, gwa_x, gwa_y):
         """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
 
         output is in degreed
@@ -1514,6 +1515,7 @@ class NirspecAperture(JwstAperture):
 
         """
 
+        filter_name = self.filter_name
         filter_list = 'CLEAR F110W F140X'.split()
         if filter_name not in filter_list:
             raise RuntimeError(
@@ -1524,7 +1526,7 @@ class NirspecAperture(JwstAperture):
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
 
 
-    def ote_to_gwa(self, ote_x, ote_y, filter_name):
+    def ote_to_gwa(self, ote_x, ote_y):
         """NIRSpec transformation from OTE frame XAN, YAN to GWA sky side
 
         Inputs must be in degrees
@@ -1539,6 +1541,7 @@ class NirspecAperture(JwstAperture):
 
         """
 
+        filter_name = self.filter_name
         filter_list = 'CLEAR F110W F140X'.split()
         if filter_name not in filter_list:
             raise RuntimeError(
@@ -1570,15 +1573,14 @@ class NirspecAperture(JwstAperture):
         else:
             gwa_xtil, gwa_ytil = self.tilt
             
-            filter_name = 'CLEAR'
-            #filter_name = self.filter_name
+            filter_name = self.filter_name
             
-            # need to pull correct coefficients from transform row
-            transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
-            rx0 = getattr(transform_aperture, 'XSciRef')
-            ry0 = getattr(transform_aperture, 'YSciRef')
-            ax = getattr(transform_aperture, 'XSciScale')
-            ay = getattr(transform_aperture, 'YSciScale')
+            # need to pull correct coefficients from GWA transform row
+            gwa_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(gwa_aperture, 'XSciRef')
+            ry0 = getattr(gwa_aperture, 'YSciRef')
+            ax = getattr(gwa_aperture, 'XSciScale')
+            ay = getattr(gwa_aperture, 'YSciScale')
            
             delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
             delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
@@ -1625,8 +1627,7 @@ class NirspecAperture(JwstAperture):
         else:
             gwa_xtil, gwa_ytil = self.tilt
 
-            filter_name = 'CLEAR'
-            #filter_name = self.filter_name
+            filter_name = self.filter_name
             
             # need to pull correct coefficients from transform row
             transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
@@ -1663,7 +1664,7 @@ class NirspecAperture(JwstAperture):
             return x_gwap, y_gwap
             
 
-    def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
+    def sci_to_idl(self, x_sci, y_sci):
         """Special implementation for NIRSpec, taking detour via tel frame.
 
         Parameters
@@ -1676,11 +1677,11 @@ class NirspecAperture(JwstAperture):
         -------
 
         """
-        v2, v3 = self.sci_to_tel(x_sci, y_sci, filter_name=filter_name)
+        v2, v3 = self.sci_to_tel(x_sci, y_sci)
         return self.tel_to_idl(v2, v3)
 
 
-    def idl_to_sci(self, x_idl, y_idl, filter_name='CLEAR'):
+    def idl_to_sci(self, x_idl, y_idl):
         """Special implementation for NIRSpec, taking detour via tel frame.
 
         Parameters
@@ -1694,7 +1695,7 @@ class NirspecAperture(JwstAperture):
 
         """
         v2, v3 = self.idl_to_tel(x_idl, y_idl)
-        x_sci, y_sci = self.tel_to_sci(v2, v3, filter_name=filter_name)
+        x_sci, y_sci = self.tel_to_sci(v2, v3)
         return x_sci, y_sci
 
 
@@ -1758,7 +1759,7 @@ class NirspecAperture(JwstAperture):
             return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
 
 
-    def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
+    def sci_to_tel(self, x_sci, y_sci):
         """Overwriting standard behaviour for NIRSpec specific transformation."""
 
         if self.AperType == 'SLIT':
@@ -1772,12 +1773,12 @@ class NirspecAperture(JwstAperture):
 
         # x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
         x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
-        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out, filter_name=filter_name)
+        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out)
 
         return an_to_tel(x_ote_deg*3600., y_ote_deg*3600.)
 
 
-    def tel_to_sci(self, x_tel, y_tel, filter_name='CLEAR'):
+    def tel_to_sci(self, x_tel, y_tel):
         """Overwriting standard behaviour for NIRSpec specific transformation.
 
         Parameters
@@ -1793,7 +1794,7 @@ class NirspecAperture(JwstAperture):
         x_an, y_an = tel_to_an(x_tel, y_tel)
         x_ote_deg, y_ote_deg = x_an/3600., y_an/3600.
 
-        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg, filter_name=filter_name)
+        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg)
         x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
         if self.AperType == 'SLIT':
             if self._parent_apertures is None:
