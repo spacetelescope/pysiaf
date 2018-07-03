@@ -1503,7 +1503,7 @@ class NirspecAperture(JwstAperture):
     def gwa_to_ote(self, gwa_x, gwa_y):
         """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
 
-        output is in degreed
+        output is in degrees
 
         Parameters
         ----------
@@ -1515,13 +1515,12 @@ class NirspecAperture(JwstAperture):
 
         """
 
-        filter_name = self.filter_name
         filter_list = 'CLEAR F110W F140X'.split()
-        if filter_name not in filter_list:
+        if self.filter_name not in filter_list:
             raise RuntimeError(
-                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
 
-        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
         X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl', include_offset=False)
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
 
@@ -1541,16 +1540,15 @@ class NirspecAperture(JwstAperture):
 
         """
 
-        filter_name = self.filter_name
         filter_list = 'CLEAR F110W F140X'.split()
-        if filter_name not in filter_list:
+        if self.filter_name not in filter_list:
             raise RuntimeError(
-                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
 
         # if self.AperType in ['FULLSCA', 'OSS']:
-        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
         # elif self.AperType in ['SLIT']:
-        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
 
         X_model, Y_model = transform_aperture.distortion_transform('idl', 'sci', include_offset=False)
         return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
@@ -1566,6 +1564,10 @@ class NirspecAperture(JwstAperture):
 
         Returns
         -------
+        
+        -------
+        Documents Giardino, Ferruit, & Alves de Oliveira (2014) ESA NTN-2014-005, and
+        Proffitt et al. (2018), JWST-STScI-005921
 
         """
         if self.tilt is None:
@@ -1620,6 +1622,10 @@ class NirspecAperture(JwstAperture):
 
         Returns
         -------
+        -------
+        
+        Equations for the reverse transform T. Keyes (private communication, but will be
+        documented in next update of JWST-STScI-005921.
 
         """
         if self.tilt is None:
