@@ -315,8 +315,8 @@ class Aperture(object):
         Adapted from jwxml package.
         """
 
-        if self.InstrName.lower() == 'nirspec':
-            print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
+        #if self.InstrName.lower() == 'nirspec':
+            #print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
             # raise NotImplementedError('NIRSpec were transformations not yet implemented.')
 
         if from_frame not in FRAMES or to_frame not in FRAMES:
@@ -1489,19 +1489,21 @@ class NirspecAperture(JwstAperture):
 
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
-    def __init__(self):
+    def __init__(self, tilt=None, filter_name='CLEAR'):
         super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
+        self.tilt = tilt
+        self.filter_name = filter_name
 
 
     def corners(self, to_frame, rederive=True):
         return super(NirspecAperture, self).corners(to_frame, rederive=False)
 
 
-    def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
+    def gwa_to_ote(self, gwa_x, gwa_y):
         """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
 
-        output is in degreed
+        output is in degrees
 
         Parameters
         ----------
@@ -1514,16 +1516,16 @@ class NirspecAperture(JwstAperture):
         """
 
         filter_list = 'CLEAR F110W F140X'.split()
-        if filter_name not in filter_list:
+        if self.filter_name not in filter_list:
             raise RuntimeError(
-                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
 
-        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
         X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl', include_offset=False)
         return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
 
 
-    def ote_to_gwa(self, ote_x, ote_y, filter_name):
+    def ote_to_gwa(self, ote_x, ote_y):
         """NIRSpec transformation from OTE frame XAN, YAN to GWA sky side
 
         Inputs must be in degrees
@@ -1539,37 +1541,77 @@ class NirspecAperture(JwstAperture):
         """
 
         filter_list = 'CLEAR F110W F140X'.split()
-        if filter_name not in filter_list:
+        if self.filter_name not in filter_list:
             raise RuntimeError(
-                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
 
         # if self.AperType in ['FULLSCA', 'OSS']:
-        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
         # elif self.AperType in ['SLIT']:
-        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
 
         X_model, Y_model = transform_aperture.distortion_transform('idl', 'sci', include_offset=False)
         return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
 
 
-    def gwain_to_gwaout(self, x_gwa, y_gwa, tilt=None):
+    def gwain_to_gwaout(self, x_gwa, y_gwa):
         """Transform from GWA detector side to GWA skyward side. Effect of mirror.
 
         Parameters
         ----------
         x_gwa
         y_gwa
-        tilt
 
         Returns
         -------
+        
+        -------
+        Documents Giardino, Ferruit, & Alves de Oliveira (2014) ESA NTN-2014-005, and
+        Proffitt et al. (2018), JWST-STScI-005921
 
         """
-        if tilt is None:
+        if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
+        else:
+            gwa_xtil, gwa_ytil = self.tilt
+            
+            filter_name = self.filter_name
+            
+            # need to pull correct coefficients from GWA transform row
+            gwa_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(gwa_aperture, 'XSciRef')
+            ry0 = getattr(gwa_aperture, 'YSciRef')
+            ax = getattr(gwa_aperture, 'XSciScale')
+            ay = getattr(gwa_aperture, 'YSciScale')
+           
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+            
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x0 = x_gwa / v
+            y0 = y_gwa / v
+            z0 = 1.0 / v
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = -1 * (x0 - delta_theta_y * np.sqrt(1.0 - x0*x0 - (y0+delta_theta_x*z0)*(y0+delta_theta_x*z0)))
+            y1 = -1 * (y0 + delta_theta_x * z0)
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to ref GWA coord system with small angle approx., 
+            # but first with an inverse rotation around the y-axis
+            x2 = x1 + delta_theta_y * z1
+            y2 = y1
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # now do an inverse rotation around the x-axis
+            x3 = x2
+            y3 = y2 - delta_theta_x * z2     
+            z3 = np.sqrt(1.0 - x3*x3 - y3*y3)
+            # compute the cosines from direction cosines
+            x_gwap = x3 / z3
+            y_gwap = y3 / z3
+ 
+            return x_gwap, y_gwap
 
 
-    def gwaout_to_gwain(self, x_gwa, y_gwa, tilt=None):
+    def gwaout_to_gwain(self, x_gwa, y_gwa):
         """Transform from GWA skyward side to GWA detector side. Effect of mirror.
 
         Parameters
@@ -1580,12 +1622,55 @@ class NirspecAperture(JwstAperture):
 
         Returns
         -------
+        -------
+        
+        Equations for the reverse transform T. Keyes (private communication, but will be
+        documented in next update of JWST-STScI-005921.
 
         """
-        if tilt is None:
+        if self.tilt is None:
             return -1*x_gwa, -1*y_gwa
+        else:
+            gwa_xtil, gwa_ytil = self.tilt
 
-    def sci_to_idl(self, x_sci, y_sci, filter_name='CLEAR'):
+            filter_name = self.filter_name
+            
+            # need to pull correct coefficients from transform row
+            transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(transform_aperture, 'XSciRef')
+            ry0 = getattr(transform_aperture, 'YSciRef')
+            ax = getattr(transform_aperture, 'XSciScale')
+            ay = getattr(transform_aperture, 'YSciScale')
+           
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+
+            # calculate direction cosines of xt, yt, (xgwa, ygwa)   
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x3 = x_gwa / v
+            y3 = y_gwa / v
+            z3 = 1.0 / v
+            # do inverse rotation around the x-axis
+            x2 = x3
+            y2 = y3 + delta_theta_x*z3
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = x2 - delta_theta_y*z2 # try changing - to +???
+            y1 = y2
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to reference GWA coordinate system (use small angle approx.),
+            # first with an inverse rotation around the y-axis:
+            x0 = -1.0*x1 + delta_theta_y * np.sqrt(1.0 - x1*x1 - (y1+delta_theta_x*z1)*(y1+delta_theta_x*z1))
+            y0 = -1.0*y1 - delta_theta_x*z1
+            z0 = np.sqrt(1.0 - x0*x0 - y0*y0)
+            
+            x_gwap = x0/z0
+            y_gwap = y0/z0
+            
+            return x_gwap, y_gwap
+            
+
+    def sci_to_idl(self, x_sci, y_sci):
         """Special implementation for NIRSpec, taking detour via tel frame.
 
         Parameters
@@ -1598,11 +1683,11 @@ class NirspecAperture(JwstAperture):
         -------
 
         """
-        v2, v3 = self.sci_to_tel(x_sci, y_sci, filter_name=filter_name)
+        v2, v3 = self.sci_to_tel(x_sci, y_sci)
         return self.tel_to_idl(v2, v3)
 
 
-    def idl_to_sci(self, x_idl, y_idl, filter_name='CLEAR'):
+    def idl_to_sci(self, x_idl, y_idl):
         """Special implementation for NIRSpec, taking detour via tel frame.
 
         Parameters
@@ -1616,7 +1701,7 @@ class NirspecAperture(JwstAperture):
 
         """
         v2, v3 = self.idl_to_tel(x_idl, y_idl)
-        x_sci, y_sci = self.tel_to_sci(v2, v3, filter_name=filter_name)
+        x_sci, y_sci = self.tel_to_sci(v2, v3)
         return x_sci, y_sci
 
 
@@ -1680,7 +1765,7 @@ class NirspecAperture(JwstAperture):
             return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
 
 
-    def sci_to_tel(self, x_sci, y_sci, filter_name='CLEAR'):
+    def sci_to_tel(self, x_sci, y_sci):
         """Overwriting standard behaviour for NIRSpec specific transformation."""
 
         if self.AperType == 'SLIT':
@@ -1694,12 +1779,12 @@ class NirspecAperture(JwstAperture):
 
         # x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
         x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
-        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out, filter_name=filter_name)
+        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out)
 
         return an_to_tel(x_ote_deg*3600., y_ote_deg*3600.)
 
 
-    def tel_to_sci(self, x_tel, y_tel, filter_name='CLEAR'):
+    def tel_to_sci(self, x_tel, y_tel):
         """Overwriting standard behaviour for NIRSpec specific transformation.
 
         Parameters
@@ -1715,7 +1800,7 @@ class NirspecAperture(JwstAperture):
         x_an, y_an = tel_to_an(x_tel, y_tel)
         x_ote_deg, y_ote_deg = x_an/3600., y_an/3600.
 
-        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg, filter_name=filter_name)
+        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg)
         x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
         if self.AperType == 'SLIT':
             if self._parent_apertures is None:
