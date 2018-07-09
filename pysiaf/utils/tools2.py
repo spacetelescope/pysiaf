@@ -125,24 +125,20 @@ def matchV2V3(apName1, apName2):
         triangle(C,5)
         print('D')
         triangle(D,5)
-        print ('\nCheck Inverses for initial polynomials')
-        checkinv(A,B,C,D, order)
 
         xPixel = poly(C, XIdl2, YIdl2, order)
         yPixel = poly(D, XIdl2, YIdl2, order)
         print ('New pixel position', xPixel, yPixel)
 
         print ('Current Sci position', ap2.XSciRef, ap2.YSciRef)
-        (dXSciRef, dYSciRef, err, steps) = invert(A, B, XIdl2, YIdl2, order)
+        #(dXSciRef, dYSciRef, err, steps) = invert(A, B, XIdl2, YIdl2, order)
         #print ('invert {:10.3e} error after {:2d} steps'.format(err,steps))
-        print ('Sci shift', dXSciRef, dYSciRef)
-        newXSciRef = ap2.XSciRef + dXSciRef
-        newYSciRef = ap2.YSciRef + dYSciRef
-        print ('New Sci position {:8.2f} {:8.2f}'.format(newXSciRef, newYSciRef))
+        #print ('Sci shift', dXSciRef, dYSciRef)
+        #print ('New Sci position {:8.2f} {:8.2f}'.format(newXSciRef, newYSciRef))
         newXDetRef = ap2.XDetRef + xSign*dXSciRef
         newYDetRef = ap2.YDetRef + ySign*dYSciRef
-        print ('V shift', V2Ref2-V2Ref1, V3Ref2-V3Ref1)
-        print('New DetRef', newXDetRef, newYDetRef)
+        #print ('V shift', V2Ref2-V2Ref1, V3Ref2-V3Ref1)
+        #print('New DetRef', newXDetRef, newYDetRef)
 
         # Use convert
         print ('VRef1', V2Ref1, V3Ref1)
@@ -151,8 +147,10 @@ def matchV2V3(apName1, apName2):
         # Convert back
         (v2c, v3c) = ap2.convert(xsc, ysc, 'sci', 'tel')
         print ('Regained values     ', v2c, v3c)
-        (v2d, v3d) = ap2.convert(newXSciRef, newYSciRef, 'sci', 'tel' )
-        print ('Regained from invert', v2d,v3d)
+        dXSciRef = xsc - xPixel
+        dYSciRef = ysc - yPixel
+        newXSciRef = ap2.XSciRef + dXSciRef
+        newYSciRef = ap2.YSciRef + dYSciRef
         AS = ShiftCoeffs(A, dXSciRef, dYSciRef, order)
         BS = ShiftCoeffs(B, dXSciRef, dYSciRef, order)
         print ('New origin', AS[0], BS[0])
