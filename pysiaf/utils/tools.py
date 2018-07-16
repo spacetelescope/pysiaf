@@ -16,6 +16,7 @@ References
 import copy
 import math
 import sys
+import pylab as pl
 
 from astropy.table import Table
 import numpy as np
@@ -61,15 +62,22 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
     # transform back the opposite direction
     x2 = poly(C,u,v,order)
     y2 = poly(D,u,v,order)
+    dx = x2-x
+    dy = y2-y
 
     if verbose:
         print ('\nInverse Check')
         for p in range(len(x)):
-            print (8*'%10.3f' %(x[p],y[p], u[p],v[p], x2[p],y2[p], x2[p]-x[p], y2[p]-y[p]))
+            print (8*'%10.3f' %(x[p],y[p], u[p],v[p], x2[p],y2[p], dx[p], dy[p]))
+
+        # Make a distortion plot
+        pl.figure()
+        pl.clf()
+        pl.axis('equal')
+        pl.grid(True)
+        pl.quiver(x, y, dx, dy)
 
     # coordinate differences
-    dx = x2-x
-    dy = y2-y
     # h = np.hypot(dx,dy)
     # rms_deviation = np.sqrt((h**2).mean())
     if verbose:
