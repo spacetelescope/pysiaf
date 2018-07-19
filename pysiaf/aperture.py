@@ -61,7 +61,7 @@ from astropy.table import Table
 import astropy.units as u
 import matplotlib
 
-from .utils import rotations
+from .utils import rotations, projection
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
@@ -158,11 +158,6 @@ def _telescope_transform_model(from_sys, to_sys, par, angle):
     # 0,0 coeff set to zero, because offsets/shifts are handled external to this function
     xc['c0_0'] = 0
     yc['c0_0'] = 0
-
-    # print("coeffs for v2v3 transform:")
-    # for key in xc:
-    #    print("{} {}".format(key,xc[key]))
-    # sys.exit()
 
     xmodel = models.Polynomial2D(1, **xc)
     ymodel = models.Polynomial2D(1, **yc)
@@ -729,9 +724,8 @@ class Aperture(object):
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                             V3Ref_arcsec=None,
                             verbose=False):
-        """
-        Generate transformation model to go to/from tel (V2/V3) from
-        undistorted angular distnaces from the reference pixel ("ideal") idl
+        """Generate transformation model to go to/from tel (V2/V3) from
+        undistorted angular distances from the reference pixel ("ideal") idl.
 
         adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
 
@@ -838,9 +832,8 @@ class Aperture(object):
         else:
             return v2, v3
 
-    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
-        """
-        Convert tel to idl
+    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', output_coordinates='tangent_plane'):
+        """Convert tel to idl.
 
         input in arcsec, output in arcsec
 
@@ -863,9 +856,53 @@ class Aperture(object):
             V2Ref_arcsec = self.V2Ref
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
-        X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
-        return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec,
-                                                                      V3 - V3Ref_arcsec)
+
+        if method == 'planar_approximation':
+            if output_coordinates!='tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
+            return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec)
+
+        elif method == 'spherical_transformation':
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+            unit_vector = rotations.unit(V2 / 3600., V3 / 3600.)
+            rotated_vector = np.dot(M, unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
+
+            if output_coordinates == 'spherical':
+                return x_idl_spherical_arcsec, y_idl_spherical_arcsec
+
+            elif output_coordinates == 'tangent_plane':
+                # Add tangent-plane projection with reference point at origin (0,0) of ideal system
+                x_idl_tangent_deg, y_idl_tangent_deg = projection.project_to_tangent_plane(
+                    x_idl_spherical_arcsec * u.arcsec.to(u.deg),
+                    y_idl_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+
+                return x_idl_tangent_deg * u.deg.to(u.arcsec), y_idl_tangent_deg * u.deg.to(u.arcsec)
+
+
+        # elif method == 'projection_and_rotate':
+        #     v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(
+        #         V2 * u.arcsec.to(u.deg), V3 * u.arcsec.to(u.deg), self.V2Ref * u.arcsec.to(u.deg), self.V3Ref * u.arcsec.to(u.deg))
+        #     if V3IdlYAngle_deg is None:
+        #         V3IdlYAngle = getattr(self, 'V3IdlYAngle')
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle)
+        #     else:
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle_deg)
+        #     parity = getattr(self, 'VIdlParity')
+        #     X_model, Y_model = _telescope_transform_model('tel', 'idl', parity, V3IdlYAngle_rad)
+        #
+        #     return X_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec)), Y_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec))
+
+
 
     def sci_to_idl(self, XSci, YSci):
         X_model, Y_model = self.distortion_transform('sci', 'idl')
@@ -1194,7 +1231,7 @@ class HstAperture(Aperture):
         pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
         return v2_arcsec, v3_arcsec, pa_deg, tvs
 
-    def closed_polygon_points(self, to_frame):
+    def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline. Used for plotting and path generation.
 
         :param to_frame:
@@ -1245,7 +1282,7 @@ class HstAperture(Aperture):
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
-    def corners(self, to_frame):
+    def corners(self, to_frame, rederive=False):
         """Return coordinates of the aperture vertices in the specified frame."""
 
         if self.a_shape == 'PICK':
