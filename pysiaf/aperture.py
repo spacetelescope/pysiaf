@@ -61,7 +61,7 @@ from astropy.table import Table
 import astropy.units as u
 import matplotlib
 
-from .utils import rotations
+from .utils import rotations, projection
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
@@ -158,11 +158,6 @@ def _telescope_transform_model(from_sys, to_sys, par, angle):
     # 0,0 coeff set to zero, because offsets/shifts are handled external to this function
     xc['c0_0'] = 0
     yc['c0_0'] = 0
-
-    # print("coeffs for v2v3 transform:")
-    # for key in xc:
-    #    print("{} {}".format(key,xc[key]))
-    # sys.exit()
 
     xmodel = models.Polynomial2D(1, **xc)
     ymodel = models.Polynomial2D(1, **yc)
@@ -729,9 +724,8 @@ class Aperture(object):
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                             V3Ref_arcsec=None,
                             verbose=False):
-        """
-        Generate transformation model to go to/from tel (V2/V3) from
-        undistorted angular distnaces from the reference pixel ("ideal") idl
+        """Generate transformation model to go to/from tel (V2/V3) from
+        undistorted angular distances from the reference pixel ("ideal") idl.
 
         adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
 
@@ -807,65 +801,167 @@ class Aperture(object):
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
-        """
-        Convert idl to  tel
+    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
+        """Convert from ideal to telescope (V2/V3) coordinate system.
 
-        input in arcsec, output in arcsec
-
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param XIdl:
-        :param YIdl:
-        :param V3IdlYAngle_deg:
-        :param V2Ref_arcsec:
-        :param V3Ref_arcsec:
-        :return:
+        Also by default, the input coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        XIdl: float
+            ideal X coordinate in arcsec
+        YIdl: float
+            ideal Y coordinate in arcsec
+        V3IdlYAngle_deg: float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        input_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing V2, V3 coordinates in arcsec
+
         """
+        if method == 'planar_approximation':
+            if input_coordinates != 'tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
+                                                        V3Ref_arcsec)
 
-        X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
-                                                    V3Ref_arcsec)
+            v2 = X_model(XIdl, YIdl)
+            v3 = Y_model(XIdl, YIdl)
 
-        v2 = X_model(XIdl, YIdl)
-        v3 = Y_model(XIdl, YIdl)
+        elif method == 'spherical_transformation':
+
+            if input_coordinates == 'spherical':
+                x_idl_spherical_deg, y_idl_spherical_deg = XIdl* u.arcsec.to(u.deg), YIdl* u.arcsec.to(u.deg)
+
+            elif input_coordinates == 'tangent_plane':
+                # deproject coordinates before applying rotations
+                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                    XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), 0.0, 0.0)
+
+
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system. These matrices transform the V-reference point to the ideal reference point
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+
+            unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
+
+            unit_vector[1] = self.VIdlParity * unit_vector[1]
+            rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            # rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            v2, v3 = rotations.v2v3(rotated_vector)
 
         if self._correct_dva:
             return self.correct_for_dva(v2, v3)
         else:
             return v2, v3
 
-    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
-        """
-        Convert tel to idl
 
-        input in arcsec, output in arcsec
+    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', output_coordinates='tangent_plane'):
+        """Convert from telescope (V2/V3) to ideal coordinate system.
 
-        This transformation involves going from global V2,V3 to local angles with respect to some
-        reference point, and possibly rotating the axes and/or flipping the parity of the X axis.
-
-
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param V2:
-        :param V3:
-        :param V3IdlYAngle_deg:
-        :return:
+        Also by default, the output coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        V2 : float
+            V2 coordinate in arcsec
+        V3 : float
+            V2 coordinate in arcsec
+        V3IdlYAngle_deg : float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        output_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing x_idl, y_idl coordinates in arcsec
+
         """
         if V2Ref_arcsec is None:
             V2Ref_arcsec = self.V2Ref
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
-        X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
-        return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec,
-                                                                      V3 - V3Ref_arcsec)
+
+        if method == 'planar_approximation':
+            if output_coordinates!='tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
+            return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec)
+
+        elif method == 'spherical_transformation':
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+            unit_vector = rotations.unit(V2 / 3600., V3 / 3600.)
+            rotated_vector = np.dot(M, unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
+
+            if output_coordinates == 'spherical':
+                return x_idl_spherical_arcsec, y_idl_spherical_arcsec
+
+            elif output_coordinates == 'tangent_plane':
+                # Add tangent-plane projection with reference point at origin (0,0) of ideal system
+                x_idl_tangent_deg, y_idl_tangent_deg = projection.project_to_tangent_plane(
+                    x_idl_spherical_arcsec * u.arcsec.to(u.deg),
+                    y_idl_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+
+                return x_idl_tangent_deg * u.deg.to(u.arcsec), y_idl_tangent_deg * u.deg.to(u.arcsec)
+
+
+        # elif method == 'projection_and_rotate':
+        #     v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(
+        #         V2 * u.arcsec.to(u.deg), V3 * u.arcsec.to(u.deg), self.V2Ref * u.arcsec.to(u.deg), self.V3Ref * u.arcsec.to(u.deg))
+        #     if V3IdlYAngle_deg is None:
+        #         V3IdlYAngle = getattr(self, 'V3IdlYAngle')
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle)
+        #     else:
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle_deg)
+        #     parity = getattr(self, 'VIdlParity')
+        #     X_model, Y_model = _telescope_transform_model('tel', 'idl', parity, V3IdlYAngle_rad)
+        #
+        #     return X_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec)), Y_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec))
+
+
 
     def sci_to_idl(self, XSci, YSci):
         X_model, Y_model = self.distortion_transform('sci', 'idl')
@@ -1194,7 +1290,7 @@ class HstAperture(Aperture):
         pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
         return v2_arcsec, v3_arcsec, pa_deg, tvs
 
-    def closed_polygon_points(self, to_frame):
+    def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline. Used for plotting and path generation.
 
         :param to_frame:
@@ -1245,7 +1341,7 @@ class HstAperture(Aperture):
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
-    def corners(self, to_frame):
+    def corners(self, to_frame, rederive=False):
         """Return coordinates of the aperture vertices in the specified frame."""
 
         if self.a_shape == 'PICK':
