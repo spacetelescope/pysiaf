@@ -801,7 +801,7 @@ class Aperture(object):
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
+    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """
         Convert idl to  tel
 
@@ -821,16 +821,48 @@ class Aperture(object):
         :return:
         """
 
-        X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
-                                                    V3Ref_arcsec)
+        if method == 'planar_approximation':
+            if input_coordinates != 'tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
+                                                        V3Ref_arcsec)
 
-        v2 = X_model(XIdl, YIdl)
-        v3 = Y_model(XIdl, YIdl)
+            v2 = X_model(XIdl, YIdl)
+            v3 = Y_model(XIdl, YIdl)
+
+        elif method == 'spherical_transformation':
+
+            if input_coordinates == 'spherical':
+                x_idl_spherical_deg, y_idl_spherical_deg = XIdl* u.arcsec.to(u.deg), YIdl* u.arcsec.to(u.deg)
+
+            elif input_coordinates == 'tangent_plane':
+                # deproject coordinates before applying rotations
+                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                    XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), 0.0, 0.0)
+
+
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system. These matrices transform the V-reference point to the ideal reference point
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+
+            unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
+
+            unit_vector[1] = self.VIdlParity * unit_vector[1]
+            rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            # rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            v2, v3 = rotations.v2v3(rotated_vector)
+
 
         if self._correct_dva:
             return self.correct_for_dva(v2, v3)
         else:
             return v2, v3
+
 
     def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', output_coordinates='tangent_plane'):
         """Convert from telescope (V2/V3) to ideal coordinate system.
