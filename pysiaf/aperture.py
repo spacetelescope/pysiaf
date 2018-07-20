@@ -833,24 +833,38 @@ class Aperture(object):
             return v2, v3
 
     def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', output_coordinates='tangent_plane'):
-        """Convert tel to idl.
+        """Convert from telescope (V2/V3) to ideal coordinate system.
 
-        input in arcsec, output in arcsec
-
-        This transformation involves going from global V2,V3 to local angles with respect to some
-        reference point, and possibly rotating the axes and/or flipping the parity of the X axis.
-
-
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param V2:
-        :param V3:
-        :param V3IdlYAngle_deg:
-        :return:
+        Also by default, the output coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        V2 : float
+            V2 coordinate in arcsec
+        V3 : float
+            V2 coordinate in arcsec
+        V3IdlYAngle_deg : float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        output_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing x_idl, y_idl coordinates in arcsec
+
         """
         if V2Ref_arcsec is None:
             V2Ref_arcsec = self.V2Ref
