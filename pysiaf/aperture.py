@@ -1363,7 +1363,7 @@ class HstAperture(Aperture):
 
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
+    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert idl to  tel
 
         input in arcsec, output in arcsec
@@ -1409,7 +1409,7 @@ class HstAperture(Aperture):
             return v[1], v[2]
         else:
             return super(HstAperture, self).idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
-                                      V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
+                                      V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec, method=method, input_coordinates=input_coordinates)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame that determine V2Ref and V3Ref via
