@@ -40,24 +40,10 @@ def test_idl_to_tel():
     """Test the transformations between ideal and telescope frames that do not use the planar approximation."""
 
     siaf = Siaf('NIRISS')
-    aperture = siaf['NIS_CEN']
 
     x_idl, y_idl = get_grid_coordinates(10, (0, 0), 100)
 
     verbose = False
-    if 0:
-        x_idl = 10
-        y_idl = 10
-
-        v2_0, v3_0 = aperture.idl_to_tel(x_idl, y_idl)
-        v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method='spherical_transformation')
-        x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method='spherical_transformation')
-
-        print('')
-        print('idl: input {} {}'.format(x_idl, y_idl))
-        print('tel: Planar   : {} {}'.format(v2_0, v3_0))
-        print('tel: Spherical: {} {}'.format(v2, v3))
-        print('idl: output {} {}'.format(x_idl_2, y_idl_2))
 
     for aper_name in siaf.apertures.keys():
         # aperture

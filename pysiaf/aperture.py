@@ -802,25 +802,39 @@ class Aperture(object):
                                                                           YSci - self.YSciRef)
 
     def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
-        """
-        Convert idl to  tel
+        """Convert from ideal to telescope (V2/V3) coordinate system.
 
-        input in arcsec, output in arcsec
-
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param XIdl:
-        :param YIdl:
-        :param V3IdlYAngle_deg:
-        :param V2Ref_arcsec:
-        :param V3Ref_arcsec:
-        :return:
+        Also by default, the input coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        XIdl: float
+            ideal X coordinate in arcsec
+        YIdl: float
+            ideal Y coordinate in arcsec
+        V3IdlYAngle_deg: float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        input_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing V2, V3 coordinates in arcsec
+
         """
-
         if method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
                 raise RuntimeError('Output has to be in tangent plane.')
@@ -856,7 +870,6 @@ class Aperture(object):
             # rotated_vector[0] = -1*rotated_vector[0]
             # rotated_vector[1] = self.VIdlParity * rotated_vector[1]
             v2, v3 = rotations.v2v3(rotated_vector)
-
 
         if self._correct_dva:
             return self.correct_for_dva(v2, v3)
