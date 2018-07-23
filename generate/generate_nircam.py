@@ -51,6 +51,8 @@ if 0:
     generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
     1/0
+if 1:
+    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
 
 
 siaf_detector_layout = iando.read.read_siaf_detector_layout()
@@ -317,9 +319,43 @@ new_siaf = pysiaf.Siaf(instrument, filenames[0])
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCAS_FULL NRCBS_FULL NRCALL_FULL'.split())
-compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCA5_FULL'.split())
+# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
 
-# compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf)
+roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, report_dir=test_dir)
+# roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name='NRCA5_FULL'.split(), report_dir=test_dir, make_plot=True)
+# roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=[s for s in aperture_name_list if 'FULL' in s], report_dir=test_dir, make_plot=False)
+
+# illustrate fix of inverse NIRCam coefficients
+if 0:
+    import pylab as pl
+
+    pl.close('all')
+
+    fig = pl.figure(figsize=(12, 6), facecolor='w', edgecolor='k')
+    pl.clf()
+    # pl.subplot(2,1,1)
+    pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='PRD dx_mean')
+    pl.plot(roundtrip_table['siaf0_dy_mean'], 'r-', label='PRD dy_mean')
+    pl.plot(roundtrip_table['siaf1_dx_mean'], 'ko--', label='fixed dx_mean')
+    pl.plot(roundtrip_table['siaf1_dy_mean'], 'go--', label='fixed dy_mean')
+    pl.title('Mean absolute difference')
+    pl.legend()
+    # pl.subplot(2,1,2)
+    # pl.plot(roundtrip_table['siaf0_dx_rms'], 'b-', label='PRD dx_mean')
+    # pl.plot(roundtrip_table['siaf0_dy_rms'], 'r-', label='PRD dy_mean')
+    # pl.plot(roundtrip_table['siaf1_dx_rms'], 'ko--', label='fixed dx_mean')
+    # pl.plot(roundtrip_table['siaf1_dy_rms'], 'go--', label='fixed dy_mean')
+    # pl.title('RMS absolute difference')
+
+    pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical')
+    pl.margins(0.2)
+    pl.subplots_adjust(bottom=0.15)
+    pl.show()
+
+    roundtrip_table[roundtrip_table['AperName']=='NRCA5_FULL'].pprint()
+
+
 
 if 0:
     ref_siaf = pysiaf.Siaf(instrument, basepath=os.path.join(pysiaf.constants._DATA_ROOT, 'JWST','PRDOPSSOC-G-012','SIAFXML/SIAFXML'))

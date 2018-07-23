@@ -41,8 +41,8 @@ def tel_to_an(v2_arcsec, v3_arcsec):
 
     return xan_arcsec, yan_arcsec
 
-def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
-    """Test whether the forward and inverse transformations are consistent.
+def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False, instrument=''):
+    """Test whether the forward and inverse idl-sci transformations are consistent.
 
     Adapted from Cox' checkinv
 
@@ -62,29 +62,47 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
     polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
     order = polynomial_degree
 
-    # regular grid of points in the full frame science frame
+    # regular grid of points (in science pixel coordinates) in the full frame science frame
     # if instrument is None:
     grid_amplitude = 2048
-    if instrument.lower() =='miri':
+    if instrument.lower() == 'miri':
         grid_amplitude = 1024
-    x, y = get_grid_coordinates(10, (0,0), grid_amplitude)
+    x, y = get_grid_coordinates(10, (grid_amplitude/2+1,grid_amplitude/2+1), grid_amplitude)
+
+    # x = np.linspace(-10, 10, 3)
+    # y = np.linspace(10, -10, 3)
+
+    x_in = x - offset_x
+    y_in = y - offset_y
 
     # transform in one direction
-    u = poly(A,x,y,order)
-    v = poly(B,x,y,order)
+    u = poly(A, x_in, y_in, order)
+    v = poly(B, x_in, y_in, order)
 
     # transform back the opposite direction
-    x2 = poly(C,u,v,order)
-    y2 = poly(D,u,v,order)
+    x_out = poly(C, u, v, order)
+    y_out = poly(D, u, v, order)
+
+    x2 = x_out + offset_x
+    y2 = y_out + offset_y
 
     if verbose:
         print ('\nInverse Check')
         for p in range(len(x)):
-            print (8*'%10.3f' %(x[p],y[p], u[p],v[p], x2[p],y2[p], x2[p]-x[p], y2[p]-y[p]))
+            print (8*'%10.3f' %(x[p], y[p], u[p], v[p], x2[p], y2[p], x2[p]-x[p], y2[p]-y[p]))
+
+
+    data = {}
+    data['x'] = x
+    data['y'] = y
+    data['x2'] = x2
+    data['y2'] = y2
 
     # coordinate differences
-    dx = x2-x
-    dy = y2-y
+    # dx = x2-x
+    # dy = y2-y
+    dx = np.abs(x2-x)
+    dy = np.abs(y2-y)
     # h = np.hypot(dx,dy)
     # rms_deviation = np.sqrt((h**2).mean())
     if verbose:
@@ -93,7 +111,7 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
 
     # compute one number that indicates if something may be wrong
     error_estimation_metric = np.abs(dx.mean()/dx.std()) + np.abs(dx.mean()/dx.std())
-    return error_estimation_metric, dx.mean(), dy.mean(), dx.std(), dy.std()
+    return error_estimation_metric, dx.mean(), dy.mean(), dx.std(), dy.std(), data
 
 
 def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=False,
@@ -136,8 +154,10 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         CS = ShiftCoeffs(C_in, V2Ref, V3Ref, 5)
         DS = ShiftCoeffs(D_in, V2Ref, V3Ref, 5)
 
-        CR = RotateCoeffs(CS, -np.deg2rad(V3Angle), 5)
-        DR = RotateCoeffs(DS, -np.deg2rad(V3Angle), 5)
+        # CR = RotateCoeffs(CS, -np.deg2rad(V3Angle), 5)
+        # DR = RotateCoeffs(DS, -np.deg2rad(V3Angle), 5)
+        CR = RotateCoeffs(CS, V3Angle, 5)
+        DR = RotateCoeffs(DS, V3Angle, 5)
 
         if oss:
             # OSS apertures
@@ -205,8 +225,10 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         AF = ShiftCoeffs(AFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
         BF = ShiftCoeffs(BFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
 
-        CS = RotateCoeffs(CR, +np.deg2rad(V3SciYAngle), polynomial_degree)
-        DS = RotateCoeffs(DR, +np.deg2rad(V3SciYAngle), polynomial_degree)
+        CS = RotateCoeffs(CR, -V3SciYAngle, polynomial_degree)
+        DS = RotateCoeffs(DR, -V3SciYAngle, polynomial_degree)
+        # CS = RotateCoeffs(CR, +np.deg2rad(V3SciYAngle), polynomial_degree)
+        # DS = RotateCoeffs(DR, +np.deg2rad(V3SciYAngle), polynomial_degree)
 
         C = ShiftCoeffs(CS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
         D = ShiftCoeffs(DS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)

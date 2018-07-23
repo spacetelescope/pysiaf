@@ -853,6 +853,8 @@ class Aperture(object):
                 # deproject coordinates before applying rotations
                 x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
                     XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), 0.0, 0.0)
+                # x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                #     XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), self.V2Ref/3600., self.V3Ref/3600.)
 
 
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
