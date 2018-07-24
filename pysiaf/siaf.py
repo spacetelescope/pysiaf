@@ -46,12 +46,15 @@ class ApertureCollection(object):
             # table of content
             self.generate_toc()
 
-    def generate_toc(self):
+    def generate_toc(self, attributes=None):
         """Generate a table of contents."""
 
         toc = Table()
         for attribute in 'InstrName AperName AperShape AperType'.split():
             toc[attribute] = [getattr(a, attribute) for key, a in self.apertures.items()]
+        if attributes is not None:
+            for attribute in list(attributes):
+                toc[attribute] = [getattr(a, attribute) for key, a in self.apertures.items()]
         self.toc = toc
 
     def __getitem__(self, key):

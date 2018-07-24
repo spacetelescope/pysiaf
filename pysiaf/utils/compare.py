@@ -288,7 +288,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     if report_dir is not None:
         # pl.close('all')
 
-        fig = pl.figure(figsize=(24, 6), facecolor='w', edgecolor='k')
+        fig = pl.figure(figsize=(30, 6), facecolor='w', edgecolor='k')
         pl.clf()
         # pl.subplot(2,1,1)
         pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='PRD dx_mean')
@@ -304,8 +304,9 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         # pl.plot(roundtrip_table['siaf1_dy_rms'], 'go--', label='fixed dy_mean')
         # pl.title('RMS absolute difference')
 
-        pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical')
-        pl.margins(0.2)
+        pl.ylabel('(pixel)')
+        pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical', fontsize=8)
+        # pl.margins(0.2)
         pl.subplots_adjust(bottom=0.15)
         # pl.show()
 
