@@ -69,9 +69,6 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
         grid_amplitude = 1024
     x, y = get_grid_coordinates(10, (grid_amplitude/2+1,grid_amplitude/2+1), grid_amplitude)
 
-    # x = np.linspace(-10, 10, 3)
-    # y = np.linspace(10, -10, 3)
-
     x_in = x - offset_x
     y_in = y - offset_y
 
@@ -98,13 +95,10 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
     data['x2'] = x2
     data['y2'] = y2
 
-    # coordinate differences
-    # dx = x2-x
-    # dy = y2-y
+    # absolute coordinate differences
     dx = np.abs(x2-x)
     dy = np.abs(y2-y)
-    # h = np.hypot(dx,dy)
-    # rms_deviation = np.sqrt((h**2).mean())
+
     if verbose:
         print(4*'%12.3e' %(dx.mean(), dy.mean(), dx.std(), dy.std()))
         # print ('RMS deviation %5.3f' %rms_deviation)
@@ -154,8 +148,6 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         CS = ShiftCoeffs(C_in, V2Ref, V3Ref, 5)
         DS = ShiftCoeffs(D_in, V2Ref, V3Ref, 5)
 
-        # CR = RotateCoeffs(CS, -np.deg2rad(V3Angle), 5)
-        # DR = RotateCoeffs(DS, -np.deg2rad(V3Angle), 5)
         CR = RotateCoeffs(CS, V3Angle, 5)
         DR = RotateCoeffs(DS, V3Angle, 5)
 
@@ -227,8 +219,6 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
 
         CS = RotateCoeffs(CR, -V3SciYAngle, polynomial_degree)
         DS = RotateCoeffs(DR, -V3SciYAngle, polynomial_degree)
-        # CS = RotateCoeffs(CR, +np.deg2rad(V3SciYAngle), polynomial_degree)
-        # DS = RotateCoeffs(DR, +np.deg2rad(V3SciYAngle), polynomial_degree)
 
         C = ShiftCoeffs(CS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
         D = ShiftCoeffs(DS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
@@ -439,8 +429,7 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
 
 def v3sciyangle_to_v3idlyangle(v3sciyangle):
-    """
-    Convert V3SciYAngle to V3IdlYAngle
+    """Convert V3SciYAngle to V3IdlYAngle.
 
     :param v3sciyangle: angle in degree
     :return: v3idlyangle: angle in deg
