@@ -225,8 +225,8 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         AF = ShiftCoeffs(AFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
         BF = ShiftCoeffs(BFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
 
-        CS = RotateCoeffs(CR, -V3SciYAngle, polynomial_degree)
-        DS = RotateCoeffs(DR, -V3SciYAngle, polynomial_degree)
+        CS = RotateCoeffs(CR, V3SciYAngle, polynomial_degree)
+        DS = RotateCoeffs(DR, V3SciYAngle, polynomial_degree)
         # CS = RotateCoeffs(CR, +np.deg2rad(V3SciYAngle), polynomial_degree)
         # DS = RotateCoeffs(DR, +np.deg2rad(V3SciYAngle), polynomial_degree)
 

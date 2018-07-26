@@ -1974,7 +1974,7 @@ def to_distortion_model(coefficients, degree=5):
 
     return models.Polynomial2D(degree, **c)
 
-def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False):
+def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False, ignore_attributes=None):
     """Compare the attributes of two apertures.
 
     Parameters
@@ -1998,6 +1998,8 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
 
     add_blank_line = False
     for attribute in attribute_list:
+        if attribute in list(ignore_attributes):
+            continue
         show = False
         reference_attr = getattr(reference_aperture, attribute)
         comparison_attr = getattr(comparison_aperture, attribute)

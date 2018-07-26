@@ -2,13 +2,13 @@
 # 
 # This file contains the wedge offsets.
 # 
-# Generated 2018-06-12T13:57:29.020 utc
+# Generated 2018-07-25T19:21:34.201 utc
 # by jsahlmann
 # 
- name , v2_offset , v3_offset
-NRCA5 ,    -2.095 ,    47.089
-NRCA4 ,    -1.388 ,    40.353
-NRCA2 ,    -0.984 ,    40.622
-NRCB5 ,     2.221 ,    47.513
-NRCB3 ,     1.586 ,    40.126
-NRCB1 ,     1.765 ,    40.173
+ name ,  v2_offset ,  v3_offset
+NRCA5 , -2.0946264 , 47.0885551
+NRCA4 , -1.3878951 ,  40.352564
+NRCA2 , -0.9842734 , 40.6223753
+NRCB5 ,  2.2208058 , 47.5127381
+NRCB3 ,   1.585703 , 40.1257254
+NRCB1 ,   1.765293 , 40.1731467

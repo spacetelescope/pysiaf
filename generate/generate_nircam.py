@@ -51,7 +51,7 @@ if 0:
     generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
     1/0
-if 1:
+if 0:
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
 
 
@@ -157,6 +157,7 @@ for AperName in aperture_name_list:
                 sca_name = aperture.AperName[0:5]
                 v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
                 v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
+                1/0
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
@@ -315,12 +316,25 @@ print('SIAFXML written in {}'.format(filenames[0]))
 ref_siaf = pysiaf.Siaf(instrument)
 new_siaf = pysiaf.Siaf(instrument, filenames[0])
 
+# ref_siaf = pysiaf.Siaf(instrument, '/itar/jwst/tel/share/SIAF_WG/Instruments/NIRCam/NIRCam_SIAF_2018-07-23.xml')
+
+
 
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCAS_FULL NRCBS_FULL NRCALL_FULL'.split())
-compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCA5_FULL'.split())
+# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCA5_FULL'.split())
+ignore_attributes = 'XIdlVert1 XIdlVert2 XIdlVert3 XIdlVert4 YIdlVert1 YIdlVert2 YIdlVert3 YIdlVert4'.split()
+from pysiaf.aperture import DISTORTION_ATTRIBUTES
+ignore_attributes += ([s for s in DISTORTION_ATTRIBUTES if 'Idl2Sci' in s])
+compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, ignore_attributes=ignore_attributes)
+# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-4, ignore_attributes=ignore_attributes, report_dir=test_dir)
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+
+
+
+
+1/0
 
 roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, report_dir=test_dir)
 # roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name='NRCA5_FULL'.split(), report_dir=test_dir, make_plot=True)
