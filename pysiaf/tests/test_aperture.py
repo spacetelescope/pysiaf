@@ -64,7 +64,7 @@ def test_idl_to_tel():
             assert np.max(y_diff) < threshold
 
 
-def test_jwst_aperture_transforms(siaf_objects, verbose=False):
+def test_jwst_aperture_transforms(siaf_objects, verbose=True):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -114,9 +114,16 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False):
                     x_out, y_out = backward_transform(*forward_transform(x_sci, y_sci))
                     x_mean_error = np.mean(np.abs(x_sci - x_out))
                     y_mean_error = np.mean(np.abs(y_sci - y_out))
+                    x_rms_error = np.std(np.abs(x_sci - x_out))
+                    y_rms_error = np.std(np.abs(y_sci - y_out))
                     for i, error in enumerate([x_mean_error, y_mean_error]):
                         if verbose:
-                            print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
+                            print('{} {}: mean absolute error in {}<->{} {}-transform is {:02.6f})'.format(
+                                siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
+                        assert error < threshold
+                    for i, error in enumerate([x_rms_error, y_rms_error]):
+                        if verbose:
+                            print('{} {}:  rms absolute error in {}<->{} {}-transform is {:02.6f})'.format(
                                 siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                         assert error < threshold
 
