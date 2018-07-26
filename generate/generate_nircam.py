@@ -45,7 +45,7 @@ if 0:
     generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
     1/0
-if 1:
+if 0:
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
 
 wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
@@ -317,10 +317,6 @@ print('SIAFXML written in {}'.format(filenames[0]))
 # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRCam_SIAF_2017-12-01.xml')))
 ref_siaf = pysiaf.Siaf(instrument)
 new_siaf = pysiaf.Siaf(instrument, filenames[0])
-
-ref_siaf = pysiaf.Siaf(instrument, '/itar/jwst/tel/share/SIAF_WG/Instruments/NIRCam/NIRCam_SIAF_2018-07-23.xml')
-
-
 
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
