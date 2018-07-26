@@ -308,7 +308,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical', fontsize=8)
         # pl.margins(0.2)
         pl.subplots_adjust(bottom=0.15)
-        # pl.show()
+        pl.show()
 
         figure_name = os.path.join(report_dir, '{}_comparison_roundtrip_error.pdf'.format(instrument))
         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)

@@ -4,7 +4,7 @@
 
 # Based on coefficients given in nircam_cold_fit.txt,
 # 
-# Generated 2018-07-25T19:21:34.201 utc
+# Generated 2018-07-26T13:35:21.437 utc
 # by jsahlmann
 # 
   AperName , siaf_index , exponent_x , exponent_y ,               Sci2IdlX ,                Sci2IdlY ,                Idl2SciX ,                Idl2SciY

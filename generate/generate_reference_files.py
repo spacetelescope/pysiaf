@@ -362,7 +362,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     """
 
     instrument = 'NIRCam'
-    overwrite_wedge_file = False
+    overwrite_wedge_file = True
     overwrite_grism_file = False
 
 

@@ -1998,7 +1998,7 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
 
     add_blank_line = False
     for attribute in attribute_list:
-        if attribute in list(ignore_attributes):
+        if (ignore_attributes is not None) and (attribute in list(ignore_attributes)):
             continue
         show = False
         reference_attr = getattr(reference_aperture, attribute)

@@ -3,7 +3,7 @@
 # This file contains the focal plane alignment parameters of master apertures calibrated
 # during FGS-SI alignment.
 # 
-# Generated 2018-07-25T19:21:34.201 utc
+# Generated 2018-07-26T13:35:21.437 utc
 # by jsahlmann
 # 
                       AperName ,          V3IdlYAngle ,        V3SciXAngle ,          V3SciYAngle ,               V2Ref ,               V3Ref

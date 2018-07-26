@@ -41,18 +41,19 @@ test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
 
+if 0:
+    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
+    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
+    1/0
+if 1:
+    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
+
 wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
 wedge_offsets = Table.read(wedge_file, format='ascii.basic', delimiter=',')
 
 grism_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_grism_parameters.txt'.format(instrument.lower()))
 grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',')
 
-if 0:
-    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
-    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
-    1/0
-if 0:
-    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
 
 
 siaf_detector_layout = iando.read.read_siaf_detector_layout()
@@ -155,9 +156,10 @@ for AperName in aperture_name_list:
 
             if dependency_type == 'wedge':
                 sca_name = aperture.AperName[0:5]
+                if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
+                    sca_name += '335R430R'
                 v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
                 v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
-                1/0
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
@@ -316,7 +318,7 @@ print('SIAFXML written in {}'.format(filenames[0]))
 ref_siaf = pysiaf.Siaf(instrument)
 new_siaf = pysiaf.Siaf(instrument, filenames[0])
 
-# ref_siaf = pysiaf.Siaf(instrument, '/itar/jwst/tel/share/SIAF_WG/Instruments/NIRCam/NIRCam_SIAF_2018-07-23.xml')
+ref_siaf = pysiaf.Siaf(instrument, '/itar/jwst/tel/share/SIAF_WG/Instruments/NIRCam/NIRCam_SIAF_2018-07-23.xml')
 
 
 
@@ -334,11 +336,12 @@ compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_toleran
 
 
 
-1/0
 
 roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, report_dir=test_dir)
 # roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name='NRCA5_FULL'.split(), report_dir=test_dir, make_plot=True)
 # roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=[s for s in aperture_name_list if 'FULL' in s], report_dir=test_dir, make_plot=False)
+
+1/0
 
 # illustrate fix of inverse NIRCam coefficients
 if 0:
