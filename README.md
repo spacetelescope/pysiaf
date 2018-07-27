@@ -99,7 +99,7 @@ For science observation planning, the focal plane geometry implemented in the la
 The STScI Telescopes Branch provides full support of pysiaf for S&OC operational systems only.
 
 ### Documentation
-The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*. 
+The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*, available at https://jwst.stsci.edu/documentation/technical-documents. 
 
 pysiaf will be documented at *TBD*.  
 

@@ -1155,6 +1155,26 @@ class Aperture(object):
         setattr(self, '_initial_attributes_validated', True)
 
 
+    def verify(self):
+        """Perform internal verification of aperture parameters
+
+        Returns
+        -------
+
+        """
+
+        # check that SciRef and DetRef coordinates refer to the same on-chip location, i.e. their
+        # sum or difference should be an integer, depending on the value of DetSciYAngle
+        if (self.XDetRef is not None):
+            sum_x = self.XDetRef + np.cos(np.deg2rad(self.DetSciYAngle)) * self.XSciRef
+            sum_y = self.YDetRef + self.YSciRef
+            if not sum_x.is_integer():
+                print('Verification WARNING: {} has non-integer sum XDetRef {} and XSciRef {} DetSciYAngle {}'.format(self.AperName, self.XDetRef, self.XSciRef, self.DetSciYAngle))
+            if not sum_y.is_integer():
+                print('Verification WARNING: {} has non-integer sum between YDetRef {} and YSciRef {} DetSciYAngle {}'.format(self.AperName, self.YDetRef, self.YSciRef, self.DetSciYAngle))
+
+
+
 
 
 def get_hst_to_jwst_coefficient_order(polynomial_degree):

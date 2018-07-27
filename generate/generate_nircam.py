@@ -23,7 +23,7 @@ from astropy.table import Table
 from pysiaf import iando
 from pysiaf.utils import tools, compare
 import generate_reference_files
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 import pysiaf.aperture
 
 instrument = 'NIRCam'
@@ -157,6 +157,7 @@ for AperName in aperture_name_list:
             if dependency_type == 'wedge':
                 sca_name = aperture.AperName[0:5]
                 if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
+                    # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += '335R430R'
                 v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
                 v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
@@ -303,11 +304,31 @@ for AperName in aperture_name_list:
 
 
 
+# fourth pass: internal verification
+for AperName in aperture_name_list:
+    aperture = aperture_dict[AperName]
+    aperture.verify()
+
+
+
 ######################################
 # SIAF content generation finished
 ######################################
 
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
+
+emulate_delivery = True
+
+if emulate_delivery:
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    if not os.path.isdir(pre_delivery_dir):
+        os.makedirs(pre_delivery_dir)
+
+    # write the SIAF files to disk
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    1/0
+
+    print('SIAFXML written in {}'.format(filenames[0]))
 
 # write the SIAFXML to disk
 filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'], label='pysiaf')
