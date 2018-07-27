@@ -27,7 +27,7 @@ from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCo
 
 
 
-def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
+def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose: object = False, instrument: object = None) -> object:
     """Test whether the forward and inverse transformations are consistent.
 
     Adapted from Cox' checkinv
@@ -49,11 +49,11 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
     order = polynomial_degree
 
     # regular grid of points in the full frame science frame
-    # if instrument is None:
-    grid_amplitude = 2048
-    if instrument.lower() =='miri':
+    if instrument is not None and instrument.lower() =='miri':
         grid_amplitude = 1024
-    x, y = get_grid_coordinates(10, (0,0), grid_amplitude)
+    else:
+        grid_amplitude = 2048
+    x, y = get_grid_coordinates(9, (0,0), grid_amplitude)
 
     # transform in one direction
     u = poly(A,x,y,order)
@@ -64,6 +64,8 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
     y2 = poly(D,u,v,order)
     dx = x2-x
     dy = y2-y
+    length = np.hypot(dx, dy)
+    maxlength = length.max()
 
     if verbose:
         print ('\nInverse Check')
@@ -72,17 +74,17 @@ def compute_roundtrip_error(A, B, C, D, verbose=False, instrument=None):
 
         # Make a distortion plot
         pl.figure()
-        pl.clf()
         pl.axis('equal')
         pl.grid(True)
         pl.quiver(x, y, dx, dy)
+        pl.xlabel('Longest arrow%6.3f pixels' %maxlength)
 
     # coordinate differences
     # h = np.hypot(dx,dy)
     # rms_deviation = np.sqrt((h**2).mean())
     if verbose:
         print(4*'%12.3e' %(dx.mean(), dy.mean(), dx.std(), dy.std()))
-        # print ('RMS deviation %5.3f' %rms_deviation)
+        #print ('RMS deviation %5.3f' %rms_deviation)
 
     # compute one number that indicates if something may be wrong
     error_estimation_metric = np.abs(dx.mean()/dx.std()) + np.abs(dx.mean()/dx.std())
