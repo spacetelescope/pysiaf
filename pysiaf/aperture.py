@@ -368,17 +368,6 @@ class Aperture(object):
         return np.array(data['v2_corrected']), np.array(data['v3_corrected'])
 
 
-
-
-        # def closed_polygon_points(self, frame):
-        #     """compute aperture polygon points for plotting and path in a particular frame"""
-        #
-        #
-        # def complement_attributes(self):
-        #
-        #     self.det_closed_polygon_points =
-        #     self.det_vertices =
-
     def corners(self, to_frame, rederive=True):
         """
         Return coordinates of the aperture outline in the specified frame.
@@ -421,6 +410,7 @@ class Aperture(object):
                              0:number_of_coefficients]
             return dict
 
+
     def path(self, to_frame):
         """
         Generate path from aperture vertices
@@ -428,6 +418,7 @@ class Aperture(object):
         """
         # self.path = \
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
+
 
     def plot(self, frame='tel', name_label=False, ax=None, title=False, units='arcsec',
              annotate=False, mark_ref=False, fill=True, fill_color='cyan', **kwargs):
@@ -532,6 +523,7 @@ class Aperture(object):
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
 
+
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
         """ Mark on the plot the various detector readout channels
 
@@ -587,6 +579,7 @@ class Aperture(object):
             )
             ax.add_patch(rect)
 
+
     def plot_detector_origin(self, frame, which='both'):
         """ Draw red and blue squares to indicate the raw detector
         readout and science frame readout, respectively
@@ -609,11 +602,13 @@ class Aperture(object):
             c1, c2 = self.convert(0, 0, 'sci', frame)
             pl.plot(c1, c2, color='blue', marker='s')
 
+
     def reference_point(self, to_frame):
         """ Return the defining reference point of the aperture."""
         return self.convert(self.V2Ref, self.V3Ref, 'tel', to_frame)
 
-    # Definition of frame transforms
+
+# Definition of frame transforms
     def detector_transform(self, from_system, to_system, angle_deg=None, parity=None):
         """
         Generate transformation model to transform between det <-> sci
@@ -649,6 +644,7 @@ class Aperture(object):
         y_model = y_model_1 | y_offset
 
         return x_model, y_model
+
 
     def distortion_transform(self, from_system, to_system, include_offset=True):
         """
@@ -744,10 +740,6 @@ class Aperture(object):
         :param verbose:
         :return:
         """
-
-        if self.InstrName == 'NIRSpec':
-            raise NotImplementedError('NIRSpec case not yet implemented.')
-
         if verbose:
             print('Using planar approximation to convert between IDL and V2V3')
 
@@ -767,10 +759,6 @@ class Aperture(object):
         else:
             V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle_deg)
 
-
-
-            # print("parity and angle are {}, {}".format(parity,v3_ideal_y_angle))
-
         X_model, Y_model = _telescope_transform_model(from_system, to_system, parity,
                                                       V3IdlYAngle_rad)
 
@@ -789,17 +777,20 @@ class Aperture(object):
 
         return X_model, Y_model
 
+
     def det_to_sci(self, XDet, YDet, *args):
         """ Detector to Science, following Section 4.1 of JWST-STScI-001550"""
         X_model, Y_model = self.detector_transform('det', 'sci', *args)
         return X_model(XDet - self.XDetRef, YDet - self.YDetRef), Y_model(XDet - self.XDetRef,
                                                                           YDet - self.YDetRef)
 
+
     def sci_to_det(self, XSci, YSci, *args):
         """ Science to Detector, following Section 4.1 of JWST-STScI-001550"""
         X_model, Y_model = self.detector_transform('sci', 'det', *args)
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
+
 
     def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert from ideal to telescope (V2/V3) coordinate system.
