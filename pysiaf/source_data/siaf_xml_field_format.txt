@@ -1,4 +1,4 @@
-# NIRSPec xml field format reference file for SIAF
+# xml field format reference file for SIAF
 # 
 # This file describes the format and order of the XML fields present in the SIAF.
 # This is compliant with the IRCD (JWST-STScI-000949) and complementary because the decimal
