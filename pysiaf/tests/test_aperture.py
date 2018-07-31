@@ -64,7 +64,7 @@ def test_idl_to_tel():
             assert np.max(y_diff) < threshold
 
 
-def test_jwst_aperture_transforms(siaf_objects, verbose=True):
+def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -85,12 +85,13 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True):
     y_sci = np.linspace(10, -10, 3)
 
     for siaf in siaf_objects:
-        if siaf.instrument in ['MIRI']:
-            threshold = 0.2
-        elif siaf.instrument in ['NIRCam']:
-            threshold = 42.
-        else:
-            threshold = 0.1
+        if threshold is None:
+            if siaf.instrument in ['MIRI']:
+                threshold = 0.2
+            elif siaf.instrument in ['NIRCam']:
+                threshold = 42.
+            else:
+                threshold = 0.1
         for aper_name in siaf.apertures.keys():
             skip = False
 
