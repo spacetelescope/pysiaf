@@ -57,12 +57,12 @@ def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose:
     x, y = get_grid_coordinates(9, (0,0), grid_amplitude)
 
     # transform in one direction
-    u = poly(A,x,y,order)
-    v = poly(B,x,y,order)
+    u = poly(A, x, y, order)
+    v = poly(B, x, y, order)
 
     # transform in the opposite direction
-    x2 = poly(C,u,v,order)
-    y2 = poly(D,u,v,order)
+    x2 = poly(C, u, v, order)
+    y2 = poly(D, u, v, order)
     dx = x2-x
     dy = y2-y
     length = np.hypot(dx, dy)
@@ -488,6 +488,7 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
 
     return comparison_table
 
+
 def match_v2v3(aperture_1, aperture_2, verbose=False):
     """ Use the V2V3 from aperture_1 in aperture_2  modifying XDetRef, YDetReƒ,
     XSciRef YSciRef to match
@@ -507,7 +508,6 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     # Detector and Science axes may go in opposite directions
     ySign = cos(radians(aperture_2.DetSciYAngle))
     xSign = aperture_2.DetSciParity * ySign
-
 
     # Need to work in aperture 2  coordinate systems
     print('Detector 1', aperture_1.AperName[:5], '  Detector 2', aperture_2.AperName[:5])
@@ -539,7 +539,6 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     print('Round trip     X       Y')
     print('     Means%8.4F %8.4f' %(xmean, ymean))
     print('      STDs%8.4f %8.4f' %(xstd, ystd))
-
 
     # Use convert
     print('\nUsing Convert')
