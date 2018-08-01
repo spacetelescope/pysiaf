@@ -18,7 +18,7 @@ import numpy as np
 
 
 def attitude(v2, v3, ra, dec, pa):
-    """This will make a rotation matrix which rotates a unit vector representing a v2,v3 position
+    """This will make a 3D rotation matrix which rotates a unit vector representing a v2,v3 position
     to a unit vector representing an RA, Dec pointing with an assigned position angle
     Described in JWST-STScI-001550, SM-12, section 6.1"""
 
@@ -157,7 +157,7 @@ def rodrigues(attitude):
 
 
 def rotate(axis, angle):
-    """Fundamental rotation matrices.
+    """Implements fundamental 3D rotation matrices.
     Rotate by angle measured in degrees, about axis 1 2 or 3"""
 
     if axis not in list(range(1, 4)):

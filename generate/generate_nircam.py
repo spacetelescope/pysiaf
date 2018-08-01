@@ -23,7 +23,7 @@ from astropy.table import Table
 from pysiaf import iando
 from pysiaf.utils import tools, compare
 import generate_reference_files
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 import pysiaf.aperture
 
 instrument = 'NIRCam'
@@ -45,7 +45,7 @@ if 0:
     generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
     1/0
-if 1:
+if 0:
     generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
 
 wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
@@ -157,6 +157,7 @@ for AperName in aperture_name_list:
             if dependency_type == 'wedge':
                 sca_name = aperture.AperName[0:5]
                 if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
+                    # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += '335R430R'
                 v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
                 v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
@@ -303,11 +304,46 @@ for AperName in aperture_name_list:
 
 
 
+# fourth pass: internal verification
+for AperName in aperture_name_list:
+    aperture = aperture_dict[AperName]
+    aperture.verify()
+
+
+
 ######################################
 # SIAF content generation finished
 ######################################
 
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
+
+emulate_delivery = True
+# emulate_delivery = False
+
+if emulate_delivery:
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    if not os.path.isdir(pre_delivery_dir):
+        os.makedirs(pre_delivery_dir)
+
+    # write the SIAF files to disk
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+
+    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+
+    # compare new SIAF with PRD version
+    ref_siaf = pysiaf.Siaf(instrument)
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+
+    1/0
+    # run some tests on the new SIAF
+    from pysiaf.tests import test_aperture
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
+    test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
+
+
+
+    1/0
+
 
 # write the SIAFXML to disk
 filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'], label='pysiaf')
@@ -317,10 +353,6 @@ print('SIAFXML written in {}'.format(filenames[0]))
 # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRCam_SIAF_2017-12-01.xml')))
 ref_siaf = pysiaf.Siaf(instrument)
 new_siaf = pysiaf.Siaf(instrument, filenames[0])
-
-ref_siaf = pysiaf.Siaf(instrument, '/itar/jwst/tel/share/SIAF_WG/Instruments/NIRCam/NIRCam_SIAF_2018-07-23.xml')
-
-
 
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
