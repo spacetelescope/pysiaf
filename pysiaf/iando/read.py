@@ -267,6 +267,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
 
     """
     from pysiaf import aperture # runtime import to avoid circular import on startup
+
     if (filename is None) and (instrument is None):
         raise ValueError('Specify either input instrument or filename')
 
@@ -310,9 +311,6 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                     except TypeError:
                         print('{}: {}'.format(node.tag, node.text))
                         raise TypeError
-
-                # except (ValueError, TypeError):
-                #     value = node.text
 
                 setattr(jwst_aperture, node.tag, value)
 

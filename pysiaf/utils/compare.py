@@ -24,14 +24,14 @@ import numpy as np
 import pylab as pl
 
 from ..constants import JWST_PRD_VERSION
-from ..iando.read import get_siaf
+from ..iando.read import get_siaf, read_siaf_aperture_definitions
 from ..siaf import Siaf
 from ..utils import tools
 from ..aperture import compare_apertures
 
 def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_siaf_input=None,
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
-                 selected_aperture_name=None, ignore_attributes=None):
+                 selected_aperture_name=None, ignore_attributes=None, tags=None):
     """Compare two SIAF files and write a difference file.
 
     Generate comparison figures showing the apertures if specified.
@@ -70,18 +70,25 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     else:
         print_file = open(report_file, 'w')
 
+    reference_tag = reference_siaf_description
+    comparison_tag = comparison_siaf.description.replace('.', '_')
+    if tags is not None:
+        reference_tag = '{}'.format(tags['reference'])
+        comparison_tag = '{}'.format(tags['comparison'])
+
     if report_dir is not None:
         report_file = os.path.join(report_dir, '{}_Diff_{}_{}.txt'.format(
-            instrument, reference_siaf_description, comparison_siaf.description.replace('.', '_')))
+            instrument, reference_tag, comparison_tag))
+        # report_file = os.path.join(report_dir, '{}_Diff_{}_{}.txt'.format(
+        #     instrument, reference_siaf_description, comparison_siaf.description.replace('.', '_')))
 
         print_file = open(report_file, 'w')
 
-
     if verbose:
         print('Reference:  {} apertures in {}'.format(
-            len(reference_siaf), reference_siaf_description), file=print_file)
+            len(reference_siaf), reference_tag), file=print_file)
         print('Comparison: {} apertures in {}\n'.format(
-            len(comparison_siaf), comparison_siaf.description), file=print_file)
+            len(comparison_siaf), comparison_tag), file=print_file)
 
 
     added_aperture_names, removed_aperture_names, modified_apertures, same_apertures = dict_compare(comparison_siaf.apertures, reference_siaf.apertures)
@@ -122,6 +129,13 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 
     print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format('Aperture', 'Attribute', 'Reference', 'Comparison', 'Difference', 'Percent'), file=print_file)
     report_table = None
+
+    # sort SIAF entries in the order of the aperture definition file
+    siaf_aperture_definitions = read_siaf_aperture_definitions(instrument)
+    aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
+    modified_apertures = OrderedDict(
+        sorted(modified_apertures.items(), key=lambda t: aperture_name_list.index(t[0])))
+
     for aperture_name in modified_apertures.keys():
         if (selected_aperture_name is not None) and (aperture_name not in selected_aperture_name):
             continue
