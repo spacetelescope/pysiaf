@@ -13,7 +13,7 @@ References
     https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
 
 """
-
+from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import os
 import sys
@@ -24,14 +24,14 @@ import numpy as np
 import pylab as pl
 
 from ..constants import JWST_PRD_VERSION
-from ..iando.read import get_siaf
+from ..iando.read import get_siaf, read_siaf_aperture_definitions
 from ..siaf import Siaf
 from ..utils import tools
-
+from ..aperture import compare_apertures
 
 def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_siaf_input=None,
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
-                 selected_aperture_name=None):
+                 selected_aperture_name=None, ignore_attributes=None, tags=None):
     """Compare two SIAF files and write a difference file.
 
     Generate comparison figures showing the apertures if specified.
@@ -70,18 +70,25 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     else:
         print_file = open(report_file, 'w')
 
+    reference_tag = reference_siaf_description
+    comparison_tag = comparison_siaf.description.replace('.', '_')
+    if tags is not None:
+        reference_tag = '{}'.format(tags['reference'])
+        comparison_tag = '{}'.format(tags['comparison'])
+
     if report_dir is not None:
         report_file = os.path.join(report_dir, '{}_Diff_{}_{}.txt'.format(
-            instrument, reference_siaf_description, comparison_siaf.description.replace('.', '_')))
+            instrument, reference_tag, comparison_tag))
+        # report_file = os.path.join(report_dir, '{}_Diff_{}_{}.txt'.format(
+        #     instrument, reference_siaf_description, comparison_siaf.description.replace('.', '_')))
 
         print_file = open(report_file, 'w')
 
-
     if verbose:
         print('Reference:  {} apertures in {}'.format(
-            len(reference_siaf), reference_siaf_description), file=print_file)
+            len(reference_siaf), reference_tag), file=print_file)
         print('Comparison: {} apertures in {}\n'.format(
-            len(comparison_siaf), comparison_siaf.description), file=print_file)
+            len(comparison_siaf), comparison_tag), file=print_file)
 
 
     added_aperture_names, removed_aperture_names, modified_apertures, same_apertures = dict_compare(comparison_siaf.apertures, reference_siaf.apertures)
@@ -122,10 +129,17 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 
     print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format('Aperture', 'Attribute', 'Reference', 'Comparison', 'Difference', 'Percent'), file=print_file)
     report_table = None
+
+    # sort SIAF entries in the order of the aperture definition file
+    siaf_aperture_definitions = read_siaf_aperture_definitions(instrument)
+    aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
+    modified_apertures = OrderedDict(
+        sorted(modified_apertures.items(), key=lambda t: aperture_name_list.index(t[0])))
+
     for aperture_name in modified_apertures.keys():
         if (selected_aperture_name is not None) and (aperture_name not in selected_aperture_name):
             continue
-        comparison_table = tools.compare_apertures(reference_siaf[aperture_name], comparison_siaf[aperture_name], fractional_tolerance=fractional_tolerance, print_file=print_file, verbose=False)
+        comparison_table = compare_apertures(reference_siaf[aperture_name], comparison_siaf[aperture_name], fractional_tolerance=fractional_tolerance, print_file=print_file, verbose=False, ignore_attributes=ignore_attributes)
         if report_table is None:
             report_table = comparison_table.copy()
         else:
@@ -159,7 +173,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance=1e-4,
                  reference_siaf_input=None,
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
-                 selected_aperture_name=None, instrument=None):
+                 selected_aperture_name=None, instrument=None, make_plot=False):
     """Compare the forward-backward roundtrip transformations of two SIAF files and write a difference file.
 
     Parameters
@@ -222,8 +236,13 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     for key in 'AperName'.split() + ['siaf{}_{}'.format(j, tag) for j in range(len(siaf_list)) for  tag in round_trip_tags]:
         roundtrip_dict[key] = []
 
-    # roundtrip_table['AperName'] =
+
+    # index 0 is for reference SIAF (defaults to PRD)
+    # index 1 is for comparison SIAF
     for AperName, aperture in reference_siaf.apertures.items():
+        # pl.close('all')
+        if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
+            continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]
             coefficients = aperture.get_polynomial_coefficients()
@@ -234,9 +253,32 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                                               coefficients['Sci2IdlY'],
                                                               coefficients['Idl2SciX'],
                                                               coefficients['Idl2SciY'],
+                                                              offset_x=aperture.XSciRef,
+                                                              offset_y=aperture.YSciRef,
+                                                              # offset_x=0.,
+                                                              # offset_y=0.,
                                                               instrument=instrument)
                 for k, tag in enumerate(round_trip_tags):
+                    # if tag != 'data':
                     roundtrip_dict['siaf{}_{}'.format(j, tag)].append(roundtrip_errors[k])
+
+                if make_plot:
+                # if AperName == 'NRCA5_FULL':
+                    # data = roundtrip_dict['siaf{}_{}'.format(j, 'data')]
+                    data = roundtrip_errors[-1]
+                    pl.figure(19, figsize=(6, 6), facecolor='w', edgecolor='k')
+                    pl.quiver(data['x'], data['y'], data['x']-data['x2'], data['y']-data['y2'], angles='xy')
+                    pl.xlabel('x_sci')
+                    pl.ylabel('y_sci')
+                    ax = pl.gca()
+                    pl.text(0.5, 0.9, 'Maximum arrow length {:3.3f} pix'.format(
+                        np.max(np.linalg.norm([data['x']-data['x2'], data['y']-data['y2']], axis=0))),
+                            horizontalalignment='center', transform=ax.transAxes)
+                    pl.title('siaf{}: {} Roundtrip error sci->idl->sci'.format(j, AperName))
+                    # pl.show()
+                    if report_dir is not None:
+                        figure_name = os.path.join(report_dir, '{}_{}_siaf{}_roundtrip_error.pdf'.format(instrument, AperName, j))
+                        pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     roundtrip_table = Table(roundtrip_dict)
     for k, tag in enumerate(round_trip_tags):
@@ -246,10 +288,44 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     bad_index = np.where(np.any(absolute_differences > 1e-9, axis=0))[0]
     # bad_index = np.where(np.abs(roundtrip_table['difference']) > 1e-9)[0]
 
-    roundtrip_table.pprint()
+
+    fstring = '{' + ','.join(["'%s':  '%%1.6f'" % (c) for c in roundtrip_table.colnames if '_mean' in c]) + '}'
+    roundtrip_table['AperName siaf0_dx_mean siaf0_dy_mean siaf1_dx_mean siaf1_dy_mean difference_dx_mean difference_dy_mean'.split()].write(print_file, format='ascii.fixed_width',
+                                             delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True, formats=eval(fstring))
+
+    # roundtrip_table.pprint()
+
     print('Apertures with significant roundtrip error differences:')
     roundtrip_table[bad_index].pprint()
     # roundtrip_table.write()
+
+    if report_dir is not None:
+        # pl.close('all')
+
+        fig = pl.figure(figsize=(30, 6), facecolor='w', edgecolor='k')
+        pl.clf()
+        # pl.subplot(2,1,1)
+        pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='PRD dx_mean')
+        pl.plot(roundtrip_table['siaf0_dy_mean'], 'r-', label='PRD dy_mean')
+        pl.plot(roundtrip_table['siaf1_dx_mean'], 'ko--', label='fixed dx_mean')
+        pl.plot(roundtrip_table['siaf1_dy_mean'], 'go--', label='fixed dy_mean')
+        pl.title('Mean absolute difference')
+        pl.legend()
+        # pl.subplot(2,1,2)
+        # pl.plot(roundtrip_table['siaf0_dx_rms'], 'b-', label='PRD dx_mean')
+        # pl.plot(roundtrip_table['siaf0_dy_rms'], 'r-', label='PRD dy_mean')
+        # pl.plot(roundtrip_table['siaf1_dx_rms'], 'ko--', label='fixed dx_mean')
+        # pl.plot(roundtrip_table['siaf1_dy_rms'], 'go--', label='fixed dy_mean')
+        # pl.title('RMS absolute difference')
+
+        pl.ylabel('(pixel)')
+        pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical', fontsize=8)
+        # pl.margins(0.2)
+        pl.subplots_adjust(bottom=0.15)
+        pl.show()
+
+        figure_name = os.path.join(report_dir, '{}_comparison_roundtrip_error.pdf'.format(instrument))
+        pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     return roundtrip_table
 

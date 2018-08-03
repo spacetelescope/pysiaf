@@ -12,24 +12,48 @@ References
 
 
 """
-
+from __future__ import absolute_import, print_function, division
 import copy
 import math
+<<<<<<< HEAD
 import sys
 import pylab as pl
 from math import sin, cos, radians, degrees, atan2
+=======
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
-from astropy.table import Table
+# from astropy.table import Table
 import numpy as np
 
-from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
+# from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
+from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
 from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, triangle
 
 
+def an_to_tel(xan_arcsec, yan_arcsec):
+    """Convert from XAN, YAN to V2, V3."""
 
+    v2_arcsec = xan_arcsec
+    v3_arcsec = -1*yan_arcsec - V3_TO_YAN_OFFSET_DEG * 3600
+
+    return v2_arcsec, v3_arcsec
+
+def tel_to_an(v2_arcsec, v3_arcsec):
+    """Convert from V2, V3 to XAN, YAN."""
+
+    xan_arcsec = v2_arcsec
+    yan_arcsec = -1*v3_arcsec - V3_TO_YAN_OFFSET_DEG * 3600
+
+    return xan_arcsec, yan_arcsec
+
+<<<<<<< HEAD
 def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose: object = False, instrument: object = None) -> object:
     """Test whether the forward and inverse transformations are consistent.
+=======
+def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False, instrument=''):
+    """Test whether the forward and inverse idl-sci transformations are consistent.
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
     Adapted from Cox' checkinv
 
@@ -49,6 +73,7 @@ def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose:
     polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
     order = polynomial_degree
 
+<<<<<<< HEAD
     # regular grid of points in the full frame science frame
     if instrument is not None and instrument.lower() =='miri':
         grid_amplitude = 1024
@@ -67,10 +92,33 @@ def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose:
     dy = y2-y
     length = np.hypot(dx, dy)
     maxlength = length.max()
+=======
+    # regular grid of points (in science pixel coordinates) in the full frame science frame
+    # if instrument is None:
+    grid_amplitude = 2048
+    if instrument.lower() == 'miri':
+        grid_amplitude = 1024
+    x, y = get_grid_coordinates(10, (grid_amplitude/2+1,grid_amplitude/2+1), grid_amplitude)
+
+    x_in = x - offset_x
+    y_in = y - offset_y
+
+    # transform in one direction
+    u = poly(A, x_in, y_in, order)
+    v = poly(B, x_in, y_in, order)
+
+    # transform back the opposite direction
+    x_out = poly(C, u, v, order)
+    y_out = poly(D, u, v, order)
+
+    x2 = x_out + offset_x
+    y2 = y_out + offset_y
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
     if verbose:
         print ('\nInverse Check')
         for p in range(len(x)):
+<<<<<<< HEAD
             print (8*'%10.3f' %(x[p],y[p], u[p],v[p], x2[p],y2[p], dx[p], dy[p]))
 
         # Make a distortion plot
@@ -83,13 +131,28 @@ def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose:
     # coordinate differences
     # h = np.hypot(dx,dy)
     # rms_deviation = np.sqrt((h**2).mean())
+=======
+            print (8*'%10.3f' %(x[p], y[p], u[p], v[p], x2[p], y2[p], x2[p]-x[p], y2[p]-y[p]))
+
+
+    data = {}
+    data['x'] = x
+    data['y'] = y
+    data['x2'] = x2
+    data['y2'] = y2
+
+    # absolute coordinate differences
+    dx = np.abs(x2-x)
+    dy = np.abs(y2-y)
+
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
     if verbose:
         print(4*'%12.3e' %(dx.mean(), dy.mean(), dx.std(), dy.std()))
         #print ('RMS deviation %5.3f' %rms_deviation)
 
     # compute one number that indicates if something may be wrong
     error_estimation_metric = np.abs(dx.mean()/dx.std()) + np.abs(dx.mean()/dx.std())
-    return error_estimation_metric, dx.mean(), dy.mean(), dx.std(), dy.std()
+    return error_estimation_metric, dx.mean(), dy.mean(), dx.std(), dy.std(), data
 
 
 def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=False,
@@ -132,8 +195,8 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         CS = ShiftCoeffs(C_in, V2Ref, V3Ref, 5)
         DS = ShiftCoeffs(D_in, V2Ref, V3Ref, 5)
 
-        CR = RotateCoeffs(CS, -np.deg2rad(V3Angle), 5)
-        DR = RotateCoeffs(DS, -np.deg2rad(V3Angle), 5)
+        CR = RotateCoeffs(CS, V3Angle, 5)
+        DR = RotateCoeffs(DS, V3Angle, 5)
 
         if oss:
             # OSS apertures
@@ -201,8 +264,8 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         AF = ShiftCoeffs(AFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
         BF = ShiftCoeffs(BFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
 
-        CS = RotateCoeffs(CR, +np.deg2rad(V3SciYAngle), polynomial_degree)
-        DS = RotateCoeffs(DR, +np.deg2rad(V3SciYAngle), polynomial_degree)
+        CS = RotateCoeffs(CR, -V3SciYAngle, polynomial_degree)
+        DS = RotateCoeffs(DR, -V3SciYAngle, polynomial_degree)
 
         C = ShiftCoeffs(CS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
         D = ShiftCoeffs(DS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
@@ -413,8 +476,7 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
 
 def v3sciyangle_to_v3idlyangle(v3sciyangle):
-    """
-    Convert V3SciYAngle to V3IdlYAngle
+    """Convert V3SciYAngle to V3IdlYAngle.
 
     :param v3sciyangle: angle in degree
     :return: v3idlyangle: angle in deg
@@ -428,6 +490,7 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
     return v3sciyangle
 
 
+<<<<<<< HEAD
 def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False):
     """Compare the attributes of two apertures.
 
@@ -619,3 +682,5 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         newV3IdlYAngle = aperture_2.V3IdlYAngle + newV3IdlYAngle
 
     return aperture_2
+=======
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3

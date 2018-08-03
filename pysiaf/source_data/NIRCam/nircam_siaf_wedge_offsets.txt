@@ -1,0 +1,15 @@
+# NIRCam detector parameter definition file for SIAF
+# 
+# This file contains the wedge offsets.
+# 
+# Generated 2018-07-26T13:35:21.437 utc
+# by jsahlmann
+# 
+         name ,  v2_offset ,  v3_offset
+        NRCA5 , -2.0946264 , 47.0885551
+NRCA5335R430R ,  -2.121191 , 47.7105149
+        NRCA4 , -1.3878951 ,  40.352564
+        NRCA2 , -0.9842734 , 40.6223753
+        NRCB5 ,  2.2208058 , 47.5127381
+        NRCB3 ,   1.585703 , 40.1257254
+        NRCB1 ,   1.765293 , 40.1731467

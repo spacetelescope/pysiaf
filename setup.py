@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import os
-import subprocess
+import pkgutil
 import sys
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.test import test as TestCommand
+from subprocess import check_call, CalledProcessError
 
 try:
     from distutils.config import ConfigParser
@@ -23,22 +24,23 @@ URL = metadata.get('url', 'https://www.stsci.edu/')
 LICENSE = metadata.get('license', 'BSD')
 
 
-if os.path.exists('relic'):
-    sys.path.insert(1, 'relic')
-    import relic.release
-else:
+if not pkgutil.find_loader('relic'):
+    relic_local = os.path.exists('relic')
+    relic_submodule = (relic_local and
+                       os.path.exists('.gitmodules') and
+                       not os.listdir('relic'))
     try:
-        import relic.release
-    except ImportError:
-        try:
-            subprocess.check_call(['git', 'clone',
-                                   'https://github.com/jhunkeler/relic.git'])
-            sys.path.insert(1, 'relic')
-            import relic.release
-        except subprocess.CalledProcessError as e:
-            print(e)
-            exit(1)
+        if relic_submodule:
+            check_call(['git', 'submodule', 'update', '--init', '--recursive'])
+        elif not relic_local:
+            check_call(['git', 'clone', 'https://github.com/spacetelescope/relic.git'])
 
+        sys.path.insert(1, 'relic')
+    except CalledProcessError as e:
+        print(e)
+        exit(1)
+
+import relic.release
 
 version = relic.release.get_info()
 relic.release.write_template(version, PACKAGENAME)
@@ -125,10 +127,10 @@ setup(
     package_data={PACKAGENAME: ['prd_data/HST/*/*.dat',
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
-                                'source_data/*/*.txt'
-                                'source_data/*.txt'
-                                'tests/test_data/*/*/*/*.fits'
-                                'tests/test_data/*/*/*/*.txt'
+                                'source_data/*/*.txt',
+                                'source_data/*.txt',
+                                'tests/test_data/*/*/*/*.fits',
+                                'tests/test_data/*/*/*/*.txt',
                                 ]},
     cmdclass={
         'test': PyTest,

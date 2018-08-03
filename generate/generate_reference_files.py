@@ -340,6 +340,7 @@ def generate_siaf_detector_reference_file(instrument):
     comments.append('by {}'.format(username))
     comments.append('')
     configuration.meta['comments'] = comments
+    print('Writing to {}'.format(configuration_file))
     configuration.write(configuration_file, format='ascii.fixed_width', delimiter=',',
                                      delimiter_pad=' ', bookend=False)
 
@@ -361,51 +362,63 @@ def generate_siaf_pre_flight_reference_files_nircam():
     """
 
     instrument = 'NIRCam'
-
-    wedge_offsets = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'wedge_offsets.txt'), format='ascii.basic', delimiter=' ', guess=False)
-
-    wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
-
-    comments = []
-    comments.append('{} detector parameter definition file for SIAF'.format(instrument))
-    comments.append('')
-    comments.append('This file contains the wedge offsets.')
-    comments.append('')
-    comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('by {}'.format(username))
-    comments.append('')
-    wedge_offsets.meta['comments'] = comments
-    wedge_offsets.write(wedge_file, format='ascii.fixed_width', delimiter=',',
-                                     delimiter_pad=' ', bookend=False)
+    overwrite_wedge_file = True
+    overwrite_grism_file = False
 
 
-    # grism parameters,     see WFSS worksheet in EXCEL SIAF
-    grism_parameters = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'grism_parameters.txt'), format='ascii.basic', delimiter='\t', guess=False)
+    # wedge definitions
+    wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+                              '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
 
-    # different sign in Y for NRCB apertures
-    factor = np.array(
-        [1. if 'NRCA' in grism_parameters['aperture_name'][i] else -1. for i in range(len(grism_parameters))])
+    if (not os.path.isfile(wedge_file) or (overwrite_wedge_file)):
 
-    for col in grism_parameters.colnames[1:]:
-        # these are Sci coordinates
-        if 'X' in col:
-            grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
-        elif 'Y' in col:
-            grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
+        wedge_offsets = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'wedge_offsets.txt'), format='ascii.basic', delimiter=' ', guess=False)
 
-    grism_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_grism_parameters.txt'.format(instrument.lower()))
+        comments = []
+        comments.append('{} detector parameter definition file for SIAF'.format(instrument))
+        comments.append('')
+        comments.append('This file contains the wedge offsets.')
+        comments.append('')
+        comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+        comments.append('by {}'.format(username))
+        comments.append('')
+        wedge_offsets.meta['comments'] = comments
+        wedge_offsets.write(wedge_file, format='ascii.fixed_width', delimiter=',',
+                                         delimiter_pad=' ', bookend=False)
 
-    comments = []
-    comments.append('{} grism parameter definition file for SIAF'.format(instrument))
-    comments.append('')
-    comments.append('This file contains the grism parameters.')
-    comments.append('')
-    comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('by {}'.format(username))
-    comments.append('')
-    grism_parameters.meta['comments'] = comments
-    grism_parameters.write(grism_file, format='ascii.fixed_width', delimiter=',',
-                                     delimiter_pad=' ', bookend=False)
+    # grism definitions
+    grism_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+                              '{}_siaf_grism_parameters.txt'.format(instrument.lower()))
+
+    if (not os.path.isfile(wedge_file) or (overwrite_grism_file)):
+        # grism parameters,     see WFSS worksheet in EXCEL SIAF
+        grism_parameters = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'grism_parameters.txt'), format='ascii.basic', delimiter='\t', guess=False)
+
+
+        # different sign in Y for NRCB apertures
+        factor = np.array(
+            [1. if 'NRCA' in grism_parameters['aperture_name'][i] else -1. for i in range(len(grism_parameters))])
+
+        for col in grism_parameters.colnames[1:]:
+            # these are Sci coordinates
+            if 'X' in col:
+                grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
+            elif 'Y' in col:
+                grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
+
+
+
+        comments = []
+        comments.append('{} grism parameter definition file for SIAF'.format(instrument))
+        comments.append('')
+        comments.append('This file contains the grism parameters.')
+        comments.append('')
+        comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+        comments.append('by {}'.format(username))
+        comments.append('')
+        grism_parameters.meta['comments'] = comments
+        grism_parameters.write(grism_file, format='ascii.fixed_width', delimiter=',',
+                                         delimiter_pad=' ', bookend=False)
 
     # Transformation parameters, mapping used to select row in cold_fit_[] file
     coldfit_name_mapping = {
@@ -486,7 +499,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
             comments.append('')
             distortion_reference_table.meta['comments'] = comments
             distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width',
-                                             delimiter=',', delimiter_pad=' ', bookend=False)
+                                             delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
 
             V3SciYAngle = betaY
             V3SciXAngle = betaX
@@ -515,7 +528,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     comments.append('')
     siaf_alignment.meta['comments'] = comments
     siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
-                                     delimiter_pad=' ', bookend=False)
+                                     delimiter_pad=' ', bookend=False, overwrite=True)
 
 
 # NIRISS reference files

@@ -22,6 +22,7 @@ References
     (https://github.com/mperrin/jwxml).
 
 """
+from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import re
 
@@ -45,12 +46,15 @@ class ApertureCollection(object):
             # table of content
             self.generate_toc()
 
-    def generate_toc(self):
+    def generate_toc(self, attributes=None):
         """Generate a table of contents."""
 
         toc = Table()
         for attribute in 'InstrName AperName AperShape AperType'.split():
             toc[attribute] = [getattr(a, attribute) for key, a in self.apertures.items()]
+        if attributes is not None:
+            for attribute in list(attributes):
+                toc[attribute] = [getattr(a, attribute) for key, a in self.apertures.items()]
         self.toc = toc
 
     def __getitem__(self, key):
@@ -174,10 +178,10 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='Tel', name_label=label, **kwargs)
+            ap.plot(color=col, frame='tel', name_label=label, **kwargs)
             if detector_channels:
                 try:
-                    ap.plot_detector_channels('Tel')
+                    ap.plot_detector_channels('tel')
                 except TypeError:
                     pass
 
@@ -249,7 +253,7 @@ class Siaf(ApertureCollection):
             Alternative method to specify a specific SIAF XML file.
 
         """
-        super().__init__()
+        super(Siaf, self).__init__()
 
         if instrument is None:
             return

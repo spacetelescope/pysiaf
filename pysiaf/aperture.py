@@ -46,18 +46,23 @@ TODO
 
 """
 
+
+from __future__ import absolute_import, print_function, division
+
 import copy
 import os
 import numpy as np
 import pylab as pl
 import subprocess
+import sys
 
 from astropy.modeling import models
 from astropy.table import Table
 import astropy.units as u
 import matplotlib
 
-from .utils import rotations
+from .utils import rotations, projection
+from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
 # global variables
@@ -153,11 +158,6 @@ def _telescope_transform_model(from_sys, to_sys, par, angle):
     # 0,0 coeff set to zero, because offsets/shifts are handled external to this function
     xc['c0_0'] = 0
     yc['c0_0'] = 0
-
-    # print("coeffs for v2v3 transform:")
-    # for key in xc:
-    #    print("{} {}".format(key,xc[key]))
-    # sys.exit()
 
     xmodel = models.Polynomial2D(1, **xc)
     ymodel = models.Polynomial2D(1, **yc)
@@ -265,13 +265,13 @@ class Aperture(object):
     def __repr__(self):
         return "<pysiaf.Aperture object AperName={0} >".format(self.AperName)
 
-    def closed_polygon_points(self, to_frame):
+    def closed_polygon_points(self, to_frame, rederive=True):
         """
         Compute closed polygon points of aperture outline. Used for plotting and path generation.
         :param to_frame:
         :return:
         """
-        points_x, points_y = self.corners(to_frame)
+        points_x, points_y = self.corners(to_frame, rederive=rederive)
         return points_x[np.append(np.arange(len(points_x)), 0)], points_y[
             np.append(np.arange(len(points_y)), 0)]
 
@@ -310,8 +310,8 @@ class Aperture(object):
         Adapted from jwxml package.
         """
 
-        if self.InstrName.lower() == 'nirspec':
-            print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
+        #if self.InstrName.lower() == 'nirspec':
+            #print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
             # raise NotImplementedError('NIRSpec were transformations not yet implemented.')
 
         if from_frame not in FRAMES or to_frame not in FRAMES:
@@ -323,6 +323,7 @@ class Aperture(object):
         else:
 
             # With valid from_frame and to_frame, this method must exist:
+            # print('calling {}_to_{}'.format(from_frame.lower(), to_frame.lower()))
             conversion_method = getattr(self,
                                         '{}_to_{}'.format(from_frame.lower(), to_frame.lower()))
 
@@ -367,18 +368,7 @@ class Aperture(object):
         return np.array(data['v2_corrected']), np.array(data['v3_corrected'])
 
 
-
-
-        # def closed_polygon_points(self, frame):
-        #     """compute aperture polygon points for plotting and path in a particular frame"""
-        #
-        #
-        # def complement_attributes(self):
-        #
-        #     self.det_closed_polygon_points =
-        #     self.det_vertices =
-
-    def corners(self, to_frame, rederive=False):
+    def corners(self, to_frame, rederive=True):
         """
         Return coordinates of the aperture outline in the specified frame.
         """
@@ -420,6 +410,7 @@ class Aperture(object):
                              0:number_of_coefficients]
             return dict
 
+
     def path(self, to_frame):
         """
         Generate path from aperture vertices
@@ -427,6 +418,7 @@ class Aperture(object):
         """
         # self.path = \
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
+
 
     def plot(self, frame='tel', name_label=False, ax=None, title=False, units='arcsec',
              annotate=False, mark_ref=False, fill=True, fill_color='cyan', **kwargs):
@@ -486,8 +478,8 @@ class Aperture(object):
                 ax.set_xlabel('X pixels ({0})'.format(frame))
                 ax.set_ylabel('Y pixels ({0})'.format(frame))
 
-        x, y = self.corners(frame)
-        x2, y2 = self.closed_polygon_points(frame)
+        x, y = self.corners(frame, rederive=False)
+        x2, y2 = self.closed_polygon_points(frame, rederive=False)
 
         if units.lower() == 'arcsec':
             scale = 1
@@ -531,6 +523,7 @@ class Aperture(object):
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
 
+
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
         """ Mark on the plot the various detector readout channels
 
@@ -555,19 +548,26 @@ class Aperture(object):
         # if self.InstrName in ['NIRISS','FGS']: # channels have wrong orientation
         #     raise NotImplementedError
 
-        # import matplotlib
-        if self.InstrName == 'MIRI':
-            npixels = 1024
-        else:
-            npixels = 2048
+        npixels = self.XDetSize
+        # if self.InstrName == 'MIRI':
+        #     npixels = 1024
+        # else:
+        #     npixels = 2048
         ch = npixels / 4
 
         ax = pl.gca()
-        pts = ((0, 0), (ch, 0), (ch, npixels), (0, npixels))
+        if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
+            pts = ((0, 0), (0, ch), (npixels, ch), (npixels, 0))
+        else:
+            pts = ((0, 0), (ch, 0), (ch, npixels), (0, npixels))
         for chan in range(4):
             plotpoints = np.zeros((4, 2))
             for i, xy in enumerate(pts):
-                plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
+                if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
+                    # plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
+                    plotpoints[i] = self.convert(xy[0], xy[1] + chan * ch, 'det', frame)
+                else:
+                    plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
             chan_alpha = alpha if chan % 2 == 1 else alpha * evenoddratio
             rect = matplotlib.patches.Polygon(
                 plotpoints,
@@ -578,6 +578,7 @@ class Aperture(object):
                 lw=0
             )
             ax.add_patch(rect)
+
 
     def plot_detector_origin(self, frame, which='both'):
         """ Draw red and blue squares to indicate the raw detector
@@ -601,11 +602,13 @@ class Aperture(object):
             c1, c2 = self.convert(0, 0, 'sci', frame)
             pl.plot(c1, c2, color='blue', marker='s')
 
+
     def reference_point(self, to_frame):
         """ Return the defining reference point of the aperture."""
         return self.convert(self.V2Ref, self.V3Ref, 'tel', to_frame)
 
-    # Definition of frame transforms
+
+# Definition of frame transforms
     def detector_transform(self, from_system, to_system, angle_deg=None, parity=None):
         """
         Generate transformation model to transform between det <-> sci
@@ -642,7 +645,8 @@ class Aperture(object):
 
         return x_model, y_model
 
-    def distortion_transform(self, from_system, to_system):
+
+    def distortion_transform(self, from_system, to_system, include_offset=True):
         """
         return transformation corresponding to aperture.
 
@@ -663,18 +667,7 @@ class Aperture(object):
         y_model : astropy.modeling.Model
             Correction in y
 
-        Examples
-        --------
-
-
-
-        HAS TO BE TESTED AGAINST COLIN's code
-
         """
-
-        # if self.InstrName.lower() == 'nirspec':
-        #     raise NotImplementedError('NIRSpec case not yet implemented.')
-
         if from_system not in ['idl', 'sci']:
             raise ValueError('Requested from_system of {} not recognized.'.format(from_system))
 
@@ -696,7 +689,6 @@ class Aperture(object):
         # the reference pixel location.
 
         # degree of distortion polynomial
-        #             degree = np.int(getattr(self, '{}Deg'.format(label)))
         degree = np.int(getattr(self, 'Sci2IdlDeg'))
 
         number_of_coefficients = np.int((degree + 1) * (degree + 2) / 2)
@@ -707,7 +699,6 @@ class Aperture(object):
             coeff_keys.sort()
             coeff = np.array([getattr(self, c) for c in coeff_keys[0:number_of_coefficients]])
             coeffs = Table(coeff, names=(coeff_keys[0:number_of_coefficients].tolist()))
-            # print(coeffs)
 
             # create the model for the transformation
             if axis == 'X':
@@ -715,9 +706,8 @@ class Aperture(object):
             elif axis == 'Y':
                 Y_model = to_distortion_model(coeffs, degree)
 
-        if label == 'Idl2Sci':
+        if (label == 'Idl2Sci') and (include_offset):
             # add constant model, see JWST-001550 Sect. 4.2
-            # print(self.XSciRef, self.YSciRef)
             X_offset = models.Shift(self.XSciRef)
             Y_offset = models.Shift(self.YSciRef)
 
@@ -726,12 +716,12 @@ class Aperture(object):
 
         return X_model, Y_model
 
+
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                             V3Ref_arcsec=None,
                             verbose=False):
-        """
-        Generate transformation model to go to/from tel (V2/V3) from
-        undistorted angular distnaces from the reference pixel ("ideal") idl
+        """Generate transformation model to go to/from tel (V2/V3) from
+        undistorted angular distances from the reference pixel ("ideal") idl.
 
         adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
 
@@ -750,10 +740,6 @@ class Aperture(object):
         :param verbose:
         :return:
         """
-
-        if self.InstrName == 'NIRSpec':
-            raise NotImplementedError('NIRSpec case not yet implemented.')
-
         if verbose:
             print('Using planar approximation to convert between IDL and V2V3')
 
@@ -773,10 +759,6 @@ class Aperture(object):
         else:
             V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle_deg)
 
-
-
-            # print("parity and angle are {}, {}".format(parity,v3_ideal_y_angle))
-
         X_model, Y_model = _telescope_transform_model(from_system, to_system, parity,
                                                       V3IdlYAngle_rad)
 
@@ -795,11 +777,13 @@ class Aperture(object):
 
         return X_model, Y_model
 
+
     def det_to_sci(self, XDet, YDet, *args):
         """ Detector to Science, following Section 4.1 of JWST-STScI-001550"""
         X_model, Y_model = self.detector_transform('det', 'sci', *args)
         return X_model(XDet - self.XDetRef, YDet - self.YDetRef), Y_model(XDet - self.XDetRef,
                                                                           YDet - self.YDetRef)
+
 
     def sci_to_det(self, XSci, YSci, *args):
         """ Science to Detector, following Section 4.1 of JWST-STScI-001550"""
@@ -807,65 +791,170 @@ class Aperture(object):
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
-        """
-        Convert idl to  tel
 
-        input in arcsec, output in arcsec
+    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
+        """Convert from ideal to telescope (V2/V3) coordinate system.
 
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param XIdl:
-        :param YIdl:
-        :param V3IdlYAngle_deg:
-        :param V2Ref_arcsec:
-        :param V3Ref_arcsec:
-        :return:
+        Also by default, the input coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        XIdl: float
+            ideal X coordinate in arcsec
+        YIdl: float
+            ideal Y coordinate in arcsec
+        V3IdlYAngle_deg: float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        input_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing V2, V3 coordinates in arcsec
+
         """
+        if method == 'planar_approximation':
+            if input_coordinates != 'tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
+                                                        V3Ref_arcsec)
 
-        X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
-                                                    V3Ref_arcsec)
+            v2 = X_model(XIdl, YIdl)
+            v3 = Y_model(XIdl, YIdl)
 
-        v2 = X_model(XIdl, YIdl)
-        v3 = Y_model(XIdl, YIdl)
+        elif method == 'spherical_transformation':
+
+            if input_coordinates == 'spherical':
+                x_idl_spherical_deg, y_idl_spherical_deg = XIdl* u.arcsec.to(u.deg), YIdl* u.arcsec.to(u.deg)
+
+            elif input_coordinates == 'tangent_plane':
+                # deproject coordinates before applying rotations
+                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                    XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), 0.0, 0.0)
+                # x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                #     XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), self.V2Ref/3600., self.V3Ref/3600.)
+
+
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system. These matrices transform the V-reference point to the ideal reference point
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+
+            unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
+
+            unit_vector[1] = self.VIdlParity * unit_vector[1]
+            rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            # rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            v2, v3 = rotations.v2v3(rotated_vector)
 
         if self._correct_dva:
             return self.correct_for_dva(v2, v3)
         else:
             return v2, v3
 
-    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
-        """
-        Convert tel to idl
 
-        input in arcsec, output in arcsec
+    def tel_to_idl(self, V2, V3, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', output_coordinates='tangent_plane'):
+        """Convert from telescope (V2/V3) to ideal coordinate system.
 
-        This transformation involves going from global V2,V3 to local angles with respect to some
-        reference point, and possibly rotating the axes and/or flipping the parity of the X axis.
-
-
-        WARNING
-        --------
-        This is an implementation of the planar approximation, which is adequate for most
+        By default, this implementats the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
 
-        :param V2:
-        :param V3:
-        :param V3IdlYAngle_deg:
-        :return:
+        Also by default, the output coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        V2 : float
+            V2 coordinate in arcsec
+        V3 : float
+            V2 coordinate in arcsec
+        V3IdlYAngle_deg : float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        output_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing x_idl, y_idl coordinates in arcsec
+
         """
         if V2Ref_arcsec is None:
             V2Ref_arcsec = self.V2Ref
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
-        X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
-        return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec,
-                                                                      V3 - V3Ref_arcsec)
+
+        if method == 'planar_approximation':
+            if output_coordinates!='tangent_plane':
+                raise RuntimeError('Output has to be in tangent plane.')
+            X_model, Y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
+            return X_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec), Y_model(V2 - V2Ref_arcsec, V3 - V3Ref_arcsec)
+
+        elif method == 'spherical_transformation':
+            # only matrix rotations, this transforms from a spherical to a spherical coordinate
+            # system
+            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
+            M2 = rotations.rotate(2, self.V3Ref / 3600.)
+            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M4 = np.dot(M2, M1)
+            M = np.dot(M3, M4)
+            unit_vector = rotations.unit(V2 / 3600., V3 / 3600.)
+            rotated_vector = np.dot(M, unit_vector)
+            # rotated_vector[0] = -1*rotated_vector[0]
+            rotated_vector[1] = self.VIdlParity * rotated_vector[1]
+            x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
+
+            if output_coordinates == 'spherical':
+                return x_idl_spherical_arcsec, y_idl_spherical_arcsec
+
+            elif output_coordinates == 'tangent_plane':
+                # Add tangent-plane projection with reference point at origin (0,0) of ideal system
+                x_idl_tangent_deg, y_idl_tangent_deg = projection.project_to_tangent_plane(
+                    x_idl_spherical_arcsec * u.arcsec.to(u.deg),
+                    y_idl_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+
+                return x_idl_tangent_deg * u.deg.to(u.arcsec), y_idl_tangent_deg * u.deg.to(u.arcsec)
+
+
+        # elif method == 'projection_and_rotate':
+        #     v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(
+        #         V2 * u.arcsec.to(u.deg), V3 * u.arcsec.to(u.deg), self.V2Ref * u.arcsec.to(u.deg), self.V3Ref * u.arcsec.to(u.deg))
+        #     if V3IdlYAngle_deg is None:
+        #         V3IdlYAngle = getattr(self, 'V3IdlYAngle')
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle)
+        #     else:
+        #         V3IdlYAngle_rad = np.deg2rad(V3IdlYAngle_deg)
+        #     parity = getattr(self, 'VIdlParity')
+        #     X_model, Y_model = _telescope_transform_model('tel', 'idl', parity, V3IdlYAngle_rad)
+        #
+        #     return X_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec)), Y_model(v2_tangent_deg*u.deg.to(u.arcsec), v3_tangent_deg*u.deg.to(u.arcsec))
+
+
 
     def sci_to_idl(self, XSci, YSci):
         X_model, Y_model = self.distortion_transform('sci', 'idl')
@@ -894,6 +983,120 @@ class Aperture(object):
 
     def tel_to_det(self, *args):
         return self.sci_to_det(*self.idl_to_sci(*self.tel_to_idl(*args)))
+
+    def raw_to_sci(self, x_raw, y_raw):
+        """Convert from raw/native coordinates to SIAF-Science coordinates (same as DMS coordinates
+        for FULLSCA apertures).
+
+        Implements the fits_generator description described the table attached to
+        https://jira.stsci.edu/browse/JWSTSIAF-25 (except for Guider 2)
+        and implemented in
+        https://github.com/STScI-JWST/jwst/blob/master/jwst/fits_generator/create_dms_data.py
+
+        see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
+
+        see also JWST-STScI-002566, JWST-STScI-003222 Rev A
+
+        """
+        if self.AperType == 'FULLSCA':
+
+            if (self.DetSciYAngle == 0) and (self.DetSciParity == -1):
+                if 'FGS' not in self.AperName:
+                    # NRCA1, NRCA3, NRCALONG, NRCB2, NRCB4
+                    # Flip in the x direction
+                    x_sci = self.XDetSize - x_raw + 1
+                    y_sci = y_raw
+                else:
+                    # FGS2, GUIDER2
+                    # rotate 90 degrees anticlockwise
+                    x_sci = -1*y_raw
+                    y_sci = x_raw
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
+                # NRCA2, NRCA4, NRCB1, NRCB3, NRCBLONG
+                # Flip in the y direction
+                x_sci = x_raw
+                y_sci = self.YDetSize - y_raw + 1
+
+            elif (self.DetSciYAngle == 0) and (self.DetSciParity == +1):
+                if 'NRS1' not in self.AperName:
+                    # MIRI
+                    # No flip or rotation
+                    x_sci = x_raw
+                    y_sci = y_raw
+                else:
+                    # NIRSpec NRS1
+                    # Flip across line x=y
+                    x_sci = y_raw
+                    y_sci = x_raw
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
+                # Flip across line x=y, then 180 degree rotation
+                # NIRISS, FGS1, NIRSpec NRS2
+                x_temp = y_raw
+                y_temp = x_raw
+                x_sci = self.XDetSize - x_temp + 1
+                y_sci = self.YDetSize - y_temp + 1
+
+            return x_sci, y_sci
+
+        else:
+            raise NotImplementedError
+
+    def sci_to_raw(self, x_sci, y_sci):
+        """Convert from Science coordinates to raw/native coordinates.
+
+        Implements the fits_generator description described the table attached to
+        https://jira.stsci.edu/browse/JWSTSIAF-25 (except for Guider 2)
+        and implemented in
+        https://github.com/STScI-JWST/jwst/blob/master/jwst/fits_generator/create_dms_data.py
+
+        see e.g. https://jwst-docs.stsci.edu/display/JDAT/Coordinate+Systems+and+Transformations
+
+        see also JWST-STScI-002566, JWST-STScI-003222 Rev A
+
+        """
+        if self.AperType == 'FULLSCA':
+
+            if (self.DetSciYAngle == 0) and (self.DetSciParity == -1):
+                if 'FGS' not in self.AperName:
+                    # Flip in the x direction
+                    x_raw = self.XDetSize - x_sci + 1
+                    y_raw = y_sci
+                else:
+                    # GUIDER2, FGS2
+                    # rotate 90 degrees clockwise
+                    x_raw = y_sci
+                    y_raw = -1*x_sci
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
+                # Flip in the y direction
+                x_raw = x_sci
+                y_raw = self.YDetSize - y_sci + 1
+
+            elif (self.DetSciYAngle == 0) and (self.DetSciParity == +1):
+                if 'NRS1' not in self.AperName:
+                    # No flip or rotation
+                    x_raw = x_sci
+                    y_raw = y_sci
+                else:
+                    # Flip across line x=y
+                    x_raw = y_sci
+                    y_raw = x_sci
+
+            elif (self.DetSciYAngle == 180) and (self.DetSciParity == +1):
+                # 180 degree rotation, then flip across line x=y
+                # e.g. NIRISS
+                x_temp = self.XDetSize - x_sci + 1
+                y_temp = self.YDetSize - y_sci + 1
+                x_raw = y_temp
+                y_raw = x_temp
+
+            return x_raw, y_raw
+
+        else:
+            raise NotImplementedError
+
 
     def validate(self):
         """
@@ -941,6 +1144,28 @@ class Aperture(object):
                 assert getattr(self, 'Idl2SciY{:d}{:d}'.format(ii, jj)) is not None
 
         setattr(self, '_initial_attributes_validated', True)
+
+
+    def verify(self):
+        """Perform internal verification of aperture parameters
+
+        Returns
+        -------
+
+        """
+
+        # check that SciRef and DetRef coordinates refer to the same on-chip location, i.e. their
+        # sum or difference should be an integer, depending on the value of DetSciYAngle
+        if (self.XDetRef is not None):
+            sum_x = self.XDetRef + np.cos(np.deg2rad(self.DetSciYAngle)) * self.XSciRef
+            sum_y = self.YDetRef + self.YSciRef
+            if not sum_x.is_integer():
+                print('Verification WARNING: {} has non-integer sum XDetRef {} and XSciRef {} DetSciYAngle {}'.format(self.AperName, self.XDetRef, self.XSciRef, self.DetSciYAngle))
+            if not sum_y.is_integer():
+                print('Verification WARNING: {} has non-integer sum between YDetRef {} and YSciRef {} DetSciYAngle {}'.format(self.AperName, self.YDetRef, self.YSciRef, self.DetSciYAngle))
+
+
+
 
 
 def get_hst_to_jwst_coefficient_order(polynomial_degree):
@@ -993,7 +1218,7 @@ class HstAperture(Aperture):
     _accepted_aperture_types = ['QUAD', 'RECT', 'CIRC']
 
     def __init__(self):
-        super().__init__()
+        super(HstAperture,self).__init__()
         self.observatory = 'HST'
 
     # dictionary that allows to set attributes using JWST naming convention
@@ -1078,7 +1303,7 @@ class HstAperture(Aperture):
         pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
         return v2_arcsec, v3_arcsec, pa_deg, tvs
 
-    def closed_polygon_points(self, to_frame):
+    def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline. Used for plotting and path generation.
 
         :param to_frame:
@@ -1129,7 +1354,7 @@ class HstAperture(Aperture):
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
-    def corners(self, to_frame):
+    def corners(self, to_frame, rederive=False):
         """Return coordinates of the aperture vertices in the specified frame."""
 
         if self.a_shape == 'PICK':
@@ -1151,7 +1376,7 @@ class HstAperture(Aperture):
 
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None):
+    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert idl to  tel
 
         input in arcsec, output in arcsec
@@ -1196,8 +1421,8 @@ class HstAperture(Aperture):
             v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
             return v[1], v[2]
         else:
-            return super().idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
-                                      V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
+            return super(HstAperture, self).idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
+                                      V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec, method=method, input_coordinates=input_coordinates)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame that determine V2Ref and V3Ref via
@@ -1299,7 +1524,7 @@ class JwstAperture(Aperture):
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
     def __init__(self):
-        super().__init__()
+        super(JwstAperture, self).__init__()
         self.observatory = 'JWST'
 
 def linear_transform_model(from_system, to_system, parity, angle_deg):
@@ -1316,10 +1541,8 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
     np.deg2rad(theta_deg))
 
     """
-    if type(angle_deg) != float:
-        raise TypeError('Angle has to be a float. It is {}'.format(angle_deg))
-    # print(angle_deg)
-
+    if type(angle_deg) not in [float, np.float64]:
+        raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(type(angle_deg), angle_deg))
 
     # check for allowed system pairs
     if (from_system == 'det' and to_system != 'sci') or (
@@ -1375,9 +1598,221 @@ class NirspecAperture(JwstAperture):
 
     _accepted_aperture_types = 'FULLSCA OSS ROI SUBARRAY SLIT COMPOUND TRANSFORM'.split()
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, tilt=None, filter_name='CLEAR'):
+        super(NirspecAperture, self).__init__()
         self.observatory = 'JWST'
+        self.tilt = tilt
+        self.filter_name = filter_name
+
+
+    def corners(self, to_frame, rederive=True):
+        return super(NirspecAperture, self).corners(to_frame, rederive=False)
+
+
+    def gwa_to_ote(self, gwa_x, gwa_y):
+        """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
+
+        output is in degrees
+
+        Parameters
+        ----------
+        gwa_x
+        gwa_y
+
+        Returns
+        -------
+
+        """
+
+        filter_list = 'CLEAR F110W F140X'.split()
+        if self.filter_name not in filter_list:
+            raise RuntimeError(
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
+
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
+        X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl', include_offset=False)
+        return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
+
+
+    def ote_to_gwa(self, ote_x, ote_y):
+        """NIRSpec transformation from OTE frame XAN, YAN to GWA sky side
+
+        Inputs must be in degrees
+
+        Parameters
+        ----------
+        ote_x
+        ote_y
+
+        Returns
+        -------
+
+        """
+
+        filter_list = 'CLEAR F110W F140X'.split()
+        if self.filter_name not in filter_list:
+            raise RuntimeError(
+                'Filter must be one of {} (it is {})'.format(filter_list, self.filter_name))
+
+        # if self.AperType in ['FULLSCA', 'OSS']:
+        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
+        # elif self.AperType in ['SLIT']:
+        #     transform_aperture = getattr(self, '_{}_GWA_OTE'.format(self.filter_name))
+
+        X_model, Y_model = transform_aperture.distortion_transform('idl', 'sci', include_offset=False)
+        return X_model(ote_x, ote_y), Y_model(ote_x, ote_y)
+
+
+    def gwain_to_gwaout(self, x_gwa, y_gwa):
+        """Transform from GWA detector side to GWA skyward side. Effect of mirror.
+
+        Parameters
+        ----------
+        x_gwa
+        y_gwa
+
+        Returns
+        -------
+        
+        -------
+        Documents Giardino, Ferruit, & Alves de Oliveira (2014) ESA NTN-2014-005, and
+        Proffitt et al. (2018), JWST-STScI-005921
+
+        """
+        if self.tilt is None:
+            return -1*x_gwa, -1*y_gwa
+        else:
+            gwa_xtil, gwa_ytil = self.tilt
+            
+            filter_name = self.filter_name
+            
+            # need to pull correct coefficients from GWA transform row
+            gwa_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(gwa_aperture, 'XSciRef')
+            ry0 = getattr(gwa_aperture, 'YSciRef')
+            ax = getattr(gwa_aperture, 'XSciScale')
+            ay = getattr(gwa_aperture, 'YSciScale')
+           
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+            
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x0 = x_gwa / v
+            y0 = y_gwa / v
+            z0 = 1.0 / v
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = -1 * (x0 - delta_theta_y * np.sqrt(1.0 - x0*x0 - (y0+delta_theta_x*z0)*(y0+delta_theta_x*z0)))
+            y1 = -1 * (y0 + delta_theta_x * z0)
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to ref GWA coord system with small angle approx., 
+            # but first with an inverse rotation around the y-axis
+            x2 = x1 + delta_theta_y * z1
+            y2 = y1
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # now do an inverse rotation around the x-axis
+            x3 = x2
+            y3 = y2 - delta_theta_x * z2     
+            z3 = np.sqrt(1.0 - x3*x3 - y3*y3)
+            # compute the cosines from direction cosines
+            x_gwap = x3 / z3
+            y_gwap = y3 / z3
+ 
+            return x_gwap, y_gwap
+
+
+    def gwaout_to_gwain(self, x_gwa, y_gwa):
+        """Transform from GWA skyward side to GWA detector side. Effect of mirror.
+
+        Parameters
+        ----------
+        x_gwa
+        y_gwa
+        tilt
+
+        Returns
+        -------
+        -------
+        
+        Equations for the reverse transform T. Keyes (private communication, but will be
+        documented in next update of JWST-STScI-005921.
+
+        """
+        if self.tilt is None:
+            return -1*x_gwa, -1*y_gwa
+        else:
+            gwa_xtil, gwa_ytil = self.tilt
+
+            filter_name = self.filter_name
+            
+            # need to pull correct coefficients from transform row
+            transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
+            rx0 = getattr(transform_aperture, 'XSciRef')
+            ry0 = getattr(transform_aperture, 'YSciRef')
+            ax = getattr(transform_aperture, 'XSciScale')
+            ay = getattr(transform_aperture, 'YSciScale')
+           
+            delta_theta_x = 0.5 * ax * (gwa_ytil - rx0) * np.pi / (180. * 3600.0)
+            delta_theta_y = 0.5 * ay * (gwa_xtil - ry0) * np.pi / (180. * 3600.0)
+
+            # calculate direction cosines of xt, yt, (xgwa, ygwa)   
+            v = np.abs(np.sqrt(1.0 + x_gwa*x_gwa + y_gwa*y_gwa))
+            x3 = x_gwa / v
+            y3 = y_gwa / v
+            z3 = 1.0 / v
+            # do inverse rotation around the x-axis
+            x2 = x3
+            y2 = y3 + delta_theta_x*z3
+            z2 = np.sqrt(1.0 - x2*x2 - y2*y2)
+            # rotate to mirror reference system with small angle approx. and perform rotation
+            x1 = x2 - delta_theta_y*z2 # try changing - to +???
+            y1 = y2
+            z1 = np.sqrt(1.0 - x1*x1 - y1*y1)
+            # rotate reflected ray back to reference GWA coordinate system (use small angle approx.),
+            # first with an inverse rotation around the y-axis:
+            x0 = -1.0*x1 + delta_theta_y * np.sqrt(1.0 - x1*x1 - (y1+delta_theta_x*z1)*(y1+delta_theta_x*z1))
+            y0 = -1.0*y1 - delta_theta_x*z1
+            z0 = np.sqrt(1.0 - x0*x0 - y0*y0)
+            
+            x_gwap = x0/z0
+            y_gwap = y0/z0
+            
+            return x_gwap, y_gwap
+            
+
+    def sci_to_idl(self, x_sci, y_sci):
+        """Special implementation for NIRSpec, taking detour via tel frame.
+
+        Parameters
+        ----------
+        x_sci
+        y_sci
+        filter_name
+
+        Returns
+        -------
+
+        """
+        v2, v3 = self.sci_to_tel(x_sci, y_sci)
+        return self.tel_to_idl(v2, v3)
+
+
+    def idl_to_sci(self, x_idl, y_idl):
+        """Special implementation for NIRSpec, taking detour via tel frame.
+
+        Parameters
+        ----------
+        x_idl
+        y_idl
+        filter_name
+
+        Returns
+        -------
+
+        """
+        v2, v3 = self.idl_to_tel(x_idl, y_idl)
+        x_sci, y_sci = self.tel_to_sci(v2, v3)
+        return x_sci, y_sci
+
 
     def sci_to_gwa(self, XSci, YSci):
         """NIRSpec transformation from Science frame to GWA detector side
@@ -1396,27 +1831,97 @@ class NirspecAperture(JwstAperture):
         return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
                                                                           YSci - self.YSciRef)
 
-    def gwa_to_ote(self, gwa_x, gwa_y, filter_name):
-        """NIRSpec transformation from GWA sky side to OTE frame XAN, YAN
+    def gwa_to_sci(self, x_gwa, y_gwa):
+        """NIRSpec transformation from GWA detector side to Science frame
 
         Parameters
         ----------
-        gwa_x
-        gwa_y
+        XSci
+        YSci
 
         Returns
         -------
 
         """
 
-        filter_list = 'CLEAR F110W F140X'.split()
-        if filter_name not in filter_list:
-            raise RuntimeError(
-                'Filter must be one of {} (it is {})'.format(filter_list, filter_name))
+        X_model, Y_model = self.distortion_transform('idl', 'sci')
+        return X_model(x_gwa, y_gwa), Y_model(x_gwa, y_gwa)
 
-        transform_aperture = getattr(self, '_{}_GWA_OTE'.format(filter_name))
-        X_model, Y_model = transform_aperture.distortion_transform('sci', 'idl')
-        return X_model(gwa_x, gwa_y), Y_model(gwa_x, gwa_y)
+
+    def det_to_sci(self, XDet, YDet, *args):
+        """Use parent aperture if SLIT."""
+        if self.AperType == 'TRANSFORM':
+            raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
+        elif self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                return self._parent_aperture.det_to_sci(XDet, YDet, *args)
+        else:
+            return super(NirspecAperture, self).det_to_sci(XDet, YDet, *args)
+
+
+    def sci_to_det(self, XSci, YSci, *args):
+        """Use parent aperture if SLIT."""
+        if self.AperType == 'TRANSFORM':
+            raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
+        elif self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                return self._parent_aperture.sci_to_det(XSci, YSci, *args)
+        else:
+            return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
+
+
+    def sci_to_tel(self, x_sci, y_sci):
+        """Overwriting standard behaviour for NIRSpec specific transformation."""
+
+        if self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                # call transformation of parent aperture
+                x_gwa_in, y_gwa_in = self._parent_aperture.sci_to_gwa(x_sci, y_sci)
+        else:
+            x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
+
+        # x_gwa_in, y_gwa_in = self.sci_to_gwa(x_sci, y_sci)
+        x_gwa_out, y_gwa_out = self.gwain_to_gwaout(x_gwa_in, y_gwa_in)
+        x_ote_deg, y_ote_deg = self.gwa_to_ote(x_gwa_out, y_gwa_out)
+
+        return an_to_tel(x_ote_deg*3600., y_ote_deg*3600.)
+
+
+    def tel_to_sci(self, x_tel, y_tel):
+        """Overwriting standard behaviour for NIRSpec specific transformation.
+
+        Parameters
+        ----------
+        x_tel : in arcsec
+        y_tel : in arcsec
+        filter_name
+
+        Returns
+        -------
+
+        """
+        x_an, y_an = tel_to_an(x_tel, y_tel)
+        x_ote_deg, y_ote_deg = x_an/3600., y_an/3600.
+
+        x_gwa_out, y_gwa_out = self.ote_to_gwa(x_ote_deg, y_ote_deg)
+        x_gwa_in, y_gwa_in = self.gwaout_to_gwain(x_gwa_out, y_gwa_out)
+        if self.AperType == 'SLIT':
+            if self._parent_apertures is None:
+                raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
+            else:
+                # call transformation of parent aperture
+                x_sci, y_sci = self._parent_aperture.gwa_to_sci(x_gwa_in, y_gwa_in)
+        else:
+            x_sci, y_sci = self.gwa_to_sci(x_gwa_in, y_gwa_in)
+
+        return x_sci, y_sci
+
 
 def points_on_arc(x0, y0, radius, phi1_deg, phi2_deg, N=100):
     """
@@ -1480,6 +1985,67 @@ def to_distortion_model(coefficients, degree=5):
 
     return models.Polynomial2D(degree, **c)
 
+def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False, ignore_attributes=None):
+    """Compare the attributes of two apertures.
+
+    Parameters
+    ----------
+    reference_aperture
+    comparison_aperture
+    absolute_tolerance
+    attribute_list
+    print_file
+    fractional_tolerance
+    verbose
+
+    Returns
+    -------
+
+    """
+    if attribute_list is None:
+        attribute_list = PRD_REQUIRED_ATTRIBUTES_ORDERED
+
+    comparison_table = Table(names=('aperture', 'attribute', 'reference', 'comparison', 'difference', 'percent'), dtype=['S50']*6)
+
+    add_blank_line = False
+    for attribute in attribute_list:
+        if (ignore_attributes is not None) and (attribute in list(ignore_attributes)):
+            continue
+        show = False
+        reference_attr = getattr(reference_aperture, attribute)
+        comparison_attr = getattr(comparison_aperture, attribute)
+        if verbose:
+            print('Comparing {} {}: {}{} {}{}'.format(reference_aperture, attribute, type(reference_attr), reference_attr, type(comparison_attr), comparison_attr))
+        if reference_attr != comparison_attr:
+            show = True
+            # if isinstance(reference_attr, float) and isinstance(comparison_attr, float):
+            if (type(reference_attr) in [int, float, np.float64]) and (type(comparison_attr) in [int, float, np.float64]):
+                difference = np.abs(comparison_attr - reference_attr)
+                fractional_difference = difference / np.max(
+                    [np.abs(reference_attr), np.abs(comparison_attr)])
+                if verbose:
+                    print('difference={}, fractional_difference={}'.format(difference, fractional_difference))
+                if (absolute_tolerance is not None) and math.isclose(reference_attr, comparison_attr, abs_tol=absolute_tolerance):
+                    show = False
+                elif fractional_difference <= fractional_tolerance:
+                    show = False
+                else:
+                    fractional_difference_percent_string = '{:.4f}'.format(fractional_difference*100.)
+                    difference_string = '{:.6f}'.format(difference)
+            else:
+                difference_string = 'N/A'
+                fractional_difference_percent_string = 'N/A'
+
+        if show:
+            add_blank_line = True
+            print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format(reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string), file=print_file)
+            # add comparison data to table
+            comparison_table.add_row([reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string])
+
+    if add_blank_line:
+        print('', file=print_file)
+
+    return comparison_table
 
 
 

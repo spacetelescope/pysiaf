@@ -1,3 +1,5 @@
+from __future__ import absolute_import, print_function, division
+
 import glob
 import os
 
@@ -11,6 +13,8 @@ _JWST_TEMPORARY_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 JWST_SOURCE_DATA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'source_data')
 
 JWST_TEMPORARY_DATA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temporary_data')
+
+JWST_DELIVERY_DATA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pre_delivery_data')
 
 # test data directory
 TEST_DATA_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests', 'test_data')

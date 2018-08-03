@@ -1,0 +1,9 @@
+# NIRCam detector parameter definition file for SIAF
+# 
+# This file contains the basic detector characteristics.
+# 
+# Generated 2018-06-12T13:57:29.020 utc
+# by jsahlmann
+# 
+InstrName , AperShape , XDetSize , YDetSize
+   NIRCAM ,      QUAD ,     2048 ,     2048
