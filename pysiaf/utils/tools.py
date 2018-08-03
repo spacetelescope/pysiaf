@@ -15,6 +15,12 @@ References
 from __future__ import absolute_import, print_function, division
 import copy
 import math
+<<<<<<< HEAD
+import sys
+import pylab as pl
+from math import sin, cos, radians, degrees, atan2
+=======
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
 # from astropy.table import Table
 import numpy as np
@@ -22,7 +28,7 @@ import numpy as np
 # from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
-from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly
+from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, triangle
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -41,8 +47,13 @@ def tel_to_an(v2_arcsec, v3_arcsec):
 
     return xan_arcsec, yan_arcsec
 
+<<<<<<< HEAD
+def compute_roundtrip_error(A: object, B: object, C: object, D: object, verbose: object = False, instrument: object = None) -> object:
+    """Test whether the forward and inverse transformations are consistent.
+=======
 def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False, instrument=''):
     """Test whether the forward and inverse idl-sci transformations are consistent.
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
     Adapted from Cox' checkinv
 
@@ -62,6 +73,26 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
     polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
     order = polynomial_degree
 
+<<<<<<< HEAD
+    # regular grid of points in the full frame science frame
+    if instrument is not None and instrument.lower() =='miri':
+        grid_amplitude = 1024
+    else:
+        grid_amplitude = 2048
+    x, y = get_grid_coordinates(9, (0,0), grid_amplitude)
+
+    # transform in one direction
+    u = poly(A, x, y, order)
+    v = poly(B, x, y, order)
+
+    # transform in the opposite direction
+    x2 = poly(C, u, v, order)
+    y2 = poly(D, u, v, order)
+    dx = x2-x
+    dy = y2-y
+    length = np.hypot(dx, dy)
+    maxlength = length.max()
+=======
     # regular grid of points (in science pixel coordinates) in the full frame science frame
     # if instrument is None:
     grid_amplitude = 2048
@@ -82,10 +113,25 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
 
     x2 = x_out + offset_x
     y2 = y_out + offset_y
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
 
     if verbose:
         print ('\nInverse Check')
         for p in range(len(x)):
+<<<<<<< HEAD
+            print (8*'%10.3f' %(x[p],y[p], u[p],v[p], x2[p],y2[p], dx[p], dy[p]))
+
+        # Make a distortion plot
+        pl.figure()
+        pl.axis('equal')
+        pl.grid(True)
+        pl.quiver(x, y, dx, dy)
+        pl.xlabel('Longest arrow%6.3f pixels' %maxlength)
+
+    # coordinate differences
+    # h = np.hypot(dx,dy)
+    # rms_deviation = np.sqrt((h**2).mean())
+=======
             print (8*'%10.3f' %(x[p], y[p], u[p], v[p], x2[p], y2[p], x2[p]-x[p], y2[p]-y[p]))
 
 
@@ -99,9 +145,10 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
     dx = np.abs(x2-x)
     dy = np.abs(y2-y)
 
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
     if verbose:
         print(4*'%12.3e' %(dx.mean(), dy.mean(), dx.std(), dy.std()))
-        # print ('RMS deviation %5.3f' %rms_deviation)
+        #print ('RMS deviation %5.3f' %rms_deviation)
 
     # compute one number that indicates if something may be wrong
     error_estimation_metric = np.abs(dx.mean()/dx.std()) + np.abs(dx.mean()/dx.std())
@@ -443,3 +490,197 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
     return v3sciyangle
 
 
+<<<<<<< HEAD
+def compare_apertures(reference_aperture, comparison_aperture, absolute_tolerance=None, attribute_list=None, print_file=sys.stdout, fractional_tolerance=1e-6, verbose=False):
+    """Compare the attributes of two apertures.
+
+    Parameters
+    ----------
+    reference_aperture
+    comparison_aperture
+    absolute_tolerance
+    attribute_list
+    print_file
+    fractional_tolerance
+    verbose
+
+    Returns
+    -------
+
+    """
+    if attribute_list is None:
+        attribute_list = PRD_REQUIRED_ATTRIBUTES_ORDERED
+
+    comparison_table = Table(names=('aperture', 'attribute', 'reference', 'comparison', 'difference', 'percent'), dtype=['S50']*6)
+
+    add_blank_line = False
+    for attribute in attribute_list:
+        show = False
+        reference_attr = getattr(reference_aperture, attribute)
+        comparison_attr = getattr(comparison_aperture, attribute)
+        if verbose:
+            print('Comparing {} {}: {}{} {}{}'.format(reference_aperture, attribute, type(reference_attr), reference_attr, type(comparison_attr), comparison_attr))
+        if reference_attr != comparison_attr:
+            show = True
+            # if isinstance(reference_attr, float) and isinstance(comparison_attr, float):
+            if (type(reference_attr) in [int, float, np.float64]) and (type(comparison_attr) in [int, float, np.float64]):
+                difference = np.abs(comparison_attr - reference_attr)
+                fractional_difference = difference / np.max(
+                    [np.abs(reference_attr), np.abs(comparison_attr)])
+                if verbose:
+                    print('difference={}, fractional_difference={}'.format(difference, fractional_difference))
+                if (absolute_tolerance is not None) and math.isclose(reference_attr, comparison_attr, abs_tol=absolute_tolerance):
+                    show = False
+                elif fractional_difference <= fractional_tolerance:
+                    show = False
+                else:
+                    fractional_difference_percent_string = '{:.4f}'.format(fractional_difference*100.)
+                    difference_string = '{:.6f}'.format(difference)
+            else:
+                difference_string = 'N/A'
+                fractional_difference_percent_string = 'N/A'
+
+        if show:
+            add_blank_line = True
+            print('{:25} {:>15} {:>21} {:>21} {:>15} {:>10}'.format(reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string), file=print_file)
+            # add comparison data to table
+            comparison_table.add_row([reference_aperture.AperName, attribute, str(reference_attr), str(comparison_attr), difference_string, fractional_difference_percent_string])
+
+    if add_blank_line:
+        print('', file=print_file)
+
+    return comparison_table
+
+
+def match_v2v3(aperture_1, aperture_2, verbose=False):
+    """ Use the V2V3 from aperture_1 in aperture_2  modifying XDetRef, YDetReƒ,
+    XSciRef YSciRef to match
+    Also shift the polynomial coefficients to reflect the new reference point origin
+    and for NIRCam recalculate angles. """
+
+    instrument = aperture_1.InstrName
+    assert (aperture_2.AperType in ['FULLSCA', 'SUBARRAY', 'ROI']), "2nd aperture must be pixel-based"
+    order = aperture_1.Sci2IdlDeg
+    V2Ref1 = aperture_1.V2Ref
+    V3Ref1 = aperture_1.V3Ref
+    newV2Ref = V2Ref1 # in all cases
+    newV3Ref = V3Ref1
+    print('Current Vref', aperture_2.V2Ref, aperture_2.V3Ref)
+    print('Shift to    ', V2Ref1, V3Ref1)
+
+    # Detector and Science axes may go in opposite directions
+    ySign = cos(radians(aperture_2.DetSciYAngle))
+    xSign = aperture_2.DetSciParity * ySign
+
+    # Need to work in aperture 2  coordinate systems
+    print('Detector 1', aperture_1.AperName[:5], '  Detector 2', aperture_2.AperName[:5])
+    V2Ref2 = aperture_2.V2Ref
+    V3Ref2 = aperture_2.V3Ref
+    theta0 = aperture_2.V3IdlYAngle
+    print('Initial VRef', V2Ref2, V3Ref2)
+    print('Initial theta', theta0)
+    theta = radians(theta0)
+
+    coefficients = aperture_2.get_polynomial_coefficients()
+    A = coefficients['Sci2IdlX']
+    B = coefficients['Sci2IdlY']
+    C = coefficients['Idl2SciX']
+    D = coefficients['Idl2SciY']
+
+    if verbose:
+        print('\nA')
+        triangle(A, order)
+        print('B')
+        triangle(B, order)
+        print('C')
+        triangle(C, order)
+        print('D')
+        triangle(D, order)
+
+    (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(A, B, C, D,
+                                                                     verbose=True, instrument = instrument)
+    print('Round trip     X       Y')
+    print('     Means%8.4F %8.4f' %(xmean, ymean))
+    print('      STDs%8.4f %8.4f' %(xstd, ystd))
+
+    # Use convert
+    print('\nUsing Convert')
+    print('VRef1', V2Ref1, V3Ref1)
+    (newXSci, newYSci) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'sci')
+    (newXDet, newYDet) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'det')
+    print('Sci', newXSci, newYSci)
+    print('Det', newXDet, newYDet)
+    (newXIdl, newYIdl) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'idl')
+    print('Idl', newXIdl, newYIdl)
+
+    # Convert back
+    (v2c, v3c) = aperture_2.convert(newXSci, newYSci, 'sci', 'tel')
+    print('Regained values     ', v2c, v3c)
+
+    dXSciRef = newXSci - aperture_2.XSciRef
+    dYSciRef = newYSci - aperture_2.YSciRef
+    print('Shift pixel origin by', dXSciRef, dYSciRef)
+    AS = ShiftCoeffs(A, dXSciRef, dYSciRef, order)
+    BS = ShiftCoeffs(B, dXSciRef, dYSciRef, order)
+    print('New Ideal origin', newXIdl, newYIdl)
+    CS = ShiftCoeffs(C, AS[0], BS[0], order)
+    DS = ShiftCoeffs(D, AS[0], BS[0], order)
+    AS[0] = 0.0
+    BS[0] = 0.0
+    CS[0] = 0.0
+    DS[0] = 0.0
+    if verbose:
+        print('\nShifted Polynomials')
+        print('AS')
+        triangle(AS, order)
+        print('BS')
+        triangle(BS, order)
+        print('CS')
+        triangle(CS, order)
+        print('DS')
+        triangle(DS, order)
+        print('\nABCDS')
+
+    (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(AS, BS, CS, DS,
+                                                                     verbose=True, instrument=instrument)
+    if verbose:
+        print('Round trip     X       Y')
+        print('     Means%8.4F %8.4f' %(xmean, ymean))
+        print('      STDs%8.4f %8.4f' %(xstd, ystd))
+
+    # For NIRCam only, adjust angles
+    if instrument == 'NIRCAM':
+        newV3IdlYAngle = degrees(atan2(-AS[2], BS[2])) # Everything rotates by this amount
+        if abs(newV3IdlYAngle) > 90.0: newV3IdlYAngle = newV3IdlYAngle - copysign(180, newV3IdlYAngle)
+        print('New angle', newV3IdlYAngle)
+        newA = AS*cos(radians(newV3IdlYAngle)) + BS*sin(radians(newV3IdlYAngle))
+        newB = -AS*sin(radians(newV3IdlYAngle)) + BS*cos(radians(newV3IdlYAngle))
+        if verbose:
+            print('\nnewA')
+            triangle(newA, order)
+            print('newB')
+            triangle(newB, order)
+
+        newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
+        newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
+        print('Rotate Coeffs by newV3IdlYAngle')
+        if verbose:
+            print('newC')
+            triangle(newC, order)
+            print('newD')
+            triangle(newD, order)
+
+        (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(AS, BS, CS, DS,
+                                                                         verbose=True, instrument=instrument)
+        print('Final coefficients')
+        print('Round trip     X       Y')
+        print('     Means%8.4F %8.4f' % (xmean, ymean))
+        print('      STDs%8.4f %8.4f' % (xstd, ystd))
+
+        newV3IdlXAngle = aperture_2.V3SciXAngle + newV3IdlYAngle
+        newV3SciYAngle = aperture_2.V3SciYAngle + newV3IdlYAngle
+        newV3IdlYAngle = aperture_2.V3IdlYAngle + newV3IdlYAngle
+
+    return aperture_2
+=======
+>>>>>>> bf40d17a6056c2a50d0671625ff19bcdbaff08b3
