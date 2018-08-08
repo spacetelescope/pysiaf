@@ -15,14 +15,14 @@ References
 from __future__ import absolute_import, print_function, division
 import copy
 import math
-
+from math import sin, cos, atan2, degrees, radians
 # from astropy.table import Table
 import numpy as np
 
 # from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
-from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly
+from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, triangle
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -488,7 +488,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         print('D')
         triangle(D, order)
 
-    (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(A, B, C, D,
+    (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(A, B, C, D,
                                                                      verbose=True, instrument = instrument)
     print('Round trip     X       Y')
     print('     Means%8.4F %8.4f' %(xmean, ymean))
@@ -532,7 +532,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         triangle(DS, order)
         print('\nABCDS')
 
-    (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(AS, BS, CS, DS,
+    (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(AS, BS, CS, DS,
                                                                      verbose=True, instrument=instrument)
     if verbose:
         print('Round trip     X       Y')
@@ -566,7 +566,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
             print('newD')
             triangle(newD, order)
 
-        (stat, xmean, ymean, xstd, ystd) = compute_roundtrip_error(newA, newB, newC, newD,
+        (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(newA, newB, newC, newD,
                                                                          verbose=True, instrument=instrument)
         print('Final coefficients')
         print('Round trip     X       Y')
