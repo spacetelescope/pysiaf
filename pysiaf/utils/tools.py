@@ -456,20 +456,22 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     V3Ref1 = aperture_1.V3Ref
     newV2Ref = V2Ref1
     newV3Ref = V3Ref1
-    print('Current Vref', aperture_2.V2Ref, aperture_2.V3Ref)
-    print('Shift to    ', V2Ref1, V3Ref1)
-
-    # Detector and Science axes may go in opposite directions
-    ySign = cos(radians(aperture_2.DetSciYAngle))
-    xSign = aperture_2.DetSciParity * ySign
+    if verbose:
+        print('Current Vref', aperture_2.V2Ref, aperture_2.V3Ref)
+        print('Shift to    ', V2Ref1, V3Ref1)
 
     # Need to work in aperture 2  coordinate systems
-    print('Detector 1', aperture_1.AperName[:5], '  Detector 2', aperture_2.AperName[:5])
+    aperName_1 = aperture_1.AperName
+    aperName_2 = aperture_2.AperName
+    detector_1 = aperName_1.split('_')[0]
+    detector_2 = aperName_2.split('_')[0]
+    print('Detector 1', detector_1, '  Detector 2', detector_2)
     V2Ref2 = aperture_2.V2Ref
     V3Ref2 = aperture_2.V3Ref
     theta0 = aperture_2.V3IdlYAngle
-    print('Initial VRef', V2Ref2, V3Ref2)
-    print('Initial theta', theta0)
+    if verbose:
+        print('Initial VRef', V2Ref2, V3Ref2)
+        print('Initial theta', theta0)
     theta = radians(theta0)
 
     coefficients = aperture_2.get_polynomial_coefficients()
@@ -488,32 +490,27 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         print('D')
         triangle(D, order)
 
-    (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(A, B, C, D,
-                                                                     verbose=True, instrument = instrument)
-    print('Round trip     X       Y')
-    print('     Means%8.4F %8.4f' %(xmean, ymean))
-    print('      STDs%8.4f %8.4f' %(xstd, ystd))
+        (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(A, B, C, D,
+                                                                         verbose=verbose, instrument = instrument)
+        print('Round trip     X       Y')
+        print('     Means%8.4F %8.4f' %(xmean, ymean))
+        print('      STDs%8.4f %8.4f' %(xstd, ystd))
 
     # Use convert
-    print('\nUsing Convert')
-    print('VRef1', V2Ref1, V3Ref1)
     (newXSci, newYSci) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'sci')
     (newXDet, newYDet) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'det')
-    print('Sci', newXSci, newYSci)
-    print('Det', newXDet, newYDet)
     (newXIdl, newYIdl) = aperture_2.convert(V2Ref1, V3Ref1, 'tel', 'idl')
-    print('Idl', newXIdl, newYIdl)
-
-    # Convert back
-    (v2c, v3c) = aperture_2.convert(newXSci, newYSci, 'sci', 'tel')
-    print('Regained values     ', v2c, v3c)
 
     dXSciRef = newXSci - aperture_2.XSciRef
     dYSciRef = newYSci - aperture_2.YSciRef
-    print('Shift pixel origin by', dXSciRef, dYSciRef)
     AS = ShiftCoeffs(A, dXSciRef, dYSciRef, order)
     BS = ShiftCoeffs(B, dXSciRef, dYSciRef, order)
-    print('New Ideal origin', newXIdl, newYIdl)
+    if verbose:
+        print('VRef1', V2Ref1, V3Ref1)
+        print('Idl', newXIdl, newYIdl)
+        print('Shift pixel origin by', dXSciRef, dYSciRef)
+        print('New Ideal origin', newXIdl, newYIdl)
+
     CS = ShiftCoeffs(C, AS[0], BS[0], order)
     DS = ShiftCoeffs(D, AS[0], BS[0], order)
     AS[0] = 0.0
@@ -533,7 +530,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         print('\nABCDS')
 
     (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(AS, BS, CS, DS,
-                                                                     verbose=True, instrument=instrument)
+                                                                     verbose=verbose, instrument=instrument)
     if verbose:
         print('Round trip     X       Y')
         print('     Means%8.4F %8.4f' %(xmean, ymean))
@@ -543,6 +540,8 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     newB = BS
     newC = CS
     newD = DS
+
+    new_aperture_2 = copy.deepcopy(aperture_2)
 
     # For NIRCam only, adjust angles
     if instrument == 'NIRCAM':
@@ -559,47 +558,45 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
         newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
         newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
-        print('Rotate Coeffs by newV3IdlYAngle')
+
         if verbose:
             print('newC')
             triangle(newC, order)
             print('newD')
             triangle(newD, order)
 
-        (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(newA, newB, newC, newD,
-                                                                         verbose=True, instrument=instrument)
-        print('Final coefficients')
-        print('Round trip     X       Y')
-        print('     Means%8.4F %8.4f' % (xmean, ymean))
-        print('      STDs%8.4f %8.4f' % (xstd, ystd))
+            (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(newA, newB, newC, newD,
+                                                                             verbose=verbose, instrument=instrument)
+            print('\nFinal coefficients')
+            print('Round trip     X       Y')
+            print('     Means%8.4F %8.4f' % (xmean, ymean))
+            print('      STDs%8.4f %8.4f' % (xstd, ystd))
 
         newV3SciXAngle = aperture_2.V3SciXAngle + newV3IdlYAngle
         newV3SciYAngle = aperture_2.V3SciXAngle + newV3IdlYAngle
         newV3IdlYAngle = aperture_2.V3IdlYAngle + newV3IdlYAngle
-        aperture_2.V3SciXAngle = newV3SciXAngle
-        aperture_2.V3SciYAngle = newV3SciYAngle
-        aperture_2.V3IdlYAngle = newV3IdlYAngle
+        new_aperture_2.V3SciXAngle = newV3SciXAngle
+        new_aperture_2.V3SciYAngle = newV3SciYAngle
+        new_aperture_2.V3IdlYAngle = newV3IdlYAngle
 
-    # Set new values in aperture_2
-    print('Before')
-    print(aperture_2.V2Ref, aperture_2.V3Ref, aperture_2.XSciRef, aperture_2.YSciRef)
-    aperture_2.V2Ref = newV2Ref
-    aperture_2.V3Ref = newV3Ref
-    aperture_2.XDetRef = newXDet
-    aperture_2.YDetRef = newYDet
-    aperture_2.XSciRef = newXSci
-    aperture_2.YSciRef = newYSci
-    print(aperture_2.XIdlVert1, aperture_2.YIdlVert1, aperture_2.XIdlVert3, aperture_2.YIdlVert3)
-    print(aperture_2.XIdlVert1, aperture_2.XIdlVert2, aperture_2.XIdlVert3, aperture_2.XIdlVert4,
-          aperture_2.YIdlVert1, aperture_2.YIdlVert2, aperture_2.YIdlVert3, aperture_2.YIdlVert4 )
-    print('After')
-    print(aperture_2.V2Ref, aperture_2.V3Ref, aperture_2.XSciRef, aperture_2.YSciRef)
 
-    aperture_2.set_polynomial_coefficients(newA, newB, newC, newD)
-    (xcorners, ycorners) = aperture_2.corners('idl', rederive=True)
+    # Set new values in new_aperture_2
+    new_aperture_2.V2Ref = newV2Ref
+    new_aperture_2.V3Ref = newV3Ref
+    new_aperture_2.XDetRef = newXDet
+    new_aperture_2.YDetRef = newYDet
+    new_aperture_2.XSciRef = newXSci
+    new_aperture_2.YSciRef = newYSci
+    if verbose:
+        print('Initial', aperture_2.V2Ref, aperture_2.V3Ref, aperture_2.XDetRef, aperture_2.YDetRef)
+        print('Changes', newV2Ref, newV3Ref, newXDet, newYDet)
+        print('Modified', new_aperture_2.V2Ref, new_aperture_2.V3Ref, new_aperture_2.XDetRef, new_aperture_2.YDetRef)
+
+    new_aperture_2.set_polynomial_coefficients(newA, newB, newC, newD)
+    (xcorners, ycorners) = new_aperture_2.corners('idl', rederive=True)
     for c in range(4):
         suffix = "{}".format(c+1)
-        setattr(aperture_2,'XIdlVert' + suffix, xcorners[c])
-        setattr(aperture_2,'YIdlVert' + suffix, ycorners[c])
+        setattr(new_aperture_2,'XIdlVert' + suffix, xcorners[c])
+        setattr(new_aperture_2,'YIdlVert' + suffix, ycorners[c])
 
-    return aperture_2
+    return new_aperture_2

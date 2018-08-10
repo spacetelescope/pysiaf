@@ -303,7 +303,7 @@ class Aperture(object):
             setattr(self, 'XIdlVert{:d}'.format(j), corners_Idl_x[j - 1])
             setattr(self, 'YIdlVert{:d}'.format(j), corners_Idl_y[j - 1])
 
-    def convert(self, X, Y, from_frame, to_frame):
+    def convert(self, X, Y, from_frame, to_frame) -> object:
         """
         Generic conversion routine, that calls one of the
         specific conversion routines based on the provided frame names as strings.
