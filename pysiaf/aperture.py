@@ -419,6 +419,7 @@ class Aperture(object):
         """
 
         if self.Sci2IdlDeg is None:
+            print('This aperture has no polynomial coefficients')
             return None
         else:
             number_of_coefficients = (self.Sci2IdlDeg + 1) * (self.Sci2IdlDeg + 2) // 2

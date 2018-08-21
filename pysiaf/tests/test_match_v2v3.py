@@ -11,8 +11,9 @@ siaf = iando.read.read_jwst_siaf(instrument=instrument)
 aperture_1 = siaf[apName_1]
 aperture_2 = siaf[apName_2]
 new_aperture_2 = tools.match_v2v3(aperture_1, aperture_2, verbose=verbose)
-print('Old VRef {:10.3f} {:10.3f}'.format(aperture_2.XDetRef, aperture_2.YDetRef))
-print('New VRef {:10.3f} {:10.3f}'.format(new_aperture_2.XDetRef, new_aperture_2.YDetRef))
+if verbose:
+    print('Old VRef {:10.3f} {:10.3f}'.format(aperture_2.XDetRef, aperture_2.YDetRef))
+    print('New VRef {:10.3f} {:10.3f}'.format(new_aperture_2.XDetRef, new_aperture_2.YDetRef))
 
 # Test that new VRef position has been installed
 assert new_aperture_2.V2Ref == aperture_1.V2Ref, 'V2Ref not in place'

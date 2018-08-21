@@ -459,6 +459,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     """
     instrument = aperture_1.InstrName
+    assert instrument != 'NIRSPEC', 'Program not working for NIRSpec'
     assert (aperture_2.AperType in ['FULLSCA', 'SUBARRAY', 'ROI']), "2nd aperture must be pixel-based"
     order = aperture_1.Sci2IdlDeg
     V2Ref1 = aperture_1.V2Ref
@@ -474,7 +475,7 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     aperName_2 = aperture_2.AperName
     detector_1 = aperName_1.split('_')[0]
     detector_2 = aperName_2.split('_')[0]
-    print('Detector 1', detector_1, '  Detector 2', detector_2)
+    if verbose: print('Detector 1', detector_1, '  Detector 2', detector_2)
     V2Ref2 = aperture_2.V2Ref
     V3Ref2 = aperture_2.V3Ref
     theta0 = aperture_2.V3IdlYAngle
@@ -556,10 +557,10 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     if instrument == 'NIRCAM':
         newV3IdlYAngle = degrees(atan2(-AS[2], BS[2])) # Everything rotates by this amount
         if abs(newV3IdlYAngle) > 90.0: newV3IdlYAngle = newV3IdlYAngle - copysign(180, newV3IdlYAngle)
-        print('New angle', newV3IdlYAngle)
         newA = AS*cos(radians(newV3IdlYAngle)) + BS*sin(radians(newV3IdlYAngle))
         newB = -AS*sin(radians(newV3IdlYAngle)) + BS*cos(radians(newV3IdlYAngle))
         if verbose:
+            print('New angle', newV3IdlYAngle)
             print('\nnewA')
             triangle(newA, order)
             print('newB')
