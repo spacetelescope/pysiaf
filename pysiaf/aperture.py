@@ -409,6 +409,28 @@ class Aperture(object):
                     [getattr(self, s) for s in DISTORTION_ATTRIBUTES if seed in s])[
                              0:number_of_coefficients]
             return dict
+    def set_polynomial_coefficients(self, sci2idlx, sci2idly, idl2scix, idl2sciy):
+        """Place a full set of coefficients into aperture
+        Input
+        : param sci2idlx - array of Sci2IdlX coefficients in JWST order
+        : param sci2idly - array of Sci2IdlY coefficients
+        : param idl2scix - array of Idl2SciX coefficients
+        : param idl2sciy - array of Idl2SciY coefficients
+        """
+
+        if self.Sci2IdlDeg is None:
+            print('This aperture has no polynomial coefficients')
+            return None
+        else:
+            number_of_coefficients = (self.Sci2IdlDeg + 1) * (self.Sci2IdlDeg + 2) // 2
+            for  i in range (number_of_coefficients):
+                    setattr(self, DISTORTION_ATTRIBUTES[4*i], sci2idlx[i])
+                    setattr(self, DISTORTION_ATTRIBUTES[4*i+1], sci2idly[i])
+                    setattr(self, DISTORTION_ATTRIBUTES[4*i+2], idl2scix[i])
+                    setattr(self, DISTORTION_ATTRIBUTES[4*i+3], idl2sciy[i])
+            return None
+
+
 
 
     def path(self, to_frame):
