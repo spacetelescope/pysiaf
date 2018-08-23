@@ -1,0 +1,43 @@
+# FGS aperture definition file for SIAF
+# 
+# This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary information (DDC mapping, wedge offsets, ...)
+# This file also defines the order in which the apertures are presented.
+# 
+# Originally based on PRDOPSSOC-H-014.
+# 
+# Generated 2018-04-19T16:44:22.903 utc
+# jsahlmann
+# 
+       AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef , parent_apertures , dependency_type
+  FGS1_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,        FGS1_FULL ,     oss_default
+      FGS1_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,             None ,          master
+  FGS2_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,        FGS2_FULL ,     oss_default
+      FGS2_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,             None ,          master
+  FGS1_SUB128LL , SUBARRAY ,    64.5 ,    64.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS1_FULL ,         default
+FGS1_SUB128DIAG , SUBARRAY ,   544.5 ,   544.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS1_FULL ,         default
+FGS1_SUB128CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS1_FULL ,         default
+   FGS1_SUB32LL , SUBARRAY ,    64.5 ,    64.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS1_FULL ,         default
+ FGS1_SUB32DIAG , SUBARRAY ,   544.5 ,   544.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS1_FULL ,         default
+ FGS1_SUB32CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS1_FULL ,         default
+    FGS1_SUB8LL , SUBARRAY ,    64.5 ,    64.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS1_FULL ,         default
+  FGS1_SUB8DIAG , SUBARRAY ,   544.5 ,   544.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS1_FULL ,         default
+  FGS1_SUB8CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS1_FULL ,         default
+  FGS2_SUB128LL , SUBARRAY ,    64.5 ,    64.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS2_FULL ,         default
+FGS2_SUB128DIAG , SUBARRAY ,   544.5 ,   544.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS2_FULL ,         default
+FGS2_SUB128CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,      128 ,      128 ,    64.5 ,    64.5 ,        FGS2_FULL ,         default
+   FGS2_SUB32LL , SUBARRAY ,    64.5 ,    64.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS2_FULL ,         default
+ FGS2_SUB32DIAG , SUBARRAY ,   544.5 ,   544.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS2_FULL ,         default
+ FGS2_SUB32CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        FGS2_FULL ,         default
+    FGS2_SUB8LL , SUBARRAY ,    64.5 ,    64.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS2_FULL ,         default
+  FGS2_SUB8DIAG , SUBARRAY ,   544.5 ,   544.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS2_FULL ,         default
+  FGS2_SUB8CNTR , SUBARRAY ,  1024.5 ,  1024.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        FGS2_FULL ,         default
+   FGS1_FP1MIMF ,  FULLSCA ,  1036.0 ,  1054.0 ,     2048 ,     2048 ,  1013.0 ,   995.0 ,        FGS1_FULL ,         default
+   FGS1_FP2MIMF ,  FULLSCA ,   100.0 ,  1948.0 ,     2048 ,     2048 ,  1949.0 ,   101.0 ,        FGS1_FULL ,         default
+   FGS1_FP3MIMF ,  FULLSCA ,  1782.0 ,  1599.0 ,     2048 ,     2048 ,   267.0 ,   450.0 ,        FGS1_FULL ,         default
+   FGS1_FP4MIMF ,  FULLSCA ,  1960.0 ,    90.0 ,     2048 ,     2048 ,    89.0 ,  1959.0 ,        FGS1_FULL ,         default
+   FGS1_FP5MIMF ,  FULLSCA ,    90.0 ,   106.0 ,     2048 ,     2048 ,  1959.0 ,  1943.0 ,        FGS1_FULL ,         default
+   FGS2_FP1MIMF ,  FULLSCA ,  1038.0 ,  1032.0 ,     2048 ,     2048 ,  1011.0 ,  1032.0 ,        FGS2_FULL ,         default
+   FGS2_FP2MIMF ,  FULLSCA ,   327.0 ,   377.0 ,     2048 ,     2048 ,  1722.0 ,   377.0 ,        FGS2_FULL ,         default
+   FGS2_FP3MIMF ,  FULLSCA ,  1948.0 ,   100.0 ,     2048 ,     2048 ,   101.0 ,   100.0 ,        FGS2_FULL ,         default
+   FGS2_FP4MIMF ,  FULLSCA ,  1948.0 ,  1948.0 ,     2048 ,     2048 ,   101.0 ,  1948.0 ,        FGS2_FULL ,         default
+   FGS2_FP5MIMF ,  FULLSCA ,   100.0 ,  1948.0 ,     2048 ,     2048 ,  1949.0 ,  1948.0 ,        FGS2_FULL ,         default
