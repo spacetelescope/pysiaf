@@ -15,6 +15,7 @@ def makeup_polynomial():
     order = 5
     terms = (order + 1) * (order + 2) // 2
     a = np.zeros(terms)
+    np.random.seed(seed=1)
     a[1] = 0.05 + 0.01 * np.random.rand(1)
     a[2] = 0.0001 * np.random.rand(1)
     a[3:6] = 1.0e-7 * np.random.rand(3)
@@ -99,10 +100,12 @@ def test_RotateCoeffs(verbose=False):
         polynomial.triangle(a, order)
 
     # Random point within 2048 square with origin at the center
+    np.random.seed(seed=1)
     [x, y] = 2048.0*np.random.rand(2) - 1024.0
     u = polynomial.poly(a, x, y, order)
 
     # Random angle
+
     theta = 360*np.random.rand(1)
     if verbose: print('Angle', theta)
     thetar = np.radians(theta)
@@ -178,6 +181,7 @@ def test_invert(verbose=True):
         polynomial.triangle(b, 5)
 
     # Random point within 2048 square with origin at the center
+    np.random.seed(seed=1)
     (x, y) = 2048.0*np.random.rand(2) - 1024.0
     u = polynomial.poly(a, x, y, order)
     v = polynomial.poly(b, x, y, order)
@@ -207,6 +211,7 @@ def test_ShiftCoeffs(verbose=False):
         polynomial.triangle(a, 5)
 
     # Shift by a random step
+    np.random.seed(seed=1)
     [xshift, yshift] = 1024.0 * np.random.rand(2) - 512.0
 
     ashift = polynomial.ShiftCoeffs(a, xshift, yshift, 5, verbose)
