@@ -17,10 +17,15 @@ def makeup_polynomial():
     a = np.zeros(terms)
     np.random.seed(seed=1)
     a[1] = 0.05 + 0.01 * np.random.rand(1)
+    np.random.seed(seed=2)
     a[2] = 0.0001 * np.random.rand(1)
+    np.random.seed(seed=3)
     a[3:6] = 1.0e-7 * np.random.rand(3)
+    np.random.seed(seed=4)
     a[6:10] = 1.0e-10 * np.random.rand(4)
+    np.random.seed(seed=5)
     a[10:15] = 1.0e-13 * np.random.rand(5)
+    np.random.seed(seed=6)
     a[15:21] = 1.0e-15 * np.random.rand(6)
     return a
 

@@ -558,15 +558,30 @@ def rescale(A, B, C, D, order, scale):
     return A_scaled, B_scaled, C_scaled, D_scaled
 
 def Rotate(A,B,theta):
-    """
+    """Used when a distortion transformation using polynomials A and B is followed by a rotation.
+    u = A(x,y) v = B(x,y) followed by
+    u2 = u*cos(theta) + v*sin(theta)
+    v2 = -u*sin(theta) + v*cos(theta)
+    This routine supplies a modified pair of polynomial which combine both steps
+    i.e u2 = A2(x,y), v2 = B2(x,y)
+
     Ported to here from makeSIAF.py
     J. Sahlmann 2018-01-03
 
-    :param A:
-    :param B:
-    :param theta:
-    :return:
+    Parameters
+    ----------
+    A   set of polynomial coefficients converting from (x,y) to a variable u
+    B   set of polynomial coefficients converting from(x,y) to  avariable v
+    theta   The angle in radians of a rotationin the (u,v) plane
+    WE SHOULD REALLY CHANGE THIS SO THE INPUT IS IN DEGREES TO BE CONSISTENT WITH OTHER ROUTINES
+    CONVERSION TO RADIANS SHOULD BE DONE INSIDE THIS METHOD
+
+    Returns
+    -------
+    A2  set of polynomial coefficiients providing combined steps from (x,y) to u2
+    B2  set of polynomial coefficients providing combined steps from (x,y) to v2
     """
+
     A2 =   A*np.cos(theta) + B*np.sin(theta)
     B2 = - A*np.sin(theta) + B*np.cos(theta)
     return A2, B2
@@ -585,13 +600,14 @@ def rotate_coefficients(A, B, angle_deg):
 
 def RotateCoeffs(a, theta, order=4, verbose=False):
     """Rotate axes of coefficients by theta degrees
+    Used when a distortion transformation using polynomials A and B is preceded by a rotation.
     The set of polynomial coefficients a[i,j] transform (x,y) as  u = a[i,j] * x**(i-j) * y**j
     Summation over repeated indices is implied.
     If now we have a set of variables (xp,yp) rotated from (x,y) so that
     xp = x * cos(theta) - y * sin(theta)
     yp = x * sin(theta) + y * cos(theta)
     find a set of polynomial coefficients ap so that the same value of u is obtained from (xp,yp)
-    i.e, u = ap[i,j]*xp**(i-j)*yp**j
+    i.e, u = ap[i,j] * xp**(i-j) * yp**j
     The rotation is opposite to the usual rotation as this routine was designed for the inverse
     transformation between Ideal and V2V3 or tel. Effectively the angle is reversed
 
