@@ -34,7 +34,7 @@ env:
     matrix:
         - SETUP_CMD='install'
         - SETUP_CMD='test'
-        - PYTHON_VERSION=2.7 SETUP_CMD='test'
+#        - PYTHON_VERSION=2.7 SETUP_CMD='test'
 
 matrix:
 
