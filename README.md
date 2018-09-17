@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/spacetelescope/pysiaf.svg?token=7TqWq6XCJswLuigCjy2Y&branch=master)](https://travis-ci.com/spacetelescope/pysiaf)
+[![Build Status](https://travis-ci.org/spacetelescope/pysiaf.svg?branch=master)](https://travis-ci.org/spacetelescope/pysiaf)
 
 # pysiaf
 Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  

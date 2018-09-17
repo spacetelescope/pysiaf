@@ -34,7 +34,7 @@ env:
     matrix:
         - SETUP_CMD='install'
         - SETUP_CMD='test'
-        - PYTHON_VERSION=2.7 SETUP_CMD='test'
+#        - PYTHON_VERSION=2.7 SETUP_CMD='test'
 
 matrix:
 
@@ -66,3 +66,12 @@ install:
 
 script:
     - $MAIN_CMD $SETUP_CMD
+
+deploy:
+  provider: pypi
+  user: "johannes-sahlmann"
+  password:
+    secure: "PYh6RiEiafAlBZOcW6cyHH75mB7OV6q2lGbP1CwyZOI8RPe3DDrPO8pqi322rW/b/bTGol3zM3lXFvEGxdXwJW07FwAI90ZlDDzlMxeSeMGfkxj0jvwNpUvft2UyJaMklynWZKcrrsMtigxrleOlE4y6xaueCWkgQl7vUKJy2AB/QGZvT3sVAnwEBJ62YWIH+jZy/LCDNoIRa5n+5x1ELYewCaTj8uIVgkuAWckPVVemPM90frU4xc/0G7bys7wZD3nMkjTHuRp2v3zOEasGxVnURLiaIV/waapGcwSsdNH3xjmevWhfYcMCIrcCzYYgidecubcxzU+2gyGNRE6MCdjBCrA0QDpRh+qTUhy+AN+B/CKEDDTtC4+92gzTYfEyyOstNwMWYerD9mGfIaGS8B93NTjt345WPJLfHYZAdLWo5IBmi7BlyDyGunovzc0R+nvdJlkrO938GR+gR5G9Sk9ewlksOmHiS4c3kYBQEymXm4FSifHD4j/IFmS3v4Cb1LWkDUb5O2T6UAOrpsSJBBhs23awp630vYzkDVsA+29FpUXwykcdgZvU/IXn8IXhpSU5MpKiE3TMQB53Lbn1+O3ZT3VSBdXBXTAbmAvROXoNxOoXaddsCEJb2EvzXXJTrF2v8e41onrJFri3ciiRXv63PsfzRsgulpLqRxQkAi0="
+  on:
+    tags: true
+    branch: master
