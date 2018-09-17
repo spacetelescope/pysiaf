@@ -450,14 +450,18 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     Parameters
     ----------
-    aperture_1
-    aperture_2
-    verbose
+    aperture_1: an aperture object being the aperture whose V2,V3 reference position is to be used
+    aperture_2: an aperture object. The V2,V3 reference position is to be altered to match that of aperture_1
+    verbose:    a logical variable controlling the output text. Defaults to False so that nothing is printed
+                unless an assert statement raises an error.
+
+
 
     Returns
     -------
-
+    new_aperture_2: an aperture object derived from aperture_2 but with some parameters changed to match altered V2V3.
     """
+
     instrument = aperture_1.InstrName
     assert instrument != 'NIRSPEC', 'Program not working for NIRSpec'
     assert (aperture_2.AperType in ['FULLSCA', 'SUBARRAY', 'ROI']), "2nd aperture must be pixel-based"
