@@ -117,8 +117,8 @@ setup(
     install_requires=[
         'astropy>=1.2',
         'numpy>=1.9',
-        'matplotlib<3; python_version="2.7"',
-        'matplotlib>=1.4.3; python_version!="2.7"',
+        'matplotlib<3; python_version=2.7',
+        'matplotlib>=1.4.3; python_version!=2.7',
         'lxml>=3.6.4',
         'scipy>=0.17',
         'openpyxl>=2.4'
