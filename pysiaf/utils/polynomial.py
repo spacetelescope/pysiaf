@@ -13,36 +13,37 @@ import numpy as np
 import scipy as sp
 from scipy import linalg
 
-def choose(n, r):
-    """Return number of ways of choosing r items from n.
 
-    All calculations done as integer.
+def choose(n, r):
+    """Return number of ways of choosing r items from an array with n items.
+
     Parameters
     ----------
-    n   number of items to choose from
-    r   number of items to choose
+    n : int
+        number of items to choose from
+    r : int
+        number of items to choose
 
     Returns
     -------
-    combin  The number if ways of making the choice
+    combinations : int
+        The number if ways of making the choice
 
     """
     if n < 0 or r < 0:
-        print('Negative values not allowed')
-        return 0
+        raise ValueError('Negative values not allowed')
     if r > n:
-        print('r must not be greater than n')
-        return 0
+        raise ValueError('r must not be greater than n')
 
-    combin = 1
+    combinations = 1
     r1 = min(r, n-r)
     for k in range(r1):
-        combin = combin * (n - k) // (k + 1)
+        combinations = combinations * (n - k) // (k + 1)
 
-    return combin
+    return combinations
 
 
-def dpdx(a, x, y, order=4):
+def dpdx(a, x, y):
     """Differential with respect to x.
 
     The polynomial is defined as p(x,y) = a[i,j] * x**(i-j) * y**j summed over i and j
@@ -53,25 +54,27 @@ def dpdx(a, x, y, order=4):
     ----------
     a      a linear array of polynomial coefficients in JWST order.
     x      an integer or float variable(or an array of same) representing pixel x positions
-    y      a variable (or an array) representing  pixel y positions. x and y must be of the same shape.
-    order  an integer, the polynomal order
+    y      a variable (or an array) representing  pixel y positions. x and y must be of same shape.
 
     Returns
     -------
-    dpdx    float value of dp/dx for the given (x,y) point(s)
+    differential : array
+        float values of dp/dx for the given (x,y) point(s)
 
     """
-    dpdx = 0.0
+    poly_degree = polynomial_degree(len(a))
+
+    differential = 0.0
     k = 1  # index for coefficients
-    for i in range(1, order + 1):
+    for i in range(1, poly_degree + 1):
         for j in range(i + 1):
             if i - j > 0:
-                dpdx = dpdx + (i - j) * a[k] * x**(i - j - 1) * y**j
+                differential = differential + (i - j) * a[k] * x**(i - j - 1) * y**j
             k += 1
-    return dpdx
+    return differential
 
 
-def dpdy(a, x, y, order=4):
+def dpdy(a, x, y):
     """Differential with respect to y.
 
     The polynomial is defined as p(x,y) = a[i,j] * x**(i-j) * y**j, summed over i and j
@@ -87,18 +90,19 @@ def dpdy(a, x, y, order=4):
 
     Returns
     -------
-    dpdy    float value of dp/dy for the given (x,y) point(s)
+    differential    float value of dp/dy for the given (x,y) point(s)
             where p(x,y) is the value of the polynomial
 
     """
-    dpdy = 0.0
+    poly_degree = polynomial_degree(len(a))
+    differential = 0.0
     k = 1  # index for coefficients
-    for i in range(1, order + 1):
+    for i in range(1, poly_degree + 1):
         for j in range(i + 1):
             if j > 0:
-                dpdy = dpdy + j * a[k] * x**(i - j) * y**(j - 1)
+                differential = differential + j * a[k] * x**(i - j) * y**(j - 1)
             k += 1
-    return dpdy
+    return differential
 
 
 def flatten(A, order):
@@ -106,9 +110,9 @@ def flatten(A, order):
 
     For many of the polynomial operations the coefficients A[i,j] are contained in an
     array of dimension (order+1, order+1) but with all elements where j > i set equal to zero.
-    This we call the triangular layout.
-    The flattened layout is a one-dimensional array containing copies of only the elements where j <= i.
+    This is what is called the triangular layout.
 
+    The flattened layout is a one-dimensional array containing only the elements where j <= i.
 
     Parameters
     ----------
@@ -118,7 +122,8 @@ def flatten(A, order):
 
     Returns
     -------
-    AF, a one-dimensional array including only those terms where i <= j
+    AF : array
+        a one-dimensional array including only those terms where i <= j
 
     """
     terms = (order+1)*(order+2) // 2
@@ -139,7 +144,8 @@ def FlipX(A, order=4):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the triangular layout as described in the function poly
+    A : array
+        A set of polynomial coefficients given in the triangular layout as described in poly
     order  The polynomial order
 
     Returns
@@ -254,7 +260,7 @@ def invert(A, B, u, v, order, verbose=False):
     iter = 0
     while err > tol:
         f1 = sp.array([poly(A, x, y, order) - u, poly(B, x, y, order) - v])
-        j = sp.array([[dpdx(A, x, y, order), dpdy(A, x, y, order)], [dpdx(B, x, y, order), dpdy(B, x, y, order)]])
+        j = sp.array([[dpdx(A, x, y), dpdy(A, x, y)], [dpdx(B, x, y), dpdy(B, x, y)]])
         invj = sp.linalg.inv(j)
         X = X - sp.dot(invj, f1)
         if verbose:
@@ -293,7 +299,7 @@ def jacob(a, b, x, y, order=4):
     area    area in (u,v) coordinates matching unit area in the (x,y) coordinates.
 
     """
-    j = dpdx(a, x, y, order)*dpdy(b, x, y, order) - dpdx(b, x, y, order)*dpdy(a, x, y, order)
+    j = dpdx(a, x, y)*dpdy(b, x, y) - dpdx(b, x, y)*dpdy(a, x, y)
     area = sp.fabs(j)
     return area
 
@@ -488,9 +494,9 @@ def reorder(A, B, verbose=False):
 
     if verbose:
         print('A')
-        triangle(A2, order)
+        print_triangle(A2, order)
         print('\nB')
-        triangle(B2, order)
+        print_triangle(B2, order)
 
     return A2, B2
 
@@ -614,7 +620,7 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
     s = np.sin(np.deg2rad(theta))
 
     # First place in triangular layout
-    at = triangulate(a, order)
+    at = triangular_layout(a)
 
     # Apply rotation
     atrotate = sp.zeros([order+1, order+1])
@@ -654,7 +660,7 @@ def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
 
     """
     # First place in triangular layout
-    at = triangulate(a, order)
+    at = triangular_layout(a)
 
     # Apply shift
     atshift = np.zeros((order+1, order+1))
@@ -727,7 +733,7 @@ def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
     return AT
 
 
-def triangle(A, order=4):
+def print_triangle(coefficients):
     """Print coefficients in triangular layout.
 
     A[0]
@@ -748,40 +754,45 @@ def triangle(A, order=4):
 
     Parameters
     ----------
-    A       polynomial float array in linear layout
-    order   integer polynomial order, defaults to value 4
+    coefficients : array
+        polynomial float array in linear layout
 
     """
+    poly_degree = polynomial_degree(len(coefficients))
+
     k = 0
-    for i in range(order + 1):
+    for i in range(poly_degree + 1):
         for j in range(i + 1):
-            print('%12.5e' % A[k], end=' ')
+            print('%12.5e' % coefficients[k], end=' ')
             k += 1
         print()
 
 
-def triangulate(A, order):
+def triangular_layout(coefficients):
     """Convert linear array to 2-D array with triangular coefficient layout.
 
     This is the reverse of the flatten method.
 
     Parameters
     ----------
-    A       float array of polynomial coefficients. A must be of dimension (order+1)(order+2)/2
-    order   polynomial order
+    a       float array of polynomial coefficients. A must be of dimension (order+1)(order+2)/2
 
     Returns
     -------
-    AT  coefficients in triangular layout as described in poly.
+    triangular_coefficients : array
+        coefficients in triangular layout as described in poly.
 
     """
-    AT = sp.zeros((order + 1, order + 1))
+    poly_degree = polynomial_degree(len(coefficients))
+    triangular_coefficients = np.zeros((poly_degree + 1, poly_degree + 1))
+
     k = 0
-    for i in range(order + 1):
+    for i in range(poly_degree + 1):
         for j in range(i + 1):
-            AT[i, j] = A[k]
+            triangular_coefficients[i, j] = coefficients[k]
             k += 1
-    return AT
+
+    return triangular_coefficients
 
 
 def two_step(A, B, a, b, order):

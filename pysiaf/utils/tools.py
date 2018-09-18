@@ -22,7 +22,7 @@ import numpy as np
 # from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
-from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, triangle
+from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, print_triangle
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -496,13 +496,13 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     if verbose:
         print('\nA')
-        triangle(A, order)
+        print_triangle(A, order)
         print('B')
-        triangle(B, order)
+        print_triangle(B, order)
         print('C')
-        triangle(C, order)
+        print_triangle(C, order)
         print('D')
-        triangle(D, order)
+        print_triangle(D, order)
 
         (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(A, B, C, D,
                                                                          verbose=verbose, instrument = instrument)
@@ -534,13 +534,13 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     if verbose:
         print('\nShifted Polynomials')
         print('AS')
-        triangle(AS, order)
+        print_triangle(AS, order)
         print('BS')
-        triangle(BS, order)
+        print_triangle(BS, order)
         print('CS')
-        triangle(CS, order)
+        print_triangle(CS, order)
         print('DS')
-        triangle(DS, order)
+        print_triangle(DS, order)
         print('\nABCDS')
 
     (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(AS, BS, CS, DS,
@@ -566,18 +566,18 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         if verbose:
             print('New angle', newV3IdlYAngle)
             print('\nnewA')
-            triangle(newA, order)
+            print_triangle(newA, order)
             print('newB')
-            triangle(newB, order)
+            print_triangle(newB, order)
 
         newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
         newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
 
         if verbose:
             print('newC')
-            triangle(newC, order)
+            print_triangle(newC, order)
             print('newD')
-            triangle(newD, order)
+            print_triangle(newD, order)
 
             (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(newA, newB, newC, newD,
                                                                              verbose=verbose, instrument=instrument)

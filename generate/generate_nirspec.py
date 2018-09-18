@@ -447,13 +447,13 @@ def reorder(pcfName, verbose=False):
     if verbose:
         print('\n', pcfName)
         print('A')
-        polynomial.triangle(A2, order=5)
+        polynomial.print_triangle(A2, order=5)
         print('\nB')
-        polynomial.triangle(B2, order=5)
+        polynomial.print_triangle(B2, order=5)
         print('\nC')
-        polynomial.triangle(C2, order=5)
+        polynomial.print_triangle(C2, order=5)
         print('\nD')
-        polynomial.triangle(D2, order=5)
+        polynomial.print_triangle(D2, order=5)
 
     # Convert V2V3 output polynomials to XAN,YAN type
     # print (year, pcfName)
@@ -466,13 +466,13 @@ def reorder(pcfName, verbose=False):
         (C2, D2) = polynomial.TwoStep(C2, D2, [0.0, 1.0, 0.0], [-0.13, 0.0, -1.0], 5)
         print ('\nAdjusted Polynomials')
         print('A')
-        polynomial.triangle(A2, order=5)
+        polynomial.print_triangle(A2, order=5)
         print('\nB')
-        polynomial.triangle(B2, order=5)
+        polynomial.print_triangle(B2, order=5)
         print('\nC')
-        polynomial.triangle(C2, order=5)
+        polynomial.print_triangle(C2, order=5)
         print('\nD')
-        polynomial.triangle(D2, order=5)
+        polynomial.print_triangle(D2, order=5)
 
     return (A2, B2, C2, D2)
 
@@ -625,27 +625,27 @@ def rows(pcfName, new_pcf_format=False):
 
     # print ('\nAL0, AL1')
     (AL0, AL1) = rearrange(xForward)
-    # polynomial.triangle(AL0,5)
+    # polynomial.print_triangle(AL0,5)
     # print ()
-    # polynomial.triangle(AL1,5)
+    # polynomial.print_triangle(AL1,5)
 
     # print ('\nBL0, BL1')
     (BL0, BL1) = rearrange(yForward)
-    # polynomial.triangle(BL0,5)
+    # polynomial.print_triangle(BL0,5)
     # print ()
-    # polynomial.triangle(BL1,5)
+    # polynomial.print_triangle(BL1,5)
 
     # print ('\nCL0, CL1')
     (CL0, CL1) = rearrange(xBackward)
-    # polynomial.triangle(CL0,5)
+    # polynomial.print_triangle(CL0,5)
     # print ()
-    # polynomial.triangle(CL1,5)
+    # polynomial.print_triangle(CL1,5)
 
     # print ('\nDL0, DL1')
     (DL0, DL1) = rearrange(yBackward)
-    # polynomial.triangle(DL0,5)
+    # polynomial.print_triangle(DL0,5)
     # print ()
-    # polynomial.triangle(DL1,5)
+    # polynomial.print_triangle(DL1,5)
 
 
     data = {}

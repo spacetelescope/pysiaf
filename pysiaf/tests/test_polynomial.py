@@ -58,9 +58,9 @@ def test_poly(verbose=False):
 
     if verbose:
         print('A coefficients')
-        polynomial.triangle(a, 5)
+        polynomial.print_triangle(a, 5)
         print('B coefficients')
-        polynomial.triangle(b, 5)
+        polynomial.print_triangle(b, 5)
 
     # Evaluate polynomials acting on x,y arrays
     u = polynomial.poly(a, x, y, 5)
@@ -80,9 +80,9 @@ def test_poly(verbose=False):
     if verbose:
         print('Fitted polynomials')
         print('S1')
-        polynomial.triangle(s1, 5)
+        polynomial.print_triangle(s1, 5)
         print('S2')
-        polynomial.triangle(s2, 5)
+        polynomial.print_triangle(s2, 5)
         print ('Fit comparison STDs {:10.2e} {:10.2e}'.format(u_std, v_std))
         pl.figure(1)
         pl.clf()
@@ -102,7 +102,7 @@ def test_RotateCoeffs(verbose=False):
     order = 5
     if verbose:
         print('A')
-        polynomial.triangle(a, order)
+        polynomial.print_triangle(a, order)
 
     # Random point within 2048 square with origin at the center
     np.random.seed(seed=1)
@@ -112,7 +112,8 @@ def test_RotateCoeffs(verbose=False):
     # Random angle
 
     theta = 360*np.random.rand(1)
-    if verbose: print('Angle', theta)
+    if verbose:
+        print('Angle', theta)
     thetar = np.radians(theta)
     xp = x*np.cos(thetar) - y*np.sin(thetar)
     yp = x*np.sin(thetar) + y*np.cos(thetar)
@@ -138,16 +139,16 @@ def test_two_step(verbose=False):
     (A2, B2) = polynomial.two_step(A, B, a, b, 5)
     if verbose:
         print('\nA')
-        polynomial.triangle(A,5)#     print('B')
+        polynomial.print_triangle(A, 5)#     print('B')
         print('B')
-        polynomial.triangle(B,5)
+        polynomial.print_triangle(B, 5)
         print('\nLinear terms')
         print('a',a)
         print('b', b)
         print('\nA2')
-        polynomial.triangle(A2,5)
+        polynomial.print_triangle(A2, 5)
         print('B2')
-        polynomial.triangle(B2,5)
+        polynomial.print_triangle(B2, 5)
 
     # Now do a test calculation
     (x,y) = (10,5)
@@ -181,9 +182,9 @@ def test_invert(verbose=True):
 
     if verbose:
         print('A')
-        polynomial.triangle(a, 5)
+        polynomial.print_triangle(a, 5)
         print('B')
-        polynomial.triangle(b, 5)
+        polynomial.print_triangle(b, 5)
 
     # Random point within 2048 square with origin at the center
     np.random.seed(seed=1)
@@ -213,7 +214,7 @@ def test_ShiftCoeffs(verbose=False):
 
     if verbose:
         print('A')
-        polynomial.triangle(a, 5)
+        polynomial.print_triangle(a, 5)
 
     # Shift by a random step
     np.random.seed(seed=1)
@@ -222,7 +223,7 @@ def test_ShiftCoeffs(verbose=False):
     ashift = polynomial.ShiftCoeffs(a, xshift, yshift, 5, verbose)
     if verbose:
         print('AS')
-        polynomial.triangle(ashift, order)
+        polynomial.print_triangle(ashift, order)
 
     # Choose a random point
     [x, y] = 2048 * np.random.rand(2) - 1024.0
