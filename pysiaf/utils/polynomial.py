@@ -10,7 +10,7 @@ Authors
 
 from __future__ import absolute_import, print_function, division
 import numpy as np
-import scipy as sp
+# import scipy as sp
 from scipy import linalg
 
 
@@ -127,7 +127,7 @@ def flatten(A, order):
 
     """
     terms = (order+1)*(order+2) // 2
-    AF = sp.zeros(terms)
+    AF = np.zeros(terms)
     k = 0
     for i in range(order+1):
         for j in range(i+1):
@@ -154,7 +154,7 @@ def FlipX(A, order=4):
 
     """
     terms = (order+1)*(order+2) // 2
-    AF = sp.zeros(terms)
+    AF = np.zeros(terms)
     k = 0
     for i in range(order+1):
         for j in range(i+1):
@@ -183,7 +183,7 @@ def FlipY(A):
     order = poly_degree
 
     terms = (order+1)*(order+2) // 2
-    AF = sp.zeros(terms)
+    AF = np.zeros(terms)
     k = 0
     for i in range(order+1):
         for j in range(i+1):
@@ -212,7 +212,7 @@ def FlipXY(A):
     order = poly_degree
 
     terms = (order+1)*(order+2) // 2
-    AF = sp.zeros(terms)
+    AF = np.zeros(terms)
     k = 0
     for i in range(order+1):
         for j in range(i+1):
@@ -256,18 +256,18 @@ def invert(A, B, u, v, order, verbose=False):
         print('Initial guesses', x0, y0)
     x = x0
     y = y0
-    X = sp.array([x, y])
+    X = np.array([x, y])
     iter = 0
     while err > tol:
-        f1 = sp.array([poly(A, x, y, order) - u, poly(B, x, y, order) - v])
-        j = sp.array([[dpdx(A, x, y), dpdy(A, x, y)], [dpdx(B, x, y), dpdy(B, x, y)]])
-        invj = sp.linalg.inv(j)
-        X = X - sp.dot(invj, f1)
+        f1 = np.array([poly(A, x, y, order) - u, poly(B, x, y, order) - v])
+        j = np.array([[dpdx(A, x, y), dpdy(A, x, y)], [dpdx(B, x, y), dpdy(B, x, y)]])
+        invj = np.linalg.inv(j)
+        X = X - np.dot(invj, f1)
         if verbose:
             print('[X1,Y1]', X)
         x1 = X[0]
         y1 = X[1]
-        err = sp.hypot(x - x1, y - y1)
+        err = np.hypot(x - x1, y - y1)
         if verbose:
             print('Error %10.2e' % err)
         [x, y] = [x1, y1]
@@ -300,34 +300,14 @@ def jacob(a, b, x, y, order=4):
 
     """
     j = dpdx(a, x, y)*dpdy(b, x, y) - dpdx(b, x, y)*dpdy(a, x, y)
-    area = sp.fabs(j)
+    area = np.fabs(j)
     return area
 
 
-def nircam_reorder(A, B, order):
-    """Change coefficient order from y**2 xy x**2 to x**2 xy y**2.
-
-    Parameters
-    ----------
-    A
-    B
-    order
-
-    Returns
-    -------
-    A2, B2: numpy arrays
-
-    """
-    terms = (order + 1) * (order + 2) // 2
-    A2 = np.zeros((terms))
-    B2 = np.zeros((terms))
-    for i in range(order + 1):
-        ti = i * (i + 1) // 2
-        for j in range(i + 1):
-            A2[ti + j] = A[ti + i - j]
-            B2[ti + j] = B[ti + i - j]
-
-    return A2, B2
+def number_of_coefficients(poly_degree):
+    """Return number of coefficients corresponding to polynomial degree."""
+    n_coefficients = (poly_degree + 1) * (poly_degree + 2) / 2
+    return n_coefficients
 
 
 def poly(a, x, y, order=4):
@@ -363,38 +343,38 @@ def poly(a, x, y, order=4):
     return pol
 
 
+# def polyfit(u, x, y, order):
+#     """SUPERSEDE BY POLYFIT2.
+#
+#     Fit polynomial to a set of u values on an x,y grid
+#     u is a function u(x,y) being a polynomial of the form
+#     u = a[i, j] x**(i-j) y**j. x and y can be on a grid or be arbitrary values
+#     """
+#     # First set up x and y powers for each coefficient
+#     px = []
+#     py = []
+#     for i in range(order + 1):
+#         for j in range(i + 1):
+#             px.append(i - j)
+#             py.append(j)
+#     terms = len(px)
+#
+#     # Make up matrix and vector
+#     vector = np.zeros((terms))
+#     mat = np.zeros((terms, terms))
+#     for i in range(terms):
+#         vector[i] = (u * x ** px[i] * y ** py[i]).sum()
+#         for j in range(terms):
+#             mat[i, j] = (x ** px[i] * y ** py[i] * x ** px[j] * y ** py[j]).sum()
+#
+#     imat = linalg.inv(mat)
+#     # Check that inversion worked
+#     # print np.dot(mat,imat)
+#     coeffs = np.dot(imat, vector)
+#     return coeffs
+
+
 def polyfit(u, x, y, order):
-    """SUPERSEDE BY POLYFIT2.
-
-    Fit polynomial to a set of u values on an x,y grid
-    u is a function u(x,y) being a polynomial of the form
-    u = a[i, j] x**(i-j) y**j. x and y can be on a grid or be arbitrary values
-    """
-    # First set up x and y powers for each coefficient
-    px = []
-    py = []
-    for i in range(order + 1):
-        for j in range(i + 1):
-            px.append(i - j)
-            py.append(j)
-    terms = len(px)
-
-    # Make up matrix and vector
-    vector = sp.zeros((terms))
-    mat = sp.zeros((terms, terms))
-    for i in range(terms):
-        vector[i] = (u * x ** px[i] * y ** py[i]).sum()
-        for j in range(terms):
-            mat[i, j] = (x ** px[i] * y ** py[i] * x ** px[j] * y ** py[j]).sum()
-
-    imat = linalg.inv(mat)
-    # Check that inversion worked
-    # print sp.dot(mat,imat)
-    coeffs = sp.dot(imat, vector)
-    return coeffs
-
-
-def polyfit2(u, x, y, order):
     """Fit polynomial to a set of u values on an x,y grid.
 
     u is a function u(x,y) being a polynomial of the form
@@ -413,7 +393,8 @@ def polyfit2(u, x, y, order):
 
     Returns
     -------
-    coeffs: an array of polynomial coefficients being the solution to the fit.
+    coeffs: array
+        polynomial coefficients being the solution to the fit.
 
     """
     # First set up x and y powers for each coefficient
@@ -426,8 +407,8 @@ def polyfit2(u, x, y, order):
     terms = len(px)
 
     # Make up matrix and vector
-    vector = sp.zeros((terms))
-    mat = sp.zeros((terms, terms))
+    vector = np.zeros((terms))
+    mat = np.zeros((terms, terms))
     for i in range(terms):
         vector[i] = (u * x ** px[i] * y ** py[i]).sum()  # Summing over all x,y
         for j in range(terms):
@@ -456,49 +437,78 @@ def polynomial_degree(number_of_coefficients):
     return poly_degree
 
 
-def reorder(A, B, verbose=False):
-    """Reorder Sabatke coefficients to Cox convention.
+# def reorder(A, B, verbose=False):
+#     """Reorder Sabatke coefficients to Cox convention.
+#
+#     Changes coefficient order from y**2 xy x**2 to x**2 xy y**2
+#     Parameters
+#     ----------
+#     A
+#     B
+#     verbose
+#
+#     Returns
+#     -------
+#     A2, B2 : numpy arrays
+#
+#     """
+#     order = 5
+#     terms = (order+1)*(order+2)//2
+#     Aarray = np.zeros((order+1, order+1))
+#     Barray = np.zeros((order+1, order+1))
+#
+#     k1 = 0
+#     for i in range(order+1):
+#         for j in range(order+1-i):
+#             Aarray[j, i] = A[k1]
+#             Barray[j, i] = B[k1]
+#             k1 += 1
+#
+#     A2 = np.zeros((terms))
+#     B2 = np.zeros((terms))
+#     k2 = 0
+#     for i in range(order+1):
+#         for j in range(i+1):
+#             A2[k2] = Aarray[j, i-j]
+#             B2[k2] = Barray[j, i-j]
+#             k2 += 1
+#
+#     if verbose:
+#         print('A')
+#         print_triangle(A2, order)
+#         print('\nB')
+#         print_triangle(B2, order)
+#
+#     return A2, B2
 
-    Changes coefficient order from y**2 xy x**2 to x**2 xy y**2
+
+def reorder(A, B):
+    """Change coefficient order from y**2 xy x**2 to x**2 xy y**2 in both A and B.
+
     Parameters
     ----------
-    A
-    B
-    verbose
+    A : array
+        polynomial coefficients
+    B : array
+        polynomial coefficients
 
     Returns
     -------
-    A2, B2 : numpy arrays
+    A2, B2: numpy arrays
+        coefficients with changed order
 
     """
-    order = 5
-    terms = (order+1)*(order+2)//2
-    Aarray = sp.zeros((order+1, order+1))
-    Barray = sp.zeros((order+1, order+1))
-
-    k1 = 0
-    for i in range(order+1):
-        for j in range(order+1-i):
-            Aarray[j, i] = A[k1]
-            Barray[j, i] = B[k1]
-            k1 += 1
-
-    A2 = sp.zeros((terms))
-    B2 = sp.zeros((terms))
-    k2 = 0
-    for i in range(order+1):
-        for j in range(i+1):
-            A2[k2] = Aarray[j, i-j]
-            B2[k2] = Barray[j, i-j]
-            k2 += 1
-
-    if verbose:
-        print('A')
-        print_triangle(A2, order)
-        print('\nB')
-        print_triangle(B2, order)
+    poly_degree = polynomial_degree(len(A))
+    A2 = np.zeros((len(A)))
+    B2 = np.zeros((len(B)))
+    for i in range(poly_degree + 1):
+        ti = i * (i + 1) // 2
+        for j in range(i + 1):
+            A2[ti + j] = A[ti + i - j]
+            B2[ti + j] = B[ti + i - j]
 
     return A2, B2
+
 
 
 def rescale(A, B, C, D, order, scale):
@@ -524,11 +534,15 @@ def rescale(A, B, C, D, order, scale):
     """
     A_scaled = scale*A
     B_scaled = scale*B
-    number_of_coefficients = np.int((order + 1) * (order + 2) / 2)
+
+    poly_degree = polynomial_degree(len(A))
+    number_of_coefficients = len(A)
+
     C_scaled = np.zeros(number_of_coefficients)
     D_scaled = np.zeros(number_of_coefficients)
+
     k = 0
-    for i in range(order+1):
+    for i in range(poly_degree+1):
         factor = scale**i
         for j in range(i+1):
             C_scaled[k] = C[k]/factor
@@ -623,8 +637,8 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
     at = triangular_layout(a)
 
     # Apply rotation
-    atrotate = sp.zeros([order+1, order+1])
-    arotate = sp.zeros([len(a)]) # Copy shape of a
+    atrotate = np.zeros([order+1, order+1])
+    arotate = np.zeros([len(a)]) # Copy shape of a
     for m in range(order+1):
         for n in range(m+1):
             for mu in range(0, m-n+1):
@@ -691,16 +705,16 @@ def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
     yp = c*x + d*y
 
     Designed to work with Sabatke solutions which included a linear transformation of the pixel coordinates
-    before the polynomial dostortion solution was calculated.
+    before the polynomial distortion solution was calculated.
     TransCoeffs combines the two steps into a single polynomial
 
     """
-    A1 = sp.zeros((order + 1, order + 1))
-    A2 = sp.zeros((order + 1, order + 1))
+    A1 = np.zeros((order + 1, order + 1))
+    A2 = np.zeros((order + 1, order + 1))
     ncoeffs = (order + 1) * (order + 2) // 2
     if verbose:
         print(ncoeffs, 'coefficients for order', order)
-    AT = sp.zeros((ncoeffs))
+    AT = np.zeros((ncoeffs))
 
     # First place A in triangular layout
     k = 0
@@ -827,8 +841,8 @@ def two_step(A, B, a, b, order):
 
     """
     # terms = (order+1)*(order+2)//2
-    A2 = sp.zeros((order+1, order+1))
-    B2 = sp.zeros((order+1, order+1))
+    A2 = np.zeros((order+1, order+1))
+    B2 = np.zeros((order+1, order+1))
     
     k = 0
     for i in range(order+1):

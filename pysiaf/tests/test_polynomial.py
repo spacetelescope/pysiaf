@@ -13,8 +13,9 @@ def makeup_polynomial():
     return: a - randomly generated polynomial array """
 
     order = 5
-    terms = (order + 1) * (order + 2) // 2
+    terms = polynomial.number_of_coefficients(order)
     a = np.zeros(terms)
+
     np.random.seed(seed=1)
     a[1] = 0.05 + 0.01 * np.random.rand(1)
     np.random.seed(seed=2)
@@ -27,14 +28,15 @@ def makeup_polynomial():
     a[10:15] = 1.0e-13 * np.random.rand(5)
     np.random.seed(seed=6)
     a[15:21] = 1.0e-15 * np.random.rand(6)
+
     return a
 
 
 def test_poly(verbose=False):
     """ Tests polynomial evaluation by calculating a 9 by 9 array across a 2048 pixel grid
-    Then polyfit2 is used to fit the calculated points to generate a new pair of polynomials
+    Then polyfit is used to fit the calculated points to generate a new pair of polynomials
     Finally the original x,y points are used in the new polynomials and the outputs compared
-    This incidentally provides a robust test of polyfit2
+    This incidentally provides a robust test of polyfit
 
     parameters
     verbose: logical value. If True, print statements and graph will be output
@@ -58,16 +60,16 @@ def test_poly(verbose=False):
 
     if verbose:
         print('A coefficients')
-        polynomial.print_triangle(a, 5)
+        polynomial.print_triangle(a)
         print('B coefficients')
-        polynomial.print_triangle(b, 5)
+        polynomial.print_triangle(b)
 
     # Evaluate polynomials acting on x,y arrays
     u = polynomial.poly(a, x, y, 5)
     v = polynomial.poly(b, x, y, 5)
     # Fit new polynomials to calculated positions
-    s1 = polynomial.polyfit2(u, x, y, 5)
-    s2 = polynomial.polyfit2(v, x, y, 5)
+    s1 = polynomial.polyfit(u, x, y, 5)
+    s2 = polynomial.polyfit(v, x, y, 5)
     # Evaluate new polynomials
     uc = polynomial.poly(s1, x, y, 5)
     vc = polynomial.poly(s2, x, y, 5)
@@ -80,9 +82,9 @@ def test_poly(verbose=False):
     if verbose:
         print('Fitted polynomials')
         print('S1')
-        polynomial.print_triangle(s1, 5)
+        polynomial.print_triangle(s1)
         print('S2')
-        polynomial.print_triangle(s2, 5)
+        polynomial.print_triangle(s2)
         print ('Fit comparison STDs {:10.2e} {:10.2e}'.format(u_std, v_std))
         pl.figure(1)
         pl.clf()
@@ -102,7 +104,7 @@ def test_RotateCoeffs(verbose=False):
     order = 5
     if verbose:
         print('A')
-        polynomial.print_triangle(a, order)
+        polynomial.print_triangle(a)
 
     # Random point within 2048 square with origin at the center
     np.random.seed(seed=1)
@@ -139,16 +141,16 @@ def test_two_step(verbose=False):
     (A2, B2) = polynomial.two_step(A, B, a, b, 5)
     if verbose:
         print('\nA')
-        polynomial.print_triangle(A, 5)#     print('B')
+        polynomial.print_triangle(A)#     print('B')
         print('B')
-        polynomial.print_triangle(B, 5)
+        polynomial.print_triangle(B)
         print('\nLinear terms')
         print('a',a)
         print('b', b)
         print('\nA2')
-        polynomial.print_triangle(A2, 5)
+        polynomial.print_triangle(A2)
         print('B2')
-        polynomial.print_triangle(B2, 5)
+        polynomial.print_triangle(B2)
 
     # Now do a test calculation
     (x,y) = (10,5)
@@ -182,9 +184,9 @@ def test_invert(verbose=True):
 
     if verbose:
         print('A')
-        polynomial.print_triangle(a, 5)
+        polynomial.print_triangle(a)
         print('B')
-        polynomial.print_triangle(b, 5)
+        polynomial.print_triangle(b)
 
     # Random point within 2048 square with origin at the center
     np.random.seed(seed=1)
@@ -214,7 +216,7 @@ def test_ShiftCoeffs(verbose=False):
 
     if verbose:
         print('A')
-        polynomial.print_triangle(a, 5)
+        polynomial.print_triangle(a)
 
     # Shift by a random step
     np.random.seed(seed=1)
@@ -223,7 +225,7 @@ def test_ShiftCoeffs(verbose=False):
     ashift = polynomial.ShiftCoeffs(a, xshift, yshift, 5, verbose)
     if verbose:
         print('AS')
-        polynomial.print_triangle(ashift, order)
+        polynomial.print_triangle(ashift)
 
     # Choose a random point
     [x, y] = 2048 * np.random.rand(2) - 1024.0

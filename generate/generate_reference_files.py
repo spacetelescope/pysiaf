@@ -1217,7 +1217,7 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
             for i in range(terms):
                 A[i] = float(column[i + 7])
                 B[i] = float(column[i + 28])
-            (A1, B1) = polynomial.nircam_reorder(A, B, order)
+            (A1, B1) = polynomial.reorder(A, B, order)
             part2 = True
             if verbose:
                 print(' Before combining')
@@ -1371,7 +1371,7 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
             for i in range(terms):
                 C[i] = float(column[i + 7])
                 D[i] = float(column[i + 28])
-            (C1, D1) = polynomial.nircam_reorder(C, D, order)
+            (C1, D1) = polynomial.reorder(C, D, order)
 
             if verbose:
                 print('C1')
