@@ -128,6 +128,7 @@ setup(
     package_data={PACKAGENAME: ['prd_data/HST/*/*.dat',
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
+                                'pre_delivery_data/*/*',
                                 'source_data/*/*.txt',
                                 'source_data/*.txt',
                                 'tests/test_data/*/*/*/*.fits',
