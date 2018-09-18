@@ -105,7 +105,7 @@ def dpdy(a, x, y):
     return differential
 
 
-def flatten(A, order):
+def flatten(coefficients):
     """Convert triangular layout to linear array.
 
     For many of the polynomial operations the coefficients A[i,j] are contained in an
@@ -116,24 +116,27 @@ def flatten(A, order):
 
     Parameters
     ----------
-    A       a two-dimensional float array of shape (order+1, order+1) supplying the polynomial coefficients
-            in JWST order. The coefficient at position [i,j] multiplies the value of x**(i-j) * y**j
-    order   an integer,  the order of the polynomial
+    coefficients : array
+        a two-dimensional float array of shape (order+1, order+1) supplying the polynomial
+        coefficients in JWST order. The coefficient at position [i,j] multiplies the value
+        of x**(i-j) * y**j.
 
     Returns
     -------
-    AF : array
+    flate_coefficients : array
         a one-dimensional array including only those terms where i <= j
 
     """
-    terms = (order+1)*(order+2) // 2
-    AF = np.zeros(terms)
+    poly_degree = coefficients.shape[0]-1
+    n_coefficients = number_of_coefficients(poly_degree)
+
+    flat_coefficients = np.zeros(n_coefficients)
     k = 0
-    for i in range(order+1):
+    for i in range(poly_degree+1):
         for j in range(i+1):
-            AF[k] = A[i, j]
+            flat_coefficients[k] = coefficients[i, j]
             k += 1
-    return AF
+    return flat_coefficients
 
 
 def FlipX(A, order=4):
@@ -511,7 +514,7 @@ def reorder(A, B):
 
 
 
-def rescale(A, B, C, D, order, scale):
+def rescale(A, B, C, D, scale):
     """Change coefficients to arcsec scale.
 
     Ported here from makeSIAF.py
@@ -648,7 +651,7 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
                     atrotate[m, n] = atrotate[m, n] + factor * cosSin * at[m, j]
                     if verbose: print(m, n, j, factor, 'cos^', j+2*mu-m+n, 'sin^', 2*m-2*mu-j-n, ' A', m, j)
     # Put back in linear layout
-    arotate = flatten(atrotate, order)
+    arotate = flatten(atrotate)
 
     return arotate
 
@@ -692,21 +695,22 @@ def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
                 print()
 
     # Put back in linear layout
-    ashift = flatten(atshift, order)
+    ashift = flatten(atshift)
 
     return ashift
 
 
 def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
-    """SUPERSEDED BY two_step.
+    """Transform polynomial coefficients.
 
-    Transform polynomial coefficients to allow for
+    This allows for
     xp = a*x + b*y
     yp = c*x + d*y
 
-    Designed to work with Sabatke solutions which included a linear transformation of the pixel coordinates
-    before the polynomial distortion solution was calculated.
-    TransCoeffs combines the two steps into a single polynomial
+    Designed to work with Sabatke solutions which included a linear transformation of the pixel
+    coordinates before the polynomial distortion solution was calculated.
+
+    TransCoeffs combines the two steps into a single polynomial.
 
     """
     A1 = np.zeros((order + 1, order + 1))
@@ -825,14 +829,17 @@ def two_step(A, B, a, b, order):
     u = AP[i,j] * x**(i-j) * y**j
     v = BP[i,j] * x**(i-j) * y**j
     All input and output polynomials are flattened arrays of dimension (order+1)(order+2)/2
-    Internally they are processed as equivalent two dimensional arrays as described in the poly documentation
+    Internally they are processed as equivalent two dimensional arrays as described in the poly
+    documentation.
 
     Parameters
     ----------
-    A       polynomial array converting from secondary xp and yp pixel positions to final coordinates u
-    B       polynomial array converting from secondary xp and yp pixel positions to final coordinates v
-    a       set of linear coefficients converting (x,y) to xp
-    b       set of linear coefficients converting (x,y) to yp
+    A : array
+        polynomial converting from secondary xp and yp pixel positions to final coordinates u
+    B : array
+        polynomial converting from secondary xp and yp pixel positions to final coordinates v
+    a : set of linear coefficients converting (x,y) to xp
+    b : set of linear coefficients converting (x,y) to yp
     order   polynomial order
 
     Returns
@@ -840,9 +847,9 @@ def two_step(A, B, a, b, order):
     Aflat, Bflat    arrays of polynomials as calculated
 
     """
-    # terms = (order+1)*(order+2)//2
-    A2 = np.zeros((order+1, order+1))
-    B2 = np.zeros((order+1, order+1))
+    poly_degree = polynomial_degree(len(A))
+    A2 = np.zeros((poly_degree+1, poly_degree+1))
+    B2 = np.zeros((poly_degree+1, poly_degree+1))
     
     k = 0
     for i in range(order+1):
@@ -858,7 +865,7 @@ def two_step(A, B, a, b, order):
             k += 1
     
     # Flatten A2 and B2
-    Aflat = flatten(A2, order)
-    Bflat = flatten(B2, order)
+    Aflat = flatten(A2)
+    Bflat = flatten(B2)
 
     return Aflat, Bflat
