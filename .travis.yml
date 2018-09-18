@@ -75,4 +75,4 @@ deploy:
   on:
     branch: master
     tags: true
-    condition: SETUP_CMD='install'
+    condition: $SETUP_CMD='install'
