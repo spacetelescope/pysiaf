@@ -318,7 +318,7 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 emulate_delivery = True
-# emulate_delivery = False
+emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)

@@ -119,7 +119,7 @@ def test_RotateCoeffs(verbose=False):
     thetar = np.radians(theta)
     xp = x*np.cos(thetar) - y*np.sin(thetar)
     yp = x*np.sin(thetar) + y*np.cos(thetar)
-    ap = polynomial.RotateCoeffs(a, theta, order)
+    ap = polynomial.prepend_rotation_to_polynomial(a, theta, order)
     u = polynomial.poly(a, x, y, order)
     up = polynomial.poly(ap, xp, yp, order) # using transformed point and polynomial
     if verbose:
@@ -208,7 +208,7 @@ def test_invert(verbose=True):
     return
 
 def test_ShiftCoeffs(verbose=False):
-    """ Test accuracy of ShiftCoeffs method"""
+    """ Test accuracy of shift_coefficients method"""
 
     # First invent a plausible polynomial
     order = 5
@@ -222,7 +222,7 @@ def test_ShiftCoeffs(verbose=False):
     np.random.seed(seed=1)
     [xshift, yshift] = 1024.0 * np.random.rand(2) - 512.0
 
-    ashift = polynomial.ShiftCoeffs(a, xshift, yshift, 5, verbose)
+    ashift = polynomial.shift_coefficients(a, xshift, yshift, verbose)
     if verbose:
         print('AS')
         polynomial.print_triangle(ashift)

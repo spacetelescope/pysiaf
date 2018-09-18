@@ -81,9 +81,8 @@ def process_nirspec_aperture(aperture, verbose=False):
 
     for axis in ['A', 'B']:
         # modified is _shifted or _XYflipped, see Calc worksheet Rows 8,9,10
-        pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.ShiftCoeffs(
-            pcf_data[pcf_name]['{}'.format(axis)], Xref, Yref, order=polynomial_degree,
-            verbose=False)
+        pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.shift_coefficients(
+            pcf_data[pcf_name]['{}'.format(axis)], Xref, Yref, verbose=False)
         if (AperName in ['NRS2_FULL']) or (parent_aperture_name == 'NRS2_FULL'):
             # Add an XY flip (The definition of the SCI frame differs from that of the DET frame,
             # therefore the polynomial coefficients are redefined so the net transformation from
@@ -99,12 +98,10 @@ def process_nirspec_aperture(aperture, verbose=False):
         Xoffset = aperture.XSciRef - parent_aperture.XSciRef
         Yoffset = aperture.YSciRef - parent_aperture.YSciRef
 
-    sci2idlx_coefficients = polynomial.ShiftCoeffs(pcf_data[pcf_name]['{}_modified'.format('A')],
-                                                   Xoffset, Yoffset, order=polynomial_degree,
-                                                   verbose=False)
-    sci2idly_coefficients = polynomial.ShiftCoeffs(pcf_data[pcf_name]['{}_modified'.format('B')],
-                                                   Xoffset, Yoffset, order=polynomial_degree,
-                                                   verbose=False)
+    sci2idlx_coefficients = polynomial.shift_coefficients(pcf_data[pcf_name]['{}_modified'.format('A')],
+                                                          Xoffset, Yoffset, verbose=False)
+    sci2idly_coefficients = polynomial.shift_coefficients(pcf_data[pcf_name]['{}_modified'.format('B')],
+                                                          Xoffset, Yoffset, verbose=False)
 
     # set polynomial coefficients for transformation that goes directly to the GWA pupil plane
     idl2sci_factor = +1
@@ -149,14 +146,10 @@ def process_nirspec_aperture(aperture, verbose=False):
         print('aperture.V2Ref, aperture.V3Ref:', aperture.V2Ref, aperture.V3Ref)
 
     # derivatives
-    dXAN_dXgwa = polynomial.ShiftCoeffs(pcf_data['CLEAR_GWA_OTE']['A'], Xgwa_mod, Ygwa_mod,
-                                        order=polynomial_degree, verbose=False)[1]
-    dXAN_dYgwa = polynomial.ShiftCoeffs(pcf_data['CLEAR_GWA_OTE']['A'], Xgwa_mod, Ygwa_mod,
-                                        order=polynomial_degree, verbose=False)[2]
-    dYAN_dXgwa = polynomial.ShiftCoeffs(pcf_data['CLEAR_GWA_OTE']['B'], Xgwa_mod, Ygwa_mod,
-                                        order=polynomial_degree, verbose=False)[1]
-    dYAN_dYgwa = polynomial.ShiftCoeffs(pcf_data['CLEAR_GWA_OTE']['B'], Xgwa_mod, Ygwa_mod,
-                                        order=polynomial_degree, verbose=False)[2]
+    dXAN_dXgwa = polynomial.shift_coefficients(pcf_data['CLEAR_GWA_OTE']['A'], Xgwa_mod, Ygwa_mod, verbose=False)[1]
+    dXAN_dYgwa = polynomial.shift_coefficients(pcf_data['CLEAR_GWA_OTE']['A'], Xgwa_mod, Ygwa_mod, verbose=False)[2]
+    dYAN_dXgwa = polynomial.shift_coefficients(pcf_data['CLEAR_GWA_OTE']['B'], Xgwa_mod, Ygwa_mod, verbose=False)[1]
+    dYAN_dYgwa = polynomial.shift_coefficients(pcf_data['CLEAR_GWA_OTE']['B'], Xgwa_mod, Ygwa_mod, verbose=False)[2]
 
     if verbose:
         print('dXAN_dXgwa, dXAN_dYgwa:', dXAN_dXgwa, dXAN_dYgwa)

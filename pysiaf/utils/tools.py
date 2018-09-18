@@ -22,7 +22,7 @@ import numpy as np
 # from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
-from .polynomial import ShiftCoeffs, FlipY, FlipX, rotate_coefficients, RotateCoeffs, poly, print_triangle
+from .polynomial import shift_coefficients, FlipY, FlipX, rotate_coefficients, prepend_rotation_to_polynomial, poly, print_triangle
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -145,11 +145,11 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
 
         AR, BR = rotate_coefficients(A_in, B_in, V3Angle)
 
-        CS = ShiftCoeffs(C_in, V2Ref, V3Ref, 5)
-        DS = ShiftCoeffs(D_in, V2Ref, V3Ref, 5)
+        CS = shift_coefficients(C_in, V2Ref, V3Ref)
+        DS = shift_coefficients(D_in, V2Ref, V3Ref)
 
-        CR = RotateCoeffs(CS, V3Angle, 5)
-        DR = RotateCoeffs(DS, V3Angle, 5)
+        CR = prepend_rotation_to_polynomial(CS, V3Angle, 5)
+        DR = prepend_rotation_to_polynomial(DS, V3Angle, 5)
 
         if oss:
             # OSS apertures
@@ -190,17 +190,17 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         # master aperture is never OSS
         if abs(betaY) > 90.0:  # e.g. NRCA2_FULL
             # print 'Reverse Y axis direction'
-            AR = -FlipY(A_in, polynomial_degree)
-            BR = FlipY(B_in, polynomial_degree)
-            CR = FlipX(C_in, polynomial_degree)
-            DR = -FlipX(D_in, polynomial_degree)
+            AR = -FlipY(A_in)
+            BR = FlipY(B_in)
+            CR = FlipX(C_in)
+            DR = -FlipX(D_in)
 
         else:  # e.g NRCA1_FULL
             # print 'Reverse X axis direction'
-            AR = -FlipX(A_in, polynomial_degree)
-            BR = FlipX(B_in, polynomial_degree)
-            CR = -FlipX(C_in, polynomial_degree)
-            DR = FlipX(D_in, polynomial_degree)
+            AR = -FlipX(A_in)
+            BR = FlipX(B_in)
+            CR = -FlipX(C_in)
+            DR = FlipX(D_in)
             V3SciXAngle = revert_correct_V3SciXAngle(V3SciXAngle)
 
         # rotate the other way
@@ -214,14 +214,14 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         BFS = B
 
         # shift by parent aperture reference point
-        AF = ShiftCoeffs(AFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
-        BF = ShiftCoeffs(BFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef, polynomial_degree)
+        AF = shift_coefficients(AFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef)
+        BF = shift_coefficients(BFS, -parent_aperture.XDetRef, -parent_aperture.YDetRef)
 
-        CS = RotateCoeffs(CR, -V3SciYAngle, polynomial_degree)
-        DS = RotateCoeffs(DR, -V3SciYAngle, polynomial_degree)
+        CS = prepend_rotation_to_polynomial(CR, -V3SciYAngle)
+        DS = prepend_rotation_to_polynomial(DR, -V3SciYAngle)
 
-        C = ShiftCoeffs(CS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
-        D = ShiftCoeffs(DS, -parent_aperture.V2Ref, -parent_aperture.V3Ref, polynomial_degree)
+        C = shift_coefficients(CS, -parent_aperture.V2Ref, -parent_aperture.V3Ref)
+        D = shift_coefficients(DS, -parent_aperture.V2Ref, -parent_aperture.V3Ref)
 
         C[0] += parent_aperture.XDetRef
         D[0] += parent_aperture.YDetRef
@@ -350,16 +350,16 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
 
         # shift polynomial coefficients of the parent aperture
-        sci2idlx_coefficients_shifted = ShiftCoeffs(sci2idlx_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
-        sci2idly_coefficients_shifted = ShiftCoeffs(sci2idly_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
+        sci2idlx_coefficients_shifted = shift_coefficients(sci2idlx_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
+        sci2idly_coefficients_shifted = shift_coefficients(sci2idly_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
 
         # see calc worksheet in NIRISS SIAFEXCEL
         dx_idl = sci2idlx_coefficients_shifted[0]
         dy_idl = sci2idly_coefficients_shifted[0]
 
         # remove the zero point offsets from the coefficients
-        idl2scix_coefficients_shifted = ShiftCoeffs(idl2scix_coefficients, dx_idl, dy_idl, order=4, verbose=False)
-        idl2sciy_coefficients_shifted = ShiftCoeffs(idl2sciy_coefficients, dx_idl, dy_idl, order=4, verbose=False)
+        idl2scix_coefficients_shifted = shift_coefficients(idl2scix_coefficients, dx_idl, dy_idl, order=4, verbose=False)
+        idl2sciy_coefficients_shifted = shift_coefficients(idl2sciy_coefficients, dx_idl, dy_idl, order=4, verbose=False)
 
         # set 00 coefficient to zero
         sci2idlx_coefficients_shifted[0] = 0
@@ -391,8 +391,8 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
 
         # now shift to child aperture reference point
-        AFS_child = ShiftCoeffs(AF, aperture.XDetRef, aperture.YDetRef, polynomial_degree)
-        BFS_child = ShiftCoeffs(BF, aperture.XDetRef, aperture.YDetRef, polynomial_degree)
+        AFS_child = shift_coefficients(AF, aperture.XDetRef, aperture.YDetRef)
+        BFS_child = shift_coefficients(BF, aperture.XDetRef, aperture.YDetRef)
         CFS_child = CF
         DFS_child = DF
         CFS_child[0] -= aperture.XDetRef
@@ -517,16 +517,16 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     dXSciRef = newXSci - aperture_2.XSciRef
     dYSciRef = newYSci - aperture_2.YSciRef
-    AS = ShiftCoeffs(A, dXSciRef, dYSciRef, order)
-    BS = ShiftCoeffs(B, dXSciRef, dYSciRef, order)
+    AS = shift_coefficients(A, dXSciRef, dYSciRef, order)
+    BS = shift_coefficients(B, dXSciRef, dYSciRef, order)
     if verbose:
         print('VRef1', V2Ref1, V3Ref1)
         print('Idl', newXIdl, newYIdl)
         print('Shift pixel origin by', dXSciRef, dYSciRef)
         print('New Ideal origin', newXIdl, newYIdl)
 
-    CS = ShiftCoeffs(C, AS[0], BS[0], order)
-    DS = ShiftCoeffs(D, AS[0], BS[0], order)
+    CS = shift_coefficients(C, AS[0], BS[0], order)
+    DS = shift_coefficients(D, AS[0], BS[0], order)
     AS[0] = 0.0
     BS[0] = 0.0
     CS[0] = 0.0
@@ -570,8 +570,8 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
             print('newB')
             print_triangle(newB, order)
 
-        newC = RotateCoeffs(CS, -newV3IdlYAngle, order)
-        newD = RotateCoeffs(DS, -newV3IdlYAngle, order)
+        newC = prepend_rotation_to_polynomial(CS, -newV3IdlYAngle, order)
+        newD = prepend_rotation_to_polynomial(DS, -newV3IdlYAngle, order)
 
         if verbose:
             print('newC')

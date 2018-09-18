@@ -645,13 +645,13 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             V2c4 = polynomial.poly(AX, 0, 2047)
             V3c4 = polynomial.poly(BX, 0, 2047)
 
-            AS = polynomial.ShiftCoeffs(AX, 1023.5, 1023.5)
+            AS = polynomial.shift_coefficients(AX, 1023.5, 1023.5)
             AS[0] = 0.0
-            BS = polynomial.ShiftCoeffs(BX, 1023.5, 1023.5)
+            BS = polynomial.shift_coefficients(BX, 1023.5, 1023.5)
             BS[0] = 0.0
-            CS = polynomial.ShiftCoeffs(CX, V2c, V3c)
+            CS = polynomial.shift_coefficients(CX, V2c, V3c)
             CS[0] = 0.0
-            DS = polynomial.ShiftCoeffs(DX, V2c, V3c)
+            DS = polynomial.shift_coefficients(DX, V2c, V3c)
             DS[0] = 0.0
 
             print('\nAS')
@@ -723,8 +723,8 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print('Ideal again %8.3f %8.3f' % (u, v))
 
             # (CR,DR) = Rotate(CF,DF, -betaY)
-            CR = polynomial.RotateCoeffs(CF, math.degrees(V3angle))
-            DR = polynomial.RotateCoeffs(DF, math.degrees(V3angle))
+            CR = polynomial.prepend_rotation_to_polynomial(CF, math.degrees(V3angle))
+            DR = polynomial.prepend_rotation_to_polynomial(DF, math.degrees(V3angle))
             print('\nCR')
             polynomial.print_triangle(CR)
             print('DR')
@@ -783,13 +783,13 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
 
         if verbose:
             print('V2V3 center %8.3f %8.3f' %(V2c, V3c))
-        AS = polynomial.ShiftCoeffs(AX, 1023.5, 1023.5)
+        AS = polynomial.shift_coefficients(AX, 1023.5, 1023.5)
         AS[0] = 0.0
-        BS = polynomial.ShiftCoeffs(BX, 1023.5, 1023.5)
+        BS = polynomial.shift_coefficients(BX, 1023.5, 1023.5)
         BS[0] = 0.0
-        CS = polynomial.ShiftCoeffs(CX, V2c, V3c)
+        CS = polynomial.shift_coefficients(CX, V2c, V3c)
         CS[0] = 0.0
-        DS = polynomial.ShiftCoeffs(DX, V2c, V3c)
+        DS = polynomial.shift_coefficients(DX, V2c, V3c)
         DS[0] = 0.0
 
         if verbose:
@@ -890,8 +890,8 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print('Ideal again %8.3f %8.3f' %(u,v))
 
         # take out the rotation, carried separately in V3IdlYangle
-        CR = polynomial.RotateCoeffs(CF, oss_factor * np.rad2deg(V3angle))
-        DR = polynomial.RotateCoeffs(DF, oss_factor * np.rad2deg(V3angle))
+        CR = polynomial.prepend_rotation_to_polynomial(CF, oss_factor * np.rad2deg(V3angle))
+        DR = polynomial.prepend_rotation_to_polynomial(DF, oss_factor * np.rad2deg(V3angle))
 
         if verbose:
             print('CR')
@@ -1234,10 +1234,10 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     delta = a1 * b2 - a2 * b1
     alpha = (b2 * a0 - a2 * b0) / delta
     beta = (-b1 * a0 + a1 * b0) / delta
-    AT = polynomial.TransCoeffs(A1, a1, a2, b1, b2, 5)
-    BT = polynomial.TransCoeffs(B1, a1, a2, b1, b2, 5)
-    ATS = polynomial.ShiftCoeffs(AT, alpha, beta, 5)
-    BTS = polynomial.ShiftCoeffs(BT, alpha, beta, 5)
+    AT = polynomial.transform_coefficients(A1, a1, a2, b1, b2, 5)
+    BT = polynomial.transform_coefficients(B1, a1, a2, b1, b2, 5)
+    ATS = polynomial.shift_coefficients(AT, alpha, beta)
+    BTS = polynomial.shift_coefficients(BT, alpha, beta)
 
     # Generate polynomials in terms of V2V3 in arcsec
     AF = 3600 * ATS
@@ -1276,8 +1276,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
         P.xlim(r, l)
 
     # Shift to reference point (xref=1024.5, yref=1024.5 hardcoded for COMPOUND apertures. OK?)
-    AFS = polynomial.ShiftCoeffs(AF, xref, yref, 5)
-    BFS = polynomial.ShiftCoeffs(BF, xref, yref, 5)
+    AFS = polynomial.shift_coefficients(AF, xref, yref)
+    BFS = polynomial.shift_coefficients(BF, xref, yref)
 
     if test:
         xy = input('x y positions ')
@@ -1382,8 +1382,8 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
             # Combination polynomials CF and DF transform
             # from XAN,YAN directly to x,y pixels.
 
-            CS = polynomial.ShiftCoeffs(C1, 0.0, -0.13, 5)
-            DS = polynomial.ShiftCoeffs(D1, 0.0, -0.13, 5)
+            CS = polynomial.shift_coefficients(C1, 0.0, -0.13)
+            DS = polynomial.shift_coefficients(D1, 0.0, -0.13)
             CV = np.zeros((terms))
             DV = np.zeros((terms))
 

@@ -309,7 +309,7 @@ def jacob(a, b, x, y, order=4):
 
 def number_of_coefficients(poly_degree):
     """Return number of coefficients corresponding to polynomial degree."""
-    n_coefficients = (poly_degree + 1) * (poly_degree + 2) / 2
+    n_coefficients = np.int((poly_degree + 1) * (poly_degree + 2) / 2)
     return n_coefficients
 
 
@@ -607,7 +607,7 @@ def rotate_coefficients(A, B, angle_deg):
     return AR, BR
 
 
-def RotateCoeffs(a, theta, order=4, verbose=False):
+def prepend_rotation_to_polynomial(a, theta, verbose=False):
     """Rotate axes of coefficients by theta degrees.
 
     Used when a distortion transformation using polynomials A and B is preceded by a rotation.
@@ -625,7 +625,6 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
     ----------
     a          Set of polynomial coefficients
     theta      rotation angle in degrees
-    order      polynomial order
     verbose    logical variable set True only if print-out of coefficient factors is desired.
 
     Returns
@@ -633,6 +632,8 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
     arotate     set of coefficients derived as described above.
 
     """
+    poly_degree = polynomial_degree(len(a))
+
     c = np.cos(np.deg2rad(theta))
     s = np.sin(np.deg2rad(theta))
 
@@ -640,23 +641,24 @@ def RotateCoeffs(a, theta, order=4, verbose=False):
     at = triangular_layout(a)
 
     # Apply rotation
-    atrotate = np.zeros([order+1, order+1])
-    arotate = np.zeros([len(a)]) # Copy shape of a
-    for m in range(order+1):
+    atrotate = np.zeros([poly_degree+1, poly_degree+1])
+    # arotate = np.zeros([len(a)]) # Copy shape of a
+    for m in range(poly_degree+1):
         for n in range(m+1):
             for mu in range(0, m-n+1):
                 for j in range(m-n-mu, m-mu+1):
                     factor = (-1)**(m-n-mu) * choose(m-j, mu) * choose(j, m-n-mu)
                     cosSin = c**(j+2*mu-m+n) * s**(2*m-2*mu-j-n)
                     atrotate[m, n] = atrotate[m, n] + factor * cosSin * at[m, j]
-                    if verbose: print(m, n, j, factor, 'cos^', j+2*mu-m+n, 'sin^', 2*m-2*mu-j-n, ' A', m, j)
+                    if verbose:
+                        print(m, n, j, factor, 'cos^', j+2*mu-m+n, 'sin^', 2*m-2*mu-j-n, ' A', m, j)
     # Put back in linear layout
     arotate = flatten(atrotate)
 
     return arotate
 
 
-def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
+def shift_coefficients(a, xshift, yshift, verbose=False):
     """Calculate coefficients of polynomial when shifted to new origin.
 
     Given a polynomial function such that u = a[i,j] * x**[i-j] * y**[j] summed over i and j
@@ -668,7 +670,6 @@ def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
     a:      Set of coefficients for a polynomial of the given order in JWST order
     xshift  x position in pixels of new solution center
     yshift  y position in pixels of new solution center
-    order   order of the polynomial
     verbose logical variable to choose print-out of coefficient table - defaults to False
 
     Returns
@@ -676,16 +677,18 @@ def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
     ashift - shifted version of the polynomial coefficients.
 
     """
-    # First place in triangular layout
+    poly_degree = polynomial_degree(len(a))
+
+    # place in triangular layout
     at = triangular_layout(a)
 
     # Apply shift
-    atshift = np.zeros((order+1, order+1))
-    for p in range(order + 1):
+    atshift = np.zeros((poly_degree+1, poly_degree+1))
+    for p in range(poly_degree + 1):
         for q in range(p + 1):
             if verbose:
                 print("A'%1d%1d" % (p, q))
-            for i in range(p, order + 1):
+            for i in range(p, poly_degree + 1):
                 for j in range(q, i + 1 - (p - q)):
                     f = choose(j, q) * choose(i - j, p - q)
                     atshift[p, q] = atshift[p, q] + f * xshift**((i - j) - (p - q)) * yshift**(j - q) * at[i, j]
@@ -700,7 +703,7 @@ def ShiftCoeffs(a, xshift, yshift, order=4, verbose=False):
     return ashift
 
 
-def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
+def transform_coefficients(A, a, b, c, d, verbose=False):
     """Transform polynomial coefficients.
 
     This allows for
@@ -710,24 +713,27 @@ def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
     Designed to work with Sabatke solutions which included a linear transformation of the pixel
     coordinates before the polynomial distortion solution was calculated.
 
-    TransCoeffs combines the two steps into a single polynomial.
+    transform_coefficients combines the two steps into a single polynomial.
 
     """
-    A1 = np.zeros((order + 1, order + 1))
-    A2 = np.zeros((order + 1, order + 1))
-    ncoeffs = (order + 1) * (order + 2) // 2
+    poly_degree = polynomial_degree(len(A))
+
+    A1 = np.zeros((poly_degree + 1, poly_degree + 1))
+    A2 = np.zeros((poly_degree + 1, poly_degree + 1))
+
+    ncoeffs = (poly_degree + 1) * (poly_degree + 2) // 2
     if verbose:
-        print(ncoeffs, 'coefficients for order', order)
+        print(ncoeffs, 'coefficients for poly_degree', poly_degree)
     AT = np.zeros((ncoeffs))
 
     # First place A in triangular layout
     k = 0
-    for i in range(order + 1):
+    for i in range(poly_degree + 1):
         for j in range(i + 1):
             A1[i, j] = A[k]
             k += 1
 
-    for m in range(order + 1):
+    for m in range(poly_degree + 1):
         for n in range(m + 1):
             if verbose:
                 print('\nM,N', m, n)
@@ -744,7 +750,7 @@ def TransCoeffs(A, a, b, c, d, order=4, verbose=False):
 
     # Restore A2 to flat layout in AT
     k = 0
-    for m in range(order + 1):
+    for m in range(poly_degree + 1):
         for n in range(m + 1):
             AT[k] = A2[m, n]
             k += 1
