@@ -75,4 +75,5 @@ deploy:
   on:
     branch: master
 #    tags: true
-    condition: SETUP_CMD=install
+    skip_existing: true
+#    condition: SETUP_CMD=install
