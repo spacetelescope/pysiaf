@@ -931,6 +931,7 @@ print('SIAFXML written in {}'.format(filename))
 # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
 # ref_siaf = pysiaf.Siaf(instrument)
 ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+# ref_siaf = pysiaf.Siaf(instrument, '/Users/jsahlmann/Desktop/NIRSpec_SIAF.xml')
 new_siaf = pysiaf.Siaf(instrument, filename)
 
 report_dir = os.path.join(REPORTS_ROOT, instrument)
