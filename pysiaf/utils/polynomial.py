@@ -28,6 +28,8 @@ def add_rotation(A, B, theta_deg):
     Ported to here from makeSIAF.py
     J. Sahlmann 2018-01-03
 
+    Formerly named Rotate or rotate_coefficients.
+
     Parameters
     ----------
     A   set of polynomial coefficients converting from (x,y) to a variable u
@@ -460,6 +462,8 @@ def prepend_rotation_to_polynomial(a, theta, verbose=False):
     i.e, u = ap[i,j] * xp**(i-j) * yp**j
     The rotation is opposite to the usual rotation as this routine was designed for the inverse
     transformation between Ideal and V2V3 or tel. Effectively the angle is reversed
+
+    Formerly named RotateCoeffs.
 
     Parameters
     ----------
