@@ -31,12 +31,12 @@ def test_against_test_data():
     computed and compared against acceptable thresholds.
 
     """
-    siaf = Siaf(instrument)
+    # siaf = Siaf(instrument)
     # directory that holds SIAF XML file
-    # test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
+    test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
     # siaf_xml_file = os.path.join(test_dir, '{}_SIAF.xml'.format(instrument))
     # siaf = Siaf(instrument, filename=siaf_xml_file)
-    # siaf = Siaf(instrument, basepath=test_dir)
+    siaf = Siaf(instrument, basepath=test_dir)
 
     test_data_dir = os.path.join(TEST_DATA_ROOT, instrument)
 
