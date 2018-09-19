@@ -34,7 +34,7 @@ import pysiaf
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 from pysiaf.utils import compare, polynomial
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, REPORTS_ROOT, V3_TO_YAN_OFFSET_DEG
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, REPORTS_ROOT, V3_TO_YAN_OFFSET_DEG, JWST_DELIVERY_DATA_ROOT
 import generate_reference_files
 
 
@@ -88,8 +88,8 @@ def process_nirspec_aperture(aperture, verbose=False):
             # therefore the polynomial coefficients are redefined so the net transformation from
             # the DET to GWA plane is the same as is obtained when the NRS2_FULL_OSS row is used.
             # see JWST-STScI-005921.)
-            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.flip_xy(
-                pcf_data[pcf_name]['{}_modified'.format(axis)], order=polynomial_degree)
+            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.FlipXY(
+                pcf_data[pcf_name]['{}_modified'.format(axis)])
 
     if 'MIMF' not in AperName:
         Xoffset = 0
@@ -683,7 +683,7 @@ detector_layout = iando.read.read_siaf_detector_layout()
 master_aperture_names = detector_layout['AperName'].data
 
 # directory containing reference files delivered by IDT
-source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'nirspec_H-014')
+source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print ('Loading reference files from directory: {}'.format(source_data_dir))
 
 # XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
@@ -915,33 +915,71 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 # write the SIAFXML to disk
-# filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
-[filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'])
-print('SIAFXML written in {}'.format(filename))
 
-# compare to SIAFXML produced the old way
-# ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
-# ref_siaf = pysiaf.Siaf(instrument)
-ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
-new_siaf = pysiaf.Siaf(instrument, filename)
 
-report_dir = os.path.join(REPORTS_ROOT, instrument)
-comparison_aperture_names = [AperName for AperName in aperture_name_list if 'MIMF' in AperName]
-# comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType == 'SLIT']
-# comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType in ['FULLSCA', 'OSS']]
-# comparison_aperture_names = pcf_file_mapping.keys()
+emulate_delivery = True
+# emulate_delivery = False
 
-# comparison_aperture_names = ['NRS_SKY_OTEIP']
-# comparison_aperture_names = ['NRS_SKY_OTEIP']
-comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS']
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS_SKY_OTEIP'])
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
-compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-# tools.compare_siaf_xml(ref_siaf, new_siaf)
+if emulate_delivery:
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    if not os.path.isdir(pre_delivery_dir):
+        os.makedirs(pre_delivery_dir)
 
+    # write the SIAF files to disk
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+
+    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+
+    # compare new SIAF with PRD version
+    ref_siaf = pysiaf.Siaf(instrument)
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+
+    # run some tests on the new SIAF
+    from pysiaf.tests import test_nirspec
+
+    print('\nRunning regression test of pre_delivery_siaf against IDT test_data:')
+    test_nirspec.test_against_test_data(siaf=pre_delivery_siaf)
+
+    print('\nRunning nirspec_aperture_transforms test for pre_delivery_siaf')
+    test_nirspec.test_nirspec_aperture_transforms(siaf=pre_delivery_siaf, verbose=False)
+
+    print('\nRunning nirspec_slit_transforms test for pre_delivery_siaf')
+    test_nirspec.test_nirspec_slit_transformations(siaf=pre_delivery_siaf, verbose=False)
+
+    new_siaf = pre_delivery_siaf
+else:
+
+
+    # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
+    [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'])
+    print('SIAFXML written in {}'.format(filename))
+
+    # compare to SIAFXML produced the old way
+    # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
+    ref_siaf = pysiaf.Siaf(instrument)
+    # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+    # new_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+    new_siaf = pysiaf.Siaf(instrument, filename)
+
+    report_dir = os.path.join(REPORTS_ROOT, instrument)
+    comparison_aperture_names = [AperName for AperName in aperture_name_list if 'MIMF' in AperName]
+    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType == 'SLIT']
+    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType in ['FULLSCA', 'OSS']]
+    # comparison_aperture_names = pcf_file_mapping.keys()
+
+    # comparison_aperture_names = ['NRS_SKY_OTEIP']
+    # comparison_aperture_names = ['NRS_SKY_OTEIP']
+    comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS']
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS_SKY_OTEIP'])
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
+    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+    # tools.compare_siaf_xml(ref_siaf, new_siaf)
+
+selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and ('MSA' not in AperName) and ('SKY' not in AperName)]
 # run roundtrip test on all apertures
-compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf)
+compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=selected_aperture_name)
 
 
 
