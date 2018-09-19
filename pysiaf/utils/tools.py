@@ -498,13 +498,13 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     if verbose:
         print('\nA')
-        print_triangle(A, order)
+        print_triangle(A)
         print('B')
-        print_triangle(B, order)
+        print_triangle(B)
         print('C')
-        print_triangle(C, order)
+        print_triangle(C)
         print('D')
-        print_triangle(D, order)
+        print_triangle(D)
 
         (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(A, B, C, D,
                                                                          verbose=verbose, instrument = instrument)
@@ -519,16 +519,16 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     dXSciRef = newXSci - aperture_2.XSciRef
     dYSciRef = newYSci - aperture_2.YSciRef
-    AS = shift_coefficients(A, dXSciRef, dYSciRef, order)
-    BS = shift_coefficients(B, dXSciRef, dYSciRef, order)
+    AS = shift_coefficients(A, dXSciRef, dYSciRef)
+    BS = shift_coefficients(B, dXSciRef, dYSciRef)
     if verbose:
         print('VRef1', V2Ref1, V3Ref1)
         print('Idl', newXIdl, newYIdl)
         print('Shift pixel origin by', dXSciRef, dYSciRef)
         print('New Ideal origin', newXIdl, newYIdl)
 
-    CS = shift_coefficients(C, AS[0], BS[0], order)
-    DS = shift_coefficients(D, AS[0], BS[0], order)
+    CS = shift_coefficients(C, AS[0], BS[0])
+    DS = shift_coefficients(D, AS[0], BS[0])
     AS[0] = 0.0
     BS[0] = 0.0
     CS[0] = 0.0
@@ -536,13 +536,13 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     if verbose:
         print('\nShifted Polynomials')
         print('AS')
-        print_triangle(AS, order)
+        print_triangle(AS)
         print('BS')
-        print_triangle(BS, order)
+        print_triangle(BS)
         print('CS')
-        print_triangle(CS, order)
+        print_triangle(CS)
         print('DS')
-        print_triangle(DS, order)
+        print_triangle(DS)
         print('\nABCDS')
 
     (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(AS, BS, CS, DS,
@@ -568,18 +568,18 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         if verbose:
             print('New angle', newV3IdlYAngle)
             print('\nnewA')
-            print_triangle(newA, order)
+            print_triangle(newA)
             print('newB')
-            print_triangle(newB, order)
+            print_triangle(newB)
 
-        newC = prepend_rotation_to_polynomial(CS, -newV3IdlYAngle, order)
-        newD = prepend_rotation_to_polynomial(DS, -newV3IdlYAngle, order)
+        newC = prepend_rotation_to_polynomial(CS, -newV3IdlYAngle)
+        newD = prepend_rotation_to_polynomial(DS, -newV3IdlYAngle)
 
         if verbose:
             print('newC')
-            print_triangle(newC, order)
+            print_triangle(newC)
             print('newD')
-            print_triangle(newD, order)
+            print_triangle(newD)
 
             (stat, xmean, ymean, xstd, ystd, data) = compute_roundtrip_error(newA, newB, newC, newD,
                                                                              verbose=verbose, instrument=instrument)
