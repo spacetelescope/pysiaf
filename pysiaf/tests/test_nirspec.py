@@ -12,46 +12,50 @@ import os
 
 from astropy.io import fits
 from astropy.table import Table
+import copy
 import numpy as np
 import pylab as pl
 # import pytest
 
 
 
-from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT
+from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT, JWST_SOURCE_DATA_ROOT
 from ..siaf import Siaf
 
 
 instrument = 'NIRSpec'
 
-def test_against_test_data():
+def test_against_test_data(siaf=None):
     """NIRSpec test data comparison.
 
     Mean and RMS difference between the IDT computations and the pysiaf computations are
     computed and compared against acceptable thresholds.
 
     """
-    siaf = Siaf(instrument)
+    if siaf is None:
+        siaf = Siaf(instrument)
+    else:
+        # safeguard against side-effects when running several tests on a provided siaf, e.g.
+        # setting tilt to non-zero value
+        siaf = copy.deepcopy(siaf)
     # directory that holds SIAF XML file
     # test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
     # siaf_xml_file = os.path.join(test_dir, '{}_SIAF.xml'.format(instrument))
     # siaf = Siaf(instrument, filename=siaf_xml_file)
 
-    test_data_dir = os.path.join(TEST_DATA_ROOT, instrument)
+    # test_data_dir = os.path.join(TEST_DATA_ROOT, instrument)
+    test_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery', 'test_data')
 
     print(' ')
     for include_tilt in [False, True]:
 
         if include_tilt is False:
-            ta_transform_data_dir = os.path.join(test_data_dir, 'testDataSet_TA', 'testDataNoTilt')
+            ta_transform_data_dir = os.path.join(test_data_dir, 'TA_testDataNoTilt')
         else:
-            ta_transform_data_dir = os.path.join(test_data_dir, 'testDataSet_TA', 'testDataWithGWATilt')
+            ta_transform_data_dir = os.path.join(test_data_dir, 'TA_testDataWithGWATilt')
 
         filter_list = 'CLEAR F110W F140X'.split()
         sca_list = ['SCA491', 'SCA492']
-        # filter_list = 'CLEAR'.split()
-        # sca_list = ['SCA491']
-        # sca_list = ['SCA492']
 
         difference_metrics = {}
         index = 0
@@ -128,7 +132,7 @@ def test_against_test_data():
                 index += 1
 
 
-def test_nirspec_aperture_transforms(verbose=False):
+def test_nirspec_aperture_transforms(verbose=False, siaf=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -138,8 +142,10 @@ def test_nirspec_aperture_transforms(verbose=False):
     verbose
 
     """
-
-    siaf = Siaf(instrument)
+    if siaf is None:
+        siaf = Siaf(instrument)
+    else:
+        siaf = copy.deepcopy(siaf)
 
     labels = ['X', 'Y']
     threshold = 0.2
@@ -188,7 +194,7 @@ def test_nirspec_aperture_transforms(verbose=False):
                         assert error < threshold
 
 
-def test_nirspec_slit_transformations(verbose=False):
+def test_nirspec_slit_transformations(verbose=False, siaf=None):
     """Test that slit to detector transforms give the same answer as the equivalent SCA transform.
 
     Check that reference_point and corners work for slit.
@@ -203,7 +209,10 @@ def test_nirspec_slit_transformations(verbose=False):
     Johannes Sahlmann
 
     """
-    siaf = Siaf(instrument)
+    if siaf is None:
+        siaf = Siaf(instrument)
+    else:
+        siaf = copy.deepcopy(siaf)
 
     threshold = 0.010  # arc-seconds
     pixel_threshold = 10 * threshold
@@ -243,8 +252,8 @@ def test_nirspec_slit_transformations(verbose=False):
             error = np.sqrt((xsciref - xscidref) ** 2 + (ysciref - yscidref) ** 2)
             if verbose:
                 print(
-                '{} {}: Error in ref. pnt. {:02.6f} pixels.'.format(siaf.instrument, aper_name,
-                                                                    error))
+                '{} {}: Error in reference point {:02.6f} pixels. (parent aperture is {})'.format(siaf.instrument, aper_name,
+                                                                    error, parent_aperture.AperName))
             assert error < pixel_threshold
 
             # verify that corners can be retrieved and check 1st vertice
