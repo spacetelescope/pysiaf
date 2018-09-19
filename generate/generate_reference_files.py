@@ -609,28 +609,28 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
         if verbose:
             print('Original values')
             print('A')
-            polynomial.triangle(A, 4)
+            polynomial.print_triangle(A)
             print('B')
-            polynomial.triangle(B, 4)
+            polynomial.print_triangle(B)
         print('C')
-        polynomial.triangle(C, 4)
+        polynomial.print_triangle(C)
             # print('D')
-            # polynomial.triangle(D, 4)
+            # polynomial.print_triangle(D)
         # Scale to arcsec
-        (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, 4, nscale)
+        (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, nscale)
 
         if 0:
             print
             print('Scaled values')
             if verbose:
                 print('AX')
-                polynomial.triangle(AX, 4)
+                polynomial.print_triangle(AX)
                 print('BX')
-                polynomial.triangle(BX, 4)
+                polynomial.print_triangle(BX)
             print('CX')
-            polynomial.triangle(CX, 4)
+            polynomial.print_triangle(CX)
             print('DX')
-            polynomial.triangle(DX, 4)
+            polynomial.print_triangle(DX)
 
             V2c = polynomial.poly(AX, 1023.5, 1023.5)
             V3c = polynomial.poly(BX, 1023.5, 1023.5)
@@ -645,19 +645,19 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             V2c4 = polynomial.poly(AX, 0, 2047)
             V3c4 = polynomial.poly(BX, 0, 2047)
 
-            AS = polynomial.ShiftCoeffs(AX, 1023.5, 1023.5)
+            AS = polynomial.shift_coefficients(AX, 1023.5, 1023.5)
             AS[0] = 0.0
-            BS = polynomial.ShiftCoeffs(BX, 1023.5, 1023.5)
+            BS = polynomial.shift_coefficients(BX, 1023.5, 1023.5)
             BS[0] = 0.0
-            CS = polynomial.ShiftCoeffs(CX, V2c, V3c)
+            CS = polynomial.shift_coefficients(CX, V2c, V3c)
             CS[0] = 0.0
-            DS = polynomial.ShiftCoeffs(DX, V2c, V3c)
+            DS = polynomial.shift_coefficients(DX, V2c, V3c)
             DS[0] = 0.0
 
             print('\nAS')
-            polynomial.triangle(AS)
+            polynomial.print_triangle(AS)
             print('BS')
-            polynomial.triangle(BS)
+            polynomial.print_triangle(BS)
 
             xScale = np.hypot(AS[1], BS[1])
             yScale = np.hypot(AS[2], BS[2])
@@ -675,9 +675,9 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             BF = -BS
 
             print('\nAF')
-            polynomial.triangle(AF)
+            polynomial.print_triangle(AF)
             print('BF')
-            polynomial.triangle(BF)
+            polynomial.print_triangle(BF)
 
             xi = polynomial.poly(AF, xs, ys)
             yi = polynomial.poly(BF, xs, ys)
@@ -685,17 +685,17 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print(' %8.3f %8.3f' % (xs, ys))
             print(' %8.3f %8.3f' % (xi, yi))
 
-            CF = polynomial.FlipY(CS)
-            DF = polynomial.FlipY(DS)
+            CF = polynomial.flip_y(CS)
+            DF = polynomial.flip_y(DS)
 
             print('\nCS')
-            polynomial.triangle(CS)
+            polynomial.print_triangle(CS)
             print('DS')
-            polynomial.triangle(DS)
+            polynomial.print_triangle(DS)
             print('CF')
-            polynomial.triangle(CF)
+            polynomial.print_triangle(CF)
             print('DF')
-            polynomial.triangle(DF)
+            polynomial.print_triangle(DF)
 
             xdr = polynomial.poly(CF, xi, yi)
             ydr = polynomial.poly(DF, xi, yi)
@@ -710,25 +710,25 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             if abs(V3angle) > math.pi / 2:
                 V3angle = V3angle - math.copysign(math.pi, V3angle)
             print('V3angle %10.4f' % math.degrees(V3angle))
-            (AR, BR) = polynomial.Rotate(AF, BF, -V3angle)
+            (AR, BR) = polynomial.add_rotation(AF, BF, np.rad2deg(-V3angle))
             print('AR')
-            polynomial.triangle(AR)
+            polynomial.print_triangle(AR)
             print('BR')
-            polynomial.triangle(BR)
+            polynomial.print_triangle(BR)
 
             xii = polynomial.poly(AR, xs, ys)
             yii = polynomial.poly(BR, xs, ys)
             print('Ideal Rotated  %8.3f %8.3f' % (xii, yii))
-            (u, v) = polynomial.Rotate(xii, yii, -betaY)
+            (u, v) = polynomial.add_rotation(xii, yii, np.rad2deg(-betaY))
             print('Ideal again %8.3f %8.3f' % (u, v))
 
-            # (CR,DR) = Rotate(CF,DF, -betaY)
-            CR = polynomial.RotateCoeffs(CF, math.degrees(V3angle))
-            DR = polynomial.RotateCoeffs(DF, math.degrees(V3angle))
+            # (CR,DR) = add_rotation(CF,DF, -betaY)
+            CR = polynomial.prepend_rotation_to_polynomial(CF, math.degrees(V3angle))
+            DR = polynomial.prepend_rotation_to_polynomial(DF, math.degrees(V3angle))
             print('\nCR')
-            polynomial.triangle(CR)
+            polynomial.print_triangle(CR)
             print('DR')
-            polynomial.triangle(DR)
+            polynomial.print_triangle(DR)
             xs3 = polynomial.poly(CR, xii, yii)
             ys3 = polynomial.poly(DR, xii, yii)
             print('Regained rotated Science %8.3f %8.3f' % (xs3, ys3))
@@ -757,46 +757,46 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
         if verbose:
             print('Original values')
             print('A')
-            polynomial.triangle(A,4)
+            polynomial.print_triangle(A)
             print('B')
-            polynomial.triangle(B,4)
+            polynomial.print_triangle(B)
             print('C')
-            polynomial.triangle(C,4)
+            polynomial.print_triangle(C)
             print('D')
-            polynomial.triangle(D,4)
+            polynomial.print_triangle(D)
 
         # Scale to arcsec
-        (AX,BX,CX,DX) = polynomial.rescale(A,B,C,D,4,nscale)
+        (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, nscale)
         print('Scaled values')
         if verbose:
             print('AX')
-            polynomial.triangle(AX,4)
+            polynomial.print_triangle(AX)
             print('BX')
-            polynomial.triangle(BX,4)
+            polynomial.print_triangle(BX)
             print('CX')
-            polynomial.triangle(CX,4)
+            polynomial.print_triangle(CX)
             print('DX')
-            polynomial.triangle(DX,4)
+            polynomial.print_triangle(DX)
 
         V2c = polynomial.poly(AX, 1023.5, 1023.5)
         V3c = polynomial.poly(BX, 1023.5, 1023.5)
 
         if verbose:
             print('V2V3 center %8.3f %8.3f' %(V2c, V3c))
-        AS = polynomial.ShiftCoeffs(AX, 1023.5, 1023.5)
+        AS = polynomial.shift_coefficients(AX, 1023.5, 1023.5)
         AS[0] = 0.0
-        BS = polynomial.ShiftCoeffs(BX, 1023.5, 1023.5)
+        BS = polynomial.shift_coefficients(BX, 1023.5, 1023.5)
         BS[0] = 0.0
-        CS = polynomial.ShiftCoeffs(CX, V2c, V3c)
+        CS = polynomial.shift_coefficients(CX, V2c, V3c)
         CS[0] = 0.0
-        DS = polynomial.ShiftCoeffs(DX, V2c, V3c)
+        DS = polynomial.shift_coefficients(DX, V2c, V3c)
         DS[0] = 0.0
 
         if verbose:
             print('\nAS')
-            polynomial.triangle(AS)
+            polynomial.print_triangle(AS)
             print('BS')
-            polynomial.triangle(BS)
+            polynomial.print_triangle(BS)
 
         x0 = 300
         y0 = 700
@@ -808,8 +808,8 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
 
             xs = -xd
             ys = -yd
-            AF = -polynomial.FlipX(polynomial.FlipY(AS))
-            BF = -polynomial.FlipX(polynomial.FlipY(BS))
+            AF = -polynomial.flip_x(polynomial.flip_y(AS))
+            BF = -polynomial.flip_x(polynomial.flip_y(BS))
         else:
             xd = 300
             yd = 700
@@ -826,9 +826,9 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print('%8.1f %8.1f'%(x0, y0))
             print('%8.3f %8.3f' %(u,v))
             print('\nAF')
-            polynomial.triangle(AF)
+            polynomial.print_triangle(AF)
             print('BF')
-            polynomial.triangle(BF)
+            polynomial.print_triangle(BF)
 
         xi = polynomial.poly(AF,xs,ys)
         yi = polynomial.poly(BF,xs,ys)
@@ -847,11 +847,11 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print()
 
         if oss is False:
-            CF = -polynomial.FlipX(polynomial.FlipY(CS))
-            DF = -polynomial.FlipX(polynomial.FlipY(DS))
+            CF = -polynomial.flip_x(polynomial.flip_y(CS))
+            DF = -polynomial.flip_x(polynomial.flip_y(DS))
         else:
-            CF = polynomial.FlipY(CS)
-            DF = polynomial.FlipY(DS)
+            CF = polynomial.flip_y(CS)
+            DF = polynomial.flip_y(DS)
 
         xsr = polynomial.poly(CF,xi,yi)
         ysr = polynomial.poly(DF, xi, yi)
@@ -859,9 +859,9 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             print('Regained Science  %8.3f %8.3f' %(xsr, ysr))
             print()
             print('AF')
-            polynomial.triangle(AF)
+            polynomial.print_triangle(AF)
             print('BF')
-            polynomial.triangle(BF)
+            polynomial.print_triangle(BF)
 
         betaX = np.arctan2(oss_factor * AF[1], BF[1])
         betaY = np.arctan2(oss_factor * AF[2], BF[2])
@@ -875,29 +875,29 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
         if verbose:
             print('V3angle %10.4f' % np.rad2deg(V3angle))
 
-        (AR,BR) = polynomial.Rotate(AF, BF, -1 * oss_factor * V3angle)
+        (AR,BR) = polynomial.add_rotation(AF, BF, -1 * oss_factor * np.rad2deg(V3angle))
 
         if verbose:
             print('AR')
-            polynomial.triangle(AR)
+            polynomial.print_triangle(AR)
             print('BR')
-            polynomial.triangle(BR)
+            polynomial.print_triangle(BR)
 
             xii = polynomial.poly(AR, xs,ys)
             yii = polynomial.poly(BR, xs,ys)
             print('Ideal Rotated  %8.3f %8.3f' %(xii,yii))
-            (u,v) = polynomial.Rotate(xii,yii, -betaY)
+            (u,v) = polynomial.add_rotation(xii, yii, np.rad2deg(-betaY))
             print('Ideal again %8.3f %8.3f' %(u,v))
 
         # take out the rotation, carried separately in V3IdlYangle
-        CR = polynomial.RotateCoeffs(CF, oss_factor * np.rad2deg(V3angle))
-        DR = polynomial.RotateCoeffs(DF, oss_factor * np.rad2deg(V3angle))
+        CR = polynomial.prepend_rotation_to_polynomial(CF, oss_factor * np.rad2deg(V3angle))
+        DR = polynomial.prepend_rotation_to_polynomial(DF, oss_factor * np.rad2deg(V3angle))
 
         if verbose:
             print('CR')
-            polynomial.triangle(CR)
+            polynomial.print_triangle(CR)
             print('DR')
-            polynomial.triangle(DR)
+            polynomial.print_triangle(DR)
             xsr = polynomial.poly(CR,xii,yii)
             ysr = polynomial.poly(DR, xii, yii)
             # if verbose:
@@ -1217,14 +1217,14 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
             for i in range(terms):
                 A[i] = float(column[i + 7])
                 B[i] = float(column[i + 28])
-            (A1, B1) = polynomial.nircam_reorder(A, B, order)
+            (A1, B1) = polynomial.reorder(A, B)
             part2 = True
             if verbose:
                 print(' Before combining')
                 print('A1')
-                polynomial.triangle(A1, 5)
+                polynomial.print_triangle(A1)
                 print('B1')
-                polynomial.triangle(B1, 5)
+                polynomial.print_triangle(B1)
 
     if not (part1 and part2):
         print('Incomplete Transform')
@@ -1234,10 +1234,10 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     delta = a1 * b2 - a2 * b1
     alpha = (b2 * a0 - a2 * b0) / delta
     beta = (-b1 * a0 + a1 * b0) / delta
-    AT = polynomial.TransCoeffs(A1, a1, a2, b1, b2, 5)
-    BT = polynomial.TransCoeffs(B1, a1, a2, b1, b2, 5)
-    ATS = polynomial.ShiftCoeffs(AT, alpha, beta, 5)
-    BTS = polynomial.ShiftCoeffs(BT, alpha, beta, 5)
+    AT = polynomial.transform_coefficients(A1, a1, a2, b1, b2)
+    BT = polynomial.transform_coefficients(B1, a1, a2, b1, b2)
+    ATS = polynomial.shift_coefficients(AT, alpha, beta)
+    BTS = polynomial.shift_coefficients(BT, alpha, beta)
 
     # Generate polynomials in terms of V2V3 in arcsec
     AF = 3600 * ATS
@@ -1276,8 +1276,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
         P.xlim(r, l)
 
     # Shift to reference point (xref=1024.5, yref=1024.5 hardcoded for COMPOUND apertures. OK?)
-    AFS = polynomial.ShiftCoeffs(AF, xref, yref, 5)
-    BFS = polynomial.ShiftCoeffs(BF, xref, yref, 5)
+    AFS = polynomial.shift_coefficients(AF, xref, yref)
+    BFS = polynomial.shift_coefficients(BF, xref, yref)
 
     if test:
         xy = input('x y positions ')
@@ -1371,19 +1371,19 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
             for i in range(terms):
                 C[i] = float(column[i + 7])
                 D[i] = float(column[i + 28])
-            (C1, D1) = polynomial.nircam_reorder(C, D, order)
+            (C1, D1) = polynomial.reorder(C, D)
 
             if verbose:
                 print('C1')
-                polynomial.triangle(C1, order)
+                polynomial.print_triangle(C1)
                 print('D1')
-                polynomial.triangle(D1, order)
+                polynomial.print_triangle(D1)
 
             # Combination polynomials CF and DF transform
             # from XAN,YAN directly to x,y pixels.
 
-            CS = polynomial.ShiftCoeffs(C1, 0.0, -0.13, 5)
-            DS = polynomial.ShiftCoeffs(D1, 0.0, -0.13, 5)
+            CS = polynomial.shift_coefficients(C1, 0.0, -0.13)
+            DS = polynomial.shift_coefficients(D1, 0.0, -0.13)
             CV = np.zeros((terms))
             DV = np.zeros((terms))
 
