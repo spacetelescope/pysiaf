@@ -90,7 +90,7 @@ def process_nirspec_aperture(aperture, verbose=False):
             # the DET to GWA plane is the same as is obtained when the NRS2_FULL_OSS row is used.
             # see JWST-STScI-005921.)
             pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.FlipXY(
-                pcf_data[pcf_name]['{}_modified'.format(axis)], order=polynomial_degree)
+                pcf_data[pcf_name]['{}_modified'.format(axis)])
 
     if 'MIMF' not in AperName:
         Xoffset = 0
@@ -690,7 +690,8 @@ detector_layout = iando.read.read_siaf_detector_layout()
 master_aperture_names = detector_layout['AperName'].data
 
 # directory containing reference files delivered by IDT
-source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'nirspec_H-014')
+# source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'nirspec_H-014')
+source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'wfr2-test')
 print ('Loading reference files from directory: {}'.format(source_data_dir))
 
 # XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
