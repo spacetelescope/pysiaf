@@ -928,8 +928,9 @@ print('SIAFXML written in {}'.format(filename))
 
 # compare to SIAFXML produced the old way
 # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
-# ref_siaf = pysiaf.Siaf(instrument)
-ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+ref_siaf = pysiaf.Siaf(instrument)
+# ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+# new_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
 new_siaf = pysiaf.Siaf(instrument, filename)
 
 report_dir = os.path.join(REPORTS_ROOT, instrument)
@@ -947,8 +948,9 @@ comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FU
 compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
 # tools.compare_siaf_xml(ref_siaf, new_siaf)
 
+selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and ('MSA' not in AperName) and ('SKY' not in AperName)]
 # run roundtrip test on all apertures
-compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf)
+compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=selected_aperture_name)
 
 
 
