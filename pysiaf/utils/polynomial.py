@@ -347,11 +347,12 @@ def jacob(a, b, x, y):
 
 def number_of_coefficients(poly_degree):
     """Return number of coefficients corresponding to polynomial degree."""
-    if type(poly_degree) == int
+    if type(poly_degree) == int:
         n_coefficients = np.int((poly_degree + 1) * (poly_degree + 2) / 2)
         return n_coefficients
     else:
         raise TypeError('Argument has to be of type int')
+
 
 def poly(a, x, y, order=4):
     """Polynomial evaluation.
