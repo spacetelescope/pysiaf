@@ -14,6 +14,41 @@ import numpy as np
 from scipy import linalg
 
 
+def add_rotation(A, B, theta_deg):
+    """Add rotation after polynomial transformation.
+
+    Use when a distortion transformation using polynomials A and B is followed by a rotation.
+
+    u = A(x,y) v = B(x,y) followed by
+    u2 = u*cos(theta) + v*sin(theta)
+    v2 = -u*sin(theta) + v*cos(theta)
+    This routine supplies a modified pair of polynomial which combine both steps
+    i.e u2 = A2(x,y), v2 = B2(x,y)
+
+    Ported to here from makeSIAF.py
+    J. Sahlmann 2018-01-03
+
+    Parameters
+    ----------
+    A   set of polynomial coefficients converting from (x,y) to a variable u
+    B   set of polynomial coefficients converting from(x,y) to  avariable v
+    theta_deg : float
+        The angle in degrees of a rotationin the (u,v) plane
+
+    Returns
+    -------
+    A2  set of polynomial coefficiients providing combined steps from (x,y) to u2
+    B2  set of polynomial coefficients providing combined steps from (x,y) to v2
+
+    """
+    theta = np.deg2rad(theta_deg)
+
+    A2 = +A*np.cos(theta) + B*np.sin(theta)
+    B2 = -A*np.sin(theta) + B*np.cos(theta)
+
+    return A2, B2
+
+
 def choose(n, r):
     """Return number of ways of choosing r items from an array with n items.
 
@@ -139,7 +174,7 @@ def flatten(coefficients):
     return flat_coefficients
 
 
-def FlipX(A, order=4):
+def flip_x(A):
     """Change sign of all coefficients with odd x power.
 
     Used when we have a polynomial expansion in terms of variables x and y and we wish to obtain one
@@ -156,17 +191,17 @@ def FlipX(A, order=4):
     AF      Modified or flipped set of coefficients matching negated x values.
 
     """
-    terms = (order+1)*(order+2) // 2
-    AF = np.zeros(terms)
+    poly_degree = polynomial_degree(len(A))
+    AF = np.zeros(len(A))
     k = 0
-    for i in range(order+1):
+    for i in range(poly_degree+1):
         for j in range(i+1):
             AF[k] = (-1)**(i-j) * A[k]
             k += 1
     return  AF
 
 
-def FlipY(A):
+def flip_y(A):
     """Change sign of all coefficients with odd y power.
 
     Used when we have a polynomial expansion in terms of variables x and y and we wish to obtain one
@@ -174,8 +209,8 @@ def FlipY(A):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the triangular layout as described in the function poly
-    order  The polynomial order
+    A      A set of polynomial coefficients given in the triangular layout as described in the
+    function poly
 
     Returns
     -------
@@ -195,7 +230,7 @@ def FlipY(A):
     return AF
 
 
-def FlipXY(A):
+def flip_xy(A):
     """Change sign for coeffs where sum of x and y powers is odd.
 
     Used when we have a polynomial expansion in terms of variables x and y and we wish to obtain one
@@ -203,8 +238,8 @@ def FlipXY(A):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the triangular layout as described in the function poly
-    order  The polynomial order
+    A      A set of polynomial coefficients given in the triangular layout as described in the
+    function poly
 
     Returns
     -------
@@ -224,7 +259,7 @@ def FlipXY(A):
     return AF
 
 
-def invert(A, B, u, v, order, verbose=False):
+def invert(A, B, u, v, verbose=False):
     """Newton Raphson method in two dimensions.
 
     Given that u = A[i,j] * x**(i-j) * y**j and v = B[i,j] * x**(i-j) * y**j
@@ -233,13 +268,12 @@ def invert(A, B, u, v, order, verbose=False):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the linear layout as described in the function poly
-            converting (x,y) to u
-    B      A set of polynomial coefficients given in the linear layout as described in the function poly
-            converting (x,y) to v
+    A      A set of polynomial coefficients given in the linear layout as described in the function
+        poly converting (x,y) to u
+    B      A set of polynomial coefficients given in the linear layout as described in the function
+        poly converting (x,y) to v
     u      The result of applyng the A coefficients to the (x,y) position
     v      The result of applyng the B coefficients to the (x, y)position
-    order:  The polynomial order
     verbose:    Logical variable, set True if full text output required
 
     Returns
@@ -249,6 +283,9 @@ def invert(A, B, u, v, order, verbose=False):
     iter - the number of iterations taken to determine the solution
 
     """
+    poly_degree = polynomial_degree(len(A))
+    order = poly_degree
+
     tol = 1.0e-6
     err = 1.0
     # Initial guesses - Linear approximation
@@ -279,7 +316,7 @@ def invert(A, B, u, v, order, verbose=False):
     return x, y, err, iter
 
 
-def jacob(a, b, x, y, order=4):
+def jacob(a, b, x, y):
     """Calculate relative area using the Jacobian.
 
                | da_dx   db_dx |
@@ -295,7 +332,6 @@ def jacob(a, b, x, y, order=4):
     x      x pixel position or array of x positions
     y      y pixel position or array of y positions matching the y positions
     x and y will usually be Science coordinates while u and v are Ideal coordinates
-    order:  order of the polynomials
 
     Returns
     -------
@@ -321,7 +357,9 @@ def poly(a, x, y, order=4):
     For many of the polynomial operations the coefficients A[i,j] are contained in an
     array of dimension (order+1, order+1) but with all elements where j > i set equal to zero.
     This we call the triangular layout.
-    The flattened layout is a one-dimensional array containing copies of only the elements where j <= i.
+    The flattened layout is a one-dimensional array containing copies of only the elements
+    where j <= i.
+
     The JWST layout is a[0,0] a[1,0] a[1,1] a[2,0] a[2,1] a[2,2] ...
     The number of coefficients will be (n+1)(n+2)/2
 
@@ -344,37 +382,6 @@ def poly(a, x, y, order=4):
             pol = pol + a[k] * x**(i-j) * y**j
             k += 1
     return pol
-
-
-# def polyfit(u, x, y, order):
-#     """SUPERSEDE BY POLYFIT2.
-#
-#     Fit polynomial to a set of u values on an x,y grid
-#     u is a function u(x,y) being a polynomial of the form
-#     u = a[i, j] x**(i-j) y**j. x and y can be on a grid or be arbitrary values
-#     """
-#     # First set up x and y powers for each coefficient
-#     px = []
-#     py = []
-#     for i in range(order + 1):
-#         for j in range(i + 1):
-#             px.append(i - j)
-#             py.append(j)
-#     terms = len(px)
-#
-#     # Make up matrix and vector
-#     vector = np.zeros((terms))
-#     mat = np.zeros((terms, terms))
-#     for i in range(terms):
-#         vector[i] = (u * x ** px[i] * y ** py[i]).sum()
-#         for j in range(terms):
-#             mat[i, j] = (x ** px[i] * y ** py[i] * x ** px[j] * y ** py[j]).sum()
-#
-#     imat = linalg.inv(mat)
-#     # Check that inversion worked
-#     # print np.dot(mat,imat)
-#     coeffs = np.dot(imat, vector)
-#     return coeffs
 
 
 def polyfit(u, x, y, order):
@@ -440,173 +447,6 @@ def polynomial_degree(number_of_coefficients):
     return poly_degree
 
 
-# def reorder(A, B, verbose=False):
-#     """Reorder Sabatke coefficients to Cox convention.
-#
-#     Changes coefficient order from y**2 xy x**2 to x**2 xy y**2
-#     Parameters
-#     ----------
-#     A
-#     B
-#     verbose
-#
-#     Returns
-#     -------
-#     A2, B2 : numpy arrays
-#
-#     """
-#     order = 5
-#     terms = (order+1)*(order+2)//2
-#     Aarray = np.zeros((order+1, order+1))
-#     Barray = np.zeros((order+1, order+1))
-#
-#     k1 = 0
-#     for i in range(order+1):
-#         for j in range(order+1-i):
-#             Aarray[j, i] = A[k1]
-#             Barray[j, i] = B[k1]
-#             k1 += 1
-#
-#     A2 = np.zeros((terms))
-#     B2 = np.zeros((terms))
-#     k2 = 0
-#     for i in range(order+1):
-#         for j in range(i+1):
-#             A2[k2] = Aarray[j, i-j]
-#             B2[k2] = Barray[j, i-j]
-#             k2 += 1
-#
-#     if verbose:
-#         print('A')
-#         print_triangle(A2, order)
-#         print('\nB')
-#         print_triangle(B2, order)
-#
-#     return A2, B2
-
-
-def reorder(A, B):
-    """Change coefficient order from y**2 xy x**2 to x**2 xy y**2 in both A and B.
-
-    Parameters
-    ----------
-    A : array
-        polynomial coefficients
-    B : array
-        polynomial coefficients
-
-    Returns
-    -------
-    A2, B2: numpy arrays
-        coefficients with changed order
-
-    """
-    poly_degree = polynomial_degree(len(A))
-    A2 = np.zeros((len(A)))
-    B2 = np.zeros((len(B)))
-    for i in range(poly_degree + 1):
-        ti = i * (i + 1) // 2
-        for j in range(i + 1):
-            A2[ti + j] = A[ti + i - j]
-            B2[ti + j] = B[ti + i - j]
-
-    return A2, B2
-
-
-
-def rescale(A, B, C, D, scale):
-    """Change coefficients to arcsec scale.
-
-    Ported here from makeSIAF.py
-    J. Sahlmann 2018-01-03
-    J. Sahlmann 2018-01-04: fixed side-effect on ABCD variables
-
-    Parameters
-    ----------
-    A
-    B
-    C
-    D
-    order
-    scale
-
-    Returns
-    -------
-    A_scaled, B_scaled, C_scaled, D_scaled : numpy arrays
-
-    """
-    A_scaled = scale*A
-    B_scaled = scale*B
-
-    poly_degree = polynomial_degree(len(A))
-    number_of_coefficients = len(A)
-
-    C_scaled = np.zeros(number_of_coefficients)
-    D_scaled = np.zeros(number_of_coefficients)
-
-    k = 0
-    for i in range(poly_degree+1):
-        factor = scale**i
-        for j in range(i+1):
-            C_scaled[k] = C[k]/factor
-            D_scaled[k] = D[k]/factor
-            k += 1
-
-    return A_scaled, B_scaled, C_scaled, D_scaled
-
-
-def Rotate(A, B, theta):
-    """Use when a distortion transformation using polynomials A and B is followed by a rotation.
-
-    u = A(x,y) v = B(x,y) followed by
-    u2 = u*cos(theta) + v*sin(theta)
-    v2 = -u*sin(theta) + v*cos(theta)
-    This routine supplies a modified pair of polynomial which combine both steps
-    i.e u2 = A2(x,y), v2 = B2(x,y)
-
-    Ported to here from makeSIAF.py
-    J. Sahlmann 2018-01-03
-
-    Parameters
-    ----------
-    A   set of polynomial coefficients converting from (x,y) to a variable u
-    B   set of polynomial coefficients converting from(x,y) to  avariable v
-    theta   The angle in radians of a rotationin the (u,v) plane
-    WE SHOULD REALLY CHANGE THIS SO THE INPUT IS IN DEGREES TO BE CONSISTENT WITH OTHER ROUTINES
-    CONVERSION TO RADIANS SHOULD BE DONE INSIDE THIS METHOD
-
-    Returns
-    -------
-    A2  set of polynomial coefficiients providing combined steps from (x,y) to u2
-    B2  set of polynomial coefficients providing combined steps from (x,y) to v2
-
-    """
-    A2 = +A*np.cos(theta) + B*np.sin(theta)
-    B2 = -A*np.sin(theta) + B*np.cos(theta)
-
-    return A2, B2
-
-
-def rotate_coefficients(A, B, angle_deg):
-    """Version of rotate_coeffs used in nircam_get_polynomial_both.
-
-    Parameters
-    ----------
-    A
-    B
-    angle_deg
-
-    Returns
-    -------
-    AR, BR : numpy arrays
-
-    """
-    AR = A * np.cos(np.deg2rad(angle_deg)) - B * np.sin(np.deg2rad(angle_deg))
-    BR = A * np.sin(np.deg2rad(angle_deg)) + B * np.cos(np.deg2rad(angle_deg))
-
-    return AR, BR
-
-
 def prepend_rotation_to_polynomial(a, theta, verbose=False):
     """Rotate axes of coefficients by theta degrees.
 
@@ -658,6 +498,110 @@ def prepend_rotation_to_polynomial(a, theta, verbose=False):
     return arotate
 
 
+def print_triangle(coefficients):
+    """Print coefficients in triangular layout.
+
+    A[0]
+    A[1]  A[2]
+    A[3]  A[4]  A[5]
+    ...
+
+    equivalent to
+    A[0,0]
+    A[1,0] A[1,1]
+    A[2,0] A[2,1] A[2,2]
+    ...
+
+    in [i,j] terms.
+
+    See method poly for details.
+    This is just to display the coefficients. No calculation performed.
+
+    Parameters
+    ----------
+    coefficients : array
+        polynomial float array in linear layout
+
+    """
+    poly_degree = polynomial_degree(len(coefficients))
+
+    k = 0
+    for i in range(poly_degree + 1):
+        for j in range(i + 1):
+            print('%12.5e' % coefficients[k], end=' ')
+            k += 1
+        print()
+
+
+def reorder(A, B):
+    """Change coefficient order from y**2 xy x**2 to x**2 xy y**2 in both A and B.
+
+    Parameters
+    ----------
+    A : array
+        polynomial coefficients
+    B : array
+        polynomial coefficients
+
+    Returns
+    -------
+    A2, B2: numpy arrays
+        coefficients with changed order
+
+    """
+    poly_degree = polynomial_degree(len(A))
+    A2 = np.zeros((len(A)))
+    B2 = np.zeros((len(B)))
+    for i in range(poly_degree + 1):
+        ti = i * (i + 1) // 2
+        for j in range(i + 1):
+            A2[ti + j] = A[ti + i - j]
+            B2[ti + j] = B[ti + i - j]
+
+    return A2, B2
+
+
+def rescale(A, B, C, D, scale):
+    """Change coefficients to arcsec scale.
+
+    Ported here from makeSIAF.py
+    J. Sahlmann 2018-01-03
+    J. Sahlmann 2018-01-04: fixed side-effect on ABCD variables
+
+    Parameters
+    ----------
+    A
+    B
+    C
+    D
+    order
+    scale
+
+    Returns
+    -------
+    A_scaled, B_scaled, C_scaled, D_scaled : numpy arrays
+
+    """
+    A_scaled = scale*A
+    B_scaled = scale*B
+
+    poly_degree = polynomial_degree(len(A))
+    number_of_coefficients = len(A)
+
+    C_scaled = np.zeros(number_of_coefficients)
+    D_scaled = np.zeros(number_of_coefficients)
+
+    k = 0
+    for i in range(poly_degree+1):
+        factor = scale**i
+        for j in range(i+1):
+            C_scaled[k] = C[k]/factor
+            D_scaled[k] = D[k]/factor
+            k += 1
+
+    return A_scaled, B_scaled, C_scaled, D_scaled
+
+
 def shift_coefficients(a, xshift, yshift, verbose=False):
     """Calculate coefficients of polynomial when shifted to new origin.
 
@@ -691,7 +635,8 @@ def shift_coefficients(a, xshift, yshift, verbose=False):
             for i in range(p, poly_degree + 1):
                 for j in range(q, i + 1 - (p - q)):
                     f = choose(j, q) * choose(i - j, p - q)
-                    atshift[p, q] = atshift[p, q] + f * xshift**((i - j) - (p - q)) * yshift**(j - q) * at[i, j]
+                    atshift[p, q] = atshift[p, q] + f * xshift**((i - j) - (p - q)) * \
+                                                    yshift**(j - q) * at[i, j]
                     if verbose:
                         print('%2d A(%1d,%1d) x^%1d y^%1d' % (f, i, j, i - j - (p - q), (j - q)))
             if verbose:
@@ -744,7 +689,8 @@ def transform_coefficients(A, a, b, c, d, verbose=False):
                     if verbose:
                         print('Choose', m - j, mu, 'and', j, m - n - mu)
                     factor = choose(m - j, mu) * choose(j, m - n - mu)
-                    A2[m, n] += factor * a**mu * b**(m - j - mu) * c**(m - n - mu) * d**(mu + j - m + n) * A1[m, j]
+                    A2[m, n] += factor * a**mu * b**(m - j - mu) * c**(m - n - mu) \
+                                * d**(mu + j - m + n) * A1[m, j]
                     if verbose:
                         print(m, j, ' Factor', factor)
 
@@ -755,41 +701,6 @@ def transform_coefficients(A, a, b, c, d, verbose=False):
             AT[k] = A2[m, n]
             k += 1
     return AT
-
-
-def print_triangle(coefficients):
-    """Print coefficients in triangular layout.
-
-    A[0]
-    A[1]  A[2]
-    A[3]  A[4]  A[5]
-    ...
-
-    equivalent to
-    A[0,0]
-    A[1,0] A[1,1]
-    A[2,0] A[2,1] A[2,2]
-    ...
-
-    in [i,j] terms.
-
-    See method poly for details.
-    This is just to display the coefficients. No calculation performed.
-
-    Parameters
-    ----------
-    coefficients : array
-        polynomial float array in linear layout
-
-    """
-    poly_degree = polynomial_degree(len(coefficients))
-
-    k = 0
-    for i in range(poly_degree + 1):
-        for j in range(i + 1):
-            print('%12.5e' % coefficients[k], end=' ')
-            k += 1
-        print()
 
 
 def triangular_layout(coefficients):
@@ -819,7 +730,7 @@ def triangular_layout(coefficients):
     return triangular_coefficients
 
 
-def two_step(A, B, a, b, order):
+def two_step(A, B, a, b):
     """Combine linear step followed by a polynomial step into a single polynomial.
 
     Designed to process Sabatke polynomials which had a linear transformation
@@ -854,22 +765,24 @@ def two_step(A, B, a, b, order):
 
     """
     poly_degree = polynomial_degree(len(A))
+    order = poly_degree
+
     A2 = np.zeros((poly_degree+1, poly_degree+1))
     B2 = np.zeros((poly_degree+1, poly_degree+1))
-    
     k = 0
     for i in range(order+1):
         for j in range(i+1):
             for alpha in range(i-j+1):
                 for beta in range(i-j-alpha+1):
-                    f1 = choose(i-j, alpha)*choose(i-j-alpha, beta)*a[0]**(i-j-alpha-beta)*a[1]**alpha*a[2]**beta
+                    f1 = choose(i-j, alpha)*choose(i-j-alpha, beta)*a[0]**(i-j-alpha-beta) \
+                         * a[1]**alpha*a[2]**beta
                     for gamma in range(j+1):
                         for delta in range(j-gamma+1):
-                            f2 = choose(j, gamma)*choose(j-gamma, delta)*b[0]**(j-gamma-delta)*b[1]**gamma*b[2]**delta
+                            f2 = choose(j, gamma)*choose(j-gamma, delta)*b[0]**(j-gamma-delta) \
+                                 * b[1]**gamma*b[2]**delta
                             A2[alpha+beta+gamma+delta, beta+delta] += A[k]*f1*f2
                             B2[alpha+beta+gamma+delta, beta+delta] += B[k]*f1*f2
             k += 1
-    
     # Flatten A2 and B2
     Aflat = flatten(A2)
     Bflat = flatten(B2)

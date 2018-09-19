@@ -22,7 +22,7 @@ import numpy as np
 # from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
-from .polynomial import shift_coefficients, FlipY, FlipX, rotate_coefficients, prepend_rotation_to_polynomial, poly, print_triangle
+from .polynomial import shift_coefficients, flip_y, flip_x, add_rotation, prepend_rotation_to_polynomial, poly, print_triangle
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -143,13 +143,14 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         if abs(V3Angle) > 90.0:
             V3Angle = V3Angle - math.copysign(180.0, V3Angle)
 
-        AR, BR = rotate_coefficients(A_in, B_in, V3Angle)
+        # AR, BR = rotate_coefficients(A_in, B_in, V3Angle)
+        AR, BR = add_rotation(A_in, B_in, -1*V3Angle)
 
         CS = shift_coefficients(C_in, V2Ref, V3Ref)
         DS = shift_coefficients(D_in, V2Ref, V3Ref)
 
-        CR = prepend_rotation_to_polynomial(CS, V3Angle, 5)
-        DR = prepend_rotation_to_polynomial(DS, V3Angle, 5)
+        CR = prepend_rotation_to_polynomial(CS, V3Angle)
+        DR = prepend_rotation_to_polynomial(DS, V3Angle)
 
         if oss:
             # OSS apertures
@@ -158,17 +159,17 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
             # non-OSS apertures
             if abs(V3SciYAngle) > 90.0:  # e.g. NRCA2_FULL
                 # print 'Reverse Y axis direction'
-                AR = -FlipY(AR, 5)
-                BR = FlipY(BR, 5)
-                CR = FlipX(CR, 5)
-                DR = -FlipX(DR, 5)
+                AR = -flip_y(AR)
+                BR = flip_y(BR)
+                CR = flip_x(CR)
+                DR = -flip_x(DR)
 
             else:  # e.g NRCA1_FULL
                 # print 'Reverse X axis direction'
-                AR = -FlipX(AR, 5)
-                BR = FlipX(BR, 5)
-                CR = -FlipX(CR, 5)
-                DR = FlipX(DR, 5)
+                AR = -flip_x(AR)
+                BR = flip_x(BR)
+                CR = -flip_x(CR)
+                DR = flip_x(DR)
                 V3SciXAngle = V3SciXAngle - math.copysign(180.0, V3SciXAngle)
                 # V3Angle = betaY   # Cox: Changed 4/29 - might affect rotated polynomials
 
@@ -190,21 +191,22 @@ def convert_polynomial_coefficients(A_in, B_in, C_in, D_in, oss=False, inverse=F
         # master aperture is never OSS
         if abs(betaY) > 90.0:  # e.g. NRCA2_FULL
             # print 'Reverse Y axis direction'
-            AR = -FlipY(A_in)
-            BR = FlipY(B_in)
-            CR = FlipX(C_in)
-            DR = -FlipX(D_in)
+            AR = -flip_y(A_in)
+            BR = flip_y(B_in)
+            CR = flip_x(C_in)
+            DR = -flip_x(D_in)
 
         else:  # e.g NRCA1_FULL
             # print 'Reverse X axis direction'
-            AR = -FlipX(A_in)
-            BR = FlipX(B_in)
-            CR = -FlipX(C_in)
-            DR = FlipX(D_in)
+            AR = -flip_x(A_in)
+            BR = flip_x(B_in)
+            CR = -flip_x(C_in)
+            DR = flip_x(D_in)
             V3SciXAngle = revert_correct_V3SciXAngle(V3SciXAngle)
 
         # rotate the other way
-        A, B = rotate_coefficients(AR, BR, -V3SciYAngle)
+        # A, B = rotate_coefficients(AR, BR, -V3SciYAngle)
+        A, B = add_rotation(AR, BR, +1*V3SciYAngle)
 
         A[0] = parent_aperture.V2Ref
         B[0] = parent_aperture.V3Ref
@@ -350,16 +352,16 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
 
         # shift polynomial coefficients of the parent aperture
-        sci2idlx_coefficients_shifted = shift_coefficients(sci2idlx_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
-        sci2idly_coefficients_shifted = shift_coefficients(sci2idly_coefficients, xsci_offset, ysci_offset, order=4, verbose=False)
+        sci2idlx_coefficients_shifted = shift_coefficients(sci2idlx_coefficients, xsci_offset, ysci_offset, verbose=False)
+        sci2idly_coefficients_shifted = shift_coefficients(sci2idly_coefficients, xsci_offset, ysci_offset, verbose=False)
 
         # see calc worksheet in NIRISS SIAFEXCEL
         dx_idl = sci2idlx_coefficients_shifted[0]
         dy_idl = sci2idly_coefficients_shifted[0]
 
         # remove the zero point offsets from the coefficients
-        idl2scix_coefficients_shifted = shift_coefficients(idl2scix_coefficients, dx_idl, dy_idl, order=4, verbose=False)
-        idl2sciy_coefficients_shifted = shift_coefficients(idl2sciy_coefficients, dx_idl, dy_idl, order=4, verbose=False)
+        idl2scix_coefficients_shifted = shift_coefficients(idl2scix_coefficients, dx_idl, dy_idl, verbose=False)
+        idl2sciy_coefficients_shifted = shift_coefficients(idl2sciy_coefficients, dx_idl, dy_idl, verbose=False)
 
         # set 00 coefficient to zero
         sci2idlx_coefficients_shifted[0] = 0

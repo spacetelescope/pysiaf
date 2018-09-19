@@ -31,15 +31,14 @@ instrument = 'NIRISS'
 
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 
-# import generate_reference_files
-# generate_siaf_detector_layout()
-# generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
-# generate_siaf_detector_reference_file(instrument)
-# generate_siaf_ddc_mapping_reference_file(instrument)
-# distortion_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'niriss_astrometric_coefficients_may_2015_with_header.txt')
-# generate_reference_files.generate_siaf_pre_flight_reference_files_niriss(distortion_file_name)
-
-
+if 0:
+    import generate_reference_files
+    # generate_siaf_detector_layout()
+    # generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
+    # generate_siaf_detector_reference_file(instrument)
+    # generate_siaf_ddc_mapping_reference_file(instrument)
+    distortion_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'niriss_astrometric_coefficients_august_2016_with_header.txt')
+    generate_reference_files.generate_siaf_pre_flight_reference_files_niriss(distortion_file_name)
 
 #############################
 _ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)

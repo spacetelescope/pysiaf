@@ -4,15 +4,15 @@ from pysiaf.utils import polynomial
 import pylab as pl
 
 
-def makeup_polynomial():
-    """ invent a random but plausible polynomial array
+def makeup_polynomial(order = 5):
+    """Invent a random but plausible polynomial array.
+
     designed to be similar to usual SIAF polynomials in which leading coefficients
     are approximately 0.05 and successive power coefficients are smaller by a a factor of about 1000.
 
     parameters
     return: a - randomly generated polynomial array """
 
-    order = 5
     terms = polynomial.number_of_coefficients(order)
     a = np.zeros(terms)
 
@@ -138,7 +138,7 @@ def test_two_step(verbose=False):
     a = np.array([1.0, 0.5, 0.1])
     b = np.array([2.0, 0.2, 0.6])
 
-    (A2, B2) = polynomial.two_step(A, B, a, b, 5)
+    (A2, B2) = polynomial.two_step(A, B, a, b)
     if verbose:
         print('\nA')
         polynomial.print_triangle(A)#     print('B')
@@ -197,7 +197,7 @@ def test_invert(verbose=True):
         print('X Y', x, y)
         print('U V', u, v)
 
-    (x2, y2, error, iterations) = polynomial.invert(a, b, u, v, order, verbose=verbose)
+    (x2, y2, error, iterations) = polynomial.invert(a, b, u, v, verbose=verbose)
 
     if verbose:
         print('Error', error, ' after',  iterations, ' iterations')

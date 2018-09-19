@@ -88,7 +88,7 @@ def process_nirspec_aperture(aperture, verbose=False):
             # therefore the polynomial coefficients are redefined so the net transformation from
             # the DET to GWA plane is the same as is obtained when the NRS2_FULL_OSS row is used.
             # see JWST-STScI-005921.)
-            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.FlipXY(
+            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.flip_xy(
                 pcf_data[pcf_name]['{}_modified'.format(axis)], order=polynomial_degree)
 
     if 'MIMF' not in AperName:
