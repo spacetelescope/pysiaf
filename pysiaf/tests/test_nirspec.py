@@ -39,6 +39,7 @@ def test_against_test_data():
 
     test_data_dir = os.path.join(TEST_DATA_ROOT, instrument)
 
+    print(' ')
     for include_tilt in [False, True]:
 
         if include_tilt is False:
