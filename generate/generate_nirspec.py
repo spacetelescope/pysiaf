@@ -88,7 +88,7 @@ def process_nirspec_aperture(aperture, verbose=False):
             # therefore the polynomial coefficients are redefined so the net transformation from
             # the DET to GWA plane is the same as is obtained when the NRS2_FULL_OSS row is used.
             # see JWST-STScI-005921.)
-            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.FlipXY(
+            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.flip_xy(
                 pcf_data[pcf_name]['{}_modified'.format(axis)])
 
     if 'MIMF' not in AperName:
@@ -440,13 +440,13 @@ def reorder(pcfName, verbose=False):
     if verbose:
         print('\n', pcfName)
         print('A')
-        polynomial.print_triangle(A2, order=5)
+        polynomial.print_triangle(A2)
         print('\nB')
-        polynomial.print_triangle(B2, order=5)
+        polynomial.print_triangle(B2)
         print('\nC')
-        polynomial.print_triangle(C2, order=5)
+        polynomial.print_triangle(C2)
         print('\nD')
-        polynomial.print_triangle(D2, order=5)
+        polynomial.print_triangle(D2)
 
     # Convert V2V3 output polynomials to XAN,YAN type
     # print (year, pcfName)
@@ -459,13 +459,13 @@ def reorder(pcfName, verbose=False):
         (C2, D2) = polynomial.TwoStep(C2, D2, [0.0, 1.0, 0.0], [-0.13, 0.0, -1.0], 5)
         print ('\nAdjusted Polynomials')
         print('A')
-        polynomial.print_triangle(A2, order=5)
+        polynomial.print_triangle(A2)
         print('\nB')
-        polynomial.print_triangle(B2, order=5)
+        polynomial.print_triangle(B2)
         print('\nC')
-        polynomial.print_triangle(C2, order=5)
+        polynomial.print_triangle(C2)
         print('\nD')
-        polynomial.print_triangle(D2, order=5)
+        polynomial.print_triangle(D2)
 
     return (A2, B2, C2, D2)
 
