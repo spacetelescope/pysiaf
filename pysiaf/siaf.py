@@ -352,6 +352,8 @@ class Siaf(ApertureCollection):
             iterable = self._getFullApertures
 
         for ap in iterable():
+            if ap.AperType == "TRANSFORM":
+                continue
             if names is not None:
                 if ap.AperName not in names: continue
 
