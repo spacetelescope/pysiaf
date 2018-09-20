@@ -484,6 +484,9 @@ class Aperture(object):
         #             error('Please provide attitude_ref')
 
         """
+        if self.AperType == "TRANSFORM":
+            raise TypeError("Cannot plot aperture of type: TRANSFORM")
+
         if units is None:
             units = 'arcsec'
 
