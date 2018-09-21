@@ -1,0 +1,16 @@
+Reference:  75 apertures in PRDOPSSOC-H-015
+Comparison: 75 apertures in minimal_change
+
+Number of modified apertures 75. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+NRS_S200A1_SLIT                     V2Ref            332.136078            332.146078        0.010000     0.0030
+NRS_S200A1_SLIT                     V3Ref           -479.224213   -479.21421300000003        0.010000     0.0021
+NRS_S200A1_SLIT                   Comment                  None      WFR2 preparation             N/A        N/A
+
+NRS_FULL_MSA                        V2Ref             378.77124    378.78123999999997        0.010000     0.0026
+NRS_FULL_MSA                        V3Ref           -428.156219   -428.14621900000003        0.010000     0.0023
+NRS_FULL_MSA                      Comment                  None      WFR2 preparation             N/A        N/A
+

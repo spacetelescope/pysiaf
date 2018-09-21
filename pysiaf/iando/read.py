@@ -300,9 +300,12 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                 elif node.tag in aperture.INTEGER_ATTRIBUTES:
                     try:
                         value = int(node.text)
-                    except TypeError:
-                        print('{}: {}'.format(node.tag, node.text))
-                        raise TypeError
+                    except (TypeError, ValueError) as e:
+                        print('{}: {}: {}'.format(e, node.tag, node.text))
+                        if node.tag == 'DetSciYAngle':
+                            value = np.int(float((node.text)))
+                        else:
+                            raise TypeError
                 elif node.tag in aperture.STRING_ATTRIBUTES:
                     value = node.text
                 else:
@@ -460,7 +463,7 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
     return Table.read(distortion_reference_file_name, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_xml_field_format_reference_file(instrument):
+def read_siaf_xml_field_format_reference_file(instrument=None):
     """Return astropy table.
 
     Parameters
@@ -472,5 +475,9 @@ def read_siaf_xml_field_format_reference_file(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
+    if instrument is None:
+        filename = os.path.join(JWST_SOURCE_DATA_ROOT, 'siaf_xml_field_format.txt')
+    else:
+        filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
+
     return Table.read(filename, format='ascii.basic', delimiter=',')

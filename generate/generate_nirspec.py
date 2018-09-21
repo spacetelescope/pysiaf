@@ -662,6 +662,45 @@ test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
 
+
+if 0:
+    # minimal change SIAF
+    new_siaf = pysiaf.Siaf(instrument)
+    for aperture_name in new_siaf.apernames:
+        if aperture_name in ['NRS_S200A1_SLIT', 'NRS_FULL_MSA']:
+            new_siaf[aperture_name].V2Ref += 0.01
+            new_siaf[aperture_name].V3Ref += 0.01
+            new_siaf[aperture_name].Comment = 'WFR2 preparation'
+
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+
+    # write the SIAF files to disk
+    filenames = pysiaf.iando.write.write_jwst_siaf(new_siaf, basepath=pre_delivery_dir, file_format=['xml'], label='minimal_change')
+
+    # pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+
+    # compare new SIAF with PRD version
+    ref_siaf = pysiaf.Siaf(instrument)
+    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'minimal_change'})
+    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'minimal_change'})
+
+    1/0
+    # run some tests on the new SIAF
+    from pysiaf.tests import test_nirspec
+
+    print('\nRunning regression test of new_siaf against IDT test_data:')
+    test_nirspec.test_against_test_data(siaf=new_siaf)
+
+    print('\nRunning nirspec_aperture_transforms test for new_siaf')
+    test_nirspec.test_nirspec_aperture_transforms(siaf=new_siaf, verbose=False)
+
+    print('\nRunning nirspec_slit_transforms test for pre_delivery_siaf')
+    test_nirspec.test_nirspec_slit_transformations(siaf=new_siaf, verbose=False)
+
+
+    1/0
+
+
 # regenerate SIAF reference files if needed
 if 0:
     generate_reference_files.generate_siaf_detector_layout()
@@ -774,7 +813,8 @@ for AperName in aperture_name_list:
     if aperture.AperType == 'OSS':
         aperture.VIdlParity = 1
         aperture.DetSciParity = 1
-        aperture.DetSciYAngle = 0.
+        # aperture.DetSciYAngle = 0.
+        aperture.DetSciYAngle = 0
 
     if AperName in ['NRS_FULL_MSA', 'NRS_VIGNETTED_MSA']:
         aperture.VIdlParity = -1
