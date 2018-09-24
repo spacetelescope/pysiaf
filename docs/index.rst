@@ -7,7 +7,7 @@
 
 
 ============================
-Something Cool
+Documentation for pysiaf
 ============================
 
 .. toctree::
