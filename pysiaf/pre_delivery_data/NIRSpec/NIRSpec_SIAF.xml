@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2018-09-21T00:38:35.081 utc-->
+  <!--Generated 2018-09-24T19:10:49.266 utc-->
   <!--by jsahlmann-->
   <!--pysiaf version 0.2.0.dev5+g90e64afc-->
   <SiafEntry>
@@ -858,8 +858,8 @@
     <YSciRef/>
     <XSciScale/>
     <YSciScale/>
-    <V2Ref>321.531952</V2Ref>
-    <V3Ref>-473.679199</V3Ref>
+    <V2Ref>321.541952</V2Ref>
+    <V3Ref>-473.669199</V3Ref>
     <V3IdlYAngle>138.77143860</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle/>
@@ -875,7 +875,7 @@
     <YIdlVert3>-0.7946</YIdlVert3>
     <YIdlVert4>0.8086</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
-    <Comment/>
+    <Comment>WFR2 preparation</Comment>
     <Sci2IdlDeg/>
     <Sci2IdlX00/>
     <Sci2IdlX10/>
@@ -4818,8 +4818,8 @@
     <YSciRef/>
     <XSciScale/>
     <YSciScale/>
-    <V2Ref>378.771240</V2Ref>
-    <V3Ref>-428.156219</V3Ref>
+    <V2Ref>378.781240</V2Ref>
+    <V3Ref>-428.146219</V3Ref>
     <V3IdlYAngle>138.49234009</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle/>
@@ -4835,7 +4835,7 @@
     <YIdlVert3>-107.7393</YIdlVert3>
     <YIdlVert4>110.2531</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
-    <Comment/>
+    <Comment>WFR2 preparation</Comment>
     <Sci2IdlDeg/>
     <Sci2IdlX00/>
     <Sci2IdlX10/>

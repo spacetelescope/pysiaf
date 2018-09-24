@@ -667,7 +667,7 @@ if 0:
     # minimal change SIAF
     new_siaf = pysiaf.Siaf(instrument)
     for aperture_name in new_siaf.apernames:
-        if aperture_name in ['NRS_S200A1_SLIT', 'NRS_FULL_MSA']:
+        if aperture_name in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
             new_siaf[aperture_name].V2Ref += 0.01
             new_siaf[aperture_name].V3Ref += 0.01
             new_siaf[aperture_name].Comment = 'WFR2 preparation'
@@ -940,6 +940,24 @@ for AperName in aperture_name_list:
     aperture_dict[AperName] = aperture
 
 
+# minimal change to two apertures that propagate to OSS DEF scripts
+wfr2_prep = True
+if wfr2_prep:
+    for AperName in aperture_name_list:
+        aperture = aperture_dict[AperName]
+
+        if AperName in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
+            aperture.V2Ref += 0.01
+            aperture.V3Ref += 0.01
+            aperture.Comment = 'WFR2 preparation'
+
+    aperture_dict[AperName] = aperture
+
+
+
+
+
+
 #sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
 
@@ -972,8 +990,8 @@ if emulate_delivery:
 
     # compare new SIAF with PRD version
     ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery_wfr2'})
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery_wfr2'})
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_nirspec
