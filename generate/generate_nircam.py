@@ -335,9 +335,10 @@ if emulate_delivery:
     # compare new SIAF with PRD version
     # ref_siaf = pysiaf.Siaf(instrument)
     ref_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': 'includes_all_previous_changes', 'comparison': 'changes_related_to_jwstsiaf-129'})
 
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}) #
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': 'includes_all_previous_changes', 'comparison': 'changes_related_to_jwstsiaf-129'}) #
+    # compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}) #
 
     1/0
     # run some tests on the new SIAF
