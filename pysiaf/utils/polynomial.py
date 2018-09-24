@@ -209,9 +209,9 @@ def polyfit2(u, x, y, order):
     vector = sp.zeros((terms))
     mat = sp.zeros((terms, terms))
     for i in range(terms):
-        vector[i] = (u * x ** px[i] * y ** py[i]).sum()  # Summing over all x,y
+        vector[i] = (u * x**px[i] * y**py[i]).sum()  # Summing over all x,y
         for j in range(terms):
-            mat[i, j] = (x ** px[i] * y ** py[i] * x ** px[j] * y ** py[j]).sum()
+            mat[i, j] = (x**px[i] * y**py[i] * x**px[j] * y**py[j]).sum()
 
     coeffs = linalg.solve(mat, vector)
     return coeffs

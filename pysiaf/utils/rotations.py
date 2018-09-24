@@ -13,6 +13,7 @@ References
 """
 from __future__ import absolute_import, print_function, division
 import numpy as np
+from math import sqrt, sin, cos, atan2, asin, acos, radians, degrees
 
 
 def attitude(v2, v3, ra, dec, pa):
@@ -68,8 +69,8 @@ def axial(ax, phi, u):
     v       float array of size 3 representing the rotated vectot
     """
 
-    rphi = np.deg2rad(phi)
-    v = u*np.cos(rphi) + cross(ax, u) * np.sin(rphi) + ax * np.dot(ax, u) * (1-np.cos(rphi))
+    rphi = radians(phi)
+    v = u*cos(rphi) + cross(ax, u) * sin(rphi) + ax * np.dot(ax, u) * (1-cos(rphi))
     return v
 
 
@@ -92,9 +93,8 @@ def getv2v3(attitude, ra, dec):
     urd = unit(ra, dec)
     inverse_attitude = np.transpose(attitude)
     uv = np.dot(inverse_attitude, urd)
-    v = radec(uv)
-    v2 = 3600.0 * v[0]
-    v3 = 3600.0 * v[1]
+    v2, v3 = v2v3(uv)
+
     return v2, v3
 
 
@@ -160,12 +160,12 @@ def posangle(attitude, v2, v3):
     """
 
     A = attitude  # Synonym to simplify typing
-    v2r = np.deg2rad(v2 / 3600.0)
-    v3r = np.deg2rad(v3 / 3600.0)
-    x = -(A[2, 0] * np.cos(v2r) + A[2, 1] * np.sin(v2r)) * np.sin(v3r) + A[2, 2] * np.cos(v3r)
-    y = (A[0, 0] * A[1, 2] - A[1, 0] * A[0, 2]) * np.cos(v2r) + (A[0, 1] * A[1, 2] - A[1, 1] * A[
-        0, 2]) * np.sin(v2r)
-    pa = np.rad2deg(np.arctan2(y, x))
+    v2r = radians(v2 / 3600.0)
+    v3r = radians(v3 / 3600.0)
+    x = -(A[2, 0] * cos(v2r) + A[2, 1] * sin(v2r)) * sin(v3r) + A[2, 2] * cos(v3r)
+    y = (A[0, 0] * A[1, 2] - A[1, 0] * A[0, 2]) * cos(v2r) + (A[0, 1] * A[1, 2] - A[1, 1] * A[
+        0, 2]) * sin(v2r)
+    pa = degrees(np.arctan2(y, x))
     return pa
 
 
@@ -174,21 +174,18 @@ def radec(u, positive_ra=False):
 
     Parameters
     ----------
-    u           an array or list of length 3 representin a unit vector
+    u           an array or list of length 3 representing a unit vector
     positive_ra logical varable indicating whether to force ra to be positive
 
     Returns
     -------
-
+    ra, dec     RA and Dec corresponding to the unit vector u
     """
-    """convert unit vector to Euler angles
-    u is """
 
-    if len(u) != 3:
-        raise RuntimeError('Not a vector')
+    assert len(u) == 3, 'Not a vector'
     norm = np.sqrt(u[0] ** 2 + u[1] ** 2 + u[2] ** 2)  # Works for list or array
-    dec = np.rad2deg(np.arcsin(u[2] / norm))
-    ra = np.rad2deg(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
+    dec = degrees(np.arcsin(u[2] / norm))
+    ra = degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
     if positive_ra:
         if np.isscalar(ra) and ra < 0.0:
             ra += 360.0
@@ -218,11 +215,11 @@ def rodrigues(attitude):
     A = attitude  # Synonym for clarity and to save typing
     cos_phi = 0.5 * (A[0, 0] + A[1, 1] + A[2, 2] - 1.0)
     phi = np.arccos(cos_phi)
-    axis = np.array([A[2, 1] - A[1, 2], A[0, 2] - A[2, 0], A[1, 0] - A[0, 1]]) / (2.0 * np.sin(phi))
+    axis = np.array([A[2, 1] - A[1, 2], A[0, 2] - A[2, 0], A[1, 0] - A[0, 1]]) / (2.0 * sin(phi))
 
     # Make corresponding quaternion
-    q = np.hstack(([np.cos(phi / 2.0)], axis * np.sin(phi / 2.0)))
-    phi = np.rad2deg(phi)
+    q = np.hstack(([cos(phi/2.0)], axis * sin(phi/2.0)))
+    phi = degrees(phi)
 
     return axis, phi, q
 
@@ -245,16 +242,16 @@ def rotate(axis, angle):
 
     assert axis in list(range(1, 4)), 'Axis must be in range 1 to 3'
     r = np.zeros((3, 3))
-    theta = np.deg2rad(angle)
+    theta = radians(angle)
 
     ax0 = axis-1 # Allow for zero offset numbering
     ax1 = (ax0+1) % 3 # Axes in cyclic order
     ax2 = (ax0+2) % 3
     r[ax0, ax0] = 1.0
-    r[ax1, ax1] = np.cos(theta)
-    r[ax2, ax2] = np.cos(theta)
-    r[ax1, ax2] = -np.sin(theta)
-    r[ax2, ax1] = np.sin(theta)
+    r[ax1, ax1] = cos(theta)
+    r[ax2, ax2] = cos(theta)
+    r[ax1, ax2] = -sin(theta)
+    r[ax2, ax1] = sin(theta)
 
     return r
 
@@ -355,9 +352,9 @@ def unit(ra, dec):
     u       a float array of length 3 representing the equivalent unit vector
     """
 
-    rar = np.deg2rad(ra)
-    decr = np.deg2rad(dec)
-    u = np.array([np.cos(rar)*np.cos(decr), np.sin(rar)*np.cos(decr), np.sin(decr)])
+    rar = radians(ra)
+    decr = radians(dec)
+    u = np.array([cos(rar)*cos(decr), sin(rar)*cos(decr), sin(decr)])
     return u
 
 
@@ -366,7 +363,7 @@ def v2v3(u):
 
     Parameters
     ----------
-    u   float list or array representing a unit vector
+    u   float list or array representing a unit vector. Must be of length 3
 
     Returns
     -------
@@ -375,6 +372,6 @@ def v2v3(u):
 
     assert len(u) == 3, 'Not a vector'
     norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2) # Works for list or array
-    v2 = 3600*np.rad2deg(np.arctan2(u[1], u[0])) # atan2 puts it in the correct quadrant
-    v3 = 3600*np.rad2deg(np.arcsin(u[2]/norm))
+    v2 = 3600*degrees(np.arctan2(u[1], u[0])) # atan2 puts it in the correct quadrant
+    v3 = 3600*degrees(np.arcsin(u[2]/norm))
     return v2, v3
