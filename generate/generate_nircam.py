@@ -318,7 +318,7 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 emulate_delivery = True
-emulate_delivery = False
+# emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -326,13 +326,16 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml'], label='jwstsiaf-129')
 
-    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    # 1/0
+    # pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    pre_delivery_siaf = pysiaf.Siaf(instrument, filename=filenames[0])
 
     # compare new SIAF with PRD version
-    ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    # ref_siaf = pysiaf.Siaf(instrument)
+    ref_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}) #, report_dir=pre_delivery_dir
 
     1/0
     # run some tests on the new SIAF
