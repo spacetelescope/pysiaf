@@ -3,24 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-
-
-
 ============================
 Documentation for pysiaf
 ============================
 
+SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).
+pysiaf is a python package to access, interpret, maintain, and generate SIAF, in particular for JWST. Tools for applying the frame transformations, plotting, comparison, and validation are provided.
+
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
 
-   Packagename  <pysiaf/index.rst>
+   pysiaf  <pysiaf/index.rst>
 
 
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``pysiaf/``.
-          You can follow this practice or choose your own layout.
-          
 * :ref:`genindex`
 * :ref:`modindex`
