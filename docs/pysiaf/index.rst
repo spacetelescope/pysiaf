@@ -1,12 +1,12 @@
 ************
-PACKAGENAME
+pysiaf
 ************
 
-Replace occurances of "PACKAGENAME" throughout the template with the name of your software package
+Handling of Science Instrument Aperture Files (SIAF) for space telescopes
 
-Where to Find PACKAGENAME
+Where to Find pysiaf
 ==========================
-Give some basic information about where to find the software
+pysiaf is hosted and developed at https://github.com/spacetelescope/pysiaf
 
 
 Installation
@@ -41,4 +41,16 @@ that can be referenced here. It may include sections such as:
 
 Reference API
 =============
-Package documentation usually pulled from docstrings inside the code
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   aperture.rst
+   compare.rst
+   polynomial.rst
+   projection.rst
+   read.rst
+   rotations.rst
+   siaf.rst
+   tools.rst
+   write.rst
