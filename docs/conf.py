@@ -74,9 +74,6 @@ if sys.version_info[0] == 2:
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
 extensions = [
     'numfig',
     'sphinx.ext.autodoc',
@@ -85,7 +82,18 @@ extensions = [
     'sphinx.ext.inheritance_diagram',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
+    'numpydoc',
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.automodsumm',
+    # 'sphinx.ext.mathjax'
     ]
+
+# extensions = ['sphinx_automodapi.automodapi',
+#               'sphinx_automodapi.automodsumm',
+#               'numpydoc',
+#               'sphinx.ext.autodoc',
+#               'sphinx.ext.mathjax',
+#               'sphinx.ext.viewcode']
 
 if on_rtd:
     extensions.append('sphinx.ext.mathjax')
@@ -152,7 +160,8 @@ default_role = 'obj'
 
 # Don't show summaries of the members in each class along with the
 # class' docstring
-numpydoc_show_class_members = False
+# numpydoc_show_class_members = False
+numpydoc_show_class_members = True
 
 autosummary_generate = True
 

@@ -128,6 +128,8 @@ Reference API
    :maxdepth: 1
 
    .. automodapi:: pysiaf.utils.compare
+   aperture.rst
+   compare.rst
    polynomial.rst
    projection.rst
    read.rst

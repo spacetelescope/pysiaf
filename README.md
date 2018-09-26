@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/spacetelescope/pysiaf.svg?branch=master)](https://travis-ci.org/spacetelescope/pysiaf)
-
 [![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
 
 # pysiaf
