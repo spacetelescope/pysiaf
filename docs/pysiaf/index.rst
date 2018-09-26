@@ -127,7 +127,6 @@ Reference API
 .. toctree::
    :maxdepth: 1
 
-   .. automodapi:: pysiaf.utils.compare
    aperture.rst
    compare.rst
    polynomial.rst
