@@ -13,6 +13,7 @@ pysiaf is a python package to access, interpret, maintain, and generate SIAF, in
 
 .. toctree::
    :maxdepth: 3
+   :caption: Contents:
 
 
    pysiaf  <pysiaf/index.rst>
