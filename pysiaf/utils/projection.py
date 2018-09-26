@@ -14,20 +14,24 @@ from astropy.modeling import models as astmodels
 from astropy.modeling import rotations as astrotations
 
 def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
-    """
-    Convert ra/dec coordinates into pixel coordinates using a tangent plane projection. The projection's reference point has to be specified.
+    """Convert ra/dec coordinates into pixel coordinates using a tangent plane projection. The projection's reference point has to be specified.
+
     Scale is a convenience parameter that defaults to 1.0, in which case the returned pixel coordinates are also in degree. Scale can be set to a pixel scale to return detector coordinates in pixels
 
     Parameters
     ----------
     ra : float
         Right Ascension in decimal degrees
+
     dec: float
         declination in decimal degrees
+
     ra_ref : float
         Right Ascension of reference point in decimal degrees
+
     dec_ref: float
         declination of reference point in decimal degrees
+
     scale : float
         Multiplicative factor that is applied to the returned values. Default is 1.0
 

@@ -39,7 +39,7 @@ Install pysiaf:
 `pip install .`
 
 Known installation issue
-**************
+************************
 
 If you get an error upon `import pysiaf` that traces back to `import lxml.etree as ET` and states
 
@@ -85,15 +85,15 @@ Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames)::
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
 
 Reporting Issues / Contributing
-============
+===============================
 Do you have feedback and feature requests? Is there something missing you would like to see? Please open a new issue or new pull request at https://github.com/spacetelescope/pysiaf for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome! This package follows the STScI `Code of Conduct <https://github.com/spacetelescope/pysiaf/blob/master/CODE_OF_CONDUCT.md>`_ strives to provide a welcoming community to all of our users and contributors.
 
-Coding and other Guidelines
-########
+Coding and other guidelines
+###########################
 We strive to adhere to the `STScI Style Guides <https://github.com/spacetelescope/style-guides>`_.
 
 How to make a code contribution
-########
+###############################
 The following describes the typical work flow for contributing to the pysiaf project (adapted from `<https://github.com/spacetelescope/jwql>`_):
 
 #. Do not commit any sensitive information (e.g. STScI-internal path structures, machine names, user names, passwords, etc.) to this public repository. Git history cannot be erased.
@@ -127,7 +127,8 @@ Reference API
 .. toctree::
    :maxdepth: 1
 
-   .. automodapi:: pysiaf.utils.compare
+   aperture.rst
+   compare.rst
    polynomial.rst
    projection.rst
    read.rst
