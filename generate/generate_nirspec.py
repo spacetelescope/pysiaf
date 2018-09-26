@@ -38,6 +38,9 @@ from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, RE
 import generate_reference_files
 
 
+
+
+
 def process_nirspec_aperture(aperture, verbose=False):
     """Set aperture parameters for master apertures and FULLSCA and OSS apertures.
 
@@ -663,6 +666,14 @@ if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
 
 
+#compare versions of xml
+if 0:
+    ref_siaf = pysiaf.Siaf(instrument)
+    new_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2017-08-04.xml'))
+    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+                         report_dir=test_dir, tags={'reference': pysiaf.JWST_PRD_VERSION,
+                                                            'comparison': 'NIRSpec_SIAF_2017-08-04'})
+    1/0
 if 0:
     # minimal change SIAF
     new_siaf = pysiaf.Siaf(instrument)
