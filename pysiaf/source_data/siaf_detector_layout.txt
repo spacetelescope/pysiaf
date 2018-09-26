@@ -4,21 +4,24 @@
 # 
 # Generated 2018-04-19T16:44:22.903 utc
 # jsahlmann
-# 
+#
+# 2018-09-20: Change format of DetSciYAngle to integer to comply with IRCD
+# jsahlmann
+#
 InstrName ,   AperName , DetSciYAngle , DetSciParity , VIdlParity
-   NIRCAM , NRCA1_FULL ,          0.0 ,           -1 ,         -1
-   NIRCAM , NRCA3_FULL ,          0.0 ,           -1 ,         -1
-   NIRCAM , NRCA5_FULL ,          0.0 ,           -1 ,         -1
-   NIRCAM , NRCB2_FULL ,          0.0 ,           -1 ,         -1
-   NIRCAM , NRCB4_FULL ,          0.0 ,           -1 ,         -1
-   NIRCAM , NRCA2_FULL ,        180.0 ,           -1 ,         -1
-   NIRCAM , NRCA4_FULL ,        180.0 ,           -1 ,         -1
-   NIRCAM , NRCB1_FULL ,        180.0 ,           -1 ,         -1
-   NIRCAM , NRCB3_FULL ,        180.0 ,           -1 ,         -1
-   NIRCAM , NRCB5_FULL ,        180.0 ,           -1 ,         -1
-      FGS ,  FGS1_FULL ,        180.0 ,            1 ,         -1
-      FGS ,  FGS2_FULL ,          0.0 ,           -1 ,         -1
-   NIRISS ,    NIS_CEN ,        180.0 ,            1 ,         -1
-  NIRSPEC ,  NRS1_FULL ,          0.0 ,            1 ,         -1
-  NIRSPEC ,  NRS2_FULL ,        180.0 ,            1 ,         -1
-     MIRI , MIRIM_FULL ,          0.0 ,            1 ,         -1
+   NIRCAM , NRCA1_FULL ,            0 ,           -1 ,         -1
+   NIRCAM , NRCA3_FULL ,            0 ,           -1 ,         -1
+   NIRCAM , NRCA5_FULL ,            0 ,           -1 ,         -1
+   NIRCAM , NRCB2_FULL ,            0 ,           -1 ,         -1
+   NIRCAM , NRCB4_FULL ,            0 ,           -1 ,         -1
+   NIRCAM , NRCA2_FULL ,          180 ,           -1 ,         -1
+   NIRCAM , NRCA4_FULL ,          180 ,           -1 ,         -1
+   NIRCAM , NRCB1_FULL ,          180 ,           -1 ,         -1
+   NIRCAM , NRCB3_FULL ,          180 ,           -1 ,         -1
+   NIRCAM , NRCB5_FULL ,          180 ,           -1 ,         -1
+      FGS ,  FGS1_FULL ,          180 ,            1 ,         -1
+      FGS ,  FGS2_FULL ,            0 ,           -1 ,         -1
+   NIRISS ,    NIS_CEN ,          180 ,            1 ,         -1
+  NIRSPEC ,  NRS1_FULL ,            0 ,            1 ,         -1
+  NIRSPEC ,  NRS2_FULL ,          180 ,            1 ,         -1
+     MIRI , MIRIM_FULL ,            0 ,            1 ,         -1
