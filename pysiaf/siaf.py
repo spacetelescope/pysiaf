@@ -314,7 +314,7 @@ class Siaf(ApertureCollection):
         return self.apertures.keys()
 
     def plot(self, frame='tel', names=None, label=True, units=None, clear=True, annotate=False,
-             mark_ref=False, subarrays=True, **kwargs):
+             mark_ref=False, subarrays=True, ax=None, **kwargs):
         """ Plot all apertures in this SIAF
 
         Parameters
@@ -335,6 +335,9 @@ class Siaf(ApertureCollection):
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         Other matplotlib standard parameters may be passed in via **kwargs
         to adjust the style of the displayed lines.
@@ -342,7 +345,8 @@ class Siaf(ApertureCollection):
         """
         if clear:
             pl.clf()
-        ax = pl.subplot(111)
+        if ax is None:
+            ax = pl.subplot(111)
         ax.set_aspect('equal')
 
         # which list of apertures to iterate over?

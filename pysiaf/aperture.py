@@ -532,7 +532,7 @@ class Aperture(object):
                 rotation=rotation,
                 color=ax.lines[-1].get_color())
         if fill:
-            pl.fill(x2, y2, color=fill_color, zorder=-40)
+            ax.fill(x2, y2, color=fill_color, zorder=-40)
         if title:
             ax.set_title("{0} frame".format(frame))
         if annotate:
@@ -543,7 +543,8 @@ class Aperture(object):
 
         if (frame == 'tel') and (self.observatory == 'JWST'):
             # ensure V2 increases to the left
-            ax = pl.gca()
+            if ax is None:
+                ax = pl.gca()
             xlim = ax.get_xlim()
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
