@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/spacetelescope/pysiaf.svg?branch=master)](https://travis-ci.org/spacetelescope/pysiaf)
+[![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
 
 # pysiaf
 Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  
@@ -101,7 +102,7 @@ The STScI Telescopes Branch provides full support of pysiaf for S&OC operational
 ### Documentation
 The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*, available at https://jwst.stsci.edu/documentation/technical-documents. 
 
-pysiaf will be documented at *TBD*.  
+pysiaf is documented at https://pysiaf.readthedocs.io/  
 
 ### Contributing
 Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
