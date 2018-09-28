@@ -364,8 +364,6 @@ class Siaf(ApertureCollection):
             ap.plot(frame=frame, name_label=label, ax=ax, units=None, mark_ref=mark_ref, **kwargs)
             if annotate:
                 ap.plot_detector_origin(frame=frame)
-        ax.set_xlabel('V2 (arcsec)')
-        ax.set_ylabel('V3 (arcsec)')
 
         if frame == 'Tel' or frame == 'Idl':
             # enforce V2 increasing toward the left

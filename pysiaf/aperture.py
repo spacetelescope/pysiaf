@@ -493,15 +493,15 @@ class Aperture(object):
         if ax is None:
             ax = pl.gca()
             ax.set_aspect('equal')
-            if frame == 'tel':
-                ax.set_xlabel('V2 ({0})'.format(units))
-                ax.set_ylabel('V3 ({0})'.format(units))
-            elif frame == 'idl':
-                ax.set_xlabel('Ideal X ({0})'.format(units))
-                ax.set_ylabel('Ideal Y ({0})'.format(units))
-            elif frame == 'sci' or frame == 'det':
-                ax.set_xlabel('X pixels ({0})'.format(frame))
-                ax.set_ylabel('Y pixels ({0})'.format(frame))
+        if frame == 'tel':
+            ax.set_xlabel('V2 ({0})'.format(units))
+            ax.set_ylabel('V3 ({0})'.format(units))
+        elif frame == 'idl':
+            ax.set_xlabel('Ideal X ({0})'.format(units))
+            ax.set_ylabel('Ideal Y ({0})'.format(units))
+        elif frame == 'sci' or frame == 'det':
+            ax.set_xlabel('X pixels ({0})'.format(frame))
+            ax.set_ylabel('Y pixels ({0})'.format(frame))
 
         x, y = self.corners(frame, rederive=False)
         x2, y2 = self.closed_polygon_points(frame, rederive=False)
@@ -543,8 +543,6 @@ class Aperture(object):
 
         if (frame == 'tel') and (self.observatory == 'JWST'):
             # ensure V2 increases to the left
-            if ax is None:
-                ax = pl.gca()
             xlim = ax.get_xlim()
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
