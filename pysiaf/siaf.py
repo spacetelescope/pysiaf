@@ -374,22 +374,28 @@ class Siaf(ApertureCollection):
 
         self._last_plot_frame = frame
 
-    def plot_detector_origin(self, which='both', frame=None):
+    def plot_detector_origin(self, frame=None, which='both', ax=None):
         """ Mark on the plot the detector's origin in Det and Sci coordinates
 
         Parameters
         -----------
-        which : str
-            Which detector origin to plot: 'both', 'Det', 'Sci'
         frame : str
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
             Optional if you have already called plot() to specify a
             coordinate frame.
+        which : str
+            Which detector origin to plot: 'both', 'Det', 'Sci'
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
+        if ax is None:
+            ax = pl.gca()
+
         if frame is None: frame = self._last_plot_frame
         for ap in self._getFullApertures():
-            ap.plot_detector_origin(frame=frame, which=which)
+            ap.plot_detector_origin(frame=frame, which=which, ax=ax)
 
     def plot_detector_channels(self, frame=None):
         """ Mark on the plot the various detector readout channels
