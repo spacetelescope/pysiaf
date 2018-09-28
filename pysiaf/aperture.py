@@ -442,8 +442,8 @@ class Aperture(object):
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
 
-    def plot(self, frame='tel', name_label=False, ax=None, title=False, units='arcsec',
-             annotate=False, mark_ref=False, fill=True, fill_color='cyan', **kwargs):
+    def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
+             annotate=False, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None, **kwargs):
         """Plot this aperture.
 
         Partially adapted from https://github.com/mperrin/jwxml
@@ -522,17 +522,20 @@ class Aperture(object):
         # ax.plot(x2 * scale, y2 * scale, ls=line_style, label=line_label)
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
-        if name_label:
-            # partially mitigate overlapping NIRCam labels
-            rotation = 30 if self.AperName.startswith('NRC') else 0
+        if name_label is not None:
+            rotation = 0
+            if name_label == 'default':
+                # partially mitigate overlapping NIRCam labels
+                rotation = 30 if self.AperName.startswith('NRC') else 0
+                name_label = self.AperName
             ax.text(
-                x.mean() * scale, y.mean() * scale, self.AperName,
+                x.mean() * scale, y.mean() * scale, name_label,
                 verticalalignment='center',
                 horizontalalignment='center',
                 rotation=rotation,
                 color=ax.lines[-1].get_color())
         if fill:
-            pl.fill(x2, y2, color=fill_color, zorder=-40)
+            pl.fill(x2, y2, color=fill_color, zorder=-40, alpha=fill_alpha)
         if title:
             ax.set_title("{0} frame".format(frame))
         if annotate:
