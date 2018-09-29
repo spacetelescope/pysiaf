@@ -2,6 +2,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/spacetelescope/pysiaf/badge.svg?branch=master)](https://coveralls.io/github/spacetelescope/pysiaf?branch=master)
 [![PyPI version](https://badge.fury.io/py/pysiaf.svg)](https://badge.fury.io/py/pysiaf)
+[![PyPI - License](https://img.shields.io/pypi/l/Django.svg)](https://github.com/spacetelescope/pysiaf/blob/master/LICENSE.md)
 
 # pysiaf
 Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  

@@ -16,36 +16,12 @@ Authors
 
 References
 ----------
-    Numerous contributions and code snippets by Colin Cox were
-    incorporated.
-
-    Some methods were adapted from the jwxml package written by
-    Marshall Perrin and Joseph Long (https://github.com/mperrin/jwxml).
-
+    Numerous contributions and code snippets by Colin Cox were incorporated.
+    Some methods were adapted from the jwxml package (https://github.com/mperrin/jwxml).
     Some of the polynomial transformation code was adapted from
-    Bryan Hilbert's ramp_simulator code (e.g. https://github.com/
-    spacetelescope/ramp_simulator/blob/master/read_siaf_table.py)
-
-
-Use
----
-
-Dependencies
-------------
-
-Notes
------
-
-
-TODO
-----
-
-    check for sanity of entries, sciref vs. detref, number of valid distortion parameters versus
-    degree
-    a.verify()
+    (https://github.com/spacetelescope/ramp_simulator/).
 
 """
-
 
 from __future__ import absolute_import, print_function, division
 
@@ -64,8 +40,6 @@ import matplotlib
 from .utils import rotations, projection
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
-
-# global variables
 
 # shorthands for supported coordinate systems
 FRAMES = ('det', 'sci', 'idl', 'tel')
@@ -122,23 +96,39 @@ NIRSPEC_TA_FILTER_NAMES = 'CLEAR F110W F140X'.split()
 
 # private functions
 def _telescope_transform_model(from_sys, to_sys, par, angle):
-    """
-    Creates an astropy.modeling.Model object
-    for the undistorted ("ideal") to V2V3 coordinate translation
+    """Return astropy.modeling models for tel<->idl transformations.
 
-    angle has to be in radians
+    Parameters
+    ----------
+    from_sys : str
+        Originating system.
+    to_sys : str
+        Target system to transform to
+    par : int
+        Parity
+    angle : float
+        V3IdlYAngle equivalent in radians
 
-    sics_to_v2v3 (HST)
-    x_v2v3 = v2_origin + parity * x_sics * np.cos(np.deg2rad(theta_deg)) + y_sics * np.sin(
-    np.deg2rad(theta_deg))
-    y_v2v3 = v3_origin - parity * x_sics * np.sin(np.deg2rad(theta_deg)) + y_sics * np.cos(
-    np.deg2rad(theta_deg))
+    Returns
+    -------
+    xmodel, ymodel : tuple of `astropy.modeling` models
 
-    adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
+    Notes
+    -----
+    see sics_to_v2v3 function for HST:
+        x_v2v3 = v2_origin + parity * x_sics * np.cos(np.deg2rad(theta_deg)) + y_sics * np.sin(
+        np.deg2rad(theta_deg))
+        y_v2v3 = v3_origin - parity * x_sics * np.sin(np.deg2rad(theta_deg)) + y_sics * np.cos(
+        np.deg2rad(theta_deg))
+
+    References
+    ----------
+    Adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
+
     """
     if from_sys != 'tel' and to_sys != 'tel':
         raise ValueError(
-            'This function is designed to generate the transformation either to or from V2V3.')
+            'This function is designed to generate the transformation either to or from tel/V2V3.')
 
     # cast the transform functions as 1st order polynomials
     xc = {}
@@ -164,12 +154,14 @@ def _telescope_transform_model(from_sys, to_sys, par, angle):
 
     return xmodel, ymodel
 
+
 def _x_from_polar(x0, radius, phi_rad):
-    """ Convert polar to rectangular x coordinate"""
+    """Convert polar to rectangular x coordinate."""
     return x0 + radius * np.sin(phi_rad)
 
+
 def _y_from_polar(y0, radius, phi_rad):
-    """ Convert polar to rectangular x coordinate"""
+    """ Convert polar to rectangular y coordinate."""
     return y0 + radius * np.cos(phi_rad)
 
 
@@ -180,16 +172,14 @@ class Aperture(object):
     Frames, transformations, conventions and property/attribute names are as defined for JWST in
     JWST-STScI-001550.
 
-    4 Coordinate systems are supported:
-        * Detector:  pixels, in SIAF detector read out axes orientation as defined in SIAF ("det").
-                     This system differs from the DMS detector frame definition.
-        * Science:   pixels, in conventional DMS axes orientation ("sci")
-        * Ideal:     arcsecs, tangent plane projection relative to aperture reference location. (
-        "idl")
-        * Telescope: arcsecs, spherical V2,V3 ("tel")
+    Transformations between four coordinate systems ("frames") are supported:
+        * `Detector ("det")` :  units of pixels, according to detector read out axes orientation as defined by SIAF. This system generally differs from the JWST-DMS detector frame definition.
+        * `Science ("sci")` :   units of pixels, corresponds to DMS coordinate system.
+        * `Ideal ("idl")` : units of arcseconds, usually a tangent plane projection with reference point at aperture reference location.
+        * `Telescope or V2/V3 ("tel")` : units of arcsecs, spherical coordinate system.
 
-    Example
-    ========
+    Examples
+    --------
 
     ap = some_siaf['desired_aperture_name']     # extract one aperture from a Siaf object
 
@@ -227,16 +217,18 @@ class Aperture(object):
         # parent apertures, if any
         self.__dict__['_parent_apertures'] = None
 
+
     def __setattr__(self, key, value):
         """Set an aperture attribute and verify that is has the correct format.
 
         Parameters
         ----------
-        key
-        value
+        key : str
+            Attribute name
+        value : str, int, float
+            Attribute value
 
         """
-
         if (key == 'AperType') and (value not in self._accepted_aperture_types):
             raise AttributeError(
                 '{} attributes has to be one of {}'.format(key, self._accepted_aperture_types))
@@ -258,33 +250,50 @@ class Aperture(object):
 
         self.__dict__[key] = value
 
+
     def __str__(self):
         """Return string describing the instance."""
         return '{} {} aperture named {}'.format(self.observatory, self.InstrName, self.AperName)
 
+
     def __repr__(self):
+        """Representation of instance."""
         return "<pysiaf.Aperture object AperName={0} >".format(self.AperName)
 
+
     def closed_polygon_points(self, to_frame, rederive=True):
-        """
-        Compute closed polygon points of aperture outline. Used for plotting and path generation.
-        :param to_frame:
-        :return:
+        """Compute closed polygon points of aperture outline. Used for plotting and path generation.
+
+        Parameters
+        ----------
+        to_frame : str
+            Name of frame.
+        rederive : bool
+            Whether to rederive vertices from scratch (if True) or use idl values stored in SIAF.
+
+        Returns
+        -------
+        points_x, points_y : tuple of numpy arrays
+            x and y coordinates of aperture vertices
+
         """
         points_x, points_y = self.corners(to_frame, rederive=rederive)
+
         return points_x[np.append(np.arange(len(points_x)), 0)], points_y[
             np.append(np.arange(len(points_y)), 0)]
 
+
     def complement(self):
-        """
-        'XIdlVert1 XIdlVert2 XIdlVert3 XIdlVert4 YIdlVert1 YIdlVert2 YIdlVert3 YIdlVert4 '
-        XSciScale
-        YSciScale
+        """Complement the attributes of an aperture.
 
-        :return:
+        This method is useful when generating new apertures. The attributes that will be added are:
+            * X[Y]IdlVert1[2,3,4]
+            * X[Y]SciScale
 
-        TODO:
+        TODO
+        ----
             Implement exact scale computation
+
         """
         if not self._initial_attributes_validated:
             self.validate()
@@ -298,22 +307,26 @@ class Aperture(object):
         self.XSciScale = np.sqrt(self.Sci2IdlX10 ** 2 + self.Sci2IdlY10 ** 2)
         self.YSciScale = np.sqrt(self.Sci2IdlX11 ** 2 + self.Sci2IdlY11 ** 2)
 
-        corners_Idl_x, corners_Idl_y = self.corners('idl', rederive=True)
+        corners_idl_x, corners_idl_y = self.corners('idl', rederive=True)
         for j in [1, 2, 3, 4]:
-            setattr(self, 'XIdlVert{:d}'.format(j), corners_Idl_x[j - 1])
-            setattr(self, 'YIdlVert{:d}'.format(j), corners_Idl_y[j - 1])
+            setattr(self, 'XIdlVert{:d}'.format(j), corners_idl_x[j - 1])
+            setattr(self, 'YIdlVert{:d}'.format(j), corners_idl_y[j - 1])
+
 
     def convert(self, X, Y, from_frame, to_frame):
-        """
-        Generic conversion routine, that calls one of the
-        specific conversion routines based on the provided frame names as strings.
-        Adapted from jwxml package.
-        """
+        """Convert input coordinates from one frame to another frame.
 
-        #if self.InstrName.lower() == 'nirspec':
-            #print('WARNING: {} transformations may be unreliable'.format(self.InstrName))
-            # raise NotImplementedError('NIRSpec were transformations not yet implemented.')
+        Parameters
+        ----------
+        X
+        Y
+        from_frame
+        to_frame
 
+        Returns
+        -------
+
+        """
         if from_frame not in FRAMES or to_frame not in FRAMES:
             raise ValueError("from_frame value must be one of: [{}]".format(', '.join(FRAMES)))
 
@@ -321,30 +334,34 @@ class Aperture(object):
             return X, Y  # null transformation
 
         else:
-
             # With valid from_frame and to_frame, this method must exist:
-            # print('calling {}_to_{}'.format(from_frame.lower(), to_frame.lower()))
             conversion_method = getattr(self,
                                         '{}_to_{}'.format(from_frame.lower(), to_frame.lower()))
 
             return conversion_method(X, Y)
 
+
     def correct_for_dva(self, v2_arcsec, v3_arcsec, verbose=False):
-        """Apply differential velocity aberration correction to input arrays of V2/V3 coordinates
+        """Apply differential velocity aberration correction to input arrays of V2/V3 coordinates.
 
-        :param v2_arcsec:
-        :param v3_arcsec:
-        :return:
+        Currently only implemented for HST apertures.
+
+        Parameters
+        ----------
+        v2_arcsec
+        v3_arcsec
+        verbose
+
+        Returns
+        -------
+
         """
-
         if self._dva_parameters is None:
             raise RuntimeError('DVA parameters not specified.')
 
         data = Table([v2_arcsec, v3_arcsec])
         tmp_file_in = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file.txt')
         tmp_file_out = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file_out.txt')
-        # data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ',
-        # bookend=False, overwrite=True)
         data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ', bookend=False)
 
         dva_source_dir = self._dva_parameters['dva_source_dir']
@@ -369,9 +386,7 @@ class Aperture(object):
 
 
     def corners(self, to_frame, rederive=True):
-        """
-        Return coordinates of the aperture outline in the specified frame.
-        """
+        """Return coordinates of the aperture vertices in the specified frame."""
 
         if rederive or not hasattr(self, 'XIdlVert1'):
             # see Colin's Calc worksheet
@@ -391,6 +406,7 @@ class Aperture(object):
 
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
+
     def get_polynomial_coefficients(self):
         """Return a dictionary of arrays holding the significant idl/sci coefficients.
 
@@ -409,6 +425,8 @@ class Aperture(object):
                     [getattr(self, s) for s in DISTORTION_ATTRIBUTES if seed in s])[
                              0:number_of_coefficients]
             return dict
+
+
     def set_polynomial_coefficients(self, sci2idlx, sci2idly, idl2scix, idl2sciy):
         """Place a full set of coefficients into aperture
         Input
@@ -431,8 +449,6 @@ class Aperture(object):
             return None
 
 
-
-
     def path(self, to_frame):
         """
         Generate path from aperture vertices
@@ -444,9 +460,7 @@ class Aperture(object):
 
     def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
              annotate=False, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None, **kwargs):
-        """Plot this aperture.
-
-        Partially adapted from https://github.com/mperrin/jwxml
+        """Plot aperture.
 
         Parameters
         -----------
