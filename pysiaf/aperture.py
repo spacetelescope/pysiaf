@@ -37,7 +37,7 @@ from astropy.table import Table
 import astropy.units as u
 import matplotlib
 
-from .utils import rotations, projection
+from .utils import rotations, projection, polynomial
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
@@ -313,32 +313,37 @@ class Aperture(object):
             setattr(self, 'YIdlVert{:d}'.format(j), corners_idl_y[j - 1])
 
 
-    def convert(self, X, Y, from_frame, to_frame):
+    def convert(self, x, y, from_frame, to_frame):
         """Convert input coordinates from one frame to another frame.
 
         Parameters
         ----------
-        X
-        Y
-        from_frame
-        to_frame
+        x : float
+            first coordinate
+        y : float
+            second coordinate
+        from_frame : str
+            Frame in which x,y are given
+        to_frame : str
+            Frame to transform into
 
         Returns
         -------
+        x', y' : tuple
+            Coordinates in to_frame
 
         """
         if from_frame not in FRAMES or to_frame not in FRAMES:
             raise ValueError("from_frame value must be one of: [{}]".format(', '.join(FRAMES)))
 
         if from_frame == to_frame:
-            return X, Y  # null transformation
+            return x, y  # null transformation
 
         else:
             # With valid from_frame and to_frame, this method must exist:
             conversion_method = getattr(self,
                                         '{}_to_{}'.format(from_frame.lower(), to_frame.lower()))
-
-            return conversion_method(X, Y)
+            return conversion_method(x, y)
 
 
     def correct_for_dva(self, v2_arcsec, v3_arcsec, verbose=False):
@@ -348,12 +353,17 @@ class Aperture(object):
 
         Parameters
         ----------
-        v2_arcsec
-        v3_arcsec
-        verbose
+        v2_arcsec : float
+            v2 coordinates
+        v3_arcsec : float
+            v3 coordinates
+        verbose : bool
+            verbosity
 
         Returns
         -------
+        v2,v3 : tuple ot floats
+            Corrected coordinates
 
         """
         if self._dva_parameters is None:
@@ -386,8 +396,22 @@ class Aperture(object):
 
 
     def corners(self, to_frame, rederive=True):
-        """Return coordinates of the aperture vertices in the specified frame."""
+        """Return coordinates of the aperture vertices in the specified frame.
 
+        Parameters
+        ----------
+        to_frame : str
+            Frame of returned coordinates
+        rederive : bool
+            If True, the parameters given in the aperture definition file are used to derive
+            the vertices. Otherwise computations are made on the basis of the IdlVert attributes.
+
+        Returns
+        -------
+        x, y : tuple of float arrays
+            coordinates of vertices in to_frame
+
+        """
         if rederive or not hasattr(self, 'XIdlVert1'):
             # see Colin's Calc worksheet
             x1 = -1 * getattr(self, 'XSciRef') + 0.5
@@ -402,23 +426,17 @@ class Aperture(object):
             y_Idl = np.array([getattr(self, 'YIdlVert{:d}'.format(j)) for j in [1, 2, 3, 4]])
             corners = SiafCoordinates(x_Idl, y_Idl, 'idl')
         else:
-            raise NotImplementedError()
+            raise KeyError('IdlVert attributes not present. Use rederive=True.')
 
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
 
     def get_polynomial_coefficients(self):
-        """Return a dictionary of arrays holding the significant idl/sci coefficients.
-
-        Returns
-        -------
-        dict : dictionary
-
-        """
+        """Return a dictionary of arrays holding the significant idl/sci coefficients."""
         if self.Sci2IdlDeg is None:
             return None
         else:
-            number_of_coefficients = np.int((self.Sci2IdlDeg + 1) * (self.Sci2IdlDeg + 2) / 2)
+            number_of_coefficients = polynomial.number_of_coefficients(self.Sci2IdlDeg)
             dict = {}
             for seed in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
                 dict[seed] = np.array(
@@ -428,19 +446,24 @@ class Aperture(object):
 
 
     def set_polynomial_coefficients(self, sci2idlx, sci2idly, idl2scix, idl2sciy):
-        """Place a full set of coefficients into aperture
-        Input
-        : param sci2idlx - array of Sci2IdlX coefficients in JWST order
-        : param sci2idly - array of Sci2IdlY coefficients
-        : param idl2scix - array of Idl2SciX coefficients
-        : param idl2sciy - array of Idl2SciY coefficients
-        """
+        """Set the values of polynomial coefficients.
 
+        Parameters
+        ----------
+        sci2idlx : array
+            Coefficients
+        sci2idly : array
+            Coefficients
+        idl2scix : array
+            Coefficients
+        idl2sciy : array
+            Coefficients
+
+        """
         if self.Sci2IdlDeg is None:
-            print('This aperture has no polynomial coefficients')
-            return None
+            raise KeyError('This aperture has no polynomial coefficients')
         else:
-            number_of_coefficients = (self.Sci2IdlDeg + 1) * (self.Sci2IdlDeg + 2) // 2
+            number_of_coefficients = polynomial.number_of_coefficients(self.Sci2IdlDeg)
             for  i in range (number_of_coefficients):
                     setattr(self, DISTORTION_ATTRIBUTES[4*i], sci2idlx[i])
                     setattr(self, DISTORTION_ATTRIBUTES[4*i+1], sci2idly[i])
@@ -450,11 +473,19 @@ class Aperture(object):
 
 
     def path(self, to_frame):
+        """Return matplotlib path generated from aperture vertices.
+
+        Parameters
+        ----------
+        to_frame : str
+            Coordinate frame.
+
+        Returns
+        -------
+        path : `matplotlib.path.Path` object
+            Path describing the aperture outline
+
         """
-        Generate path from aperture vertices
-        :return:
-        """
-        # self.path = \
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
 
@@ -463,39 +494,45 @@ class Aperture(object):
         """Plot aperture.
 
         Parameters
-        -----------
+        ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-        name_label : bool
+        name_label : str
             Add text label stating aperture name
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
-            axes are inferred from pyplot.)
+            axes are inferred from pylab)
+        title : str
+            Figure title. If set, add a label to the plot indicating which frame was plotted.
         units : str
             one of 'arcsec', 'arcmin', 'deg'
         annotate : bool
             Add annotations for detector (0,0) pixels
         mark_ref : bool
             Add marker for the (V2Ref, V3Ref) reference point defining this aperture.
-        title : str
-            If set, add a label to the plot indicating which frame was plotted.
+        fill : bool
+            Whether to color fill the aperture
+        fill_color : str
+            Fill color
+        fill_alpha : float
+            alpha parameter for filled aperture
         color : matplotlib-compatible color
             Color specification for this aperture's outline,
             passed through to `matplotlib.Axes.plot`
+        kwargs : dict
+            Dictionary of optional parameters passed to matplotlib
 
-        Other matplotlib standard parameters may be passed in via **kwargs
-        to adjust the style of the displayed lines.
-
-        TODO:
+        TODO
+        ----
         plotting in Sky frame, requires attitude
-        #     elif system == 'radec':
-        #         if attitude_ref is not None:
-        #             vertices = np.array(
-        #                 siaf_rotations.pointing(attitude_ref, self.points_closed.T[0],
+        elif system == 'radec':
+                 if attitude_ref is not None:
+                     vertices = np.array(
+                         siaf_rotations.pointing(attitude_ref, self.points_closed.T[0],
         self.points_closed.T[1])).T
-        #             self.path_radec = matplotlib.path.Path(vertices)
-        #         else:
-        #             error('Please provide attitude_ref')
+                     self.path_radec = matplotlib.path.Path(vertices)
+                 else:
+                     error('Please provide attitude_ref')
 
         """
         if self.AperType == "TRANSFORM":
@@ -529,11 +566,6 @@ class Aperture(object):
         else:
             raise ValueError("Unknown units: " + units)
 
-        # convert arcsec to arcmin and plot
-        # if color is not None:
-        #     ax.plot(x2 * scale, y2 * scale, color=color, ls=line_style, label=line_label)
-        # else:
-        # ax.plot(x2 * scale, y2 * scale, ls=line_style, label=line_label)
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
         if name_label is not None:
@@ -567,7 +599,7 @@ class Aperture(object):
 
 
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
-        """ Mark on the plot the various detector readout channels
+        """Outline the detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
         regions read out by each of the output amps.
@@ -585,16 +617,9 @@ class Aperture(object):
         evenoddratio : float
             Ratio of opacity between even and odd amplifier region
             overlays
-       """
 
-        # if self.InstrName in ['NIRISS','FGS']: # channels have wrong orientation
-        #     raise NotImplementedError
-
+        """
         npixels = self.XDetSize
-        # if self.InstrName == 'MIRI':
-        #     npixels = 1024
-        # else:
-        #     npixels = 2048
         ch = npixels / 4
 
         ax = pl.gca()
@@ -606,7 +631,6 @@ class Aperture(object):
             plotpoints = np.zeros((4, 2))
             for i, xy in enumerate(pts):
                 if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
-                    # plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
                     plotpoints[i] = self.convert(xy[0], xy[1] + chan * ch, 'det', frame)
                 else:
                     plotpoints[i] = self.convert(xy[0] + chan * ch, xy[1], 'det', frame)
@@ -617,14 +641,14 @@ class Aperture(object):
                 alpha=chan_alpha,
                 facecolor=color,
                 edgecolor='none',
-                lw=0
-            )
+                lw=0)
             ax.add_patch(rect)
 
 
     def plot_detector_origin(self, frame, which='both'):
-        """ Draw red and blue squares to indicate the raw detector
-        readout and science frame readout, respectively
+        """Indicate the origins of the detector and science frames.
+
+        Red and blue squares indicate the detector and science frame origin, respectively.
 
         Parameters
         -----------
@@ -632,8 +656,8 @@ class Aperture(object):
             Which detector origin to plot: 'both', 'det', 'sci'
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-        """
 
+        """
         # raw detector frame
         if which.lower() == 'det' or which.lower() == 'both':
             c1, c2 = self.convert(0, 0, 'det', frame)
@@ -646,26 +670,33 @@ class Aperture(object):
 
 
     def reference_point(self, to_frame):
-        """ Return the defining reference point of the aperture."""
+        """ Return the defining reference point of the aperture in to_frame."""
         return self.convert(self.V2Ref, self.V3Ref, 'tel', to_frame)
 
 
-# Definition of frame transforms
+    # Definition of frame transforms
     def detector_transform(self, from_system, to_system, angle_deg=None, parity=None):
+        """Generate transformation model to transform between det <-> sci.
+
+        DetSciYAngle_deg, DetSciParity can be defined externally to override aperture attribute.
+
+        Parameters
+        ----------
+        from_system : str
+            Originating system
+        to_system : str
+            System to transform into
+        angle_deg : float, int
+            DetSciYAngle
+        parity : int
+            DetSciParity
+
+        Returns
+        -------
+        x_model, y_model : tuple of `astropy.modeling` models
+
         """
-        Generate transformation model to transform between det <-> sci
-
-        DetSciYAngle_deg, DetSciParity can be defined externally to override value saved in aperture
-
-        :param from_system:
-        :param to_system:
-        :param angle_deg:
-        :param parity:
-        :return:
-        """
-
         # create the model for the transformation
-
         if parity is None:
             parity = getattr(self, 'DetSciParity')
 
@@ -676,11 +707,11 @@ class Aperture(object):
 
         if from_system == 'det':
             # add offset model, see JWST-001550 Sect. 4.1
-            x_offset = models.Shift(self.XSciRef)  # & models.Shift(self.XSciRef)
-            y_offset = models.Shift(self.YSciRef)  # & models.Shift(self.YSciRef)
+            x_offset = models.Shift(self.XSciRef)
+            y_offset = models.Shift(self.YSciRef)
         elif from_system == 'sci':
-            x_offset = models.Shift(self.XDetRef)  # & models.Shift(self.XDetRef)
-            y_offset = models.Shift(self.YDetRef)  # & models.Shift(self.YDetRef)
+            x_offset = models.Shift(self.XDetRef)
+            y_offset = models.Shift(self.YDetRef)
 
         x_model = x_model_1 | x_offset  # evaluated as x_offset( x_model_1(*args) )
         y_model = y_model_1 | y_offset
@@ -689,11 +720,7 @@ class Aperture(object):
 
 
     def distortion_transform(self, from_system, to_system, include_offset=True):
-        """
-        return transformation corresponding to aperture.
-
-        adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
-
+        """Return polynomial distortion transformation between sci<->idl.
 
         Parameters
         ----------
@@ -701,6 +728,8 @@ class Aperture(object):
             Starting system (e.g. "sci", "idl")
         to_system : str
             Ending coordinate system (e.g. "sci" , "idl")
+        include_offset : bool
+            Whether to include the zero-point offset.
 
         Returns
         -------
@@ -708,6 +737,10 @@ class Aperture(object):
             Correction in x
         y_model : astropy.modeling.Model
             Correction in y
+
+        TODO
+        ----
+        Clean up part with all_keys = self.__dict__.keys()
 
         """
         if from_system not in ['idl', 'sci']:
@@ -719,21 +752,15 @@ class Aperture(object):
         # Generate the string corresponding to the requested coefficient labels
         if from_system == 'idl' and to_system == 'sci':
             label = 'Idl2Sci'
-            #         from_units = 'arcsec'
-            #         to_units = 'distorted pixels'
         elif from_system == 'sci' and to_system == 'idl':
             label = 'Sci2Idl'
-            #         from_units = 'distorted pixels'
-            #         to_units = 'arcsec'
 
         # Get the coefficients for "science" to "ideal" transformation (and back)
-        # "science" is distorted pixels. "ideal" is undistorted arcsec from the
-        # the reference pixel location.
 
         # degree of distortion polynomial
         degree = np.int(getattr(self, 'Sci2IdlDeg'))
 
-        number_of_coefficients = np.int((degree + 1) * (degree + 2) / 2)
+        number_of_coefficients = polynomial.number_of_coefficients(degree)
         all_keys = self.__dict__.keys()
 
         for axis in ['X', 'Y']:
@@ -762,25 +789,34 @@ class Aperture(object):
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                             V3Ref_arcsec=None,
                             verbose=False):
-        """Generate transformation model to go to/from tel (V2/V3) from
-        undistorted angular distances from the reference pixel ("ideal") idl.
+        """Return transformation model between tel<->idl.
 
-        adapted from https://github.com/spacetelescope/ramp_simulator/blob/master/read_siaf_table.py
+        V3IdlYAngle_deg, V2Ref_arcsec, V3Ref_arcsec can be given as arguments to override aperture
+        attributes.
 
-        values to be transformed must be in arcseconds
+        Parameters
+        ----------
+        from_system : str
+            Starting system ("tel" or "idl")
+        to_system : str
+            Ending coordinate system ("tel" or "idl")
+        V3IdlYAngle_deg : float
+            Angle
+        V2Ref_arcsec : float
+            Reference coordinate
+        V3Ref_arcsec : float
+            Reference coordinate
+        verbose : bool
+            verbosity
+
+        Returns
+        -------
+        X_model, Y_model : tuple of `astropy.modeling` models
 
         TODO
-        (upgrade: use constants to get rid of this requirement)
+        ----
+        (upgrade: use astropy.units to allow any type of input angular unit)
 
-        V3IdlYAngle_deg, V2Ref_arcsec, V3Ref_arcsec can be defined externally to override value
-        saved in aperture
-        :param from_system:
-        :param to_system:
-        :param V3IdlYAngle_deg:
-        :param V2Ref_arcsec:
-        :param V3Ref_arcsec:
-        :param verbose:
-        :return:
         """
         if verbose:
             print('Using planar approximation to convert between IDL and V2V3')
@@ -820,21 +856,21 @@ class Aperture(object):
         return X_model, Y_model
 
 
-    def det_to_sci(self, XDet, YDet, *args):
-        """ Detector to Science, following Section 4.1 of JWST-STScI-001550"""
+    def det_to_sci(self, x_det, y_det, *args):
+        """Detector to science frame transformation, following Section 4.1 of JWST-STScI-001550."""
         X_model, Y_model = self.detector_transform('det', 'sci', *args)
-        return X_model(XDet - self.XDetRef, YDet - self.YDetRef), Y_model(XDet - self.XDetRef,
-                                                                          YDet - self.YDetRef)
+        return X_model(x_det - self.XDetRef, y_det - self.YDetRef), Y_model(x_det - self.XDetRef,
+                                                                          y_det - self.YDetRef)
 
 
-    def sci_to_det(self, XSci, YSci, *args):
-        """ Science to Detector, following Section 4.1 of JWST-STScI-001550"""
+    def sci_to_det(self, x_sci, y_sci, *args):
+        """Science to detector frame transformation, following Section 4.1 of JWST-STScI-001550."""
         X_model, Y_model = self.detector_transform('sci', 'det', *args)
-        return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
-                                                                          YSci - self.YSciRef)
+        return X_model(x_sci - self.XSciRef, y_sci - self.YSciRef), Y_model(x_sci - self.XSciRef,
+                                                                          y_sci - self.YSciRef)
 
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
+    def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implementats the planar approximation, which is adequate for most
@@ -848,9 +884,9 @@ class Aperture(object):
 
         Parameters
         ----------
-        XIdl: float
+        x_idl: float
             ideal X coordinate in arcsec
-        YIdl: float
+        y_idl: float
             ideal Y coordinate in arcsec
         V3IdlYAngle_deg: float
             overwrites self.V3IdlYAngle
@@ -874,20 +910,20 @@ class Aperture(object):
             X_model, Y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
                                                         V3Ref_arcsec)
 
-            v2 = X_model(XIdl, YIdl)
-            v3 = Y_model(XIdl, YIdl)
+            v2 = X_model(x_idl, y_idl)
+            v3 = Y_model(x_idl, y_idl)
 
         elif method == 'spherical_transformation':
 
             if input_coordinates == 'spherical':
-                x_idl_spherical_deg, y_idl_spherical_deg = XIdl* u.arcsec.to(u.deg), YIdl* u.arcsec.to(u.deg)
+                x_idl_spherical_deg, y_idl_spherical_deg = x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg)
 
             elif input_coordinates == 'tangent_plane':
                 # deproject coordinates before applying rotations
                 x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                    XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), 0.0, 0.0)
+                    x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
                 # x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                #     XIdl * u.arcsec.to(u.deg), YIdl * u.arcsec.to(u.deg), self.V2Ref/3600., self.V3Ref/3600.)
+                #     x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), self.V2Ref/3600., self.V3Ref/3600.)
 
 
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
@@ -998,15 +1034,14 @@ class Aperture(object):
 
 
 
-    def sci_to_idl(self, XSci, YSci):
+    def sci_to_idl(self, x_sci, y_sci):
         X_model, Y_model = self.distortion_transform('sci', 'idl')
-        return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
-                                                                          YSci - self.YSciRef)
-        # return X_model(XSci, YSci), Y_model(XSci, YSci)
+        return X_model(x_sci - self.XSciRef, y_sci - self.YSciRef), Y_model(x_sci - self.XSciRef,
+                                                                          y_sci - self.YSciRef)
 
-    def idl_to_sci(self, XIdl, YIdl):
+    def idl_to_sci(self, x_idl, y_idl):
         X_model, Y_model = self.distortion_transform('idl', 'sci')
-        return X_model(XIdl, YIdl), Y_model(XIdl, YIdl)
+        return X_model(x_idl, y_idl), Y_model(x_idl, y_idl)
 
     def det_to_idl(self, *args):
         return self.sci_to_idl(*self.det_to_sci(*args))
@@ -1418,7 +1453,7 @@ class HstAperture(Aperture):
 
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
-    def idl_to_tel(self, XIdl, YIdl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
+    def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None, method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert idl to  tel
 
         input in arcsec, output in arcsec
@@ -1439,8 +1474,8 @@ class HstAperture(Aperture):
         tvs_v3_arcsec  = V3Ref_arcsec
 
 
-        :param XIdl:
-        :param YIdl:
+        :param x_idl:
+        :param y_idl:
         :param V3IdlYAngle_deg:
         :param V2Ref_arcsec:
         :param V3Ref_arcsec:
@@ -1456,14 +1491,14 @@ class HstAperture(Aperture):
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
             # unit vector
-            x_rad = np.deg2rad(XIdl * u.arcsec.to(u.deg))
-            y_rad = np.deg2rad(YIdl * u.arcsec.to(u.deg))
+            x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
+            y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
             xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
 
             v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
             return v[1], v[2]
         else:
-            return super(HstAperture, self).idl_to_tel(XIdl, YIdl, V3IdlYAngle_deg=V3IdlYAngle_deg,
+            return super(HstAperture, self).idl_to_tel(x_idl, y_idl, V3IdlYAngle_deg=V3IdlYAngle_deg,
                                       V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec, method=method, input_coordinates=input_coordinates)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
@@ -1856,13 +1891,13 @@ class NirspecAperture(JwstAperture):
         return x_sci, y_sci
 
 
-    def sci_to_gwa(self, XSci, YSci):
+    def sci_to_gwa(self, x_sci, y_sci):
         """NIRSpec transformation from Science frame to GWA detector side
 
         Parameters
         ----------
-        XSci
-        YSci
+        x_sci
+        y_sci
 
         Returns
         -------
@@ -1870,16 +1905,16 @@ class NirspecAperture(JwstAperture):
         """
 
         X_model, Y_model = self.distortion_transform('sci', 'idl')
-        return X_model(XSci - self.XSciRef, YSci - self.YSciRef), Y_model(XSci - self.XSciRef,
-                                                                          YSci - self.YSciRef)
+        return X_model(x_sci - self.XSciRef, y_sci - self.YSciRef), Y_model(x_sci - self.XSciRef,
+                                                                          y_sci - self.YSciRef)
 
     def gwa_to_sci(self, x_gwa, y_gwa):
         """NIRSpec transformation from GWA detector side to Science frame
 
         Parameters
         ----------
-        XSci
-        YSci
+        x_sci
+        y_sci
 
         Returns
         -------
@@ -1890,7 +1925,7 @@ class NirspecAperture(JwstAperture):
         return X_model(x_gwa, y_gwa), Y_model(x_gwa, y_gwa)
 
 
-    def det_to_sci(self, XDet, YDet, *args):
+    def det_to_sci(self, x_det, y_det, *args):
         """Use parent aperture if SLIT."""
         if self.AperType == 'TRANSFORM':
             raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
@@ -1898,12 +1933,12 @@ class NirspecAperture(JwstAperture):
             if self._parent_apertures is None:
                 raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
             else:
-                return self._parent_aperture.det_to_sci(XDet, YDet, *args)
+                return self._parent_aperture.det_to_sci(x_det, y_det, *args)
         else:
-            return super(NirspecAperture, self).det_to_sci(XDet, YDet, *args)
+            return super(NirspecAperture, self).det_to_sci(x_det, y_det, *args)
 
 
-    def sci_to_det(self, XSci, YSci, *args):
+    def sci_to_det(self, x_sci, y_sci, *args):
         """Use parent aperture if SLIT."""
         if self.AperType == 'TRANSFORM':
             raise RuntimeError('AperType {} is not supported for this transformation'.format(self.AperType))
@@ -1911,9 +1946,9 @@ class NirspecAperture(JwstAperture):
             if self._parent_apertures is None:
                 raise RuntimeError('Transformation not supported for this aperture: {}.'.format(self.AperName))
             else:
-                return self._parent_aperture.sci_to_det(XSci, YSci, *args)
+                return self._parent_aperture.sci_to_det(x_sci, y_sci, *args)
         else:
-            return super(NirspecAperture, self).sci_to_det(XSci, YSci, *args)
+            return super(NirspecAperture, self).sci_to_det(x_sci, y_sci, *args)
 
 
     def sci_to_tel(self, x_sci, y_sci):
