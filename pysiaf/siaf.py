@@ -314,7 +314,7 @@ class Siaf(ApertureCollection):
         return self.apertures.keys()
 
     def plot(self, frame='tel', names=None, label=True, units=None, clear=True, annotate=False,
-             mark_ref=False, subarrays=True, ax=None, **kwargs):
+             origin="both", mark_ref=False, subarrays=True, ax=None, **kwargs):
         """ Plot all apertures in this SIAF
 
         Parameters
@@ -331,6 +331,8 @@ class Siaf(ApertureCollection):
             Clear plot before plotting (set to false to overplot)
         annotate : bool
             Add annotations for detector (0,0) pixels
+        origin : str
+            Which detector origin to plot (goes to plot_detector_origin()): 'both', 'det', 'sci'
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
@@ -361,9 +363,8 @@ class Siaf(ApertureCollection):
             if names is not None:
                 if ap.AperName not in names: continue
 
-            ap.plot(frame=frame, name_label=label, ax=ax, units=None, mark_ref=mark_ref, **kwargs)
-            if annotate:
-                ap.plot_detector_origin(frame=frame)
+            ap.plot(frame=frame, name_label=label, ax=ax, units=None, mark_ref=mark_ref, annotate=annotate,
+                    origin=origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':
             # enforce V2 increasing toward the left

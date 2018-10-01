@@ -443,7 +443,7 @@ class Aperture(object):
 
 
     def plot(self, frame='tel', name_label=False, ax=None, title=False, units='arcsec',
-             annotate=False, mark_ref=False, fill=True, fill_color='cyan', **kwargs):
+             annotate=False, origin="both", mark_ref=False, fill=True, fill_color='cyan', **kwargs):
         """Plot this aperture.
 
         Partially adapted from https://github.com/mperrin/jwxml
@@ -461,6 +461,8 @@ class Aperture(object):
             one of 'arcsec', 'arcmin', 'deg'
         annotate : bool
             Add annotations for detector (0,0) pixels
+        origin : str
+            Which detector origin to plot (goes to plot_detector_origin()): 'both', 'det', 'sci'
         mark_ref : bool
             Add marker for the (V2Ref, V3Ref) reference point defining this aperture.
         title : str
@@ -536,7 +538,7 @@ class Aperture(object):
         if title:
             ax.set_title("{0} frame".format(frame))
         if annotate:
-            self.plot_detector_origin(frame)
+            self.plot_detector_origin(frame, which=origin, ax=ax)
         if mark_ref:
             x_ref, y_ref = self.reference_point(frame)
             ax.plot([x_ref], [y_ref], marker='+', color=ax.lines[-1].get_color())
