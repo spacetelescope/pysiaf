@@ -58,6 +58,8 @@ def test_attitude(verbose=False):
         print('PA tests')
         print('%10.6f %10.6f %10.6f %10.3e' %(roll, pa1, pa2, pa1 - pa2))
         print('%10.6f %10.6f %10.3e' %(pa3, pa4, pa3-pa4))
+    assert abs(pa1 - pa2) < 1.0e-10, 'Disagreement for reference point position angles'
+    assert abs(pa3 - pa4) < 1.0e-10, 'Disagreement for displaced point position angles'
 
 def test_axial_rotation(verbose=False):
 
