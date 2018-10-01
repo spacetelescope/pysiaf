@@ -3,7 +3,6 @@
 
 Authors
 -------
-
     Johannes Sahlmann
 
 """

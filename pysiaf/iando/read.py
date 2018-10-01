@@ -14,9 +14,9 @@ References
 
 """
 from collections import OrderedDict
-import numpy as np
 import os
 
+import numpy as np
 from astropy.table import Table
 import lxml.etree as ET
 
@@ -37,7 +37,7 @@ def get_siaf(input_siaf, observatory='JWST'):
         Siaf object
 
     """
-    from pysiaf import siaf # runtime import to avoid circular import on startup
+    from pysiaf import siaf  # runtime import to avoid circular import on startup
     if type(input_siaf) == str:
         aperture_collection = read_jwst_siaf(filename=input_siaf)
 
@@ -64,7 +64,7 @@ def get_siaf(input_siaf, observatory='JWST'):
     return siaf_object
 
 
-def read_hst_siaf(file=None):#, AperNames=None):
+def read_hst_siaf(file=None):
     """Read apertures from HST SIAF file and return a collection.
 
     This was partially ported from Lallo's plotap.f.
@@ -80,7 +80,7 @@ def read_hst_siaf(file=None):#, AperNames=None):
         Dictionary of apertures
 
     """
-    from pysiaf import aperture # runtime import to avoid circular import on startup
+    from pysiaf import aperture  # runtime import to avoid circular import on startup
     if file is None:
         file = os.path.join(HST_PRD_DATA_ROOT, 'siaf.dat')
 
@@ -266,7 +266,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         dictionary of apertures
 
     """
-    from pysiaf import aperture # runtime import to avoid circular import on startup
+    from pysiaf import aperture  # runtime import to avoid circular import on startup
 
     if (filename is None) and (instrument is None):
         raise ValueError('Specify either input instrument or filename')
@@ -332,12 +332,14 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
             jwst_aperture = apertures[AperName]
             if jwst_aperture.AperType in ['FULLSCA', 'OSS']:
                 for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
-                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
+                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name),
+                            apertures[transform_aperture_name])
                 apertures[AperName] = jwst_aperture
             elif jwst_aperture.AperType in ['SLIT']:
                 # attach TA apertures
                 for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
-                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
+                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name),
+                            apertures[transform_aperture_name])
 
                 # attach parent aperture (name stored in _parent_apertures, aperture object stored
                 # in _parent_aperture)
@@ -349,7 +351,6 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                     jwst_aperture._parent_aperture = apertures[jwst_aperture._parent_apertures]
 
                 apertures[AperName] = jwst_aperture
-
 
     return apertures
 
@@ -366,7 +367,8 @@ def read_siaf_alignment_parameters(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.
+                            format(instrument.lower()))
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
@@ -405,10 +407,9 @@ def read_siaf_ddc_mapping_reference_file(instrument):
     ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
                                     '{}_siaf_ddc_apername_mapping.txt'.format(instrument.lower()))
 
-
     ddc_mapping_table = Table.read(ddc_mapping_file, format='ascii.basic', delimiter=',')
 
-    #generate dictionary
+    # generate dictionary
     _ddc_apername_mapping = {}
     for j, siaf_name in enumerate(ddc_mapping_table['SIAF_NAME'].data):
         _ddc_apername_mapping[siaf_name] = ddc_mapping_table['DDC_NAME'][j]
