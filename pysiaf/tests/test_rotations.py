@@ -59,7 +59,7 @@ def test_attitude(verbose=False):
         print('%10.6f %10.6f %10.6f %10.3e' %(roll, pa1, pa2, pa1 - pa2))
         print('%10.6f %10.6f %10.3e' %(pa3, pa4, pa3-pa4))
 
-def test_axial(verbose=False):
+def test_axial_rotation(verbose=False):
 
     """ Compares vector transformations using the attitude matrix with a single rotation about an axis.
     In the process validates the method of deriving the axis and rotation angle from the attitude matrix
@@ -85,7 +85,7 @@ def test_axial(verbose=False):
     va = np.dot(a,u)    # Transform using attitude matrix
 
     (axis, phi, quaternion) = rt.rodrigues(a) # obtain single rotation parameters equivalent to attitude matrix
-    vb = rt.axial(axis, phi, u)     #  Transform using axial rotation
+    vb = rt.axial_rotation(axis, phi, u)     #  Transform using axial rotation
     dot_product = np.dot(va, vb)
 
     if verbose:

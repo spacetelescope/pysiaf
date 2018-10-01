@@ -414,7 +414,7 @@ def v2v3(u):
     Parameters
     ----------
     u:  float list or array of length 3
-        a unit vector. 
+        a unit vector.
 
     Returns
     -------
