@@ -534,11 +534,11 @@ class Aperture(object):
                 rotation=rotation,
                 color=ax.lines[-1].get_color())
         if fill:
-            ax.fill(x2, y2, color=fill_color, zorder=-40)
+            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40)
         if title:
             ax.set_title("{0} frame".format(frame))
         if annotate:
-            self.plot_detector_origin(frame, which=origin, ax=ax)
+            self.plot_detector_origin(frame, which=origin, units=units, ax=ax)
         if mark_ref:
             x_ref, y_ref = self.reference_point(frame)
             ax.plot([x_ref], [y_ref], marker='+', color=ax.lines[-1].get_color())
@@ -606,7 +606,7 @@ class Aperture(object):
             ax.add_patch(rect)
 
 
-    def plot_detector_origin(self, frame, which='both', ax=None):
+    def plot_detector_origin(self, frame, which='both', units='arcsec', ax=None):
         """ Draw red and blue squares to indicate the raw detector
         readout and science frame readout, respectively
 
@@ -616,6 +616,8 @@ class Aperture(object):
             Which detector origin to plot: 'both', 'det', 'sci'
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
+        units : str
+            one of 'arcsec', 'arcmin', 'deg'
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
@@ -623,15 +625,24 @@ class Aperture(object):
         if ax is None:
             ax = pl.gca()
 
+        if units.lower() == 'arcsec':
+            scale = 1
+        elif units.lower() == 'arcmin':
+            scale = 1. / 60
+        elif units.lower() == 'deg':
+            scale = 1. / 60 / 60
+        else:
+            raise ValueError("Unknown units: " + units)
+
         # raw detector frame
         if which.lower() == 'det' or which.lower() == 'both':
             c1, c2 = self.convert(0, 0, 'det', frame)
-            ax.plot(c1, c2, color='red', marker='s', markersize=9)
+            ax.plot(c1 * scale, c2 * scale, color='red', marker='s', markersize=9)
 
         # science frame
         if which.lower() == 'sci' or which.lower() == 'both':
             c1, c2 = self.convert(0, 0, 'sci', frame)
-            ax.plot(c1, c2, color='blue', marker='s')
+            ax.plot(c1 * scale, c2 * scale, color='blue', marker='s')
 
 
     def reference_point(self, to_frame):

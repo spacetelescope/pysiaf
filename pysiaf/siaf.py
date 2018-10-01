@@ -363,7 +363,7 @@ class Siaf(ApertureCollection):
             if names is not None:
                 if ap.AperName not in names: continue
 
-            ap.plot(frame=frame, name_label=label, ax=ax, units=None, mark_ref=mark_ref, annotate=annotate,
+            ap.plot(frame=frame, name_label=label, ax=ax, units=units, mark_ref=mark_ref, annotate=annotate,
                     origin=origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':
@@ -375,7 +375,7 @@ class Siaf(ApertureCollection):
 
         self._last_plot_frame = frame
 
-    def plot_detector_origin(self, frame=None, which='both', ax=None):
+    def plot_detector_origin(self, frame=None, which='both', units='arcsec', ax=None):
         """ Mark on the plot the detector's origin in Det and Sci coordinates
 
         Parameters
@@ -386,6 +386,8 @@ class Siaf(ApertureCollection):
             coordinate frame.
         which : str
             Which detector origin to plot: 'both', 'Det', 'Sci'
+        units : str
+            one of 'arcsec', 'arcmin', 'deg'
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
@@ -396,7 +398,7 @@ class Siaf(ApertureCollection):
 
         if frame is None: frame = self._last_plot_frame
         for ap in self._getFullApertures():
-            ap.plot_detector_origin(frame=frame, which=which, ax=ax)
+            ap.plot_detector_origin(frame=frame, which=which, units=units, ax=ax)
 
     def plot_detector_channels(self, frame=None):
         """ Mark on the plot the various detector readout channels
