@@ -23,16 +23,21 @@ def attitude(v2, v3, ra, dec, pa):
 
     Parameters
     ----------
-    v2  a position measured in arc-seconds
-    v3  a position measured in arc-seconds
-    ra  Right Ascension on the sky in degrees
-    dec Declination on the sky in degrees
-    pa  Position angle in degrees measured from North to V3 axis in
-        North to East direction.
+    v2: float
+      a position measured in arc-seconds
+    v3: float
+      a position measured in arc-seconds
+    ra: float
+        Right Ascension on the sky in degrees
+    dec: float
+         Declination on the sky in degrees
+    pa: float
+        Position angle in degrees measured from North to V3 axis in North to East direction.
 
     Returns
     -------
-    m   a (3 x 3) matrix representing the attitude of the telescope which points the given
+    m:   a (3 x 3) matrix
+        represents the attitude of the telescope which points the given
         V2V3 position to the indicated RA and Dec and with the V3 axis rotated by position angle pa
     """
 
@@ -55,18 +60,22 @@ def attitude(v2, v3, ra, dec, pa):
     return m
 
 
-def axial(ax, phi, u):
+def axial_rotation(ax, phi, u):
     """Apply direct rotation to a vector using Rodrigues' formula
 
     Parameters
     ----------
-    ax      float array of size 3 being a unit vector represent a rotation axis
-    phi     angle in degrees to rotate original vector
-    u       float array of size 3 representing any vector
+    ax:     float array of size 3
+            a unit vector represent a rotation axis
+    phi:    float
+            angle in degrees to rotate original vector
+    u:      float
+            array of size 3 representing any vector
 
     Returns
     -------
-    v       float array of size 3 representing the rotated vectot
+    v:      float
+            array of size 3 representing the rotated vectot
     """
 
     rphi = radians(phi)
@@ -76,17 +85,21 @@ def axial(ax, phi, u):
 
 def getv2v3(attitude, ra, dec):
     """Using the inverse of attitude matrix
-    find v2,v3 position of any RA and Dec.
+    find v2,v3 position of any RA and Dec
 
     Parameters
     ----------
-    attitude    the telescope attitude matrix
-    ra          RA of sky position
-    dec         Dec of sky position
+    attitude:   3 by 3 float array
+                the telescope attitude matrix
+    ra:         float
+                RA of sky position
+    dec:        float
+                Dec of sky position
 
     Returns
     -------
-    v2,v3       V2,V3 value at matching position
+    v2,v3:      float
+                V2,V3 value at matching position
 
     """
 
@@ -100,16 +113,19 @@ def getv2v3(attitude, ra, dec):
 
 def cross(a, b):
     """cross product of two vectors c = a X b
-    The order is significant
+    The order is significant. Reversing the order changes the sign of the result
 
     Parameters
     ----------
-    a   float array or list of length 3
-    b   float array or list of length 3
+    a:   float array or list of length 3
+         first vector
+    b    float array or list of length 3
+         second vector
 
     Returns
     -------
-    c   float array of length 3 representing the product vector
+    c   float array of length 3
+        the product vector
     """
 
     c = np.array([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]])
@@ -121,14 +137,19 @@ def pointing(attitude, v2, v3, positive_ra=True):
 
     Parameters
     ----------
-    attitude
-    v2 : float V2 coordinate in arc-seconds
-    v3 : float V3 coordinate in arc-seconds
-    positive_ra : bool. If True forces ra value to be positive
+    attitude:   3 by 3 float array
+                the telescope attitude matrix
+    v2 :        float
+                V2 coordinate in arc-seconds
+    v3 :        float
+                V3 coordinate in arc-seconds
+    positive_ra : bool.
+                If True forces ra value to be positive
 
     Returns
     -------
-    rd : tuple (ra, dec) - RA and Dec in degrees
+    rd :        tuple of floats
+                (ra, dec) - RA and Dec in degrees
     """
 
     v2d = v2 / 3600.0
@@ -150,9 +171,12 @@ def posangle(attitude, v2, v3):
 
     Parameters
     ----------
-    attitude    the telescope attitude matrix
-    v2          v2 position in arc-sec
-    v3          v3 position n arc-sec
+    attitude:   3 by 3 float array
+                the telescope attitude matrix
+    v2 :        float
+                V2 coordinate in arc-seconds
+    v3 :        float
+                V3 coordinate in arc-seconds
 
     Returns
     -------
@@ -174,12 +198,16 @@ def radec(u, positive_ra=False):
 
     Parameters
     ----------
-    u           an array or list of length 3 representing a unit vector
-    positive_ra logical varable indicating whether to force ra to be positive
+    u:              a float array or list of length 3
+                    represents a unit vector so should have unit magnitude
+                    if not, the normalization is forced withinin the method
+    positive_ra:    bool
+                    indicating whether to force ra to be positive
 
     Returns
     -------
-    ra, dec     RA and Dec corresponding to the unit vector u
+    ra, dec:        float
+                    RA and Dec in degrees corresponding to the unit vector u
     """
 
     assert len(u) == 3, 'Not a vector'
@@ -199,17 +227,21 @@ def rodrigues(attitude):
     """Interpret rotation matrix as a single rotation by angle phi around unit length axis
     Return axis, angle and matching quaternion
     The quaternion is given in a slightly irregular order with the angle value preceding the axis information.
-    Most of the literature shows the reverse order but JWST flight software is using the order given here.
+    Most of the literature shows the reverse order but JWST flight software uses the order given here.
 
     Parameters
     ----------
-    attitude    (3 x 3) telescope attitude matrix
+    attitude:   3 by 3 float array
+                the telescope attitude matrix
 
     Returns
     -------
-    axis    float array of length 3 representing a unit vector which is the rotation axis
-    phi     degrees - angle of rotation
-    q       float array of length 4 representing the equivalent quaternion
+    axis:   float array of length 3
+            a unit vector which is the rotation axis
+    phi:    float
+            angle of rotation in degrees
+    q:      float array of length 4
+            the equivalent quaternion
     """
 
     A = attitude  # Synonym for clarity and to save typing
@@ -226,18 +258,21 @@ def rodrigues(attitude):
 
 def rotate(axis, angle):
     """Implements fundamental 3D rotation matrices.
-    Rotate by angle measured in degrees, about axis 1 2 or 3
+    Rotate a vector by an angle measured in degrees, about axis 1 2 or 3 in the inertial frame.
     This is an anti-clockwise rotation when sighted along the axis, commonly called a
     right-handed rotation.
 
     Parameters
     ----------
-    axis    integer axis number, 1 2 or 3
-    angle   angle in degrees of rotation
+    axis:   integer
+            axis number, 1 2 or 3
+    angle   float
+            angle of rotation in degrees
 
     Returns
     -------
-    r   a (3 x 3) float matrix which performs the specified rotation.
+    r   a (3 x 3) float array
+        matrix which performs the specified rotation.
     """
 
     assert axis in list(range(1, 4)), 'Axis must be in range 1 to 3'
@@ -263,12 +298,15 @@ def rv(v2, v3):
 
     Parameters
     ----------
-    v2  V2 position in arc-sec
-    v3  V3 position in arc-sec
+    v2: float
+        V2 position in arc-sec
+    v3: float
+        V3 position in arc-sec
 
     Returns
     -------
-    rv  a (3 x 3) matrix which performs the rotation described.
+    rv:     a (3 x 3) array
+            matrix which performs the rotation described.
 
     """
 
@@ -286,13 +324,17 @@ def sky_posangle(attitude, ra, dec):
 
     Parameters
     ----------
-    attitude    the (3 x 3) telescope attitude matrix
-    ra          RA position in degrees
-    dec         Dec position in degrees
+    attitude:   3 by 3 float array
+                the telescope attitude matrix
+    ra:         float
+                RA position in degrees
+    dec:        float
+                Dec position in degrees
 
     Returns
     -------
-    pa          resulting position angle in degrees
+    pa:         float
+                resulting position angle in degrees
     """
 
     rar = radians(ra)
@@ -314,14 +356,19 @@ def slew(v2t, v3t, v2a, v3a):
 
     Parameters
     ----------
-    v2t     Initial V2 position in arc-sec
-    v3t     Initial V3 position in arc-sec
-    v2a     Final V2 position in arc-sec
-    v3a     Final V3 position in arc-sec
+    v2t:    float
+            Initial V2 position in arc-sec
+    v3t:    float
+            Initial V3 position in arc-sec
+    v2a:    float
+            Final V2 position in arc-sec
+    v3a:    float
+            Final V3 position in arc-sec
 
     Returns
     -------
-    mv      a (3 x 3) matrix performing the rotation described
+    mv      a (3 x 3) float array
+            The matrix that performs the rotation described
     """
 
     v2td = v2t/3600.0
@@ -344,12 +391,15 @@ def unit(ra, dec):
 
     Parameters
     ----------
-    ra      RA of sky position in degrees
-    dec     Dec of sky position in degrees
+    ra:     float
+            RA of sky position in degrees
+    dec:    float
+            Dec of sky position in degrees
 
     Returns
     -------
-    u       a float array of length 3 representing the equivalent unit vector
+    u       a float array of length 3
+            the equivalent unit vector
     """
 
     rar = radians(ra)
@@ -363,7 +413,8 @@ def v2v3(u):
 
     Parameters
     ----------
-    u   float list or array representing a unit vector. Must be of length 3
+    u:  float list or array of length 3
+        a unit vector. 
 
     Returns
     -------
