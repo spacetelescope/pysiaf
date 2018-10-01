@@ -2,21 +2,21 @@
 
 Authors
 -------
-
     Johannes Sahlmann
-
-Use
----
 
 """
 
 from astropy.modeling import models as astmodels
 from astropy.modeling import rotations as astrotations
 
-def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
-    """Convert ra/dec coordinates into pixel coordinates using a tangent plane projection. The projection's reference point has to be specified.
 
-    Scale is a convenience parameter that defaults to 1.0, in which case the returned pixel coordinates are also in degree. Scale can be set to a pixel scale to return detector coordinates in pixels
+def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
+    """Convert ra/dec coordinates into pixel coordinates using a tangent plane projection.
+
+    Theprojection's reference point has to be specified.
+    Scale is a convenience parameter that defaults to 1.0, in which case the returned pixel
+    coordinates are also in degree. Scale can be set to a pixel scale to return detector coordinates
+    in pixels
 
     Parameters
     ----------
@@ -37,11 +37,10 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
 
     Returns
     -------
-	x,y : float
-	   pixel coordinates in decimal degrees if scale = 1.0
+    x,y : float
+        pixel coordinates in decimal degrees if scale = 1.0
 
     """
-
     # for zenithal projections, i.e. gnomonic, i.e. TAN:
     lonpole = 180.
 
@@ -63,16 +62,19 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
 
 
 def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
-    """
-    Convert pixel coordinates into ra/dec coordinates using a tangent plane de-projection. The projection's reference point has to be specified.
+    """Convert pixel coordinates into ra/dec coordinates using a tangent plane de-projection.
+
+    The projection's reference point has to be specified.
     See the inverse transformation radec2Pix_TAN.
 
     Parameters
     ----------
     x : float
-        Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter) x/scale has to be degrees.
+        Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
+        x/scale has to be degrees.
     y : float
-        Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter) x/scale has to be degrees.
+        Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
+        x/scale has to be degrees.
     ra_ref : float
         Right Ascension of reference point in decimal degrees
     dec_ref: float
@@ -80,7 +82,7 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
     scale : float
         Multiplicative factor that is applied to the input values. Default is 1.0
 
-	Returns
+    Returns
     -------
     ra : float
         Right Ascension in decimal degrees
