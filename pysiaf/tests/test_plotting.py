@@ -25,6 +25,8 @@ def test_aperture_plotting():
     """
     save_plot = True
     plot_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT)
+    if not os.path.isdir(plot_dir):
+        os.makedirs(plot_dir)
 
     instrument = 'NIRISS'
     siaf = Siaf(instrument)
