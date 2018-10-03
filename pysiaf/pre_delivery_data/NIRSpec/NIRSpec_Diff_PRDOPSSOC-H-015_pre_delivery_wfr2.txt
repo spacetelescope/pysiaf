@@ -9,21 +9,46 @@ Aperture                        Attribute             Reference            Compa
 NRS1_FULL                       XSciScale            0.10326748            0.10324663        0.000021     0.0202
 NRS1_FULL                       YSciScale            0.10532422             0.1053387        0.000014     0.0137
 
-NRS_S1600A1_SLIT                    V2Ref            321.531952            321.541952        0.010000     0.0031
-NRS_S1600A1_SLIT                    V3Ref           -473.679199           -473.669199        0.010000     0.0021
-NRS_S1600A1_SLIT                  Comment                  None      WFR2 preparation             N/A        N/A
+NRS_S1600A1_SLIT                    V2Ref            321.531952            321.541962        0.010010     0.0031
+NRS_S1600A1_SLIT                    V3Ref           -473.679199           -473.669189        0.010010     0.0021
+NRS_S1600A1_SLIT                XIdlVert1                0.7996                0.7855        0.014100     1.7634
+NRS_S1600A1_SLIT                XIdlVert2                0.7996                0.7854        0.014200     1.7759
+NRS_S1600A1_SLIT                XIdlVert3               -0.7996               -0.8137        0.014100     1.7328
+NRS_S1600A1_SLIT                XIdlVert4               -0.7996               -0.8138        0.014200     1.7449
+NRS_S1600A1_SLIT                YIdlVert1                0.7947                0.7957        0.001000     0.1257
+NRS_S1600A1_SLIT                YIdlVert2               -0.8084               -0.8075        0.000900     0.1113
+NRS_S1600A1_SLIT                YIdlVert3               -0.7946               -0.7937        0.000900     0.1133
+NRS_S1600A1_SLIT                YIdlVert4                0.8086                0.8095        0.000900     0.1112
 
 NRS_IFU_SLICE12                 XIdlVert2                0.0494                0.0493        0.000100     0.2024
 
 NRS_IFU_SLICE16                 XIdlVert4               -0.0543               -0.0544        0.000100     0.1838
 
-NRS_FULL_MSA                        V2Ref             378.77124             378.78124        0.010000     0.0026
-NRS_FULL_MSA                        V3Ref           -428.156219           -428.146219        0.010000     0.0023
-NRS_FULL_MSA                      Comment                  None      WFR2 preparation             N/A        N/A
+NRS_FULL_MSA                        V2Ref             378.77124             378.78125        0.010010     0.0026
+NRS_FULL_MSA                        V3Ref           -428.156219            -428.14621        0.010009     0.0023
+NRS_FULL_MSA                    XIdlVert1              110.1717              110.1576        0.014100     0.0128
+NRS_FULL_MSA                    XIdlVert2              108.6279              108.6138        0.014100     0.0130
+NRS_FULL_MSA                    XIdlVert3             -108.6184             -108.6325        0.014100     0.0130
+NRS_FULL_MSA                    XIdlVert4             -110.1622             -110.1763        0.014100     0.0128
+NRS_FULL_MSA                    YIdlVert1              110.2789              110.2797        0.000800     0.0007
+NRS_FULL_MSA                    YIdlVert2             -107.7177             -107.7168        0.000900     0.0008
+NRS_FULL_MSA                    YIdlVert3             -107.7393             -107.7384        0.000900     0.0008
+NRS_FULL_MSA                    YIdlVert4              110.2531              110.2539        0.000800     0.0007
 
 NRS_FULL_MSA2                   XIdlVert3              -48.4885              -48.4884        0.000100     0.0002
 
 NRS_VIGNETTED_MSA4              XIdlVert2                47.703               47.7029        0.000100     0.0002
+
+NRS1_FP1MIMF                        V2Ref            321.531952            321.541962        0.010010     0.0031
+NRS1_FP1MIMF                        V3Ref           -473.679199           -473.669189        0.010010     0.0021
+NRS1_FP1MIMF                    XIdlVert1                0.7996                0.7855        0.014100     1.7634
+NRS1_FP1MIMF                    XIdlVert2                0.7996                0.7854        0.014200     1.7759
+NRS1_FP1MIMF                    XIdlVert3               -0.7996               -0.8137        0.014100     1.7328
+NRS1_FP1MIMF                    XIdlVert4               -0.7996               -0.8138        0.014200     1.7449
+NRS1_FP1MIMF                    YIdlVert1                0.7947                0.7957        0.001000     0.1257
+NRS1_FP1MIMF                    YIdlVert2               -0.8084               -0.8075        0.000900     0.1113
+NRS1_FP1MIMF                    YIdlVert3               -0.7946               -0.7937        0.000900     0.1133
+NRS1_FP1MIMF                    YIdlVert4                0.8086                0.8095        0.000900     0.1112
 
 NRS1_FP2MIMF                    XSciScale              0.103574            0.10354762        0.000026     0.0255
 NRS1_FP2MIMF                    YSciScale              0.106504            0.10647847        0.000026     0.0240

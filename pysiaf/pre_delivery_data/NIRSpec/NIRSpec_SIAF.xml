@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2018-09-24T19:10:49.266 utc-->
+  <!--Generated 2018-10-02T11:55:27.257 utc-->
   <!--by jsahlmann-->
   <!--pysiaf version 0.2.0.dev5+g90e64afc-->
   <SiafEntry>
@@ -858,24 +858,24 @@
     <YSciRef/>
     <XSciScale/>
     <YSciScale/>
-    <V2Ref>321.541952</V2Ref>
-    <V3Ref>-473.669199</V3Ref>
+    <V2Ref>321.541962</V2Ref>
+    <V3Ref>-473.669189</V3Ref>
     <V3IdlYAngle>138.77143860</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle/>
     <DetSciParity/>
     <V3SciXAngle/>
     <V3SciYAngle/>
-    <XIdlVert1>0.7996</XIdlVert1>
-    <XIdlVert2>0.7996</XIdlVert2>
-    <XIdlVert3>-0.7996</XIdlVert3>
-    <XIdlVert4>-0.7996</XIdlVert4>
-    <YIdlVert1>0.7947</YIdlVert1>
-    <YIdlVert2>-0.8084</YIdlVert2>
-    <YIdlVert3>-0.7946</YIdlVert3>
-    <YIdlVert4>0.8086</YIdlVert4>
+    <XIdlVert1>0.7855</XIdlVert1>
+    <XIdlVert2>0.7854</XIdlVert2>
+    <XIdlVert3>-0.8137</XIdlVert3>
+    <XIdlVert4>-0.8138</XIdlVert4>
+    <YIdlVert1>0.7957</YIdlVert1>
+    <YIdlVert2>-0.8075</YIdlVert2>
+    <YIdlVert3>-0.7937</YIdlVert3>
+    <YIdlVert4>0.8095</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
-    <Comment>WFR2 preparation</Comment>
+    <Comment/>
     <Sci2IdlDeg/>
     <Sci2IdlX00/>
     <Sci2IdlX10/>
@@ -4818,24 +4818,24 @@
     <YSciRef/>
     <XSciScale/>
     <YSciScale/>
-    <V2Ref>378.781240</V2Ref>
-    <V3Ref>-428.146219</V3Ref>
+    <V2Ref>378.781250</V2Ref>
+    <V3Ref>-428.146210</V3Ref>
     <V3IdlYAngle>138.49234009</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle/>
     <DetSciParity/>
     <V3SciXAngle/>
     <V3SciYAngle/>
-    <XIdlVert1>110.1717</XIdlVert1>
-    <XIdlVert2>108.6279</XIdlVert2>
-    <XIdlVert3>-108.6184</XIdlVert3>
-    <XIdlVert4>-110.1622</XIdlVert4>
-    <YIdlVert1>110.2789</YIdlVert1>
-    <YIdlVert2>-107.7177</YIdlVert2>
-    <YIdlVert3>-107.7393</YIdlVert3>
-    <YIdlVert4>110.2531</YIdlVert4>
+    <XIdlVert1>110.1576</XIdlVert1>
+    <XIdlVert2>108.6138</XIdlVert2>
+    <XIdlVert3>-108.6325</XIdlVert3>
+    <XIdlVert4>-110.1763</XIdlVert4>
+    <YIdlVert1>110.2797</YIdlVert1>
+    <YIdlVert2>-107.7168</YIdlVert2>
+    <YIdlVert3>-107.7384</YIdlVert3>
+    <YIdlVert4>110.2539</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
-    <Comment>WFR2 preparation</Comment>
+    <Comment/>
     <Sci2IdlDeg/>
     <Sci2IdlX00/>
     <Sci2IdlX10/>
@@ -6258,22 +6258,22 @@
     <YSciRef/>
     <XSciScale/>
     <YSciScale/>
-    <V2Ref>321.531952</V2Ref>
-    <V3Ref>-473.679199</V3Ref>
+    <V2Ref>321.541962</V2Ref>
+    <V3Ref>-473.669189</V3Ref>
     <V3IdlYAngle>138.77143860</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle/>
     <DetSciParity/>
     <V3SciXAngle/>
     <V3SciYAngle/>
-    <XIdlVert1>0.7996</XIdlVert1>
-    <XIdlVert2>0.7996</XIdlVert2>
-    <XIdlVert3>-0.7996</XIdlVert3>
-    <XIdlVert4>-0.7996</XIdlVert4>
-    <YIdlVert1>0.7947</YIdlVert1>
-    <YIdlVert2>-0.8084</YIdlVert2>
-    <YIdlVert3>-0.7946</YIdlVert3>
-    <YIdlVert4>0.8086</YIdlVert4>
+    <XIdlVert1>0.7855</XIdlVert1>
+    <XIdlVert2>0.7854</XIdlVert2>
+    <XIdlVert3>-0.8137</XIdlVert3>
+    <XIdlVert4>-0.8138</XIdlVert4>
+    <YIdlVert1>0.7957</YIdlVert1>
+    <YIdlVert2>-0.8075</YIdlVert2>
+    <YIdlVert3>-0.7937</YIdlVert3>
+    <YIdlVert4>0.8095</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg/>

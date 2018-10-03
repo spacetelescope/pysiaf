@@ -759,11 +759,32 @@ nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertu
 nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
 nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].tolist()
 
+
+
 # dictionary that maps NIRSpec nomenclature to SIAF nomenclature
 nirspec_slit_apertures_data_mapping = {}
 nirspec_slit_apertures_data_mapping['V2Ref'] = 'RefXPOSKY'
 nirspec_slit_apertures_data_mapping['V3Ref'] = 'RefYPOSKY'
 nirspec_slit_apertures_data_mapping['V3IdlYAngle'] = 'AngleV3'
+
+
+# minimal change to two apertures that propagate to OSS DEF scripts
+wfr2_prep = True
+if wfr2_prep:
+    for i, AperName in enumerate(nirspec_slit_apertures_data['SIAF_NAME']):
+        if AperName in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
+            1/0
+            nirspec_slit_apertures_data['RefXPOSKY'][i] += 0.01
+            nirspec_slit_apertures_data['RefYPOSKY'][i] += 0.01
+
+    #         aperture.V2Ref += 0.01
+    #         aperture.V3Ref += 0.01
+    #         aperture.Comment = 'WFR2 preparation'
+    #
+    # aperture_dict[AperName] = aperture
+
+
+# 1/0
 
 # compute 'Idl Vertices' from the V2V3 vertices given in nirspec_slit_apertures_data,
 # see Section 5.2 of TR and see Calc worksheet in NIRSpec_SIAF.xlsx
@@ -951,18 +972,18 @@ for AperName in aperture_name_list:
     aperture_dict[AperName] = aperture
 
 
-# minimal change to two apertures that propagate to OSS DEF scripts
-wfr2_prep = True
-if wfr2_prep:
-    for AperName in aperture_name_list:
-        aperture = aperture_dict[AperName]
-
-        if AperName in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
-            aperture.V2Ref += 0.01
-            aperture.V3Ref += 0.01
-            aperture.Comment = 'WFR2 preparation'
-
-    aperture_dict[AperName] = aperture
+# # minimal change to two apertures that propagate to OSS DEF scripts
+# wfr2_prep = True
+# if wfr2_prep:
+#     for AperName in aperture_name_list:
+#         aperture = aperture_dict[AperName]
+#
+#         if AperName in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
+#             aperture.V2Ref += 0.01
+#             aperture.V3Ref += 0.01
+#             aperture.Comment = 'WFR2 preparation'
+#
+#     aperture_dict[AperName] = aperture
 
 
 
