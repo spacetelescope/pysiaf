@@ -10,6 +10,8 @@ Authors
 
 import os
 
+import matplotlib
+matplotlib.use('agg')
 import pylab as pl
 import pytest
 
