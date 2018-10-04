@@ -190,7 +190,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance=1e-4,
                                      reference_siaf_input=None, report_file=None, report_dir=None,
                                      verbose=True, make_figures=False, selected_aperture_name=None,
-                                     instrument=None, make_plot=False):
+                                     instrument=None, make_plot=False, tags=None):
     """Compare the forward-backward roundtrip transformations of two SIAF files.
 
     and write a difference file.
@@ -232,6 +232,14 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         reference_siaf = get_siaf(reference_siaf_input)
         reference_siaf_description = reference_siaf.description.replace('.', '_')
 
+    reference_tag = reference_siaf_description
+    comparison_tag = comparison_siaf.description.replace('.', '_')
+    if tags is not None:
+        reference_tag = '{}'.format(tags['reference'])
+        comparison_tag = '{}'.format(tags['comparison'])
+
+
+
     if report_file is None:
         print_file = sys.stdout
     else:
@@ -239,17 +247,16 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
 
     if report_dir is not None:
         report_file = os.path.join(report_dir, '{}_roundtrip_{}_{}.txt'.
-                                   format(instrument, reference_siaf_description,
-                                          comparison_siaf.description.replace('.', '_')))
+                                   format(instrument, reference_tag, comparison_tag))
 
         print_file = open(report_file, 'w')
 
     if verbose:
-        print('Reference:  {} apertures in {}'.format(len(reference_siaf),
-                                                      reference_siaf_description),
+        print('Reference:  {} apertures in {} (index 0 in table below)'.format(len(reference_siaf),
+                                                      reference_tag),
               file=print_file)
-        print('Comparison: {} apertures in {}\n'.format(len(comparison_siaf),
-                                                        comparison_siaf.description),
+        print('Comparison: {} apertures in {} (index 1 in table below)\n'.format(len(comparison_siaf),
+                                                        comparison_tag),
               file=print_file)
 
     siaf_list = [reference_siaf, comparison_siaf]
