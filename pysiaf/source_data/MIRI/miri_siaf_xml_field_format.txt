@@ -1,0 +1,128 @@
+# MIRI xml field format reference file for SIAF
+# 
+# This file describes the format and order of the XML fields present in the SIAF.
+# This is compliant with the IRCD (JWST-STScI-000949) and complementary because the decimal
+# precision of float fields is specified.
+# 
+# Generated 2018-02-20T02:00:15.117 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+field_nr ,           field_name ,     format ,   pyformat ,                        example
+     1.1 ,            InstrName ,     string ,            ,                           MIRI
+     1.2 ,             AperName ,     string ,            ,                     MIRIM_FULL
+     1.3 ,              DDCName ,     string ,            ,               MIRIMAGE_ILLCNTR
+     1.4 ,             AperType ,     string ,            ,                        FULLSCA
+     1.5 ,            AperShape ,     string ,            ,                           QUAD
+     1.6 ,             XDetSize ,    integer ,          d ,                           1032
+     1.7 ,             YDetSize ,    integer ,          d ,                           1024
+     1.8 ,              XDetRef ,      float ,        .2f ,                         693.50
+     1.9 ,              YDetRef ,      float ,        .2f ,                         512.50
+    1.10 ,             XSciSize ,    integer ,          d ,                           1032
+    1.11 ,             YSciSize ,    integer ,          d ,                           1024
+    1.12 ,              XSciRef ,      float ,        .2f ,                         693.50
+    1.13 ,              YSciRef ,      float ,        .2f ,                         512.50
+    1.14 ,            XSciScale ,      float ,        .8f ,                     0.11140974
+    1.15 ,            YSciScale ,      float ,        .8f ,                     0.11043966
+    1.16 ,                V2Ref ,      float ,        .6f ,                    -453.363363
+    1.17 ,                V3Ref ,      float ,        .6f ,                    -374.068629
+    1.18 ,          V3IdlYAngle ,      float ,        .6f ,                       4.449705
+    1.19 ,           VIdlParity ,    integer ,          d ,                             -1
+    1.20 ,         DetSciYAngle ,        int ,          d ,                              0
+    1.21 ,         DetSciParity ,    integer ,          d ,                              1
+    1.22 ,          V3SciXAngle ,      float ,        .6f ,                     -85.554056
+    1.23 ,          V3SciYAngle ,      float ,        .6f ,                       4.449705
+    1.24 ,            XIdlVert1 ,      float ,        .4f ,                       -76.6020
+    1.25 ,            XIdlVert2 ,      float ,        .4f ,                        37.3507
+    1.26 ,            XIdlVert3 ,      float ,        .4f ,                        37.3406
+    1.27 ,            XIdlVert4 ,      float ,        .4f ,                       -76.5790
+    1.28 ,            YIdlVert1 ,      float ,        .4f ,                       -56.8838
+    1.29 ,            YIdlVert2 ,      float ,        .4f ,                       -56.3430
+    1.30 ,            YIdlVert3 ,      float ,        .4f ,                        56.3378
+    1.31 ,            YIdlVert4 ,      float ,        .4f ,                        56.8379
+    1.32 ,         UseAfterDate ,     string ,            ,                     2014-01-01
+    1.33 ,              Comment ,     string ,            ,                               
+    1.34 ,           Sci2IdlDeg ,    integer ,          d ,                              4
+    1.35 ,           Sci2IdlX00 ,      float ,       .14e ,           0.00000000000000E+00
+    1.36 ,           Sci2IdlX10 ,      float ,       .14e ,           1.11409737205717E-01
+    1.37 ,           Sci2IdlX11 ,      float ,       .14e ,          -3.21206471072441E-06
+    1.38 ,           Sci2IdlX20 ,      float ,       .14e ,          -1.04890962126574E-06
+    1.39 ,           Sci2IdlX21 ,      float ,       .14e ,          -2.34633412588741E-08
+    1.40 ,           Sci2IdlX22 ,      float ,       .14e ,          -1.04216139888006E-06
+    1.41 ,           Sci2IdlX30 ,      float ,       .14e ,          -1.46265705471772E-09
+    1.42 ,           Sci2IdlX31 ,      float ,       .14e ,          -5.81497907703205E-11
+    1.43 ,           Sci2IdlX32 ,      float ,       .14e ,          -8.97525784643324E-10
+    1.44 ,           Sci2IdlX33 ,      float ,       .14e ,           1.68440916986875E-11
+    1.45 ,           Sci2IdlX40 ,      float ,       .14e ,           2.03043769952300E-12
+    1.46 ,           Sci2IdlX41 ,      float ,       .14e ,          -1.58844200585500E-13
+    1.47 ,           Sci2IdlX42 ,      float ,       .14e ,           2.02319048869400E-12
+    1.48 ,           Sci2IdlX43 ,      float ,       .14e ,           1.09872158986500E-13
+    1.49 ,           Sci2IdlX44 ,      float ,       .14e ,           2.98260200305500E-13
+    1.50 ,           Sci2IdlX50 ,       None ,       None ,                           None
+    1.51 ,           Sci2IdlX51 ,       None ,       None ,                           None
+    1.52 ,           Sci2IdlX52 ,       None ,       None ,                           None
+    1.53 ,           Sci2IdlX53 ,       None ,       None ,                           None
+    1.54 ,           Sci2IdlX54 ,       None ,       None ,                           None
+    1.55 ,           Sci2IdlX55 ,       None ,       None ,                           None
+    1.56 ,           Sci2IdlY00 ,      float ,       .14e ,           0.00000000000000E+00
+    1.57 ,           Sci2IdlY10 ,      float ,       .14e ,           2.81166552575681E-06
+    1.58 ,           Sci2IdlY11 ,      float ,       .14e ,           1.10439662508992E-01
+    1.59 ,           Sci2IdlY20 ,      float ,       .14e ,           2.39180454681707E-08
+    1.60 ,           Sci2IdlY21 ,      float ,       .14e ,          -1.80301567940181E-06
+    1.61 ,           Sci2IdlY22 ,      float ,       .14e ,          -2.32430711794185E-08
+    1.62 ,           Sci2IdlY30 ,      float ,       .14e ,          -5.34874931364912E-11
+    1.63 ,           Sci2IdlY31 ,      float ,       .14e ,          -7.59115196304709E-11
+    1.64 ,           Sci2IdlY32 ,      float ,       .14e ,           7.26301722356080E-12
+    1.65 ,           Sci2IdlY33 ,      float ,       .14e ,           2.56642550801635E-10
+    1.66 ,           Sci2IdlY40 ,      float ,       .14e ,          -1.51366180986400E-13
+    1.67 ,           Sci2IdlY41 ,      float ,       .14e ,           1.38723365595900E-12
+    1.68 ,           Sci2IdlY42 ,      float ,       .14e ,          -1.16894999034800E-13
+    1.69 ,           Sci2IdlY43 ,      float ,       .14e ,           1.11191235267500E-12
+    1.70 ,           Sci2IdlY44 ,      float ,       .14e ,           9.79667208859400E-14
+    1.71 ,           Sci2IdlY50 ,       None ,       None ,                           None
+    1.72 ,           Sci2IdlY51 ,       None ,       None ,                           None
+    1.73 ,           Sci2IdlY52 ,       None ,       None ,                           None
+    1.74 ,           Sci2IdlY53 ,       None ,       None ,                           None
+    1.75 ,           Sci2IdlY54 ,       None ,       None ,                           None
+    1.76 ,           Sci2IdlY55 ,       None ,       None ,                           None
+    1.77 ,           Idl2SciX00 ,      float ,       .14e ,           0.00000000000000E+00
+    1.78 ,           Idl2SciX10 ,      float ,       .14e ,           8.97621813017046E+00
+    1.79 ,           Idl2SciX11 ,      float ,       .14e ,           2.59496071267204E-04
+    1.80 ,           Idl2SciX20 ,      float ,       .14e ,           7.75799586502095E-04
+    1.81 ,           Idl2SciX21 ,      float ,       .14e ,           1.66729590062384E-05
+    1.82 ,           Idl2SciX22 ,      float ,       .14e ,           7.69190398873507E-04
+    1.83 ,           Idl2SciX30 ,      float ,       .14e ,           9.20427199311866E-06
+    1.84 ,           Idl2SciX31 ,      float ,       .14e ,           4.01214068277239E-07
+    1.85 ,           Idl2SciX32 ,      float ,       .14e ,           6.09425657764870E-06
+    1.86 ,           Idl2SciX33 ,      float ,       .14e ,          -1.12421719675366E-07
+    1.87 ,           Idl2SciX40 ,      float ,       .14e ,          -1.27106242713300E-07
+    1.88 ,           Idl2SciX41 ,      float ,       .14e ,           9.83933564905500E-09
+    1.89 ,           Idl2SciX42 ,      float ,       .14e ,          -1.18924830431600E-07
+    1.90 ,           Idl2SciX43 ,      float ,       .14e ,          -6.39936551102300E-09
+    1.91 ,           Idl2SciX44 ,      float ,       .14e ,          -1.79381207694400E-08
+    1.92 ,           Idl2SciX50 ,       None ,       None ,                           None
+    1.93 ,           Idl2SciX51 ,       None ,       None ,                           None
+    1.94 ,           Idl2SciX52 ,       None ,       None ,                           None
+    1.95 ,           Idl2SciX53 ,       None ,       None ,                           None
+    1.96 ,           Idl2SciX54 ,       None ,       None ,                           None
+    1.97 ,           Idl2SciX55 ,       None ,       None ,                           None
+    1.98 ,           Idl2SciY00 ,      float ,       .14e ,           0.00000000000000E+00
+    1.99 ,           Idl2SciY10 ,      float ,       .14e ,          -2.42380005619824E-04
+   1.100 ,           Idl2SciY11 ,      float ,       .14e ,           9.05480982976337E+00
+   1.101 ,           Idl2SciY20 ,      float ,       .14e ,          -1.75962229751375E-05
+   1.102 ,           Idl2SciY21 ,      float ,       .14e ,           1.32485697400834E-03
+   1.103 ,           Idl2SciY22 ,      float ,       .14e ,           1.73344517664145E-05
+   1.104 ,           Idl2SciY30 ,      float ,       .14e ,           3.71653658860166E-07
+   1.105 ,           Idl2SciY31 ,      float ,       .14e ,           6.02533623234010E-07
+   1.106 ,           Idl2SciY32 ,      float ,       .14e ,          -4.65623032243145E-08
+   1.107 ,           Idl2SciY33 ,      float ,       .14e ,          -1.67163505868630E-06
+   1.108 ,           Idl2SciY40 ,      float ,       .14e ,           9.23715896356800E-09
+   1.109 ,           Idl2SciY41 ,      float ,       .14e ,          -8.11325135631500E-08
+   1.110 ,           Idl2SciY42 ,      float ,       .14e ,           6.97991330713600E-09
+   1.111 ,           Idl2SciY43 ,      float ,       .14e ,          -6.58477412125900E-08
+   1.112 ,           Idl2SciY44 ,      float ,       .14e ,          -5.99459215858400E-09
+   1.113 ,           Idl2SciY50 ,       None ,       None ,                           None
+   1.114 ,           Idl2SciY51 ,       None ,       None ,                           None
+   1.115 ,           Idl2SciY52 ,       None ,       None ,                           None
+   1.116 ,           Idl2SciY53 ,       None ,       None ,                           None
+   1.117 ,           Idl2SciY54 ,       None ,       None ,                           None
+   1.118 ,           Idl2SciY55 ,       None ,       None ,                           None
