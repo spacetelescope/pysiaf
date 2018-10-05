@@ -759,6 +759,7 @@ nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertu
 nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
 nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].tolist()
 
+# 1/0
 
 
 # dictionary that maps NIRSpec nomenclature to SIAF nomenclature
@@ -769,20 +770,13 @@ nirspec_slit_apertures_data_mapping['V3IdlYAngle'] = 'AngleV3'
 
 
 # minimal change to two apertures that propagate to OSS DEF scripts
-wfr2_prep = True
+wfr2_prep = False
 if wfr2_prep:
     for i, AperName in enumerate(nirspec_slit_apertures_data['SIAF_NAME']):
         if AperName in ['NRS_S1600A1_SLIT', 'NRS_FULL_MSA']:
-            1/0
             nirspec_slit_apertures_data['RefXPOSKY'][i] += 0.01
             nirspec_slit_apertures_data['RefYPOSKY'][i] += 0.01
-
-    #         aperture.V2Ref += 0.01
-    #         aperture.V3Ref += 0.01
-    #         aperture.Comment = 'WFR2 preparation'
-    #
-    # aperture_dict[AperName] = aperture
-
+    1 / 0
 
 # 1/0
 
