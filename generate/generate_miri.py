@@ -20,48 +20,20 @@ import sys
 from collections import OrderedDict
 
 import numpy as np
-from astropy.time import Time
+# from astropy.time import Time
 from astropy.table import Table, vstack
 import pylab as pl
 
 
-# hostname = os.uname()[1]
-# username = os.getlogin()
-# timestamp = Time.now()
-#
-# try:
-#     import pysiaf
-# except ImportError:
-#     if __name__ == '__main__' and __package__ is None:
-#         sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-
-
-# home_dir = os.environ['HOME']
-# sys.path.append(os.path.join(home_dir,'jwst/code/gitlab/tel/jwst_siaf_prototype/pysiaf'))
 import pysiaf
 from pysiaf.utils import polynomial, tools
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
-from pysiaf.aperture import DISTORTION_ATTRIBUTES
+# from pysiaf.aperture import DISTORTION_ATTRIBUTES
 # from pysiaf.certify import compare
 from pysiaf import iando
 from pysiaf.utils import compare
 
 import generate_reference_files
-
-# import importlib
-#
-# importlib.reload(pysiaf.tools)
-# importlib.reload(pysiaf.aperture)
-# # importlib.reload(pysiaf.aperture)
-# importlib.reload(pysiaf.certify.compare)
-# importlib.reload(pysiaf.iando.read)
-# importlib.reload(generate_reference_files)
-# from pysiaf.certify import compare
-# from pysiaf import iando
-# from pysiaf import aperture
-#
-# from astropy.io import ascii
 
 
 #############################
@@ -69,10 +41,6 @@ instrument = 'MIRI'
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
-
-
-
-
 
 # regenerate SIAF reference files if needed
 if 0:
@@ -467,18 +435,9 @@ def extract_ifu_data(overwrite=False):
 
 
 csv_data = get_mirim_coefficients()
-if 0:
-    print('Roundtrip error computations:')
-    print( tools.compute_roundtrip_error(csv_data['DET_DMF']['A'], csv_data['DET_DMF']['B'], csv_data['DET_DMF']['C'], csv_data['DET_DMF']['D'], verbose=False, instrument=instrument))
-    # print( tools.compute_roundtrip_error(csv_data['DET_OSS']['A'], csv_data['DET_OSS']['B'], csv_data['DET_OSS']['C'], csv_data['DET_OSS']['D']))
-
-    A,B,C,D = csv_data['DET_DMF']['A'], csv_data['DET_DMF']['B'], csv_data['DET_DMF']['C'], csv_data['DET_DMF']['D']
-
-    print( invcheck(A, B, C, D, 4, -512, 512) )
-
 
 number_of_coefficients = len(csv_data['DET_OSS']['A'])
-polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+polynomial_degree = polynomial.polynomial_degree(number_of_coefficients)
 
 # convert to column names in Calc worksheet
 for AperName in csv_data.keys():
@@ -497,7 +456,7 @@ for AperName in csv_data.keys():
 
 
 
-slice_table = extract_ifu_data(overwrite=False)
+slice_table = extract_ifu_data(overwrite=True)
 
 idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1, 2, 3, 4]] + [
     'YIdlVert{}'.format(i) for i in [1, 2, 3, 4]]
