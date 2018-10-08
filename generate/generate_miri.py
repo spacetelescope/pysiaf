@@ -640,9 +640,11 @@ if emulate_delivery:
 
 
     # compare new SIAF with PRD version
-    ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    # ref_siaf = pysiaf.Siaf(instrument)
+    ref_siaf = pysiaf.Siaf(instrument, '/Users/jsahlmann/Desktop/MIRI_SIAF_2018-10-05.xml')
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    1/0
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
 
     compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})#,selected_aperture_name=selected_aperture_name)
     compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}, report_dir=pre_delivery_dir)
