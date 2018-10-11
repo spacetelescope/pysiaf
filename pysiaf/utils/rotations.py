@@ -139,9 +139,9 @@ def pointing(attitude, v2, v3, positive_ra=True):
     ----------
     attitude:   3 by 3 float array
                 the telescope attitude matrix
-    v2 :        float
+    v2 :        float or array of floats
                 V2 coordinate in arc-seconds
-    v3 :        float
+    v3 :        float or array of floats
                 V3 coordinate in arc-seconds
     positive_ra : bool.
                 If True forces ra value to be positive
@@ -154,6 +154,11 @@ def pointing(attitude, v2, v3, positive_ra=True):
 
     v2d = v2 / 3600.0
     v3d = v3 / 3600.0
+    print('POINTING v2v3')
+    print(v2)
+    print(v3)
+    print(v2d)
+    print(v3d)
     v = unit(v2d, v3d)
     w = np.dot(attitude, v)
 
@@ -186,10 +191,10 @@ def posangle(attitude, v2, v3):
     A = attitude  # Synonym to simplify typing
     v2r = radians(v2 / 3600.0)
     v3r = radians(v3 / 3600.0)
-    x = -(A[2, 0] * cos(v2r) + A[2, 1] * sin(v2r)) * sin(v3r) + A[2, 2] * cos(v3r)
+    x = -(A[2, 0] * np.cos(v2r) + A[2, 1] * np.sin(v2r)) * np.sin(v3r) + A[2, 2] * np.cos(v3r)
     y = (A[0, 0] * A[1, 2] - A[1, 0] * A[0, 2]) * cos(v2r) + (A[0, 1] * A[1, 2] - A[1, 1] * A[
-        0, 2]) * sin(v2r)
-    pa = degrees(np.arctan2(y, x))
+        0, 2]) * np.sin(v2r)
+    pa = np.degrees(np.arctan2(y, x))
     return pa
 
 
@@ -212,8 +217,8 @@ def radec(u, positive_ra=False):
 
     assert len(u) == 3, 'Not a vector'
     norm = np.sqrt(u[0] ** 2 + u[1] ** 2 + u[2] ** 2)  # Works for list or array
-    dec = degrees(np.arcsin(u[2] / norm))
-    ra = degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
+    dec = np.degrees(np.arcsin(u[2] / norm))
+    ra = np.degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
     if positive_ra:
         if np.isscalar(ra) and ra < 0.0:
             ra += 360.0
@@ -391,9 +396,9 @@ def unit(ra, dec):
 
     Parameters
     ----------
-    ra:     float
+    ra:     float or array of floats
             RA of sky position in degrees
-    dec:    float
+    dec:    float or array of floats
             Dec of sky position in degrees
 
     Returns
@@ -402,9 +407,9 @@ def unit(ra, dec):
             the equivalent unit vector
     """
 
-    rar = radians(ra)
-    decr = radians(dec)
-    u = np.array([cos(rar)*cos(decr), sin(rar)*cos(decr), sin(decr)])
+    rar = np.radians(ra)
+    decr = np.radians(dec)
+    u = np.array([np.cos(rar)*np.cos(decr), np.sin(rar)*np.cos(decr), np.sin(decr)])
     return u
 
 
@@ -423,6 +428,6 @@ def v2v3(u):
 
     assert len(u) == 3, 'Not a vector'
     norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2) # Works for list or array
-    v2 = 3600*degrees(np.arctan2(u[1], u[0])) # atan2 puts it in the correct quadrant
-    v3 = 3600*degrees(np.arcsin(u[2]/norm))
+    v2 = 3600*np.degrees(np.arctan2(u[1], u[0])) # atan2 puts it in the correct quadrant
+    v3 = 3600*np.degrees(np.arcsin(u[2]/norm))
     return v2, v3

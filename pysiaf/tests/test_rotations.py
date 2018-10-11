@@ -12,7 +12,10 @@ v2 = 200.0
 v3 = 300.0
 ra2 = 21.0
 dec2 = 69.0
-
+ra_array = np.array([20.0, 100.0, 200.0, 280.0])
+dec_array = np.array([70.0, -20.0, -70.0, 50.0])
+v2_array = np.array([200.0, -500.0, 300.0, -400.0])
+v3_array = np.array([300.0, -600.0, -400.0, 500.0])
 
 def test_attitude(verbose=False):
     """ Tests the properties of the attitude matrix in calculating positions and roll angles. Incidentally tests underlying
@@ -20,11 +23,12 @@ def test_attitude(verbose=False):
 
     Parameters
     ----------
-    verbose     logical - set to true if detailed print-out needed
+    verbose:    logical
+                set to true only if detailed print-out needed
 
     Returns
     -------
-    None    unless assert statement fails
+    None:    unless assert statement fails
     """
 
 
@@ -61,6 +65,25 @@ def test_attitude(verbose=False):
     assert abs(pa1 - pa2) < 1.0e-10, 'Disagreement for reference point position angles'
     assert abs(pa3 - pa4) < 1.0e-10, 'Disagreement for displaced point position angles'
 
+    # Test some functions with arrays as input
+    unit_vectors = rt.unit(ra_array, dec_array)
+    if verbose: print(unit_vectors)
+    rd = rt.radec(unit_vectors, positive_ra=True)
+    print('RD\n', rd)
+    rd_test = rt.pointing(a, v2_array, v3_array)
+    if verbose:
+        print(rd_test[0])
+        print(rd_test[1])
+
+    v_test = rt.getv2v3(a, ra_array, dec_array)
+    if verbose:
+        for i in range(len(ra_array)):
+            print(v_test[0][i], v_test[1][i])
+
+    # Check leading values agree
+    assert abs(v_test[0][0] - v2_array[0] < 1.0e-10), 'V2 values do not match'
+    assert abs(v_test[1][0] - v3_array[0] < 1.0e-10), 'V3 values do not match'
+
 def test_axial_rotation(verbose=False):
 
     """ Compares vector transformations using the attitude matrix with a single rotation about an axis.
@@ -68,11 +91,12 @@ def test_axial_rotation(verbose=False):
 
     Parameters
     ----------
-    verbose     logical - set to true if detailed print-out needed
+    verbose:    logical
+                set to true if detailed print-out needed
 
     Returns
     -------
-    None    unless assert statement fails
+    None:       unless assert statement fails
     -------
 
     """
