@@ -136,7 +136,7 @@ def plot_all_apertures(subarrays=True, showorigin=True, showchannels=True, **kwa
 
         aps.plot(clear=False, subarrays=subarrays, **kwargs)
         if showorigin:
-            aps.plot_detector_origin()
+            aps.plot_frame_origin()
         if showchannels:
             aps.plot_detector_channels()
 
@@ -326,8 +326,8 @@ class Siaf(ApertureCollection):
         """List of aperture names defined in this SIAF."""
         return self.apertures.keys()
 
-    def plot(self, frame='tel', names=None, label=None, units=None, clear=True, annotate=False,
-             mark_ref=False, subarrays=True, **kwargs):
+    def plot(self, frame='tel', names=None, label=None, units=None, clear=True,
+             show_frame_origin=None, mark_ref=False, subarrays=True, ax=None, **kwargs):
         """Plot all apertures in this SIAF.
 
         Parameters
@@ -342,12 +342,16 @@ class Siaf(ApertureCollection):
             one of 'arcsec', 'arcmin', 'deg'
         clear : bool
             Clear plot before plotting (set to false to overplot)
-        annotate : bool
-            Add annotations for detector (0,0) pixels
+        show_frame_origin : str or list
+            Plot frame origin (goes to plot_frame_origin()): None, 'all', 'det',
+            'sci', 'raw', or a list of these.
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         Other matplotlib standard parameters may be passed in via **kwargs
         to adjust the style of the displayed lines.
@@ -355,7 +359,8 @@ class Siaf(ApertureCollection):
         """
         if clear:
             pl.clf()
-        ax = pl.subplot(111)
+        if ax is None:
+            ax = pl.subplot(111)
         ax.set_aspect('equal')
 
         # which list of apertures to iterate over?
@@ -371,11 +376,8 @@ class Siaf(ApertureCollection):
                 if ap.AperName not in names:
                     continue
 
-            ap.plot(frame=frame, name_label=label, ax=ax, units=None, mark_ref=mark_ref, **kwargs)
-            if annotate:
-                ap.plot_detector_origin(frame=frame)
-        ax.set_xlabel('V2 (arcsec)')
-        ax.set_ylabel('V3 (arcsec)')
+            ap.plot(frame=frame, name_label=label, ax=ax, units=units, mark_ref=mark_ref,
+                    show_frame_origin=show_frame_origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':
             # enforce V2 increasing toward the left
@@ -387,23 +389,31 @@ class Siaf(ApertureCollection):
 
         self._last_plot_frame = frame
 
-    def plot_detector_origin(self, which='both', frame=None):
-        """Mark on the plot the detector's origin in Det and Sci coordinates.
+    def plot_frame_origin(self, frame=None, which='both', units='arcsec', ax=None):
+        """Mark on the plot the frame's origin in Det and Sci coordinates.
 
         Parameters
         -----------
-        which : str
-            Which detector origin to plot: 'both', 'Det', 'Sci'
         frame : str
-            Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
             Optional if you have already called plot() to specify a
             coordinate frame.
+        which : str or list
+            Which origin to plot: 'all', 'det', 'sci', 'raw', or a list
+        units : str
+            one of 'arcsec', 'arcmin', 'deg'
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
+        if ax is None:
+            ax = pl.gca()
+
         if frame is None:
             frame = self._last_plot_frame
         for ap in self._getFullApertures():
-            ap.plot_detector_origin(frame=frame, which=which)
+            ap.plot_frame_origin(frame=frame, which=which, units=units, ax=ax)
 
     def plot_detector_channels(self, frame=None):
         """Mark on the plot the various detector readout channels.

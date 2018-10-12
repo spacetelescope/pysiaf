@@ -42,7 +42,7 @@ from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
 # shorthands for supported coordinate systems
-FRAMES = ('det', 'sci', 'idl', 'tel')
+FRAMES = ('det', 'sci', 'idl', 'tel', 'raw')
 
 # list of attributes for the distortion coefficients up to degree 5
 POLYNOMIAL_COEFFICIENT_NAMES = 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split()
@@ -479,10 +479,11 @@ class Aperture(object):
         """
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
+
     def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
-             annotate=False, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
+             show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
              **kwargs):
-        """Plot aperture.
+        """Plot this aperture.
 
         Parameters
         ----------
@@ -497,8 +498,9 @@ class Aperture(object):
             Figure title. If set, add a label to the plot indicating which frame was plotted.
         units : str
             one of 'arcsec', 'arcmin', 'deg'
-        annotate : bool
-            Add annotations for detector (0,0) pixels
+        show_frame_origin : str or list
+            Plot frame origin (goes to plot_frame_origin()): None, 'all', 'det',
+            'sci', 'raw', or a list of these.
         mark_ref : bool
             Add marker for the (V2Ref, V3Ref) reference point defining this aperture.
         fill : bool
@@ -534,16 +536,16 @@ class Aperture(object):
 
         if ax is None:
             ax = pl.gca()
-            ax.set_aspect('equal')
-            if frame == 'tel':
-                ax.set_xlabel('V2 ({0})'.format(units))
-                ax.set_ylabel('V3 ({0})'.format(units))
-            elif frame == 'idl':
-                ax.set_xlabel('Ideal X ({0})'.format(units))
-                ax.set_ylabel('Ideal Y ({0})'.format(units))
-            elif frame == 'sci' or frame == 'det':
-                ax.set_xlabel('X pixels ({0})'.format(frame))
-                ax.set_ylabel('Y pixels ({0})'.format(frame))
+        ax.set_aspect('equal')
+        if frame == 'tel':
+            ax.set_xlabel('V2 ({0})'.format(units))
+            ax.set_ylabel('V3 ({0})'.format(units))
+        elif frame == 'idl':
+            ax.set_xlabel('Ideal X ({0})'.format(units))
+            ax.set_ylabel('Ideal Y ({0})'.format(units))
+        elif frame == 'sci' or frame == 'det':
+            ax.set_xlabel('X pixels ({0})'.format(frame))
+            ax.set_ylabel('Y pixels ({0})'.format(frame))
 
         x, y = self.corners(frame, rederive=False)
         x2, y2 = self.closed_polygon_points(frame, rederive=False)
@@ -572,21 +574,70 @@ class Aperture(object):
                 rotation=rotation,
                 color=ax.lines[-1].get_color())
         if fill:
-            pl.fill(x2, y2, color=fill_color, zorder=-40, alpha=fill_alpha)
+            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha)
+
         if title:
             ax.set_title("{0} frame".format(frame))
-        if annotate:
-            self.plot_detector_origin(frame)
+        if show_frame_origin:
+            self.plot_frame_origin(frame, which=show_frame_origin, units=units, ax=ax)
         if mark_ref:
             x_ref, y_ref = self.reference_point(frame)
             ax.plot([x_ref], [y_ref], marker='+', color=ax.lines[-1].get_color())
 
         if (frame == 'tel') and (self.observatory == 'JWST'):
             # ensure V2 increases to the left
-            ax = pl.gca()
             xlim = ax.get_xlim()
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
+
+    def plot_frame_origin(self, frame, which='both', units='arcsec', ax=None):
+        """Indicate the origins of the detector and science frames.
+
+        Red and blue squares indicate the detector and science frame origin, respectively.
+
+        Parameters
+        -----------
+        frame : str
+            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
+        which : str of list
+            Which origin to plot: 'all', 'det', 'sci', 'raw', or a list
+        units : str
+            one of 'arcsec', 'arcmin', 'deg'
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
+        """
+
+        if ax is None:
+            ax = pl.gca()
+
+        if units.lower() == 'arcsec':
+            scale = 1
+        elif units.lower() == 'arcmin':
+            scale = 1. / 60
+        elif units.lower() == 'deg':
+            scale = 1. / 60 / 60
+        else:
+            raise ValueError("Unknown units: " + units)
+
+        # Set which variable to be a list if not already for easy parsing
+        if isinstance(which, str):
+            which = [which]
+
+        # detector frame
+        if 'det' in which or 'all' in which:
+            c1, c2 = self.convert(0, 0, 'det', frame)
+            ax.plot(c1 * scale, c2 * scale, color='red', marker='s', markersize=9)
+
+        # science frame
+        if 'sci' in which or 'all' in which:
+            c1, c2 = self.convert(0, 0, 'sci', frame)
+            ax.plot(c1 * scale, c2 * scale, color='blue', marker='s', markersize=7)
+
+        # raw frame
+        if 'raw' in which or 'all' in which:
+            c1, c2 = self.convert(0, 0, 'raw', frame)
+            ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
 
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
         """Outline the detector readout channels.
@@ -633,29 +684,6 @@ class Aperture(object):
                 edgecolor='none',
                 lw=0)
             ax.add_patch(rect)
-
-    def plot_detector_origin(self, frame, which='both'):
-        """Indicate the origins of the detector and science frames.
-
-        Red and blue squares indicate the detector and science frame origin, respectively.
-
-        Parameters
-        -----------
-        which : str
-            Which detector origin to plot: 'both', 'det', 'sci'
-        frame : str
-            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-
-        """
-        # raw detector frame
-        if which.lower() == 'det' or which.lower() == 'both':
-            c1, c2 = self.convert(0, 0, 'det', frame)
-            pl.plot(c1, c2, color='red', marker='s', markersize=9)
-
-        # science frame
-        if which.lower() == 'sci' or which.lower() == 'both':
-            c1, c2 = self.convert(0, 0, 'sci', frame)
-            pl.plot(c1, c2, color='blue', marker='s')
 
     def reference_point(self, to_frame):
         """Return the defining reference point of the aperture in to_frame."""
@@ -1167,6 +1195,31 @@ class Aperture(object):
 
         else:
             raise NotImplementedError
+
+    def raw_to_tel(self, *args):
+        """Raw to telescope frame transformation."""
+        return self.sci_to_tel(*self.raw_to_sci(*args))
+
+    def tel_to_raw(self, *args):
+        """Telescope to raw frame transformation."""
+        return self.sci_to_raw(*self.tel_to_sci(*args))
+
+    def raw_to_det(self, *args):
+        """Raw to detector frame transformation."""
+        return self.sci_to_det(*self.raw_to_sci(*args))
+
+    def det_to_raw(self, *args):
+        """Detector to raw frame transformation."""
+        return self.sci_to_raw(*self.det_to_sci(*args))
+
+    def raw_to_idl(self, *args):
+        """Raw to raw ideal transformation."""
+        return self.sci_to_idl(*self.raw_to_sci(*args))
+
+    def idl_to_raw(self, *args):
+        """Ideal to raw frame transformation."""
+        return self.sci_to_raw(*self.idl_to_sci(*args))
+
 
     def validate(self):
         """Verify that the instance's attributes fully qualify the aperture.
