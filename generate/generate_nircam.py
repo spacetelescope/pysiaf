@@ -318,7 +318,7 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 emulate_delivery = True
-# emulate_delivery = False
+emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -352,6 +352,12 @@ print('SIAFXML written in {}'.format(filenames[0]))
 # compare to SIAFXML produced the old way
 # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRCam_SIAF_2017-12-01.xml')))
 ref_siaf = pysiaf.Siaf(instrument)
+
+if 0:
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    ref_siaf = pre_delivery_siaf
+
 new_siaf = pysiaf.Siaf(instrument, filenames[0])
 
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
@@ -364,9 +370,6 @@ ignore_attributes += ([s for s in DISTORTION_ATTRIBUTES if 'Idl2Sci' in s])
 compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, ignore_attributes=ignore_attributes)
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-4, ignore_attributes=ignore_attributes, report_dir=test_dir)
 # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-
-
-
 
 
 roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, report_dir=test_dir)

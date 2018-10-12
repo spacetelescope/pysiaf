@@ -64,8 +64,8 @@
            NRS1_FP1MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None , NRS_S1600A1_SLIT ,         FP1MIMF
            NRS1_FP2MIMF ,   FULLSCA ,  1134.0 ,   185.0 ,     2048 ,     2048 ,         1134.0 ,          185.0 ,        NRS1_FULL ,         default
            NRS1_FP3MIMF ,   FULLSCA ,  1225.0 ,  1967.0 ,     2048 ,     2048 ,         1225.0 ,         1967.0 ,        NRS1_FULL ,         default
-           NRS2_FP4MIMF ,   FULLSCA ,  1276.0 ,   236.0 ,     2048 ,     2048 ,          771.0 ,         1811.0 ,        NRS2_FULL ,         default
-           NRS2_FP5MIMF ,   FULLSCA ,  1247.0 ,  1839.0 ,     2048 ,     2048 ,          800.0 ,          208.0 ,        NRS2_FULL ,         default
+           NRS2_FP4MIMF ,   FULLSCA ,  1276.0 ,   236.0 ,     2048 ,     2048 ,          773.0 ,         1813.0 ,        NRS2_FULL ,         default
+           NRS2_FP5MIMF ,   FULLSCA ,  1247.0 ,  1839.0 ,     2048 ,     2048 ,          802.0 ,          210.0 ,        NRS2_FULL ,         default
           CLEAR_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
           F110W_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
           F140X_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None

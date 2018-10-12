@@ -117,7 +117,7 @@ setup(
     install_requires=[
         'astropy>=1.2',
         'numpy>=1.9',
-        # 'matplotlib<3; python_version=2.7', ; python_version!=2.7'
+        'numpydoc',
         'matplotlib>=1.4.3',
         'lxml>=3.6.4',
         'scipy>=0.17',
@@ -128,6 +128,7 @@ setup(
     package_data={PACKAGENAME: ['prd_data/HST/*/*.dat',
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
+                                'pre_delivery_data/*/*.*',
                                 'source_data/*/*.txt',
                                 'source_data/*.txt',
                                 'tests/test_data/*/*/*/*.fits',

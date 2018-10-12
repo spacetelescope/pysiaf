@@ -1,31 +1,27 @@
 """Functions to read Science Instrument Aperture Files (SIAF) and SIAF reference files.
 
 For JWST SIAF, reading XML and CSV format are supported.
-
 For HST SIAF, only .dat files can be read.
-
 
 Authors
 -------
-
     Johannes Sahlmann
 
 References
 ----------
     Parts of read_hst_siaf were adapted from Matt Lallo's plotap.f.
-
     Parts of read_jwst_siaf were adapted from jwxml.
 
 """
-
 from collections import OrderedDict
-import numpy as np
 import os
 
+import numpy as np
 from astropy.table import Table
 import lxml.etree as ET
 
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT
+
 
 def get_siaf(input_siaf, observatory='JWST'):
     """Return a Siaf object corresponding to input_siaf which can be a string path or a Siaf object.
@@ -41,13 +37,14 @@ def get_siaf(input_siaf, observatory='JWST'):
         Siaf object
 
     """
-    from pysiaf import siaf # runtime import to avoid circular import on startup
+    from pysiaf import siaf  # runtime import to avoid circular import on startup
     if type(input_siaf) == str:
         aperture_collection = read_jwst_siaf(filename=input_siaf)
 
         # initilize siaf as empty object
         siaf_object = siaf.Siaf(None)
-        siaf_object.instrument = aperture_collection[list(aperture_collection.items())[0][0]].InstrName
+        siaf_object.instrument = aperture_collection[list(aperture_collection.items())[0][0]].\
+            InstrName
 
         if siaf_object.instrument == 'NIRCAM':
             siaf_object.instrument = 'NIRCam'
@@ -67,7 +64,7 @@ def get_siaf(input_siaf, observatory='JWST'):
     return siaf_object
 
 
-def read_hst_siaf(file=None):#, AperNames=None):
+def read_hst_siaf(file=None):
     """Read apertures from HST SIAF file and return a collection.
 
     This was partially ported from Lallo's plotap.f.
@@ -83,7 +80,7 @@ def read_hst_siaf(file=None):#, AperNames=None):
         Dictionary of apertures
 
     """
-    from pysiaf import aperture # runtime import to avoid circular import on startup
+    from pysiaf import aperture  # runtime import to avoid circular import on startup
     if file is None:
         file = os.path.join(HST_PRD_DATA_ROOT, 'siaf.dat')
 
@@ -175,15 +172,17 @@ def read_hst_siaf(file=None):#, AperNames=None):
             rec_type = text[70:73]  # !Record type.
 
         elif text.rstrip()[-2::] == 'AM':
-            a.a_v2_ref = np.float(text[0:15])  # !V2 Coordinate of Aperture Reference Point. (same as v2_cent)
-            a.a_v3_ref = np.float(text[15:30])  # !V3 Coordinate of Aperture Reference Point. (same as v3_cent)
+            a.a_v2_ref = np.float(text[0:15])  # !V2 Coordinate of Aperture Reference Point.
+            # (same as v2_cent)
+            a.a_v3_ref = np.float(text[15:30])  # !V3 Coordinate of Aperture Reference Point.
+            # (same as v3_cent)
             a.a_x_incr = np.float(text[30:45])  # !First Coordinate Axis increment.
             a.a_y_incr = np.float(text[45:60])  # !Second Coordinate Axis increment.
 
         elif text.rstrip()[-2::] == 'AN':
             if (a.a_shape == 'PICK') and ('FGS' in a.ap_name):
-                # HST FGS are special in the sense that the idl_to_tel transformation is implemented via the TVS matrix
-                # and not the standard way
+                # HST FGS are special in the sense that the idl_to_tel transformation is implemented
+                # via the TVS matrix and not the standard way
                 # a.set_fgs_tel_reference_point(a.a_v2_ref, a.a_v2_ref)
                 a.set_idl_reference_point(a.a_v2_ref, a.a_v3_ref, verbose=False)
                 # pass
@@ -192,7 +191,8 @@ def read_hst_siaf(file=None):#, AperNames=None):
                 # TO BE IMPLEMENTED
                 # FGS pickle record ends here
                 # apertures.append(a)
-                #                             read(10,1250)Beta1,     !Angle of increasing first coordinate axis.
+                #                             read(10,1250)Beta1,     !Angle of increasing first
+                # coordinate axis.
                 #      *               Beta2,     !Angle of increasing second coordinate axis.
                 #      *               a_x_ref,   !X reference.
                 #      *               a_y_ref,   !Y reference.
@@ -266,7 +266,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         dictionary of apertures
 
     """
-    from pysiaf import aperture # runtime import to avoid circular import on startup
+    from pysiaf import aperture  # runtime import to avoid circular import on startup
 
     if (filename is None) and (instrument is None):
         raise ValueError('Specify either input instrument or filename')
@@ -319,8 +319,10 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
     else:
         raise NotImplementedError
 
-    # handle special case of NIRSpec, where auxiliary TRANSFORM apertures are defined and hold transformation parameters
-    # simple workaround is to attach the TRANSFORM aperture as attribute to the respective NIRSpec aperture
+    # handle special case of NIRSpec, where auxiliary TRANSFORM apertures are defined and hold
+    # transformation parameters
+    # simple workaround is to attach the TRANSFORM aperture as attribute to the respective NIRSpec
+    # aperture
     if instrument.upper() == 'NIRSPEC':
 
         # Fundamental aperture definitions: names, types, reference positions, dependencies
@@ -330,22 +332,25 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
             jwst_aperture = apertures[AperName]
             if jwst_aperture.AperType in ['FULLSCA', 'OSS']:
                 for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
-                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
+                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name),
+                            apertures[transform_aperture_name])
                 apertures[AperName] = jwst_aperture
             elif jwst_aperture.AperType in ['SLIT']:
                 # attach TA apertures
                 for transform_aperture_name in 'CLEAR_GWA_OTE F110W_GWA_OTE F140X_GWA_OTE'.split():
-                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name), apertures[transform_aperture_name])
+                    setattr(jwst_aperture, '_{}'.format(transform_aperture_name),
+                            apertures[transform_aperture_name])
 
-                # attach parent aperture (name stored in _parent_apertures, aperture object stored in _parent_aperture)
+                # attach parent aperture (name stored in _parent_apertures, aperture object stored
+                # in _parent_aperture)
                 index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
                 parent_aperture_name = siaf_aperture_definitions['parent_apertures'][index]
-                if (parent_aperture_name is not None) and (not np.ma.is_masked(parent_aperture_name)):
+                if (parent_aperture_name is not None) and \
+                        (not np.ma.is_masked(parent_aperture_name)):
                     jwst_aperture._parent_apertures = parent_aperture_name
                     jwst_aperture._parent_aperture = apertures[jwst_aperture._parent_apertures]
 
                 apertures[AperName] = jwst_aperture
-
 
     return apertures
 
@@ -362,7 +367,8 @@ def read_siaf_alignment_parameters(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.
+                            format(instrument.lower()))
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
@@ -378,7 +384,8 @@ def read_siaf_aperture_definitions(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_aperture_definition.txt'.format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_aperture_definition.txt'.
+                            format(instrument.lower()))
 
     # converters = {'XDetRef': [ascii.convert_numpy(np.float32)]}
     # , converters = converters, guess = False
@@ -400,10 +407,9 @@ def read_siaf_ddc_mapping_reference_file(instrument):
     ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
                                     '{}_siaf_ddc_apername_mapping.txt'.format(instrument.lower()))
 
-
     ddc_mapping_table = Table.read(ddc_mapping_file, format='ascii.basic', delimiter=',')
 
-    #generate dictionary
+    # generate dictionary
     _ddc_apername_mapping = {}
     for j, siaf_name in enumerate(ddc_mapping_table['SIAF_NAME'].data):
         _ddc_apername_mapping[siaf_name] = ddc_mapping_table['DDC_NAME'][j]
@@ -436,7 +442,8 @@ def read_siaf_detector_reference_file(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_detector_parameters.txt'.format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_detector_parameters.txt'.
+                            format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
@@ -455,7 +462,8 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
 
     """
     distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
-                                                  '{}_siaf_distortion_{}.txt'.format(instrument.lower(), aperture_name.lower()))
+                                                  '{}_siaf_distortion_{}.txt'.format(
+                                                      instrument.lower(), aperture_name.lower()))
 
     return Table.read(distortion_reference_file_name, format='ascii.basic', delimiter=',')
 
@@ -472,5 +480,6 @@ def read_siaf_xml_field_format_reference_file(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.
+                            format(instrument.lower()))
     return Table.read(filename, format='ascii.basic', delimiter=',')

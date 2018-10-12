@@ -21,6 +21,8 @@ import stsci_rtd_theme
 
 def setup(app):
     app.add_stylesheet("stsci.css")
+    # app.add_stylesheet("default.css")
+
 
 
 from distutils.version import LooseVersion
@@ -74,26 +76,41 @@ if sys.version_info[0] == 2:
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
-extensions = [
-    'numfig',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.inheritance_diagram',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.autosummary',
-    ]
+extensions = ['sphinx_automodapi.automodapi',
+              'sphinx_automodapi.automodsumm',
+              'numpydoc',
+              'sphinx.ext.autodoc',
+              'sphinx.ext.mathjax',
+              'sphinx.ext.viewcode',]
 
-if on_rtd:
-    extensions.append('sphinx.ext.mathjax')
+# extensions = [
+#     'numfig',
+#     'sphinx_automodapi.automodapi',
+#     'sphinx_automodapi.automodsumm',
+#     'sphinx.ext.autodoc',
+#     'sphinx.ext.intersphinx',
+#     'sphinx.ext.todo',
+#     'sphinx.ext.inheritance_diagram',
+#     'sphinx.ext.viewcode',
+#     'sphinx.ext.autosummary',
+#     'numpydoc',
+#     # 'sphinx.ext.mathjax'
+#     ]
 
-elif LooseVersion(sphinx.__version__) < LooseVersion('1.4'):
-    extensions.append('sphinx.ext.pngmath')
-else:
-    extensions.append('sphinx.ext.imgmath')
+# extensions = ['sphinx_automodapi.automodapi',
+#               'sphinx_automodapi.automodsumm',
+#               'numpydoc',
+#               'sphinx.ext.autodoc',
+#               'sphinx.ext.mathjax',
+#               'sphinx.ext.viewcode']
+
+# if on_rtd:
+#     extensions.append('sphinx.ext.mathjax')
+#
+# elif LooseVersion(sphinx.__version__) < LooseVersion('1.4'):
+#     extensions.append('sphinx.ext.pngmath')
+# else:
+#     extensions.append('sphinx.ext.imgmath')
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -152,7 +169,8 @@ default_role = 'obj'
 
 # Don't show summaries of the members in each class along with the
 # class' docstring
-numpydoc_show_class_members = False
+# numpydoc_show_class_members = False
+numpydoc_show_class_members = True
 
 autosummary_generate = True
 
@@ -195,12 +213,16 @@ pygments_style = 'sphinx'
 # If true, keep warnings as "system message" paragraphs in the built documents.
 # keep_warnings = False
 
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = False
+
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'stsci_rtd_theme'
+html_static_path = []
 html_theme_path = [stsci_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
@@ -345,8 +367,8 @@ texinfo_show_urls = 'inline'
 
 # Bibliographic Dublin Core info.
 epub_title = u'Pysiaf'
-epub_author = u'Johannes Sahlmann, STSCI'
-epub_publisher = u'STSCI'
+epub_author = u'Johannes Sahlmann, STScI'
+epub_publisher = u'STScI'
 epub_copyright = u'2018 STScI'
 
 # The basename for the epub file. It defaults to the project name.

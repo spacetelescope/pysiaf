@@ -1,48 +1,78 @@
+# We set the language to c because python isn't supported on the MacOS X nodes
+# on Travis. However, the language ends up being irrelevant anyway, since we
+# install Python ourselves using conda.
 language: c
+
 compiler: gcc
+
 os:
-- linux
+    - linux
+
+# Setting sudo to false opts in to Travis-CI container-based builds.
 sudo: false
+
+# The apt packages below are needed for sphinx builds, which can no longer
+# be installed with sudo apt-get.
 addons:
-  apt:
-    packages:
-    - graphviz
-    - texlive-latex-extra
-    - dvipng
+    apt:
+        packages:
+            - graphviz
+            - texlive-latex-extra
+            - dvipng
+
 env:
-  global:
-  - MAIN_CMD='python setup.py'
-  - CONDA_CHANNELS='http://ssb.stsci.edu/astroconda'
-  - CONDA_DEPENDENCIES='pytest sphinx'
-  - PIP_DEPENDENCIES=''
-  - PYTHON_VERSION=3.6
-  - NUMPY_VERSION=stable
-  - ASTROPY_VERSION=stable
-  - EVENT_TYPE='push pull_request'
-  matrix:
-  - SETUP_CMD='install'
-  - SETUP_CMD='test'
+    global:
+        - MAIN_CMD='python setup.py'
+        - CONDA_CHANNELS='http://ssb.stsci.edu/astroconda'
+        - CONDA_DEPENDENCIES='pytest sphinx'
+        - PIP_DEPENDENCIES=''
+        - PYTHON_VERSION=3.6
+        - NUMPY_VERSION=stable
+        - ASTROPY_VERSION=stable
+        - EVENT_TYPE='push pull_request'
+
+    matrix:
+        - SETUP_CMD='install'
+        - SETUP_CMD='test'
+#        - PYTHON_VERSION=2.7 SETUP_CMD='test'
+
 matrix:
-  fast_finish: true
-  include:
-  - os: linux
-    env: SETUP_CMD='build_sphinx' CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES PIP_DEPENDENCIES='sphinx_rtd_theme
-      stsci_rtd_theme sphinx-automodapi'
-  - os: linux
-    env: MAIN_CMD='flake8 --count' SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
-      CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
-  allow_failures:
-  - env: MAIN_CMD='flake8 --count' SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
-      CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
+
+    # Don't wait for allowed failures
+    fast_finish: true
+
+    include:
+        # build sphinx documentation with warnings
+        - os: linux
+          env: SETUP_CMD='build_sphinx'
+               CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
+               PIP_DEPENDENCIES='sphinx_rtd_theme stsci_rtd_theme sphinx-automodapi'
+
+        # PEP8 check with flake8 (only once, i.e. "os: linux")
+        - os: linux
+          env: MAIN_CMD='flake8 --count'
+               SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
+               CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
+
+    allow_failures:
+        # PEP8 will fail for numerous reasons. Ignore it.
+        - env: MAIN_CMD='flake8 --count'
+               SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
+               CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
+
 install:
-  - git clone git://github.com/astropy/ci-helpers.git
-  - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+    - git clone git://github.com/astropy/ci-helpers.git
+    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+
 script:
-  - "$MAIN_CMD $SETUP_CMD"
+    - $MAIN_CMD $SETUP_CMD
+
 deploy:
   provider: pypi
+  skip_existing: true
   user: johannes-sahlmann
   password:
     secure: NSRG9wOl4Wk9Ns7Ooxfwv+Y4G1oIBA1pAMj7kTRQrRJ2GjmZVfsKMWRb4YBwtPZLdjwE9l9a5jIvUiCNZdeEuCc2t9mqhiZtgjzMPDnh6DiRFtsJEdiavmolgE2Par4yMkLG/iMxRDU/UnqP9YPEz3CT4ccDDGu2a7gvyNvJjljNA7vQyBBlZMa4mHL8InttRLF4lWQSMpLCgKeYREurhLEND/zz7ycTcgQj18z4ibucsDPCtLi6uwJxgYXFDkXdfcq6h7QjHNuyl2BwAFUuFouXKt00GRvkUtmYFdzkZqZ9ObKxCZuT3qipa6qOL3b1FBLkxF6+oMdnJvJd9zzLTOHBEqw4jo6xDGeSNICUiC6temhmA1soOp5PBszd3E9m8ESYDVgDqFqT4lw01+70/ej4SR0f8SOnWO/9QPQNJq1G1G5oEk3sKph2kMaAdhImU4o9GSEKMHu3mDh4K2fJN54oMDmGAPFjMczgSUOLFaQG4INP+/7aOm9+NUskuk3stYYJj97ZURsVMp56a4GxzNHOX3nHiJUMAs3uO0HoPWYGTwTLc6Iw8J55VYK8FNLfEDkN/QYSZb4/KLdL86PTwDxmeEL77j1jqUtt7pIrJr/PSyyZzy6BJO+dALUIv9Mjb1XEqwhzXmD5RJpyw2sdgYb1qcO/N6Tk+0PNzVAEmkY=
   on:
     branch: master
+    tags: true
