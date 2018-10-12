@@ -42,7 +42,7 @@ from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
 
 # shorthands for supported coordinate systems
-FRAMES = ('det', 'sci', 'idl', 'tel')
+FRAMES = ('det', 'sci', 'idl', 'tel', 'raw')
 
 # list of attributes for the distortion coefficients up to degree 5
 POLYNOMIAL_COEFFICIENT_NAMES = 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split()
@@ -632,13 +632,12 @@ class Aperture(object):
         # science frame
         if 'sci' in which or 'all' in which:
             c1, c2 = self.convert(0, 0, 'sci', frame)
-            ax.plot(c1 * scale, c2 * scale, color='blue', marker='s')
+            ax.plot(c1 * scale, c2 * scale, color='blue', marker='s', markersize=7)
 
         # raw frame
-        if 'raw' in which:
-            # Will add or 'all' in which_list once this is implemented
-            raise NotImplementedError("Not set up to plot raw frame origin")
-
+        if 'raw' in which or 'all' in which:
+            c1, c2 = self.convert(0, 0, 'raw', frame)
+            ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
 
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
         """Outline the detector readout channels.
@@ -1196,6 +1195,31 @@ class Aperture(object):
 
         else:
             raise NotImplementedError
+
+    def raw_to_tel(self, *args):
+        """Raw to telescope frame transformation."""
+        return self.sci_to_tel(*self.raw_to_sci(*args))
+
+    def tel_to_raw(self, *args):
+        """Telescope to raw frame transformation."""
+        return self.sci_to_raw(*self.tel_to_sci(*args))
+
+    def raw_to_det(self, *args):
+        """Raw to detector frame transformation."""
+        return self.sci_to_det(*self.raw_to_sci(*args))
+
+    def det_to_raw(self, *args):
+        """Detector to raw frame transformation."""
+        return self.sci_to_raw(*self.det_to_sci(*args))
+
+    def raw_to_idl(self, *args):
+        """Raw to raw ideal transformation."""
+        return self.sci_to_idl(*self.raw_to_sci(*args))
+
+    def idl_to_raw(self, *args):
+        """Ideal to raw frame transformation."""
+        return self.sci_to_raw(*self.idl_to_sci(*args))
+
 
     def validate(self):
         """Verify that the instance's attributes fully qualify the aperture.
