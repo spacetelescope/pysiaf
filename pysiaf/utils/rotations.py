@@ -7,7 +7,6 @@ Authors
 """
 from __future__ import absolute_import, print_function, division
 import numpy as np
-from math import sqrt, sin, cos, atan2, asin, acos, radians, degrees
 
 
 def attitude(v2, v3, ra, dec, pa):
@@ -74,8 +73,8 @@ def axial_rotation(ax, phi, u):
         array of size 3 representing the rotated vectot
 
     """
-    rphi = radians(phi)
-    v = u*cos(rphi) + cross(ax, u) * sin(rphi) + ax * np.dot(ax, u) * (1-cos(rphi))
+    rphi = np.radians(phi)
+    v = u*np.cos(rphi) + cross(ax, u) * np.sin(rphi) + ax * np.dot(ax, u) * (1-np.cos(rphi))
     return v
 
 
@@ -185,12 +184,12 @@ def posangle(attitude, v2, v3):
         Angle in degrees - the position angle at (V2,V3)
 
     """
-    A = attitude  # Synonym to simplify typing
-    v2r = radians(v2 / 3600.0)
-    v3r = radians(v3 / 3600.0)
-    x = -(A[2, 0] * np.cos(v2r) + A[2, 1] * np.sin(v2r)) * np.sin(v3r) + A[2, 2] * np.cos(v3r)
-    y = (A[0, 0] * A[1, 2] - A[1, 0] * A[0, 2]) * cos(v2r) + (A[0, 1] * A[1, 2] - A[1, 1] * A[
-        0, 2]) * np.sin(v2r)
+    v2r = np.radians(v2 / 3600.0)
+    v3r = np.radians(v3 / 3600.0)
+    x = -(attitude[2, 0] * np.cos(v2r) + attitude[2, 1] * np.sin(v2r)) * np.sin(v3r) \
+        + attitude[2, 2] * np.cos(v3r)
+    y = (attitude[0, 0] * attitude[1, 2] - attitude[1, 0] * attitude[0, 2]) * np.cos(v2r) \
+        + (attitude[0, 1] * attitude[1, 2] - attitude[1, 1] * attitude[0, 2]) * np.sin(v2r)
     pa = np.degrees(np.arctan2(y, x))
     return pa
 
@@ -248,14 +247,14 @@ def rodrigues(attitude):
         the equivalent quaternion
 
     """
-    A = attitude  # Synonym for clarity and to save typing
-    cos_phi = 0.5 * (A[0, 0] + A[1, 1] + A[2, 2] - 1.0)
+    cos_phi = 0.5 * (attitude[0, 0] + attitude[1, 1] + attitude[2, 2] - 1.0)
     phi = np.arccos(cos_phi)
-    axis = np.array([A[2, 1] - A[1, 2], A[0, 2] - A[2, 0], A[1, 0] - A[0, 1]]) / (2.0 * sin(phi))
+    axis = np.array([attitude[2, 1] - attitude[1, 2], attitude[0, 2] - attitude[2, 0],
+                     attitude[1, 0] - attitude[0, 1]]) / (2.0 * np.sin(phi))
 
     # Make corresponding quaternion
-    q = np.hstack(([cos(phi/2.0)], axis * sin(phi/2.0)))
-    phi = degrees(phi)
+    q = np.hstack(([np.cos(phi/2.0)], axis * np.sin(phi/2.0)))
+    phi = np.degrees(phi)
 
     return axis, phi, q
 
@@ -282,16 +281,16 @@ def rotate(axis, angle):
     """
     assert axis in list(range(1, 4)), 'Axis must be in range 1 to 3'
     r = np.zeros((3, 3))
-    theta = radians(angle)
+    theta = np.radians(angle)
 
-    ax0 = axis-1 # Allow for zero offset numbering
-    ax1 = (ax0+1) % 3 # Axes in cyclic order
+    ax0 = axis-1  # Allow for zero offset numbering
+    ax1 = (ax0+1) % 3  # Axes in cyclic order
     ax2 = (ax0+2) % 3
     r[ax0, ax0] = 1.0
-    r[ax1, ax1] = cos(theta)
-    r[ax2, ax2] = cos(theta)
-    r[ax1, ax2] = -sin(theta)
-    r[ax2, ax1] = sin(theta)
+    r[ax1, ax1] = np.cos(theta)
+    r[ax2, ax2] = np.cos(theta)
+    r[ax1, ax2] = -np.sin(theta)
+    r[ax2, ax1] = np.sin(theta)
 
     return r
 
@@ -342,15 +341,14 @@ def sky_posangle(attitude, ra, dec):
         resulting position angle in degrees
 
     """
-    rar = radians(ra)
-    decr = radians(dec)
-    A = attitude  # Synonym to simplify typing
+    rar = np.radians(ra)
+    decr = np.radians(dec)
     # Pointing of V3 axis
-    v3ra = atan2(A[1, 2], A[0, 2])
-    v3dec = asin(A[2, 2])
-    x = sin(v3dec) * cos(decr) - cos(v3dec) * sin(decr) * cos(v3ra - rar)
-    y = cos(v3dec) * sin(v3ra - rar)
-    pa = degrees(atan2(y, x))
+    v3ra = np.arctan2(attitude[1, 2], attitude[0, 2])
+    v3dec = np.arcsin(attitude[2, 2])
+    x = np.sin(v3dec) * np.cos(decr) - np.cos(v3dec) * np.sin(decr) * np.cos(v3ra - rar)
+    y = np.cos(v3dec) * np.sin(v3ra - rar)
+    pa = np.degrees(np.arctan2(y, x))
     return pa
 
 
@@ -428,7 +426,7 @@ def v2v3(u):
 
     """
     assert len(u) == 3, 'Not a vector'
-    norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2) # Works for list or array
-    v2 = 3600*np.degrees(np.arctan2(u[1], u[0])) # atan2 puts it in the correct quadrant
+    norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2)  # Works for list or array
+    v2 = 3600*np.degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
     v3 = 3600*np.degrees(np.arcsin(u[2]/norm))
     return v2, v3
