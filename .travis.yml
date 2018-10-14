@@ -71,6 +71,10 @@ install:
 script:
     - $MAIN_CMD $SETUP_CMD
 
+after_success:
+    # The coveragerc file may be customized as needed for your package.
+    - if [[ $SETUP_CMD == 'test --coverage' ]]; then coveralls --rcfile='pysiaf/tests/coveragerc'; fi
+
 deploy:
   provider: pypi
   skip_existing: true
@@ -81,6 +85,3 @@ deploy:
     branch: master
     tags: true
 
-after_success:
-    # The coveragerc file may be customized as needed for your package.
-    - if [[ $SETUP_CMD == 'test --coverage' ]]; then coveralls --rcfile='pysiaf/tests/coveragerc'; fi
