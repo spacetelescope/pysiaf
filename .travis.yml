@@ -54,6 +54,10 @@ matrix:
                SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
 
+        # Do a coverage test
+        - env: SETUP_CMD='test --coverage --open-files --remote-data'
+
+
     allow_failures:
         # PEP8 will fail for numerous reasons. Ignore it.
         - env: MAIN_CMD='flake8 --count'
@@ -76,3 +80,7 @@ deploy:
   on:
     branch: master
     tags: true
+
+after_success:
+    # The coveragerc file may be customized as needed for your package.
+    - if [[ $SETUP_CMD == 'test --coverage --open-files --remote-data' ]]; then coveralls --rcfile='pysiaf/tests/coveragerc'; fi
