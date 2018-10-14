@@ -11,6 +11,7 @@ omit =
    {packagename}/*/tests/*
    {packagename}/*/*/tests/*
    {packagename}/version*
+   {packagename}/relic*
 
 [report]
 exclude_lines =
@@ -28,4 +29,5 @@ exclude_lines =
    def main\(.*\):
 
    # Ignore branches that don't pertain to this version of Python
-    pragma: py{ignore_python_version}
+   pragma: py{ignore_python_version}
+   
