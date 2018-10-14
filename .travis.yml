@@ -55,7 +55,7 @@ matrix:
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
 
         # Do a coverage test
-        - env: SETUP_CMD='test --coverage --open-files --remote-data'
+        - env: SETUP_CMD='test --coverage'
 
 
     allow_failures:
@@ -83,4 +83,4 @@ deploy:
 
 after_success:
     # The coveragerc file may be customized as needed for your package.
-    - if [[ $SETUP_CMD == 'test --coverage --open-files --remote-data' ]]; then coveralls --rcfile='pysiaf/tests/coveragerc'; fi
+    - if [[ $SETUP_CMD == 'test --coverage' ]]; then coveralls --rcfile='pysiaf/tests/coveragerc'; fi
