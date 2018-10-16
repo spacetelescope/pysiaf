@@ -36,6 +36,11 @@ env:
         - SETUP_CMD='test'
 #        - PYTHON_VERSION=2.7 SETUP_CMD='test'
 
+
+install:
+    - git clone git://github.com/astropy/ci-helpers.git
+    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
+
 matrix:
 
     # Don't wait for allowed failures
@@ -63,10 +68,6 @@ matrix:
                SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
 
-install:
-    - git clone git://github.com/astropy/ci-helpers.git
-    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
-    - pip install pytest-cov python-coveralls
 
 script:
     - $MAIN_CMD $SETUP_CMD
