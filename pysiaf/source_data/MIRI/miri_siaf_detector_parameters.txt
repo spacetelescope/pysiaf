@@ -1,0 +1,9 @@
+# MIRI detector parameter definition file for SIAF
+# 
+# This file contains the basic detector characteristics.
+# 
+# Generated 2018-04-11T00:55:34.126 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+InstrName , AperShape , XDetSize , YDetSize
+     MIRI ,      QUAD ,     1032 ,     1024
