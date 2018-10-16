@@ -36,19 +36,14 @@ env:
         - SETUP_CMD='test'
 #        - PYTHON_VERSION=2.7 SETUP_CMD='test'
 
-
-install:
-    - git clone git://github.com/astropy/ci-helpers.git
-    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
-
 matrix:
-
     # Don't wait for allowed failures
     fast_finish: true
 
     include:
         # Do a coverage test
-        - env: SETUP_CMD='test --coverage'
+#        - env: SETUP_CMD='test --coverage'
+        - env: SETUP_CMD='test --cov'
 
         # build sphinx documentation with warnings
         - os: linux
@@ -67,6 +62,10 @@ matrix:
         - env: MAIN_CMD='flake8 --count'
                SETUP_CMD='pysiaf' TEST_CMD='flake8 --version'
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
+
+install:
+    - git clone git://github.com/astropy/ci-helpers.git
+    - source ci-helpers/travis/setup_conda_$TRAVIS_OS_NAME.sh
 
 
 script:
