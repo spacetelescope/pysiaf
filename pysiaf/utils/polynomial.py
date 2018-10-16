@@ -2,7 +2,6 @@
 
 Authors
 -------
-
     - Colin Cox
     - Johannes Sahlmann
 
@@ -10,7 +9,6 @@ Authors
 
 from __future__ import absolute_import, print_function, division
 import numpy as np
-# import scipy as sp
 from scipy import linalg
 
 
@@ -25,22 +23,26 @@ def add_rotation(A, B, theta_deg):
     This routine supplies a modified pair of polynomial which combine both steps
     i.e u2 = A2(x,y), v2 = B2(x,y)
 
-    Ported to here from makeSIAF.py
-    J. Sahlmann 2018-01-03
-
-    Formerly named Rotate or rotate_coefficients.
-
     Parameters
     ----------
-    A   set of polynomial coefficients converting from (x,y) to a variable u
-    B   set of polynomial coefficients converting from(x,y) to  avariable v
+    A : array
+        Set of polynomial coefficients converting from (x,y) to a variable u
+    B : array
+        set of polynomial coefficients converting from(x,y) to  avariable v
     theta_deg : float
         The angle in degrees of a rotationin the (u,v) plane
 
     Returns
     -------
-    A2  set of polynomial coefficiients providing combined steps from (x,y) to u2
-    B2  set of polynomial coefficients providing combined steps from (x,y) to v2
+    A2 : array
+        set of polynomial coefficiients providing combined steps from (x,y) to u2
+    B2 : array
+        set of polynomial coefficients providing combined steps from (x,y) to v2
+
+    Notes
+    -----
+    Function formerly named Rotate or rotate_coefficients.
+    Ported from makeSIAF.py by J. Sahlmann 2018-01-03.
 
     """
     theta = np.deg2rad(theta_deg)
@@ -83,15 +85,18 @@ def choose(n, r):
 def dpdx(a, x, y):
     """Differential with respect to x.
 
-    The polynomial is defined as p(x,y) = a[i,j] * x**(i-j) * y**j summed over i and j
-    Then dp/dx = (i-j) * a[i,j] * x**(i-j-1) * y**j
+    The polynomial is defined as p(x,y) = a[i,j] * x**(i-j) * y**j summed over i and j.
+    Then dp/dx = (i-j) * a[i,j] * x**(i-j-1) * y**j.
 
 
     Parameters
     ----------
-    a      a linear array of polynomial coefficients in JWST order.
-    x      an integer or float variable(or an array of same) representing pixel x positions
-    y      a variable (or an array) representing  pixel y positions. x and y must be of same shape.
+    a : array
+        a linear array of polynomial coefficients in JWST order.
+    x : array
+        an integer or float variable(or an array of same) representing pixel x positions
+    y : array
+        a variable (or an array) representing  pixel y positions. x and y must be of same shape.
 
     Returns
     -------
@@ -119,16 +124,19 @@ def dpdy(a, x, y):
 
     Parameters
     ----------
-    a      an array of polynomial coefficients in JWST arrangement.
-            The number of coefficients must be (order+1)(order+2)/2
-    x      an integer or float variable(or an array of same) representing  pixel x positions
-    y      a variable (or an array) representing  pixel y positions
-    order  an integer, the polynomal order
+    a : array
+        an array of polynomial coefficients in JWST arrangement.
+        The number of coefficients must be (order+1)(order+2)/2
+    x : array
+        an integer or float variable(or an array of same) representing  pixel x positions
+    y : array
+        a variable (or an array) representing  pixel y positions
 
     Returns
     -------
-    differential    float value of dp/dy for the given (x,y) point(s)
-            where p(x,y) is the value of the polynomial
+    differential  : array
+        float value of dp/dy for the given (x,y) point(s) where p(x,y) is the value of the
+        polynomial
 
     """
     poly_degree = polynomial_degree(len(a))
@@ -186,11 +194,11 @@ def flip_x(A):
     ----------
     A : array
         A set of polynomial coefficients given in the triangular layout as described in poly
-    order  The polynomial order
 
     Returns
     -------
-    AF      Modified or flipped set of coefficients matching negated x values.
+    AF : array
+        Modified or flipped set of coefficients matching negated x values.
 
     """
     poly_degree = polynomial_degree(len(A))
@@ -200,7 +208,7 @@ def flip_x(A):
         for j in range(i+1):
             AF[k] = (-1)**(i-j) * A[k]
             k += 1
-    return  AF
+    return AF
 
 
 def flip_y(A):
@@ -211,12 +219,14 @@ def flip_y(A):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the triangular layout as described in the
-    function poly
+    A : array
+        A set of polynomial coefficients given in the triangular layout as described in the
+        function poly
 
     Returns
     -------
-    AF      Modified or flipped set of coefficients matching negated y values.
+    AF : array
+        Modified or flipped set of coefficients matching negated y values.
 
     """
     poly_degree = polynomial_degree(len(A))
@@ -240,12 +250,14 @@ def flip_xy(A):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the triangular layout as described in the
-    function poly
+    A : array
+        A set of polynomial coefficients given in the triangular layout as described in the
+        function poly
 
     Returns
     -------
-    AF      Modified or flipped set of coefficients matching negated x and y values.
+    AF : array
+        Modified or flipped set of coefficients matching negated x and y values.
 
     """
     poly_degree = polynomial_degree(len(A))
@@ -270,19 +282,27 @@ def invert(A, B, u, v, verbose=False):
 
     Parameters
     ----------
-    A      A set of polynomial coefficients given in the linear layout as described in the function
+    A : array
+        A set of polynomial coefficients given in the linear layout as described in the function
         poly converting (x,y) to u
-    B      A set of polynomial coefficients given in the linear layout as described in the function
+    B : array
+        A set of polynomial coefficients given in the linear layout as described in the function
         poly converting (x,y) to v
-    u      The result of applyng the A coefficients to the (x,y) position
-    v      The result of applyng the B coefficients to the (x, y)position
-    verbose:    Logical variable, set True if full text output required
+    u : array
+        The result of applying the A coefficients to the (x,y) position
+    v : array
+        The result of applying the B coefficients to the (x, y)position
+    verbose : bool
+        Logical variable, set True if full text output required
 
     Returns
     -------
-    x, y - The pair of values which transform to (u,v)
-    err - the standard deviation of the fit
-    iter - the number of iterations taken to determine the solution
+    x, y  : tuple of arrays
+        The pair of values which transform to (u,v)
+    err : float
+        the standard deviation of the fit
+    iteration : int
+        the number of iterations taken to determine the solution
 
     """
     poly_degree = polynomial_degree(len(A))
@@ -292,14 +312,14 @@ def invert(A, B, u, v, verbose=False):
     err = 1.0
     # Initial guesses - Linear approximation
     det = A[1] * B[2] - A[2] * B[1]
-    x0 = (B[2] * (u - A[0]) - A[2] * (v - B[0]))/ det
-    y0 = (-B[1] * (u - A[0]) + A[1] * (v - B[0]))/ det
+    x0 = (B[2] * (u - A[0]) - A[2] * (v - B[0])) / det
+    y0 = (-B[1] * (u - A[0]) + A[1] * (v - B[0])) / det
     if verbose:
         print('Initial guesses', x0, y0)
     x = x0
     y = y0
     X = np.array([x, y])
-    iter = 0
+    iteration = 0
     while err > tol:
         f1 = np.array([poly(A, x, y, order) - u, poly(B, x, y, order) - v])
         j = np.array([[dpdx(A, x, y), dpdy(A, x, y)], [dpdx(B, x, y), dpdy(B, x, y)]])
@@ -313,9 +333,9 @@ def invert(A, B, u, v, verbose=False):
         if verbose:
             print('Error %10.2e' % err)
         [x, y] = [x1, y1]
-        iter += 1
+        iteration += 1
 
-    return x, y, err, iter
+    return x, y, err, iteration
 
 
 def jacob(a, b, x, y):
@@ -324,20 +344,24 @@ def jacob(a, b, x, y):
                | da_dx   db_dx |
     Jacobian = |               |
                | da_dy   db_dy |
-
     Then the relative area is the absolute value of the determinant of the Jacobian.
+    x and y will usually be Science coordinates while u and v are Ideal coordinates
 
     Parameters
     ----------
-    a      set of polynomial coefficients converting from (x,y) to u
-    b      set of polynomial coefficients converting from (x,y) to v
-    x      x pixel position or array of x positions
-    y      y pixel position or array of y positions matching the y positions
-    x and y will usually be Science coordinates while u and v are Ideal coordinates
+    a : array
+        set of polynomial coefficients converting from (x,y) to u
+    b : array
+        set of polynomial coefficients converting from (x,y) to v
+    x : array
+        x pixel position or array of x positions
+    y : array
+        y pixel position or array of y positions matching the y positions
 
     Returns
     -------
-    area    area in (u,v) coordinates matching unit area in the (x,y) coordinates.
+    area : array
+        area in (u,v) coordinates matching unit area in the (x,y) coordinates.
 
     """
     j = dpdx(a, x, y)*dpdy(b, x, y) - dpdx(b, x, y)*dpdy(a, x, y)
@@ -357,11 +381,11 @@ def number_of_coefficients(poly_degree):
 def poly(a, x, y, order=4):
     """Polynomial evaluation.
 
-    pol = a[i,j] * x**(i-j) * y**j summed over i and j
-    i runs from 0 to order. Then for each value of i, j runs from 0 to i
+    pol = a[i,j] * x**(i-j) * y**j summed over i and j, where i runs from 0 to order.
+    Then for each value of i, j runs from 0 to i.
     For many of the polynomial operations the coefficients A[i,j] are contained in an
     array of dimension (order+1, order+1) but with all elements where j > i set equal to zero.
-    This we call the triangular layout.
+    This is called the triangular layout.
     The flattened layout is a one-dimensional array containing copies of only the elements
     where j <= i.
 
@@ -370,18 +394,23 @@ def poly(a, x, y, order=4):
 
     Parameters
     ----------
-    a       float array of polynomial coefficients in flattened arrangement
-    x       x pixel position. Can be integer or float or an array of integers or floats
-    y       y pixel position in same layout as x positions.
-    order   integer polynomial order
+    a : array
+        float array of polynomial coefficients in flattened arrangement
+    x : array
+        x pixel position. Can be integer or float or an array of integers or floats
+    y : array
+        y pixel position in same layout as x positions.
+    order : int
+        integer polynomial order
 
     Returns
     -------
-    pol     result as described above
+    pol : float
+        result as described above
 
     """
     pol = 0.0
-    k = 0 # index for coefficients
+    k = 0  # index for coefficients
     for i in range(order+1):
         for j in range(i+1):
             pol = pol + a[k] * x**(i-j) * y**j
@@ -394,17 +423,20 @@ def polyfit(u, x, y, order):
 
     u is a function u(x,y) being a polynomial of the form
     u = a[i, j] x**(i-j) y**j. x and y can be on a grid or be arbitrary values
-    This version uses scipy.linalg.solve instead of matrix inversion
-
+    This version uses scipy.linalg.solve instead of matrix inversion.
+    u, x and y must have the same shape and may be 2D grids of values.
 
     Parameters
     ----------
-    u      an array of values to be the results of applying the sought after
-            polynomial to the values (x,y)
-    x      an array of x values
-    y      an array of y values
-    order  an integer, the polynomial order
-    u, x and y must have the same shape and may be 2D grids of values.
+    u : array
+        an array of values to be the results of applying the sought after
+        polynomial to the values (x,y)
+    x : array
+        an array of x values
+    y : array
+        an array of y values
+    order : int
+        the polynomial order
 
     Returns
     -------
@@ -468,17 +500,24 @@ def prepend_rotation_to_polynomial(a, theta, verbose=False):
     The rotation is opposite to the usual rotation as this routine was designed for the inverse
     transformation between Ideal and V2V3 or tel. Effectively the angle is reversed
 
-    Formerly named RotateCoeffs.
 
     Parameters
     ----------
-    a          Set of polynomial coefficients
-    theta      rotation angle in degrees
-    verbose    logical variable set True only if print-out of coefficient factors is desired.
+    a : array
+        Set of polynomial coefficients
+    theta : float
+        rotation angle in degrees
+    verbose : bool
+        logical variable set True only if print-out of coefficient factors is desired.
 
     Returns
     -------
-    arotate     set of coefficients derived as described above.
+    arotate : array
+        set of coefficients derived as described above.
+
+    Notes
+    -----
+    Function was formerly named RotateCoeffs.
 
     """
     poly_degree = polynomial_degree(len(a))
@@ -514,13 +553,11 @@ def print_triangle(coefficients):
     A[1]  A[2]
     A[3]  A[4]  A[5]
     ...
-
     equivalent to
     A[0,0]
     A[1,0] A[1,1]
     A[2,0] A[2,1] A[2,2]
     ...
-
     in [i,j] terms.
 
     See method poly for details.
@@ -571,24 +608,30 @@ def reorder(A, B):
 
 
 def rescale(A, B, C, D, scale):
-    """Change coefficients to arcsec scale.
-
-    Ported here from makeSIAF.py
-    J. Sahlmann 2018-01-03
-    J. Sahlmann 2018-01-04: fixed side-effect on ABCD variables
+    """Apply a scale to forward and inverse polynomial coefficients.
 
     Parameters
     ----------
-    A
-    B
-    C
-    D
-    order
-    scale
+    A : array
+        Polynomial coefficients
+    B : array
+        Polynomial coefficients
+    C : array
+        Polynomial coefficients
+    D : array
+        Polynomial coefficients
+    scale : float
+        Scale factor to apply
 
     Returns
     -------
-    A_scaled, B_scaled, C_scaled, D_scaled : numpy arrays
+    A_scaled, B_scaled, C_scaled, D_scaled : tuple of numpy arrays
+        the scales coefficients
+
+    Notes
+    -----
+    Ported from makeSIAF.py by J. Sahlmann 2018-01-03.
+    J. Sahlmann 2018-01-04: fixed side-effect on ABCD variables
 
     """
     A_scaled = scale*A
@@ -614,20 +657,25 @@ def rescale(A, B, C, D, scale):
 def shift_coefficients(a, xshift, yshift, verbose=False):
     """Calculate coefficients of polynomial when shifted to new origin.
 
-    Given a polynomial function such that u = a[i,j] * x**[i-j] * y**[j] summed over i and j
+    Given a polynomial function such that u = a[i,j] * x**[i-j] * y**[j] summed over i and j.
     Find the polynomial function ashift centered at xshift, yshift
-    i.e the same value of u = ashift[i,j] * (x-xshift)**(i-j) * (y-yshift)**j
+    i.e the same value of u = ashift[i,j] * (x-xshift)**(i-j) * (y-yshift)**j.
 
     Parameters
     ----------
-    a:      Set of coefficients for a polynomial of the given order in JWST order
-    xshift  x position in pixels of new solution center
-    yshift  y position in pixels of new solution center
-    verbose logical variable to choose print-out of coefficient table - defaults to False
+    a : array
+        Set of coefficients for a polynomial of the given order in JWST order
+    xshift : float
+        x position in pixels of new solution center
+    yshift : float
+        y position in pixels of new solution center
+    verbose : bool
+        logical variable to choose print-out of coefficient table - defaults to False
 
     Returns
     -------
-    ashift - shifted version of the polynomial coefficients.
+    ashift : array
+        shifted version of the polynomial coefficients.
 
     """
     poly_degree = polynomial_degree(len(a))
@@ -644,8 +692,8 @@ def shift_coefficients(a, xshift, yshift, verbose=False):
             for i in range(p, poly_degree + 1):
                 for j in range(q, i + 1 - (p - q)):
                     f = choose(j, q) * choose(i - j, p - q)
-                    atshift[p, q] = atshift[p, q] + f * xshift**((i - j) - (p - q)) * \
-                                                    yshift**(j - q) * at[i, j]
+                    atshift[p, q] = atshift[p, q] + f * xshift**((i - j) - (p - q)) \
+                                                    * yshift**(j - q) * at[i, j]
                     if verbose:
                         print('%2d A(%1d,%1d) x^%1d y^%1d' % (f, i, j, i - j - (p - q), (j - q)))
             if verbose:
@@ -664,10 +712,32 @@ def transform_coefficients(A, a, b, c, d, verbose=False):
     xp = a*x + b*y
     yp = c*x + d*y
 
+
+    Parameters
+    ----------
+    A : array
+        Polynomial coefficients
+    a : float
+        factor
+    b : float
+        factor
+    c : float
+        factor
+    d : float
+        factor
+    verbose : bool
+        verbosity
+
+    Returns
+    -------
+    AT : array
+        Transformed coefficients
+
+    Notes
+    -----
     Designed to work with Sabatke solutions which included a linear transformation of the pixel
     coordinates before the polynomial distortion solution was calculated.
-
-    transform_coefficients combines the two steps into a single polynomial.
+    `transform_coefficients` combines the two steps into a single polynomial.
 
     """
     poly_degree = polynomial_degree(len(A))
@@ -719,7 +789,8 @@ def triangular_layout(coefficients):
 
     Parameters
     ----------
-    a       float array of polynomial coefficients. A must be of dimension (order+1)(order+2)/2
+    coefficients : array
+        float array of polynomial coefficients. Must be of dimension (order+1)(order+2)/2.
 
     Returns
     -------
@@ -764,13 +835,15 @@ def two_step(A, B, a, b):
         polynomial converting from secondary xp and yp pixel positions to final coordinates u
     B : array
         polynomial converting from secondary xp and yp pixel positions to final coordinates v
-    a : set of linear coefficients converting (x,y) to xp
-    b : set of linear coefficients converting (x,y) to yp
-    order   polynomial order
+    Aflat : array
+        set of linear coefficients converting (x,y) to xp
+    Bflat : array
+        set of linear coefficients converting (x,y) to yp
 
     Returns
     -------
-    Aflat, Bflat    arrays of polynomials as calculated
+    Aflat, Bflat : tuple of arrays
+        polynomial coefficients as calculated
 
     """
     poly_degree = polynomial_degree(len(A))

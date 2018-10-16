@@ -26,6 +26,7 @@ References
 from __future__ import absolute_import, print_function, division
 
 import copy
+import math
 import os
 import subprocess
 import sys
@@ -176,31 +177,35 @@ class Aperture(object):
     Transformations between four coordinate systems ("frames") are supported:
         * `Detector ("det")` :  units of pixels, according to detector read out axes orientation as
         defined by SIAF. This system generally differs from the JWST-DMS detector frame definition.
+
         * `Science ("sci")` :   units of pixels, corresponds to DMS coordinate system.
+
         * `Ideal ("idl")` : units of arcseconds, usually a tangent plane projection with reference
         point at aperture reference location.
+
         * `Telescope or V2/V3 ("tel")` : units of arcsecs, spherical coordinate system.
 
     Examples
     --------
-    ap = some_siaf['desired_aperture_name']     # extract one aperture from a Siaf object
+    extract one aperture from a Siaf object:
+    ``ap = some_siaf['desired_aperture_name']``
 
-    ap.det_to_tel(1024, 512)                    # convert pixel coordinates to V2V3 / tel coords.
-                                                # takes pixel coords, returns arcsec
+    convert pixel coordinates to V2V3 / tel coords (takes pixel coords, returns arcsec):
+    ``ap.det_to_tel(1024, 512)``
 
-    ap.idl_to_sci( 10, 3)                       # convert idl coords to sci pixels
-                                                # takes arcsec, returns pixels
-
-    There exist methods for all of the possible
-    {tel,idl,sci,det}_to_{tel,idl,sci,det} combinations.
+    convert idl coords to sci pixels: ``ap.idl_to_sci( 10, 3)``
 
     Frames can also be defined by strings:
-    ap.convert(1024, 512, from_frame='det', to_frame='tel')  # same as first example above
+    ``ap.convert(1024, 512, from_frame='det', to_frame='tel')``
 
-    ap.corners('tel')                           # Get aperture vertices/corners in tel frame
-    ap.reference_point('tel')                   # Get the reference point defined in the SIAF
+    Get aperture vertices/corners in tel frame: ``ap.corners('tel')``
 
-    ap.plot('tel')                              # plot coordinates in idl frame
+    Get the reference point defined in the SIAF: ``ap.reference_point('tel')``
+
+    plot coordinates in idl frame: ``ap.plot('tel')``
+
+    There exist methods for all of the possible ``{tel,idl,sci,det}_to_{tel,idl,sci,det}``
+    combinations.
 
     """
 
@@ -479,7 +484,6 @@ class Aperture(object):
         """
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
-
     def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
              **kwargs):
@@ -606,8 +610,8 @@ class Aperture(object):
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
-        """
 
+        """
         if ax is None:
             ax = pl.gca()
 
@@ -1220,7 +1224,6 @@ class Aperture(object):
         """Ideal to raw frame transformation."""
         return self.sci_to_raw(*self.idl_to_sci(*args))
 
-
     def validate(self):
         """Verify that the instance's attributes fully qualify the aperture.
 
@@ -1314,6 +1317,7 @@ def get_hst_to_jwst_coefficient_order(polynomial_degree):
     conversion_index = np.array([hst_exponents.index(t) for t in jwst_exponents])
 
     return conversion_index
+
 
 #######################################
 # support for HST apertures
@@ -2185,7 +2189,6 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
                                                       type(comparison_attr), comparison_attr))
         if reference_attr != comparison_attr:
             show = True
-            # if isinstance(reference_attr, float) and isinstance(comparison_attr, float):
             if (type(reference_attr) in [int, float, np.float64]) and \
                     (type(comparison_attr) in [int, float, np.float64]):
 
