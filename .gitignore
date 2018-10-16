@@ -14,3 +14,4 @@ docs/_build
 ~$*_SIAF.xlsx
 wedge_offsets.txt
 miri_siaf_ifu_slice_table.fits
+*.pdf

@@ -15,21 +15,19 @@ References
 
 """
 
+from collections import OrderedDict
 import os
 import sys
-from collections import OrderedDict
 
-import numpy as np
-# from astropy.time import Time
 from astropy.table import Table, vstack
+from astropy.io import fits
+import numpy as np
 import pylab as pl
 
-
 import pysiaf
-from pysiaf.utils import polynomial, tools
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
-# from pysiaf.aperture import DISTORTION_ATTRIBUTES
-# from pysiaf.certify import compare
+from pysiaf.utils import polynomial
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
+    JWST_DELIVERY_DATA_ROOT
 from pysiaf import iando
 from pysiaf.utils import compare
 
@@ -64,12 +62,23 @@ master_aperture_names = detector_layout['AperName'].data
 
 # directory containing reference files delivered by IDT
 source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
-print ('Loading reference files from directory: {}'.format(source_data_dir))
-
-from astropy.io import fits
+print('Loading reference files from directory: {}'.format(source_data_dir))
 
 
 def untangle(square):
+    """Turn a square n x n array into a linear array.
+
+    Parameters
+    ----------
+    square : n x n array
+        Input array
+
+    Returns
+    -------
+    linear : array
+        Linearized array
+
+    """
     n = square.shape[0]
     t = n * (n + 1) // 2
     linear = np.zeros(t)
@@ -81,7 +90,19 @@ def untangle(square):
 
 
 def invcheck(A, B, C, D, order, low, high):
-    '''Round trip calculation to test inversion'''
+    """Round trip calculation to test inversion.
+
+    Parameters
+    ----------
+    A
+    B
+    C
+    D
+    order
+    low
+    high
+
+    """
     x = np.random.random(10)
     x = low + (high - low) * x
     y = np.random.random(10)
@@ -90,22 +111,31 @@ def invcheck(A, B, C, D, order, low, high):
     v = polynomial.poly(B, x, y, order)
     x2 = polynomial.poly(C, u, v, order)
     y2 = polynomial.poly(D, u, v, order)
-    print ('\n INVERSE CHECK')
+    print('\n INVERSE CHECK')
     for i in range(10):
-        print ('%10.4f%10.4f%10.4f%10.4f%10.4f%10.4f%10.2e%10.2e' % (
-        x[i], y[i], u[i], v[i], x2[i], y2[i], x2[i] - x[i], y2[i] - y[i]))
+        print('%10.4f%10.4f%10.4f%10.4f%10.4f%10.4f%10.2e%10.2e' %
+              (x[i], y[i], u[i], v[i], x2[i], y2[i], x2[i] - x[i], y2[i] - y[i]))
 
-    print ('Round trip errors %10.2e %10.2e' % ((x - x2).std(), (y - y2).std()))
-    print ('Round trip errors %10.3f %10.3f' % ((x - x2).std(), (y - y2).std()))
-    return
+    print('Round trip errors %10.2e %10.2e' % ((x - x2).std(), (y - y2).std()))
+    print('Round trip errors %10.3f %10.3f' % ((x - x2).std(), (y - y2).std()))
 
 
 def get_mirim_coefficients(verbose=False):
+    """Read delivered FITS file for MIRI imager and return data to be ingested in SIAF.
+
+    Parameters
+    ----------
+    verbose : bool
+        verbosity
+
+    Returns
+    -------
+    csv_data : dict
+        Dictionary containing the data
+
+    """
     miri = fits.open(os.path.join(source_data_dir, 'MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits'))
-    # miri.info()
 
-
-    # T = miri[3].data
     T = miri['T matrix'].data
     TI = miri['TI matrix'].data
 
@@ -117,18 +147,18 @@ def get_mirim_coefficients(verbose=False):
     TT = np.dot(T, TI)
 
     if verbose:
-        print ('T\n', T)
+        print('T\n', T)
         print('TI\n', TI)
-        print ('VtoAN\n', VtoAN)
-        print ('\n TV V2V3 to XY Entrance')
-        print (TV)
-        print (1.0 / TV[1, 1], 'arcsec/mm')
-        print ('\nANtoV\n', ANtoV)
-        print ('\n VTXY entrance to V2V3')
-        print ('VT\n', VT)
-        print ()
-        print ('VT comparison\n', prod)
-        print ('T comparison\n', TT)
+        print('VtoAN\n', VtoAN)
+        print('\n TV V2V3 to XY Entrance')
+        print(TV)
+        print(1.0 / TV[1, 1], 'arcsec/mm')
+        print('\nANtoV\n', ANtoV)
+        print('\n VTXY entrance to V2V3')
+        print('VT\n', VT)
+        print()
+        print('VT comparison\n', prod)
+        print('T comparison\n', TT)
 
 
     # Get linear coefficient layout
@@ -141,10 +171,10 @@ def get_mirim_coefficients(verbose=False):
     CL = untangle(C)
     DL = untangle(D)
     if verbose:
-        print ('Initial AL\n', AL)
-        print ('Initial BL\n', BL)
-        print ('CL\n', CL)
-        print ('DL\n', DL)
+        print('Initial AL\n', AL)
+        print('Initial BL\n', BL)
+        print('CL\n', CL)
+        print('DL\n', DL)
 
     order = 4
     k = 0
@@ -158,31 +188,31 @@ def get_mirim_coefficients(verbose=False):
 
     AF = VT[0, 0] * AL + VT[0, 1] * BL
     AF[0] = AF[0] + VT[0, 2]
-    polynomial.print_triangle(AF)
     BF = VT[1, 0] * AL + VT[1, 1] * BL
     BF[0] = BF[0] + VT[1, 2]
-    polynomial.print_triangle(BF)
-
     if verbose:
-        print ('AL scaled\n', AL)
-        print ('\n A FINAL')
-        print ('\n B FINAL')
+        polynomial.print_triangle(AF)
+        polynomial.print_triangle(BF)
 
-    ## print ('INVERSE TRANSFORMATIONS')
+        print('AL scaled\n', AL)
+        print('\n A FINAL')
+        print('\n B FINAL')
+
+    ## print('INVERSE TRANSFORMATIONS')
     # Combine TV with polynomial using polynomial.two_step
     a = np.array([TV[0, 2], TV[0, 0], TV[0, 1]])
     b = np.array([TV[1, 2], TV[1, 0], TV[1, 1]])
     (C2, D2) = polynomial.two_step(CL, DL, a, b)
     CF = 40 * C2
     DF = 40 * D2
-    polynomial.print_triangle(CF)
-    polynomial.print_triangle(DF)
-
     if verbose:
-        print ('a', a)
-        print ('b', b)
-        print ('\nC Final')
-        print ('\nD Final')
+        polynomial.print_triangle(CF)
+        polynomial.print_triangle(DF)
+
+        print('a', a)
+        print('b', b)
+        print('\nC Final')
+        print('\nD Final')
 
     # Test two_step
     v2 = -280
@@ -197,7 +227,6 @@ def get_mirim_coefficients(verbose=False):
     xmm2 = polynomial.poly(C2, v2, v3, 4)
     ymm2 = polynomial.poly(D2, v2, v3, 4)
 
-
     # Backwards check
     xp = 0
     yp = 0
@@ -207,41 +236,41 @@ def get_mirim_coefficients(verbose=False):
     ypix = polynomial.poly(DF, v2, v3, 4)
 
     if verbose:
-        print ('IN', xin, yin)
+        print('IN', xin, yin)
         print('MM', xmm, ymm)
         print('MM2', xmm2, ymm2)
-        print ('V', v2, v3)
-        print ('Original ', xp, yp)
-        print ('Recovered', xpix, ypix)
-        print ('Change   ', xpix - xp, ypix - yp)
+        print('V', v2, v3)
+        print('Original ', xp, yp)
+        print('Recovered', xpix, ypix)
+        print('Change   ', xpix - xp, ypix - yp)
 
-    invcheck(AF, BF, CF, DF, 4, -512.0, 512.0)
+        invcheck(AF, BF, CF, DF, 4, -512.0, 512.0)
 
     CS = polynomial.shift_coefficients(CF, AF[0], BF[0])
     DS = polynomial.shift_coefficients(DF, AF[0], BF[0])
     CS[0] = 0.0
     DS[0] = 0.0
-    polynomial.print_triangle(CS)
-    polynomial.print_triangle(DS)
     V2cen = AF[0]
     V3cen = BF[0]
     AF[0] = 0.0
     BF[0] = 0.0
-    invcheck(AF, BF, CS, DS, 4, -512.0, 512.0)
-
     if verbose:
-        print ('\nCS')
-        print ('\nDS')
-        print ('\nDetector Center')
+        polynomial.print_triangle(CS)
+        polynomial.print_triangle(DS)
+        invcheck(AF, BF, CS, DS, 4, -512.0, 512.0)
+
+        print('\nCS')
+        print('\nDS')
+        print('\nDetector Center')
 
     xscalec = np.hypot(AF[1], BF[1])
     yscalec = np.hypot(AF[2], BF[2])
     xanglec = np.rad2deg(np.arctan2(AF[1], BF[1]))
     yanglec = np.rad2deg(np.arctan2(AF[2], BF[2]))
     if verbose:
-        print ('Position', V2cen, V3cen)
-        print ('Scales %10.6f %10.6f' % (xscalec, yscalec))
-        print ('Angles %10.6f %10.6f' % (xanglec, yanglec))
+        print('Position', V2cen, V3cen)
+        print('Scales %10.6f %10.6f' % (xscalec, yscalec))
+        print('Angles %10.6f %10.6f' % (xanglec, yanglec))
 
     xcen = 1033 / 2
     ycen = 1025 / 2
@@ -255,18 +284,20 @@ def get_mirim_coefficients(verbose=False):
     dV3dy = polynomial.dpdy(BF, xref, yref)
     xangler = np.arctan2(dV2dx, dV3dx)
     yangler = np.arctan2(dV2dy, dV3dy)
-    print ('Axis angles', np.rad2deg(xangler), np.rad2deg(yangler))
+    if verbose:
+        print('Axis angles', np.rad2deg(xangler), np.rad2deg(yangler))
 
     # Illum reference position
     xscaler = np.hypot(dV2dx, dV3dx)
     yscaler = np.hypot(dV2dy, dV3dy)
-    print ('\nIllum reference position')
-    print ('xref=', xref)
-    print ('Position', V2Ref, V3Ref)
-    print ('Scales %10.6f %10.6f' % (xscaler, yscaler))
     xangler = np.rad2deg(np.arctan2(dV2dx, dV3dx))
     yangler = np.rad2deg(np.arctan2(dV2dy, dV3dy))
-    print ('Angles %10.6f %10.6f %10.6f' % (xangler, yangler, yangler - xangler))
+    if verbose:
+        print('\nIllum reference position')
+        print('xref=', xref)
+        print('Position', V2Ref, V3Ref)
+        print('Scales %10.6f %10.6f' % (xscaler, yscaler))
+        print('Angles %10.6f %10.6f %10.6f' % (xangler, yangler, yangler - xangler))
 
     # Slit position
     xslit = (326.13)
@@ -281,10 +312,11 @@ def get_mirim_coefficients(verbose=False):
     dV3dy = polynomial.dpdy(BF, dxslit, dyslit)
     xangles = np.arctan2(dV2dx, dV3dx)
     yangles = np.arctan2(dV2dy, dV3dy)
-    print ('\nSlit')
-    print ('Position', dxslit, dyslit)
-    print ('V2,V3', V2slit, V3slit)
-    print ('Slit angles', np.rad2deg(xangles), np.rad2deg(yangles))
+    if verbose:
+        print('\nSlit')
+        print('Position', dxslit, dyslit)
+        print('V2,V3', V2slit, V3slit)
+        print('Slit angles', np.rad2deg(xangles), np.rad2deg(yangles))
 
     # Corners
     xc = np.array([-516.0, 516.0, 516.0, -516.0, -516.0])
@@ -293,46 +325,50 @@ def get_mirim_coefficients(verbose=False):
     V3c = polynomial.poly(BF, xc, yc, 4)
     V2c = V2c + V2cen
     V3c = V3c + V3cen
-    print ('\nCorners')
-    print ('V2 %10.4f %10.4f %10.4f %10.4f' % (V2c[0], V2c[1], V2c[2], V2c[3]))
-    print ('V3 %10.4f %10.4f %10.4f %10.4f' % (V3c[0], V3c[1], V3c[2], V3c[3]))
+    if verbose:
+        print('\nCorners')
+        print('V2 %10.4f %10.4f %10.4f %10.4f' % (V2c[0], V2c[1], V2c[2], V2c[3]))
+        print('V3 %10.4f %10.4f %10.4f %10.4f' % (V3c[0], V3c[1], V3c[2], V3c[3]))
 
-    pl.figure(1)
-    pl.clf()
-    pl.title('MIRI Detector')
-    pl.plot(V2cen, V3cen, 'r+')
-    pl.plot(V2c, V3c, ':')
-    pl.grid(True)
-    pl.axis('equal')
-    pl.plot(V2Ref, V3Ref, 'b+')
-    pl.plot(V2slit, V3slit, 'c+')
-    pl.gca().invert_xaxis()
+        pl.figure(1)
+        pl.clf()
+        pl.title('MIRI Detector')
+        pl.plot(V2cen, V3cen, 'r+')
+        pl.plot(V2c, V3c, ':')
+        pl.grid(True)
+        pl.axis('equal')
+        pl.plot(V2Ref, V3Ref, 'b+')
+        pl.plot(V2slit, V3slit, 'c+')
+        pl.gca().invert_xaxis()
 
     ## Rotated versions
-    print ('Angle', yanglec)
+        print('Angle', yanglec)
+        print('Rotated')
     a = np.deg2rad(yanglec)
-    print ('Rotated')
     AR = AF * np.cos(a) - BF * np.sin(a)
     BR = AF * np.sin(a) + BF * np.cos(a)
-    print('AR')
-    polynomial.print_triangle(AR)
-    print('BR')
-    polynomial.print_triangle(BF)
-    print ('\n', AR[2], ' near zero')
+    if verbose:
+        print('AR')
+        polynomial.print_triangle(AR)
+        print('BR')
+        polynomial.print_triangle(BF)
+        print('\n', AR[2], ' near zero')
 
     CR = polynomial.prepend_rotation_to_polynomial(CS, yanglec)
     DR = polynomial.prepend_rotation_to_polynomial(DS, yanglec)
 
-    invcheck(AR, BR, CR, DR, 4, -512.0, 512.0)
+    if verbose:
+        invcheck(AR, BR, CR, DR, 4, -512.0, 512.0)
 
     # Check positions using rotated (Ideal) coefficiients
     xi = polynomial.poly(AR, xc, yc, 4)
     yi = polynomial.poly(BR, xc, yc, 4)
     v2r = xi * np.cos(a) + yi * np.sin(a) + V2cen
     v3r = -xi * np.sin(a) + yi * np.cos(a) + V3cen
-    print ('V2', v2r)
-    print ('V3', v3r)
-    pl.plot(v2r, v3r, '--')
+    if verbose:
+        print('V2', v2r)
+        print('V3', v3r)
+        pl.plot(v2r, v3r, '--')
 
     CRFl = polynomial.flip_x(CR)
     DRFl = polynomial.flip_x(DR)
@@ -352,9 +388,9 @@ def get_mirim_coefficients(verbose=False):
     csv_data['DET_OSS']['yAngle'] = yanglec
     csv_data['DET_DMF'] = {}
     csv_data['DET_DMF']['A'] = -AR
-    csv_data['DET_DMF']['B'] =  BR
-    csv_data['DET_DMF']['C'] =  CRFl
-    csv_data['DET_DMF']['D'] =  DRFl
+    csv_data['DET_DMF']['B'] = BR
+    csv_data['DET_DMF']['C'] = CRFl
+    csv_data['DET_DMF']['D'] = DRFl
     csv_data['DET_DMF']['Xref'] = 516.5
     csv_data['DET_DMF']['Yref'] = 512.5
     csv_data['DET_DMF']['Xref_inv'] = V2cen
@@ -368,17 +404,18 @@ def get_mirim_coefficients(verbose=False):
 def extract_ifu_data(overwrite=False):
     """Extract relevant information from IFU slice reference files.
 
-    Return on single table with columns that directly map to SIAF aperture entries.
+    Return one single table with columns that directly map to SIAF aperture entries.
 
     Parameters
     ----------
-    overwrite : boolean
+    overwrite : bool
 
     Returns
     -------
+    slice_table : astropy.table.Table instance
+        Table containing data
 
     """
-
     column_name_mapping = {}
     column_name_mapping['X1'] = 'v2_ll'
     column_name_mapping['Y1'] = 'v3_ll'
@@ -390,13 +427,15 @@ def extract_ifu_data(overwrite=False):
     column_name_mapping['Y4'] = 'v3_ul'
 
     V3angle = 0.0
-    arcmin_to_arcsec = 60.
+    # arcmin_to_arcsec = 60.
     slice_table = Table()
     for channel_number in range(1, 5):  # 1,2,3,4
         for letter in ['A', 'B', 'C']:
-            ifu_slice_file = os.path.join(source_data_dir, 'siaf_{}{}.txt'.format(channel_number, letter))
-            table=[]
-            table = Table.read(ifu_slice_file, format='ascii.commented_header', delimiter=' ', guess=False)
+            ifu_slice_file = os.path.join(source_data_dir, 'siaf_{}{}.txt'.format(channel_number,
+                                                                                  letter))
+            # table=[]
+            table = Table.read(ifu_slice_file, format='ascii.commented_header', delimiter=' ',
+                               guess=False)
             if '{}{}'.format(channel_number, letter) == '2C':
                 arcmin_to_arcsec = 1.
             else:
@@ -405,14 +444,12 @@ def extract_ifu_data(overwrite=False):
             table['V3Ref'] = arcmin_to_arcsec * table['v3_ref']
             table['V3IdlYAngle'] = np.ones(len(table)) * np.rad2deg(V3angle)
             # see IFU worksheet
-            for axis in ['X','Y']:
-                for index in [1,2,3,4]:
+            for axis in ['X', 'Y']:
+                for index in [1, 2, 3, 4]:
                     if axis == 'X':
-                        table['{}IdlVert{}'.format(axis, index)] = table['V2Ref'] - arcmin_to_arcsec * table[
-                        column_name_mapping['{}{}'.format(axis, index)]]
+                        table['{}IdlVert{}'.format(axis, index)] = table['V2Ref'] - arcmin_to_arcsec * table[column_name_mapping['{}{}'.format(axis, index)]]
                     elif axis == 'Y':
-                        table['{}IdlVert{}'.format(axis, index)] = arcmin_to_arcsec * table[
-                        column_name_mapping['{}{}'.format(axis, index)]] - table['V3Ref']
+                        table['{}IdlVert{}'.format(axis, index)] = arcmin_to_arcsec * table[column_name_mapping['{}{}'.format(axis, index)]] - table['V3Ref']
             AperName = []
             for j in range(len(table)):
                 if table['SliceNum'][j] == -1:
@@ -448,12 +485,11 @@ for AperName in csv_data.keys():
     k = 0
     for i in range(polynomial_degree + 1):
         for j in np.arange(i + 1):
-            csv_data[AperName]['Sci2IdlX{:d}{:d}'.format(i, j)] =  csv_data[AperName]['A'][k]
-            csv_data[AperName]['Sci2IdlY{:d}{:d}'.format(i, j)] =  csv_data[AperName]['B'][k]
-            csv_data[AperName]['Idl2SciX{:d}{:d}'.format(i, j)] =  csv_data[AperName]['C'][k]
-            csv_data[AperName]['Idl2SciY{:d}{:d}'.format(i, j)] =  csv_data[AperName]['D'][k]
+            csv_data[AperName]['Sci2IdlX{:d}{:d}'.format(i, j)] = csv_data[AperName]['A'][k]
+            csv_data[AperName]['Sci2IdlY{:d}{:d}'.format(i, j)] = csv_data[AperName]['B'][k]
+            csv_data[AperName]['Idl2SciX{:d}{:d}'.format(i, j)] = csv_data[AperName]['C'][k]
+            csv_data[AperName]['Idl2SciY{:d}{:d}'.format(i, j)] = csv_data[AperName]['D'][k]
             k += 1
-
 
 
 slice_table = extract_ifu_data(overwrite=True)
@@ -479,15 +515,12 @@ for AperName in aperture_name_list:
 
     # Retrieve basic aperture parameters from definition files
     for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
-        # setattr(aperture, attribute, getattr(parent_aperture, attribute))
         value = siaf_aperture_definitions[attribute][aperture_definitions_index]
         if np.ma.is_masked(value):
             value = None
         setattr(aperture, attribute, value)
 
     if aperture.AperType not in ['COMPOUND', 'SLIT']:
-        # for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
-        #     setattr(aperture, attribute, siaf_aperture_definitions[attribute][aperture_definitions_index])
         for attribute in 'XDetSize YDetSize'.split():
             setattr(aperture, attribute, siaf_detector_parameters[attribute][0])
 
@@ -497,9 +530,7 @@ for AperName in aperture_name_list:
 
     master_aperture_name = 'MIRIM_FULL'
     # process master apertures
-    # if AperName in master_aperture_names:
     if aperture.AperType not in ['COMPOUND', 'SLIT']:
-
 
         if aperture.AperType == 'OSS':
             aperture.VIdlParity = 1
@@ -519,20 +550,14 @@ for AperName in aperture_name_list:
         dx = aperture.XDetRef - csv_data[csv_aperture_name]['dx']
         dy = aperture.YDetRef - csv_data[csv_aperture_name]['dy']
 
-        # set 00 coefficients to zero
-        # for coefficient_name in ['{}'.format(c) for c in 'A B C D'.split()]:
-        #     csv_data[csv_aperture_name][coefficient_name][0] = 0.
-
         csv_data[csv_aperture_name]['A_shifted'] = polynomial.shift_coefficients(
             csv_data[csv_aperture_name]['A'], dx, dy, verbose=False)
         csv_data[csv_aperture_name]['B_shifted'] = polynomial.shift_coefficients(
             csv_data[csv_aperture_name]['B'], dx, dy, verbose=False)
 
         # apply polynomial to get reference location in ideal plane
-        dxIdl = polynomial.poly(csv_data[csv_aperture_name]['A'], dx, dy,
-                              order=polynomial_degree)
-        dyIdl = polynomial.poly(csv_data[csv_aperture_name]['B'], dx, dy,
-                              order=polynomial_degree)
+        dxIdl = polynomial.poly(csv_data[csv_aperture_name]['A'], dx, dy, order=polynomial_degree)
+        dyIdl = polynomial.poly(csv_data[csv_aperture_name]['B'], dx, dy, order=polynomial_degree)
 
         csv_data[csv_aperture_name]['C_shifted'] = polynomial.shift_coefficients(
             csv_data[csv_aperture_name]['C'], dxIdl, dyIdl, verbose=False)
@@ -607,7 +632,6 @@ for AperName in aperture_name_list:
 
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
-
 emulate_delivery = True
 # emulate_delivery = False
 
@@ -617,8 +641,8 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    # filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml'])
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    # filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml'])
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
@@ -630,8 +654,8 @@ if emulate_delivery:
                              tags={'reference': 'prototype', 'comparison': 'pre_delivery'})
 
     if 0:
-        #compare to prototype generation: -> perfect agreement 2018-10-04
-        colin_siaf = pysiaf.Siaf(instrument, filename='/itar/jwst/tel/share/SIAF_WG/Instruments/MIRI/MIRI_SIAF_2017-12-14.xml')
+        #compare to colin's generation: -> perfect agreement 2018-10-04
+        colin_siaf = pysiaf.Siaf(instrument, filename='SIAF_WG/Instruments/MIRI/MIRI_SIAF_2017-12-14.xml')
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=colin_siaf,
                              fractional_tolerance=1e-6,
                              tags={'reference': 'colin', 'comparison': 'pre_delivery'})
@@ -640,10 +664,9 @@ if emulate_delivery:
 
 
     # compare new SIAF with PRD version
-    # ref_siaf = pysiaf.Siaf(instrument)
-    ref_siaf = pysiaf.Siaf(instrument, '/Users/jsahlmann/Desktop/MIRI_SIAF_2018-10-05.xml')
+    ref_siaf = pysiaf.Siaf(instrument)
+    # ref_siaf = pysiaf.Siaf(instrument, '/Users/jsahlmann/Desktop/MIRI_SIAF_2018-10-05.xml')
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-    1/0
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
 
     compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})#,selected_aperture_name=selected_aperture_name)
@@ -657,11 +680,7 @@ if emulate_delivery:
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
-    # 1/0
-
 else:
-
-
 
     # write the SIAFXML to disk
     # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
@@ -698,8 +717,3 @@ else:
 
 
     roundtrip_table.write(sys.stdout, format='ascii.fixed_width', formats={key: '{:1.4f}' for key in roundtrip_table.colnames if key not in ['AperName']})
-
-
-
-
-
