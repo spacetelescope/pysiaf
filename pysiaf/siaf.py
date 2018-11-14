@@ -226,6 +226,15 @@ def plot_master_apertures(**kwargs):
         ax.set_xlim(xlim[::-1])
 
 
+ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst'.split()
+
+# mapping from internal lower-case names to mixed-case names used for xml file names
+JWST_INSTRUMENT_NAME_MAPPING = {'nircam': 'NIRCam',
+                                'nirspec': 'NIRSpec',
+                                'miri': 'MIRI',
+                                'niriss': 'NIRISS',
+                                'fgs': 'FGS'}
+
 class Siaf(ApertureCollection):
     """Science Instrument Aperture File class.
 
@@ -268,20 +277,20 @@ class Siaf(ApertureCollection):
         """
         super(Siaf, self).__init__()
 
-        if instrument is None:
-            return
+        if (instrument is None) or (isinstance(instrument, str) is False):
+            raise RuntimeError('Please specify a valid instrument name.')
 
-        elif instrument not in ['NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS', 'HST']:
-            raise ValueError('Invalid instrument name: {0}. Note that this is case '
-                             'sensitive.'.format(instrument))
+        elif instrument.lower() not in ACCEPTED_INSTRUMENT_NAMES:
+            raise ValueError('Invalid instrument name: {}. It has to be one of {} '
+                             '(case-insensitive).'.format(instrument, ACCEPTED_INSTRUMENT_NAMES))
 
-        self.instrument = instrument
+        self.instrument = instrument.lower()
 
-        if instrument == 'HST':
+        if instrument == 'hst':
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
         else:
-            self.apertures = read.read_jwst_siaf(instrument, filename=filename, basepath=basepath)
+            self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
             self.observatory = 'JWST'
 
     def __repr__(self):
@@ -295,19 +304,19 @@ class Siaf(ApertureCollection):
     def _getFullApertures(self):
         """Return whichever subset of apertures correspond to the entire detectors."""
         fullaps = []
-        if self.instrument == 'NIRCam':
+        if self.instrument == 'nircam':
             fullaps.append(self.apertures['NRCA5_FULL'])
             fullaps.append(self.apertures['NRCB5_FULL'])
-        elif self.instrument == 'NIRSpec':
+        elif self.instrument == 'nirspec':
             fullaps.append(self.apertures['NRS_FULL_MSA1'])
             fullaps.append(self.apertures['NRS_FULL_MSA2'])
             fullaps.append(self.apertures['NRS_FULL_MSA3'])
             fullaps.append(self.apertures['NRS_FULL_MSA4'])
-        elif self.instrument == 'NIRISS':
+        elif self.instrument == 'niriss':
             fullaps.append(self.apertures['NIS_CEN'])
-        elif self.instrument == 'MIRI':
+        elif self.instrument == 'miri':
             fullaps.append(self.apertures['MIRIM_FULL'])
-        elif self.instrument == 'FGS':
+        elif self.instrument == 'fgs':
             fullaps.append(self.apertures['FGS1_FULL'])
             fullaps.append(self.apertures['FGS2_FULL'])
         return fullaps
