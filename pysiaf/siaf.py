@@ -286,7 +286,7 @@ class Siaf(ApertureCollection):
 
         self.instrument = instrument.lower()
 
-        if instrument == 'hst':
+        if self.instrument == 'hst':
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
         else:
