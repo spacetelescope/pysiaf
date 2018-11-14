@@ -268,7 +268,7 @@ class Siaf(ApertureCollection):
         Parameters
         -----------
         instrument : string
-            one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case sensitive.
+            one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case-insensitive.
         basepath : string
             Directory to look in for SIAF files
         filename : string, optional
