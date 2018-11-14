@@ -21,7 +21,7 @@ from astropy.table import Table
 import lxml.etree as ET
 
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT
-
+from ..siaf import JWST_INSTRUMENT_NAME_MAPPING
 
 def get_siaf(input_siaf, observatory='JWST'):
     """Return a Siaf object corresponding to input_siaf which can be a string path or a Siaf object.
@@ -44,12 +44,12 @@ def get_siaf(input_siaf, observatory='JWST'):
         # initilize siaf as empty object
         siaf_object = siaf.Siaf(None)
         siaf_object.instrument = aperture_collection[list(aperture_collection.items())[0][0]].\
-            InstrName
+            InstrName.lower()
 
-        if siaf_object.instrument == 'NIRCAM':
-            siaf_object.instrument = 'NIRCam'
-        elif siaf_object.instrument == 'NIRSPEC':
-            siaf_object.instrument = 'NIRSpec'
+        # if siaf_object.instrument == 'NIRCAM':
+        #     siaf_object.instrument = 'NIRCam'
+        # elif siaf_object.instrument == 'NIRSPEC':
+        #     siaf_object.instrument = 'NIRSpec'
 
         siaf_object.apertures = aperture_collection
         siaf_object.description = os.path.basename(input_siaf)
@@ -256,9 +256,12 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
 
     Parameters
     ----------
-    instrument
-    filename
-    basepath
+    instrument : str
+        instrument name (case-insensitive)
+    filename : str
+        Absolute path to alternative SIAF xml file
+    basepath : str
+        Directory containing alternative SIAF xml file conforming with standard naming convention
 
     Returns
     -------
@@ -277,7 +280,8 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         if not os.path.isdir(basepath):
             raise RuntimeError("Could not find SIAF data "
                                "in {}".format(basepath))
-        filename = os.path.join(basepath, instrument + '_SIAF.xml')
+        filename = os.path.join(basepath, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()]
+                                + '_SIAF.xml')
     else:
         filename = filename
 
@@ -377,18 +381,18 @@ def read_siaf_aperture_definitions(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
+        content of SIAF reference file
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_aperture_definition.txt'.
-                            format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+                            '{}_siaf_aperture_definition.txt'.format(instrument.lower()))
 
-    # converters = {'XDetRef': [ascii.convert_numpy(np.float32)]}
-    # , converters = converters, guess = False
     return Table.read(filename, format='ascii.basic', delimiter=',', fill_values=('None', 0))
 
 
@@ -397,14 +401,15 @@ def read_siaf_ddc_mapping_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+    ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                     '{}_siaf_ddc_apername_mapping.txt'.format(instrument.lower()))
 
     ddc_mapping_table = Table.read(ddc_mapping_file, format='ascii.basic', delimiter=',')
@@ -435,15 +440,16 @@ def read_siaf_detector_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_detector_parameters.txt'.
-                            format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+                            '{}_siaf_detector_parameters.txt'.format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
@@ -453,15 +459,17 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
 
     Parameters
     ----------
-    instrument
-    aperture_name
+    instrument : str
+        instrument name (case insensitive)
+    aperture_name : str
+        name of master aperture
 
     Returns
     -------
     : astropy table
 
     """
-    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                                   '{}_siaf_distortion_{}.txt'.format(
                                                       instrument.lower(), aperture_name.lower()))
 
@@ -473,13 +481,15 @@ def read_siaf_xml_field_format_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument  : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.
-                            format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+                            '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
+
     return Table.read(filename, format='ascii.basic', delimiter=',')

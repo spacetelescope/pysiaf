@@ -85,9 +85,9 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
 
     for siaf in siaf_objects:
         if threshold is None:
-            if siaf.instrument in ['MIRI']:
+            if siaf.instrument in ['miri']:
                 threshold = 0.2
-            elif siaf.instrument in ['NIRCam']:
+            elif siaf.instrument in ['nircam']:
                 threshold = 42.
             else:
                 threshold = 0.1
@@ -98,7 +98,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
             aperture = siaf[aper_name]
 
             if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (
-                    siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and
+                    siaf.instrument in ['nircam', 'miri', 'nirspec'] and
                     aperture.AperType == 'SLIT'):
                 skip = True
 
@@ -146,7 +146,7 @@ def test_jwst_aperture_vertices(siaf_objects):
             aperture = siaf[aper_name]
 
             if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or \
-                    (siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec']
+                    (siaf.instrument in ['nircam', 'miri', 'nirspec']
                      and aperture.AperType == 'SLIT'):
                 skip = True
 
