@@ -128,7 +128,7 @@ def get_jwst_apertures(apertures_dict, include_oss_apertures=False, exact_patter
     return ApertureCollection(aperture_dict=all_aps)
 
 
-def plot_all_apertures(subarrays=True, showorigin=True, showchannels=True, **kwargs):
+def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, **kwargs):
     """Plot all apertures."""
     for instr in ['NIRCam', 'NIRISS', 'NIRSpec', 'FGS', 'MIRI']:
         aps = Siaf(instr, **kwargs)
@@ -137,7 +137,7 @@ def plot_all_apertures(subarrays=True, showorigin=True, showchannels=True, **kwa
         aps.plot(clear=False, subarrays=subarrays, **kwargs)
         if showorigin:
             aps.plot_frame_origin()
-        if showchannels:
+        if detector_channels:
             aps.plot_detector_channels()
 
 
