@@ -643,7 +643,7 @@ class Aperture(object):
             c1, c2 = self.convert(0, 0, 'raw', frame)
             ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
 
-    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
+    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5, ax=None):
         """Outline the detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -662,12 +662,17 @@ class Aperture(object):
         evenoddratio : float
             Ratio of opacity between even and odd amplifier region
             overlays
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
         npixels = self.XDetSize
         ch = npixels / 4
 
-        ax = pl.gca()
+        if ax is None:
+            ax = pl.gca()
+
         if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
             pts = ((0, 0), (0, ch), (npixels, ch), (npixels, 0))
         else:

@@ -424,7 +424,7 @@ class Siaf(ApertureCollection):
         for ap in self._getFullApertures():
             ap.plot_frame_origin(frame=frame, which=which, units=units, ax=ax)
 
-    def plot_detector_channels(self, frame=None):
+    def plot_detector_channels(self, frame=None, ax=None):
         """Mark on the plot the various detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -436,9 +436,15 @@ class Siaf(ApertureCollection):
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
             Optional if you have already called plot() to specify a
             coordinate frame.
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
         raise NotImplementedError
+        # raise NotImplementedError
+        if ax is None:
+            ax = pl.gca()
 
         if frame is None:
             frame = self._last_plot_frame
