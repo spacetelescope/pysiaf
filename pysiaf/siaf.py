@@ -357,7 +357,7 @@ class Siaf(ApertureCollection):
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
-            Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
