@@ -385,12 +385,7 @@ class Siaf(ApertureCollection):
                 if ap.AperName not in names:
                     continue
 
-            if label is True:
-                name_label = ap.AperName
-            else:
-                name_label= None
-
-            ap.plot(frame=frame, name_label=name_label, ax=ax, units=units, mark_ref=mark_ref,
+            ap.plot(frame=frame, label=label, ax=ax, units=units, mark_ref=mark_ref,
                     show_frame_origin=show_frame_origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':

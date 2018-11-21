@@ -484,7 +484,7 @@ class Aperture(object):
         """
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
-    def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
+    def plot(self, frame='tel', label=False, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
              **kwargs):
         """Plot this aperture.
@@ -493,9 +493,8 @@ class Aperture(object):
         ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-        name_label : str
-            Add text label stating aperture name. If given 'default' will plot the aperture
-            names.
+        label : str or bool
+            Add text label. If True, text will be the default aperture name.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pylab)
@@ -566,14 +565,14 @@ class Aperture(object):
 
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
-        if name_label is not None:
+        if label is not False:
             rotation = 0
-            if name_label == 'default':
+            if label is True:
                 # partially mitigate overlapping NIRCam labels
                 rotation = 30 if self.AperName.startswith('NRC') else 0
-                name_label = self.AperName
+                label = self.AperName
             ax.text(
-                x.mean() * scale, y.mean() * scale, name_label,
+                x.mean() * scale, y.mean() * scale, label,
                 verticalalignment='center',
                 horizontalalignment='center',
                 rotation=rotation,
