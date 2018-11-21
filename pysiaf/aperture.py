@@ -494,7 +494,8 @@ class Aperture(object):
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         name_label : str
-            Add text label stating aperture name
+            Add text label stating aperture name. If given 'default' will plot the aperture
+            names.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pylab)
