@@ -192,7 +192,7 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='tel', name_label=label, **kwargs)
+            ap.plot(color=col, frame='tel', label=label, **kwargs)
             if detector_channels:
                 try:
                     ap.plot_detector_channels('tel')
@@ -335,7 +335,7 @@ class Siaf(ApertureCollection):
         """List of aperture names defined in this SIAF."""
         return self.apertures.keys()
 
-    def plot(self, frame='tel', names=None, label=None, units=None, clear=True,
+    def plot(self, frame='tel', names=None, label=False, units=None, clear=True,
              show_frame_origin=None, mark_ref=False, subarrays=True, ax=None, **kwargs):
         """Plot all apertures in this SIAF.
 
