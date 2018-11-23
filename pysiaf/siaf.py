@@ -441,17 +441,12 @@ class Siaf(ApertureCollection):
             axes are inferred from pyplot.)
 
         """
-        # raise NotImplementedError
+
         if ax is None:
             ax = pl.gca()
 
         if frame is None:
             frame = self._last_plot_frame
 
-        if self.instrument == "nirspec":
-            aper_list = [self.apertures['NRS1_FULL'], self.apertures['NRS2_FULL']]
-        else:
-            aper_list = self._getFullApertures()
-
-        for ap in aper_list:
+        for ap in self._getFullApertures():
             ap.plot_detector_channels(frame=frame, ax=ax)

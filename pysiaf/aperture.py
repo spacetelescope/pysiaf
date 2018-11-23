@@ -667,7 +667,19 @@ class Aperture(object):
             axes are inferred from pyplot.)
 
         """
-        npixels = self.XDetSize
+
+        # NIRSpec MSA requires plotting underlying channels
+        msa_dict = {"NRS_FULL_MSA1": "NRS2_FULL", "NRS_FULL_MSA2": "NRS2_FULL",
+                    "NRS_FULL_MSA3": "NRS1_FULL", "NRS_FULL_MSA4": "NRS1_FULL",
+                    "NRS_S1600A1_SLIT": "NRS1_FULL"}
+
+        if self.AperName not in msa_dict.keys():
+            npixels = self.XDetSize
+        else:
+            aper = msa_dict[self.AperName]
+            nrs = read.read_jwst_siaf(self.InstrName)[aper]
+            npixels = nrs.XDetSize
+
         ch = npixels / 4
 
         if ax is None:
