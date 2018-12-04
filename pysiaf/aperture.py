@@ -1326,6 +1326,10 @@ HST_FLIP_1 = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]])
 HST_FLIP_2 = np.array([[0, 0, 1], [-1, 0, 0], [0, -1, 0]])
 HST_FLIP_3 = np.array([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
 
+# filepath = 'pysiaf/prd_data/HST/amu.rep-Latest'
+# data = read_hst_fgs_amudotrep(filepath)
+# HST_TVS_FGS_1R = data['fgs1']['tvs']
+
 # TVS matrices (from FGS Geometry Products on GSFC/SAC web page)
 HST_TVS_FGS_1R = np.array([-0.000034791201, +0.000021915510, +0.999999999155,
                            -0.003589864866, +0.999993556171, -0.000022040265,
