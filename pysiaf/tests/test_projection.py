@@ -18,16 +18,18 @@ from ..utils import projection
 
 
 @pytest.fixture(scope='module')
-def grid_coordinates(centre_deg=(0., 0.)):
-    """Return tuple of coordinates in deg mapping out a regular grid."""
-    n_side = 50
-    span = 20 * u.arcmin
-    x_width = span.to(u.deg).value
+def grid_coordinates():
+    def make_grid_coordinates(centre_deg=(0., 0.)):
+        """Return tuple of coordinates in deg mapping out a regular grid."""
+        n_side = 50
+        span = 20 * u.arcmin
+        x_width = span.to(u.deg).value
+        return get_grid_coordinates(n_side, centre_deg, x_width)
 
-    return get_grid_coordinates(n_side, centre_deg, x_width)
+    return make_grid_coordinates
 
 
-def test_tangent_plane_projection_roundtrip():
+def test_tangent_plane_projection_roundtrip(grid_coordinates):
     """Transform from RA/Dec to tangent plane and back. Check that input is recovered."""
     centre_deg = (80., -70.)   # setting this to 0,0 fails because of 0,360 deg wrapping
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
@@ -43,7 +45,7 @@ def test_tangent_plane_projection_roundtrip():
     assert np.std(difference_modulus) < 1.e-13 #, 'Problem with tangent plane projection.')
 
 
-def test_project_to_tangent_plane():
+def test_project_to_tangent_plane(grid_coordinates):
     """Compare projection code built with astropy functions with independent implementation."""
     centre_deg = (80., -70.)  # setting this to 0,0 fails because of 0,360 deg wrapping
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
@@ -56,7 +58,7 @@ def test_project_to_tangent_plane():
     assert np.max(difference_modulus) < 1e-13
 
 
-def test_deproject_from_tangent_plane():
+def test_deproject_from_tangent_plane(grid_coordinates):
     """Compare projection code built with astropy functions with independent implementation."""
     centre_deg = (80., -70.)  # setting this to 0,0 fails because of 0,360 deg wrapping
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
