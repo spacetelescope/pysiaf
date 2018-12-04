@@ -484,7 +484,7 @@ class Aperture(object):
         """
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
-    def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
+    def plot(self, frame='tel', label=False, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
              **kwargs):
         """Plot this aperture.
@@ -493,8 +493,8 @@ class Aperture(object):
         ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-        name_label : str
-            Add text label stating aperture name
+        label : str or bool
+            Add text label. If True, text will be the default aperture name.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pylab)
@@ -565,14 +565,14 @@ class Aperture(object):
 
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
-        if name_label is not None:
+        if label is not False:
             rotation = 0
-            if name_label == 'default':
+            if label is True:
                 # partially mitigate overlapping NIRCam labels
                 rotation = 30 if self.AperName.startswith('NRC') else 0
-                name_label = self.AperName
+                label = self.AperName
             ax.text(
-                x.mean() * scale, y.mean() * scale, name_label,
+                x.mean() * scale, y.mean() * scale, label,
                 verticalalignment='center',
                 horizontalalignment='center',
                 rotation=rotation,
@@ -643,7 +643,7 @@ class Aperture(object):
             c1, c2 = self.convert(0, 0, 'raw', frame)
             ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
 
-    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
+    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5, ax=None):
         """Outline the detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -662,12 +662,29 @@ class Aperture(object):
         evenoddratio : float
             Ratio of opacity between even and odd amplifier region
             overlays
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
-        npixels = self.XDetSize
+
+        # NIRSpec MSA requires plotting underlying channels
+        msa_dict = {"NRS_FULL_MSA1": "NRS2_FULL", "NRS_FULL_MSA2": "NRS2_FULL",
+                    "NRS_FULL_MSA3": "NRS1_FULL", "NRS_FULL_MSA4": "NRS1_FULL",
+                    "NRS_S1600A1_SLIT": "NRS1_FULL"}
+
+        if self.AperName not in msa_dict.keys():
+            npixels = self.XDetSize
+        else:
+            aper = msa_dict[self.AperName]
+            nrs = read.read_jwst_siaf(self.InstrName)[aper]
+            npixels = nrs.XDetSize
+
         ch = npixels / 4
 
-        ax = pl.gca()
+        if ax is None:
+            ax = pl.gca()
+
         if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
             pts = ((0, 0), (0, ch), (npixels, ch), (npixels, 0))
         else:
