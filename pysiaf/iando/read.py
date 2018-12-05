@@ -19,6 +19,7 @@ import re
 
 import numpy as np
 from astropy.table import Table
+from astropy.time import Time
 import lxml.etree as ET
 
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT, HST_PRD_VERSION
@@ -305,13 +306,13 @@ def read_hst_fgs_amudotrep(file=None, version=None):
             elif key == 'n_cones':
                 n_cones = int(match.group('n_cones'))
             elif key == 'cone_vector':
-                table = Table.read(filepath, format='ascii.no_header', delimiter=' ',
+                table = Table.read(file, format='ascii.no_header', delimiter=' ',
                                    data_start=astropy_table_index+2, data_end=astropy_table_index + 2 + n_cones,
                                    guess=False, names=('CONE', 'X', 'Y', 'Z', 'CONE_ANGLE_DEG'))
                 # table.pprint()
                 data[fgs_id]['cone_parameters'] = table
             elif key == 'tvs':
-                table = Table.read(filepath, format='ascii.no_header', delimiter=' ',
+                table = Table.read(file, format='ascii.no_header', delimiter=' ',
                                    data_start=astropy_table_index+2, data_end=astropy_table_index+2+3,
                                    guess=False, names=('NEW_1', 'NEW_2', 'NEW_3', 'OLD_1', 'OLD_2', 'OLD_3'))
                 # table.pprint()
@@ -332,7 +333,7 @@ def read_hst_fgs_amudotrep(file=None, version=None):
             line_index += 1
             if line.strip():
                 astropy_table_index += 1  # astropy.table.Table.read ignores blank lines
-        data['ORIGIN'] = filepath
+        data['ORIGIN'] = file
     return data
 
 
