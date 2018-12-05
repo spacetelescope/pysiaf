@@ -128,16 +128,16 @@ def get_jwst_apertures(apertures_dict, include_oss_apertures=False, exact_patter
     return ApertureCollection(aperture_dict=all_aps)
 
 
-def plot_all_apertures(subarrays=True, showorigin=True, showchannels=True, **kwargs):
+def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, **kwargs):
     """Plot all apertures."""
     for instr in ['NIRCam', 'NIRISS', 'NIRSpec', 'FGS', 'MIRI']:
-        aps = Siaf(instr, **kwargs)
+        aps = Siaf(instr)
         print("{0} has {1} apertures".format(aps.instrument, len(aps)))
 
         aps.plot(clear=False, subarrays=subarrays, **kwargs)
         if showorigin:
             aps.plot_frame_origin()
-        if showchannels:
+        if detector_channels:
             aps.plot_detector_channels()
 
 
@@ -192,7 +192,7 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='tel', name_label=label, **kwargs)
+            ap.plot(color=col, frame='tel', label=label, **kwargs)
             if detector_channels:
                 try:
                     ap.plot_detector_channels('tel')
@@ -335,7 +335,7 @@ class Siaf(ApertureCollection):
         """List of aperture names defined in this SIAF."""
         return self.apertures.keys()
 
-    def plot(self, frame='tel', names=None, label=None, units=None, clear=True,
+    def plot(self, frame='tel', names=None, label=False, units=None, clear=True,
              show_frame_origin=None, mark_ref=False, subarrays=True, ax=None, **kwargs):
         """Plot all apertures in this SIAF.
 
@@ -357,7 +357,7 @@ class Siaf(ApertureCollection):
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
-            Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
@@ -385,7 +385,7 @@ class Siaf(ApertureCollection):
                 if ap.AperName not in names:
                     continue
 
-            ap.plot(frame=frame, name_label=label, ax=ax, units=units, mark_ref=mark_ref,
+            ap.plot(frame=frame, label=label, ax=ax, units=units, mark_ref=mark_ref,
                     show_frame_origin=show_frame_origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':
@@ -424,7 +424,7 @@ class Siaf(ApertureCollection):
         for ap in self._getFullApertures():
             ap.plot_frame_origin(frame=frame, which=which, units=units, ax=ax)
 
-    def plot_detector_channels(self, frame=None):
+    def plot_detector_channels(self, frame=None, ax=None):
         """Mark on the plot the various detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -436,11 +436,17 @@ class Siaf(ApertureCollection):
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
             Optional if you have already called plot() to specify a
             coordinate frame.
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
-        raise NotImplementedError
+
+        if ax is None:
+            ax = pl.gca()
 
         if frame is None:
             frame = self._last_plot_frame
+
         for ap in self._getFullApertures():
-            ap.plot_detector_channels(frame=frame)
+            ap.plot_detector_channels(frame=frame, ax=ax)
