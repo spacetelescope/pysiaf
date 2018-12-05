@@ -334,6 +334,7 @@ def read_hst_fgs_amudotrep(file=None, version=None):
             if line.strip():
                 astropy_table_index += 1  # astropy.table.Table.read ignores blank lines
         data['ORIGIN'] = file
+        data['VERSION'] = version
     return data
 
 
