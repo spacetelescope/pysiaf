@@ -41,6 +41,7 @@ import matplotlib
 from .utils import rotations, projection, polynomial
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
+from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
 
 # shorthands for supported coordinate systems
 FRAMES = ('det', 'sci', 'idl', 'tel', 'raw')
@@ -1338,23 +1339,15 @@ def get_hst_to_jwst_coefficient_order(polynomial_degree):
 
 #######################################
 # support for HST apertures
-
 HST_FLIP_1 = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]])
 HST_FLIP_2 = np.array([[0, 0, 1], [-1, 0, 0], [0, -1, 0]])
 HST_FLIP_3 = np.array([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
 
-# TVS matrices (from FGS Geometry Products on GSFC/SAC web page)
-HST_TVS_FGS_1R = np.array([-0.000034791201, +0.000021915510, +0.999999999155,
-                           -0.003589864866, +0.999993556171, -0.000022040265,
-                           -0.999993555809, -0.003589865630, -0.000034712303]).reshape(3, 3)
-
-HST_TVS_FGS_2R2 = np.array([-0.000001019786, +0.000025918600, +0.999999999664,
-                            -0.999997535003, +0.002220357221, -0.000001077332,
-                            -0.002220357248, -0.999997534668, +0.000025916272]).reshape(3, 3)
-
-HST_TVS_FGS_3 = np.array([+0.000030012865, +0.000022612406, +0.999999999294,
-                          -0.002060622958, -0.999997876657, +0.000022674204,
-                          +0.999997876464, -0.002060623637, -0.000029966206]).reshape(3, 3)
+# TVS matrices
+amudotrep = read.read_hst_fgs_amudotrep()
+HST_TVS_FGS_1R = amudotrep['fgs1']['tvs']
+HST_TVS_FGS_2R2 = amudotrep['fgs2']['tvs']
+HST_TVS_FGS_3 = amudotrep['fgs3']['tvs']
 
 
 class HstAperture(Aperture):
