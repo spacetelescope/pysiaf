@@ -125,7 +125,7 @@ setup(
     ],
     tests_require=['pytest'],
     packages=find_packages(),
-    package_data={PACKAGENAME: ['prd_data/HST/*/*',
+    package_data={PACKAGENAME: ['prd_data/HST/*',
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
                                 'pre_delivery_data/*/*.*',
