@@ -1643,19 +1643,23 @@ class HstAperture(Aperture):
         idl_vector_rad = np.deg2rad(
             [self.idl_x_ref_arcsec / 3600., self.idl_y_ref_arcsec / 3600., self.idl_angle_deg])
 
-        # transform to tel frame
+        # transform to tel frame using corrected TVS matrix
         tel_vector_rad = np.array(np.dot(self.corrected_tvs, idl_vector_rad)).flatten()
 
         tel_vector_arcsec = np.rad2deg(tel_vector_rad) * 3600.
 
-        # set V2Ref and V3Ref
+        # set V2Ref and V3Ref and  V3IdlYAngle back to original SIAF value
         self.V2Ref = copy.deepcopy(self.a_v2_ref)
         self.V3Ref = copy.deepcopy(self.a_v3_ref)
         self.V3IdlYAngle = copy.deepcopy(self.theta)
 
+        # set corrected values for fiducial point. This shows the effect on the fiducial point of
+        # changing the TVS matrix
         self.V2Ref_corrected = tel_vector_arcsec[1]
         self.V3Ref_corrected = tel_vector_arcsec[2]
-        self.V3IdlYAngle_corrected = self.theta  # correction = 0 by convention
+
+        # angle correction = 0 by convention
+        self.V3IdlYAngle_corrected = self.theta
 
         if verbose:
             for attribute_name in 'V2Ref V3Ref V3IdlYAngle'.split():
