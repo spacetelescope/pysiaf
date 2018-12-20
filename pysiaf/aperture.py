@@ -374,7 +374,8 @@ class Aperture(object):
         data = Table([v2_arcsec, v3_arcsec])
         tmp_file_in = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file.txt')
         tmp_file_out = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file_out.txt')
-        data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ', bookend=False)
+        data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ', bookend=False,
+                   overwrite=True)
 
         dva_source_dir = self._dva_parameters['dva_source_dir']
         parameter_file = self._dva_parameters['parameter_file']
@@ -388,6 +389,9 @@ class Aperture(object):
 
         data = Table.read(tmp_file_out, format='ascii.no_header',
                           names=('v2_original', 'v3_original', 'v2_corrected', 'v3_corrected'))
+
+        if not np.issubdtype(data['v2_corrected'].dtype, np.floating):
+            raise RuntimeError('DVA correction failed. Output is not float. Please check inputs.')
 
         # clean up
         for filename in [tmp_file_in, tmp_file_out]:
@@ -903,7 +907,8 @@ class Aperture(object):
                                                                             y_sci - self.YSciRef)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   use_tel_boresight=True):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -930,6 +935,9 @@ class Aperture(object):
             must be one of ['planar_approximation', 'spherical_transformation']
         input_coordinates : str
             must be one of ['tangent_plane', 'spherical']
+        use_tel_boresight : bool
+            if method='spherical_transformation' and input_coordinates='tangent_plane', use the
+            V2,V3=0,0 point for deprojections
 
         Returns
         -------
@@ -952,7 +960,9 @@ class Aperture(object):
 
             elif input_coordinates == 'tangent_plane':
                 # deproject coordinates before applying rotations
-                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                if use_tel_boresight:
+                # ses telescope boresight V2,V3 = 0,0 as reference point
+                    x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
                     x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
 
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
@@ -1513,7 +1523,8 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   use_tel_boresight=True):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
 
         For HST FGS, transformation is implemented using the FGS TVS matrix. Parameter names
@@ -1565,7 +1576,8 @@ class HstAperture(Aperture):
                                                        V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                        V2Ref_arcsec=V2Ref_arcsec,
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
-                                                       input_coordinates=input_coordinates)
+                                                       input_coordinates=input_coordinates,
+                                                       use_tel_boresight=use_tel_boresight)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame.
