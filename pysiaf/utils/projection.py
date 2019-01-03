@@ -61,7 +61,7 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
     return x, y
 
 
-def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
+def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1., unwrap=True):
     """Convert pixel coordinates into ra/dec coordinates using a tangent plane de-projection.
 
     The projection's reference point has to be specified.
@@ -106,5 +106,8 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
 
     # ra and dec
     ra, dec = rot_for_tan(phi, theta)
+
+    if unwrap:
+        ra[ra > 180.] -= 360.
 
     return ra, dec

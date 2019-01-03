@@ -907,8 +907,7 @@ class Aperture(object):
                                                                             y_sci - self.YSciRef)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane',
-                   use_tel_boresight=True):
+                   method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -935,9 +934,6 @@ class Aperture(object):
             must be one of ['planar_approximation', 'spherical_transformation']
         input_coordinates : str
             must be one of ['tangent_plane', 'spherical']
-        use_tel_boresight : bool
-            if method='spherical_transformation' and input_coordinates='tangent_plane', use the
-            V2,V3=0,0 point for deprojections
 
         Returns
         -------
@@ -960,16 +956,23 @@ class Aperture(object):
 
             elif input_coordinates == 'tangent_plane':
                 # deproject coordinates before applying rotations
-                if use_tel_boresight:
-                # ses telescope boresight V2,V3 = 0,0 as reference point
-                    x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                    x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
+                # uses origin of idl system x,y=0,0 as reference point
+                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
+
+            if V3IdlYAngle_deg is None:
+                V3IdlYAngle_deg = self.V3IdlYAngle
+            if V2Ref_arcsec is None:
+                V2Ref_arcsec = self.V2Ref
+            if V3Ref_arcsec is None:
+                V2Ref_arcsec = self.V3Ref
+
 
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
             # system. These matrices transform the V-reference point to the ideal reference point
-            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
-            M2 = rotations.rotate(2, self.V3Ref / 3600.)
-            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M1 = rotations.rotate(3, -1 * V2Ref_arcsec / 3600.)
+            M2 = rotations.rotate(2, V3Ref_arcsec / 3600.)
+            M3 = rotations.rotate(1, V3IdlYAngle_deg)
             M4 = np.dot(M2, M1)
             M = np.dot(M3, M4)
 
@@ -989,13 +992,13 @@ class Aperture(object):
                    output_coordinates='tangent_plane'):
         """Convert from telescope (V2/V3) to ideal coordinate system.
 
-        By default, this implementats the planar approximation, which is adequate for most
+        By default, this implements the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
         For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
         are applied.
 
-        Also by default, the output coordinates are in a tangent plane with a reference points at
+        Also by default, the output coordinates are in a tangent plane with a reference point at
         the origin (0,0) of the ideal frame.
 
         Parameters
@@ -1423,7 +1426,7 @@ class HstAperture(Aperture):
     def _tvs_parameters(self, tvs=None):
         """Compute V2_tvs, V3_tvs, and V3angle_tvs from the TVS matrices stored in the database.
 
-        TVS matrices come from GSFC/SAC web page.
+        TVS matrices come from SOCPRD amu.rep files.
         Adapted from Colin Cox's ipython notebook received 11 Dec 2017.
 
         """
@@ -1447,6 +1450,7 @@ class HstAperture(Aperture):
     def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline."""
         if self.a_shape == 'PICK':
+            # TODO: implement methos based on the FGS cones defined in amu.rep file
             x0 = 0.
             y0 = 0.
             outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
@@ -1523,8 +1527,7 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane',
-                   use_tel_boresight=True):
+                   method='planar_approximation', input_coordinates='tangent_plane'):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
 
         For HST FGS, transformation is implemented using the FGS TVS matrix. Parameter names
@@ -1556,7 +1559,7 @@ class HstAperture(Aperture):
             Telescope coordinates in arcsec
 
         """
-        if 'FGS' in self.AperName:
+        if ('FGS' in self.AperName) and (self.AperType not in ['PSEUDO']):
             tvs_pa_deg = V3IdlYAngle_deg
             tvs_v2_arcsec = V2Ref_arcsec
             tvs_v3_arcsec = V3Ref_arcsec
@@ -1564,9 +1567,25 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
+            if method == 'spherical_transformation':
+                #apply TVS formalism to spherical coordinates
+                if input_coordinates == 'spherical':
+                    x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
+                                                               y_idl * u.arcsec.to(u.deg)
+
+                elif input_coordinates == 'tangent_plane':
+                    # deproject coordinates before applying rotations
+                    # uses origin of idl system x,y=0,0 as reference point
+                    x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                    x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
+
+                x_rad = np.deg2rad(x_idl_spherical_deg)
+                y_rad = np.deg2rad(y_idl_spherical_deg)
+            else:
+                x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
+                y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
+
             # unit vector
-            x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
-            y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
             xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
 
             v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
@@ -1576,8 +1595,7 @@ class HstAperture(Aperture):
                                                        V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                        V2Ref_arcsec=V2Ref_arcsec,
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
-                                                       input_coordinates=input_coordinates,
-                                                       use_tel_boresight=use_tel_boresight)
+                                                       input_coordinates=input_coordinates)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame.
