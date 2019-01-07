@@ -1628,13 +1628,33 @@ class HstAperture(Aperture):
                 # rotated_vector = np.dot(tvs, unit_vector)
                 # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
 
-                # need to use inverted and rearranged TVS to make it work this way
-                rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
-                rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
-                rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
-                if self.AperName != 'FGS2':
-                    rotated_vector[[1,2],:] *= -1.
+                if 1:
+                    # need to use inverted and rearranged TVS to make it work this way
+                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
+                    if np.ndim(rotated_vector) == 1:
+                        # rotated_vector = np.expand_dims(rotated_vector, axis=1)
+                        rotated_vector[[0,2]] = rotated_vector[[2,0]]
+                        rotated_vector[[1,2]] = rotated_vector[[2,1]]
+                        if self.AperName != 'FGS2':
+                            rotated_vector[[1,2]] *= -1.
+
+                    else:
+                        rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
+                        rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
+                        if self.AperName != 'FGS2':
+                            rotated_vector[[1,2],:] *= -1.
+                else:
+                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
+                    # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
+                    # rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
+                    # rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
+                    # if self.AperName != 'FGS2':
+                    #     rotated_vector[[1,2],:] *= -1.
+
                 v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
+                # v3_spherical_arcsec, v2_spherical_arcsec = rotations.v2v3(rotated_vector)
+                # v3_spherical_arcsec *= -1.
+
                 # print(rotated_vector[:,0:10])
                 # rotated_vector = np.dot(tvs, unit_vector)
                 # print(v2_spherical_arcsec[0:10], v3_spherical_arcsec[0:10])

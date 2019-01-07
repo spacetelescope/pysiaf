@@ -6,6 +6,7 @@ Authors
 
 """
 
+import numpy as np
 from astropy.modeling import models as astmodels
 from astropy.modeling import rotations as astrotations
 
@@ -69,10 +70,10 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1., unwrap=True):
 
     Parameters
     ----------
-    x : float
+    x : float or array of floats
         Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
         x/scale has to be degrees.
-    y : float
+    y : float or array of floats
         Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
         x/scale has to be degrees.
     ra_ref : float
@@ -108,6 +109,10 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1., unwrap=True):
     ra, dec = rot_for_tan(phi, theta)
 
     if unwrap:
-        ra[ra > 180.] -= 360.
+        if (np.ndim(ra) == 0):
+            if (ra > 180.):
+                ra -= 360.
+        else:
+            ra[ra > 180.] -= 360.
 
     return ra, dec
