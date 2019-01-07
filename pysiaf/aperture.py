@@ -907,7 +907,7 @@ class Aperture(object):
                                                                             y_sci - self.YSciRef)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates='tangent_plane'):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -942,7 +942,7 @@ class Aperture(object):
         """
         if method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
-                raise RuntimeError('Output has to be in tangent plane.')
+                raise RuntimeError('Input has to be in tangent plane.')
             x_model, y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
                                                         V3Ref_arcsec)
 
@@ -965,8 +965,7 @@ class Aperture(object):
             if V2Ref_arcsec is None:
                 V2Ref_arcsec = self.V2Ref
             if V3Ref_arcsec is None:
-                V2Ref_arcsec = self.V3Ref
-
+                V3Ref_arcsec = self.V3Ref
 
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
             # system. These matrices transform the V-reference point to the ideal reference point
@@ -980,7 +979,16 @@ class Aperture(object):
 
             unit_vector[1] = self.VIdlParity * unit_vector[1]
             rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
-            v2, v3 = rotations.v2v3(rotated_vector)
+            v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
+            # 1/0
+            # v2_spherical_arcsec, v3_spherical_arcsec = rotated_vector[1]*u.deg.to(u.arcsec), rotated_vector[2]*u.deg.to(u.arcsec)
+
+            if output_coordinates=='tangent_plane':
+                # tangent plane projection using tel boresight
+                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg), v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+                v2, v3 = v2_tangent_deg*3600., v3_tangent_deg*3600.
+            else:
+                v2, v3 = v2_spherical_arcsec, v3_spherical_arcsec
 
         if self._correct_dva:
             return self.correct_for_dva(v2, v3)
@@ -989,7 +997,7 @@ class Aperture(object):
 
     def tel_to_idl(self, v2_arcsec, v3_arcsec, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                    V3Ref_arcsec=None, method='planar_approximation',
-                   output_coordinates='tangent_plane'):
+                   output_coordinates='tangent_plane', input_coordinates='tangent_plane'):
         """Convert from telescope (V2/V3) to ideal coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -1031,19 +1039,38 @@ class Aperture(object):
         if method == 'planar_approximation':
             if output_coordinates != 'tangent_plane':
                 raise RuntimeError('Output has to be in tangent plane.')
+            if input_coordinates != 'tangent_plane':
+                raise RuntimeError('Input has to be in tangent plane.')
             x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
             return x_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec), \
                    y_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec)
 
         elif method == 'spherical_transformation':
+
+            if input_coordinates == 'spherical':
+                v2_spherical_deg, v3_spherical_deg = v2_arcsec * u.arcsec.to(u.deg), v3_arcsec * u.arcsec.to(u.deg)
+
+            elif input_coordinates == 'tangent_plane':
+                # deproject coordinates before applying rotations
+                # uses origin of idl system x,y=0,0 as reference point
+                v2_spherical_deg, v3_spherical_deg = projection.deproject_from_tangent_plane(v2_arcsec * u.arcsec.to(u.deg), v3_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+
+            if V3IdlYAngle_deg is None:
+                V3IdlYAngle_deg = self.V3IdlYAngle
+            if V2Ref_arcsec is None:
+                V2Ref_arcsec = self.V2Ref
+            if V3Ref_arcsec is None:
+                V3Ref_arcsec = self.V3Ref
+
             # only matrix rotations, this transforms from a spherical to a spherical coordinate
             # system
-            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
-            M2 = rotations.rotate(2, self.V3Ref / 3600.)
-            M3 = rotations.rotate(1, self.V3IdlYAngle)
+            M1 = rotations.rotate(3, -1 * V2Ref_arcsec/3600.)
+            M2 = rotations.rotate(2, V3Ref_arcsec/3600.)
+            M3 = rotations.rotate(1, V3IdlYAngle_deg)
             M4 = np.dot(M2, M1)
             M = np.dot(M3, M4)
-            unit_vector = rotations.unit(v2_arcsec / 3600., v3_arcsec / 3600.)
+
+            unit_vector = rotations.unit(v2_spherical_deg, v3_spherical_deg)
             rotated_vector = np.dot(M, unit_vector)
             rotated_vector[1] = self.VIdlParity * rotated_vector[1]
             x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
@@ -1494,8 +1521,6 @@ class HstAperture(Aperture):
         """
         if v2_arcsec is None:
             v2_arcsec = self.db_tvs_v2_arcsec
-            if verbose:
-                print('{} using db_tvs_v2_arcsec'.format(self))
         if v3_arcsec is None:
             v3_arcsec = self.db_tvs_v3_arcsec
         if pa_deg is None:
@@ -1527,7 +1552,7 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates='tangent_plane'):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
 
         For HST FGS, transformation is implemented using the FGS TVS matrix. Parameter names
@@ -1585,17 +1610,54 @@ class HstAperture(Aperture):
                 x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
                 y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
 
-            # unit vector
+            # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
+            # this is a distortion corrected object space vector
             xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
 
-            v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
-            return v[1], v[2]
+            # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle spacex`
+            v = np.rad2deg(np.dot(tvs, xyz))
+
+            v2_spherical_arcsec, v3_spherical_arcsec = v[1]*u.deg.to(u.arcsec), v[2]*u.deg.to(u.arcsec)
+            if method == 'spherical_transformation':
+                # apply different, more accurate formalism
+
+                unit_vector = rotations.unit(np.rad2deg(x_rad), np.rad2deg(y_rad))
+                # print(v[:,0:10])
+                # unit_vector[1] = self.VIdlParity * unit_vector[1]
+                # rotated_vector = np.dot(np.linalg.inv(tvs), unit_vector)
+                # rotated_vector = np.dot(tvs, unit_vector)
+                # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
+
+                # need to use inverted and rearranged TVS to make it work this way
+                rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
+                rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
+                rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
+                if self.AperName != 'FGS2':
+                    rotated_vector[[1,2],:] *= -1.
+                v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
+                # print(rotated_vector[:,0:10])
+                # rotated_vector = np.dot(tvs, unit_vector)
+                # print(v2_spherical_arcsec[0:10], v3_spherical_arcsec[0:10])
+                # print(v2_spherical_arcsec_b[0:10], v3_spherical_arcsec_b[0:10])
+                # 1 / 0
+
+            v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
+
+
+
+            if (method == 'spherical_transformation') and (output_coordinates == 'tangent_plane'):
+                # tangent plane projection using tel boresight
+                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg), v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+                v2_arcsec, v3_arcsec = v2_tangent_deg*3600., v3_tangent_deg*3600.
+
+            return v2_arcsec, v3_arcsec
         else:
             return super(HstAperture, self).idl_to_tel(x_idl, y_idl,
                                                        V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                        V2Ref_arcsec=V2Ref_arcsec,
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
-                                                       input_coordinates=input_coordinates)
+                                                       input_coordinates=input_coordinates,
+                                                       output_coordinates=output_coordinates)
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame.

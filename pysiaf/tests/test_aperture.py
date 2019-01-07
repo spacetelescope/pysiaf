@@ -28,35 +28,41 @@ def siaf_objects():
     return siafs
 
 
-def test_idl_to_tel():
-    """Test the transformations between ideal and telescope frames that do not use the planar approximation."""
+def test_idl_to_tel(verbose=False):
+    """Test the transformations between ideal and telescope frames."""
 
     siaf = Siaf('NIRISS')
 
     x_idl, y_idl = get_grid_coordinates(10, (0, 0), 100)
 
-    verbose = False
-
     for aper_name in siaf.apertures.keys():
-        # aperture
         aperture = siaf[aper_name]
 
-        for input_coordinates in ['spherical', 'tangent_plane']:
-            v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method='spherical_transformation', input_coordinates=input_coordinates)
-            x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method='spherical_transformation', output_coordinates=input_coordinates)
-            x_diff = np.abs(x_idl - x_idl_2)
-            y_diff = np.abs(y_idl - y_idl_2)
-            if verbose:
-                print('Aperture {} {} x_diff {} y_diff {}'.format(aper_name, input_coordinates, np.max(x_diff), np.max(y_diff)))
-            if input_coordinates == 'spherical':
-                threshold = 1e-12
-            elif input_coordinates == 'tangent_plane':
-                threshold = 5e-10
-            assert np.max(x_diff) < threshold
-            assert np.max(y_diff) < threshold
+        for idl_to_tel_method in ['planar_approximation', 'spherical_transformation']:
+            if idl_to_tel_method == 'spherical_transformation':
+                input_coordinate_types = ['tangent_plane', 'spherical']
+            else:
+                input_coordinate_types = ['tangent_plane']
+
+            for input_coordinates in input_coordinate_types:
+                v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                x_diff = np.abs(x_idl - x_idl_2)
+                y_diff = np.abs(y_idl - y_idl_2)
+                if verbose:
+                    print('{} {}: Aperture {} {} x_diff {} y_diff {}'.format(idl_to_tel_method, input_coordinates, aper_name, input_coordinates, np.max(x_diff), np.max(y_diff)))
+                if idl_to_tel_method == 'spherical_transformation':
+                    if input_coordinates == 'spherical':
+                        threshold = 6e-13
+                    elif input_coordinates == 'tangent_plane':
+                        threshold = 5e-10
+                elif idl_to_tel_method == 'planar_approximation':
+                    threshold = 7e-14
+                assert np.max(x_diff) < threshold
+                assert np.max(y_diff) < threshold
 
 
-def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
+def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.

@@ -32,7 +32,7 @@ def attitude(v2, v3, ra, dec, pa):
     Returns
     -------
     m : numpy matrix
-        A (3 x 3) matrixrepresents the attitude of the telescope which points the given
+        A (3 x 3) matrix represents the attitude of the telescope which points the given
         V2V3 position to the indicated RA and Dec and with the V3 axis rotated by position angle pa
 
     """
@@ -390,7 +390,9 @@ def slew(v2t, v3t, v2a, v3a):
 
 
 def unit(ra, dec):
-    """Convert vector expressed in Euler angles to unit vector components.
+    """Convert inertial frame vector expressed in Euler angles to unit vector components.
+
+    See Section 5 of JWST-STScI-001550.
 
     Parameters
     ----------
@@ -402,31 +404,34 @@ def unit(ra, dec):
     Returns
     -------
     u : float array of length 3
-        the equivalent unit vector
+        the equivalent unit vector in the inertial frame
 
     """
-    rar = np.radians(ra)
-    decr = np.radians(dec)
+    rar = np.deg2rad(ra)
+    decr = np.deg2rad(dec)
     u = np.array([np.cos(rar)*np.cos(decr), np.sin(rar)*np.cos(decr), np.sin(decr)])
     return u
 
 
 def v2v3(u):
-    """Convert unit vector to v2v3.
+    """Compute v2,v3 spherical coordinates corresponding to a unit vector in the rotated (telescope) frame.
+
+    See Section 5 of JWST-STScI-001550.
 
     Parameters
     ----------
     u : float list or array of length 3
-        a unit vector.
+        unit vector in the rotated (telescope) frame
 
     Returns
     -------
-    v2, v3 : tuple of floate
-        The same position represented by V2,V3 values in arc-sec.
+    v2, v3 : tuple of floats
+        The same position represented by V2, V3 values in arc-sec.
 
     """
     assert len(u) == 3, 'Not a vector'
-    norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2)  # Works for list or array
-    v2 = 3600*np.degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
-    v3 = 3600*np.degrees(np.arcsin(u[2]/norm))
+
+    norm = np.sqrt(u[0]**2 + u[1]**2 + u[2]**2)
+    v2 = 3600. * np.degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
+    v3 = 3600. * np.degrees(np.arcsin(u[2]/norm))
     return v2, v3
