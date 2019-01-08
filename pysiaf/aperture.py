@@ -1450,7 +1450,7 @@ class HstAperture(Aperture):
                             m, k]
                     m += 1
 
-    def _tvs_parameters(self, tvs=None):
+    def _tvs_parameters(self, tvs=None, units=None):
         """Compute V2_tvs, V3_tvs, and V3angle_tvs from the TVS matrices stored in the database.
 
         TVS matrices come from SOCPRD amu.rep files.
@@ -1469,10 +1469,16 @@ class HstAperture(Aperture):
 
         m1f = np.dot(np.transpose(self.tvs_flip_matrix), tvs)
 
-        v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
-        v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
-        pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
-        return v2_arcsec, v3_arcsec, pa_deg, tvs
+        if units is None:
+            v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
+            v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
+            pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
+            return v2_arcsec, v3_arcsec, pa_deg, tvs
+        else:
+            v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
+            v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
+            pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
+            return v2, v3, pa, tvs
 
     def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline."""
@@ -1618,6 +1624,7 @@ class HstAperture(Aperture):
             v = np.rad2deg(np.dot(tvs, xyz))
 
             v2_spherical_arcsec, v3_spherical_arcsec = v[1]*u.deg.to(u.arcsec), v[2]*u.deg.to(u.arcsec)
+            # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
             if method == 'spherical_transformation':
                 # apply different, more accurate formalism
 
@@ -1628,7 +1635,7 @@ class HstAperture(Aperture):
                 # rotated_vector = np.dot(tvs, unit_vector)
                 # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
 
-                if 1:
+                if 0:
                     # need to use inverted and rearranged TVS to make it work this way
                     rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
                     if np.ndim(rotated_vector) == 1:
@@ -1643,17 +1650,30 @@ class HstAperture(Aperture):
                         rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
                         if self.AperName != 'FGS2':
                             rotated_vector[[1,2],:] *= -1.
-                else:
-                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
-                    # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
-                    # rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
-                    # rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
-                    # if self.AperName != 'FGS2':
-                    #     rotated_vector[[1,2],:] *= -1.
 
-                v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-                # v3_spherical_arcsec, v2_spherical_arcsec = rotations.v2v3(rotated_vector)
-                # v3_spherical_arcsec *= -1.
+                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
+                else:
+                    # need to use rearranged TVS to make it work this way
+                    v2_angle, v3_angle, v1_angle, tvs = self._tvs_parameters(units=u.arcsec)
+                    # print(v1_angle, v2_angle, v3_angle)
+                    if self.AperName == 'FGS1':
+                        tvs_new = self.compute_tvs_matrix(v2_angle, +1*v1_angle, -v3_angle*u.arcsec.to(u.deg))
+                    elif self.AperName == 'FGS2':
+                        tvs_new = self.compute_tvs_matrix(v2_angle, +1*v3_angle, v1_angle*u.arcsec.to(u.deg))
+                    elif self.AperName == 'FGS3':
+                        tvs_new = self.compute_tvs_matrix(v2_angle, -1*v1_angle, v3_angle*u.arcsec.to(u.deg))
+                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs_new), unit_vector))
+                    rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
+                    rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
+                    if self.AperName != 'FGS2':
+                        rotated_vector[[1,2],:] *= -1.
+
+                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
+
+                    # v3_spherical_arcsec, v2_spherical_arcsec = rotations.v2v3(rotated_vector)
+                    # v3_spherical_arcsec *= -1.
+
+                # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
 
                 # print(rotated_vector[:,0:10])
                 # rotated_vector = np.dot(tvs, unit_vector)
