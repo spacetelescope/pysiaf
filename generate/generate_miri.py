@@ -64,6 +64,8 @@ master_aperture_names = detector_layout['AperName'].data
 source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print('Loading reference files from directory: {}'.format(source_data_dir))
 
+miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits'
+
 
 def untangle(square):
     """Turn a square n x n array into a linear array.
@@ -134,7 +136,7 @@ def get_mirim_coefficients(verbose=False):
         Dictionary containing the data
 
     """
-    miri = fits.open(os.path.join(source_data_dir, 'MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits'))
+    miri = fits.open(os.path.join(source_data_dir, miri_distortion_file))
 
     T = miri['T matrix'].data
     TI = miri['TI matrix'].data
@@ -401,74 +403,47 @@ def get_mirim_coefficients(verbose=False):
     return csv_data
 
 
-def extract_ifu_data(overwrite=False):
+def extract_ifu_data(data_dir):
     """Extract relevant information from IFU slice reference files.
 
     Return one single table with columns that directly map to SIAF aperture entries.
 
     Parameters
     ----------
-    overwrite : bool
+    data_dir : str
 
     Returns
     -------
-    slice_table : astropy.table.Table instance
+    table : astropy.table.Table instance
         Table containing data
 
     """
     column_name_mapping = {}
-    column_name_mapping['X1'] = 'v2_ll'
-    column_name_mapping['Y1'] = 'v3_ll'
-    column_name_mapping['X2'] = 'v2_lr'
-    column_name_mapping['Y2'] = 'v3_lr'
-    column_name_mapping['X3'] = 'v2_ur'
-    column_name_mapping['Y3'] = 'v3_ur'
-    column_name_mapping['X4'] = 'v2_ul'
-    column_name_mapping['Y4'] = 'v3_ul'
+    column_name_mapping['X1'] = 'v2ll'
+    column_name_mapping['Y1'] = 'v3ll'
+    column_name_mapping['X2'] = 'v2lr'
+    column_name_mapping['Y2'] = 'v3lr'
+    column_name_mapping['X3'] = 'v2ur'
+    column_name_mapping['Y3'] = 'v3ur'
+    column_name_mapping['X4'] = 'v2ul'
+    column_name_mapping['Y4'] = 'v3ul'
 
-    V3angle = 0.0
-    # arcmin_to_arcsec = 60.
-    slice_table = Table()
-    for channel_number in range(1, 5):  # 1,2,3,4
-        for letter in ['A', 'B', 'C']:
-            ifu_slice_file = os.path.join(source_data_dir, 'siaf_{}{}.txt'.format(channel_number,
-                                                                                  letter))
-            # table=[]
-            table = Table.read(ifu_slice_file, format='ascii.commented_header', delimiter=' ',
-                               guess=False)
-            if '{}{}'.format(channel_number, letter) == '2C':
-                arcmin_to_arcsec = 1.
-            else:
-                arcmin_to_arcsec = 60.
-            table['V2Ref'] = arcmin_to_arcsec * table['v2_ref']
-            table['V3Ref'] = arcmin_to_arcsec * table['v3_ref']
-            table['V3IdlYAngle'] = np.ones(len(table)) * np.rad2deg(V3angle)
-            # see IFU worksheet
-            for axis in ['X', 'Y']:
-                for index in [1, 2, 3, 4]:
-                    if axis == 'X':
-                        table['{}IdlVert{}'.format(axis, index)] = table['V2Ref'] - arcmin_to_arcsec * table[column_name_mapping['{}{}'.format(axis, index)]]
-                    elif axis == 'Y':
-                        table['{}IdlVert{}'.format(axis, index)] = arcmin_to_arcsec * table[column_name_mapping['{}{}'.format(axis, index)]] - table['V3Ref']
-            AperName = []
-            for j in range(len(table)):
-                if table['SliceNum'][j] == -1:
-                    aperture_name = 'MIRIFU_CHANNEL' + table['SliceName'][j]
-                else:
-                    sliceID = table['SliceName'][j]
-                    aperture_name = 'MIRIFU_' + sliceID[0] + sliceID[3] + 'SLICE' + sliceID[1:3]
-                AperName.append(aperture_name)
-            table['AperName'] = AperName
-            slice_table = vstack((slice_table, table))
+    ifu_slice_file = os.path.join(data_dir, 'miri_siaf_mrs.txt')
 
-    slice_file = os.path.join(source_data_dir, 'miri_siaf_ifu_slice_table.fits')
-    if (not os.path.isfile(slice_file)) or (overwrite):
-        slice_table.write(slice_file, overwrite=overwrite)
-    else:
-        slice_table = Table.read(slice_file)
+    table = Table.read(ifu_slice_file, format='ascii.basic', delimiter=',')
+    table['V2Ref'] = table['v2ref']
+    table['V3Ref'] = table['v3ref']
 
-
-    return slice_table
+    # see IFU worksheet
+    for axis in ['X', 'Y']:
+        for index in [1, 2, 3, 4]:
+            if axis == 'X':
+                table['{}IdlVert{}'.format(axis, index)] = table['V2Ref'] \
+                                                           - table[column_name_mapping['{}{}'.format(axis, index)]]
+            elif axis == 'Y':
+                table['{}IdlVert{}'.format(axis, index)] = table[ column_name_mapping['{}{}'.format(axis, index)]] \
+                                                           - table['V3Ref']
+    return table
 
 
 csv_data = get_mirim_coefficients()
@@ -491,8 +466,7 @@ for AperName in csv_data.keys():
             csv_data[AperName]['Idl2SciY{:d}{:d}'.format(i, j)] = csv_data[AperName]['D'][k]
             k += 1
 
-
-slice_table = extract_ifu_data(overwrite=True)
+slice_table = extract_ifu_data(source_data_dir)
 
 idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1, 2, 3, 4]] + [
     'YIdlVert{}'.format(i) for i in [1, 2, 3, 4]]
@@ -578,7 +552,6 @@ for AperName in aperture_name_list:
                 setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['D_shifted'][k])
                 k += 1
 
-
         aperture.V3SciYAngle = csv_data[csv_aperture_name]['yAngle']
         aperture.V3SciXAngle = csv_data[csv_aperture_name]['xAngle']
         aperture.V3IdlYAngle = aperture.V3SciYAngle
@@ -595,19 +568,26 @@ for AperName in aperture_name_list:
         aperture.VIdlParity = -1
 
     elif AperName == 'MIRIM_SLIT':
-        aperture.V2Ref    =           -414.33
-        aperture.V3Ref         =      -400.69
-        aperture.V3IdlYAngle    =          4.358324
-        aperture.VIdlParity     =               -1
-        aperture.XIdlVert1      =         -2.3674
-        aperture.XIdlVert2      =          2.3778
-        aperture.XIdlVert3      =          2.3774
-        aperture.XIdlVert4      =         -2.3678
-        aperture.YIdlVert1      =         -0.2709
-        aperture.YIdlVert2      =         -0.2514
-        aperture.YIdlVert3      =          0.2701
-        aperture.YIdlVert4      =          0.2507
-
+        mirim_slit_definitions = Table.read(os.path.join(source_data_dir, 'miri_siaf_lrs.txt'), format='ascii.basic', delimiter=',')
+        aperture.V2Ref = mirim_slit_definitions['v2ref'][0]
+        aperture.V3Ref = mirim_slit_definitions['v3ref'][0]
+        for attribute_name in 'VIdlParity V3IdlYAngle'.split():
+            setattr(aperture, attribute_name, mirim_slit_definitions[attribute_name][0])
+        # the mapping is different from above because now we are treating this as 'true' v2v3 and transform to idl
+        column_name_mapping = {}
+        column_name_mapping['X1'] = 'v2ll'
+        column_name_mapping['Y1'] = 'v3ll'
+        column_name_mapping['X4'] = 'v2lr'
+        column_name_mapping['Y4'] = 'v3lr'
+        column_name_mapping['X3'] = 'v2ur'
+        column_name_mapping['Y3'] = 'v3ur'
+        column_name_mapping['X2'] = 'v2ul'
+        column_name_mapping['Y2'] = 'v3ul'
+        for index in [1, 2, 3, 4]:
+            x_idl, y_idl = aperture.tel_to_idl(mirim_slit_definitions[column_name_mapping['{}{}'.format('X', index)]][0],
+                                               mirim_slit_definitions[column_name_mapping['{}{}'.format('Y', index)]][0])
+            setattr(aperture, '{}IdlVert{}'.format('X', index), x_idl)
+            setattr(aperture, '{}IdlVert{}'.format('Y', index), y_idl)
     aperture_dict[AperName] = aperture
 
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
@@ -642,45 +622,30 @@ if emulate_delivery:
 
     # write the SIAF files to disk
     filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
-    # filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml'])
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
-    if 0:
-        #compare to prototype generation: -> perfect agreement 2018-10-04
-        proto_siaf = pysiaf.Siaf(instrument, filename='/Users/jsahlmann/jwst/code/gitlab/tel/jwst_siaf_prototype/pysiaf/pysiaf/temporary_data/MIRI/generate_test/MIRI_SIAF.xml')
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=proto_siaf,
-                             fractional_tolerance=1e-6,
-                             tags={'reference': 'prototype', 'comparison': 'pre_delivery'})
-
-    if 0:
-        #compare to colin's generation: -> perfect agreement 2018-10-04
-        colin_siaf = pysiaf.Siaf(instrument, filename='SIAF_WG/Instruments/MIRI/MIRI_SIAF_2017-12-14.xml')
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=colin_siaf,
-                             fractional_tolerance=1e-6,
-                             tags={'reference': 'colin', 'comparison': 'pre_delivery'})
-
-
-
-
     # compare new SIAF with PRD version
     ref_siaf = pysiaf.Siaf(instrument)
-    # ref_siaf = pysiaf.Siaf(instrument, '/Users/jsahlmann/Desktop/MIRI_SIAF_2018-10-05.xml')
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
 
-    compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})#,selected_aperture_name=selected_aperture_name)
+    compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
     compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}, report_dir=pre_delivery_dir)
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
-
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
 else:
+
+    # siaf_1 = '/Users/jsahlmann/jwst/code/github/spacetelescope/pysiaf/pysiaf/pre_delivery_data/MIRI/MIRI_SIAF_original.xml'
+    # siaf_2 = '/Users/jsahlmann/jwst/code/github/spacetelescope/pysiaf/pysiaf/pre_delivery_data/MIRI/MIRI_SIAF.xml'
+    # compare.compare_siaf(pysiaf.Siaf(instrument, siaf_2), reference_siaf_input=pysiaf.Siaf(instrument, siaf_1), fractional_tolerance=1e-6)
+
 
     # write the SIAFXML to disk
     # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
@@ -706,6 +671,8 @@ else:
     # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names)
     compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
     # tools.compare_siaf_xml(ref_siaf, new_siaf)
+
+
 
     # run roundtrip test on all apertures
 
