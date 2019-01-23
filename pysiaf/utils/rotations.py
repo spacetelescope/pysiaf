@@ -9,12 +9,12 @@ from __future__ import absolute_import, print_function, division
 import numpy as np
 
 
-def attitude(v2, v3, ra, dec, pa):
+def attitude(v2, v3, ra, dec, pa, convention='JWST'):
     """Return rotation matrix that transforms from v2,v3 to RA,Dec.
 
     Makes a 3D rotation matrix which rotates a unit vector representing a v2,v3 position
     to a unit vector representing an RA, Dec pointing with an assigned position angle
-    Described in JWST-STScI-001550, SM-12, section 6.1.
+    Described in JWST-STScI-001550, SM-12, section 5.1.
 
     Parameters
     ----------
@@ -36,6 +36,10 @@ def attitude(v2, v3, ra, dec, pa):
         V2V3 position to the indicated RA and Dec and with the V3 axis rotated by position angle pa
 
     """
+    if convention == 'JWST':
+        pa_sign = -1.
+
+    # else:
     v2d = v2 / 3600.0
     v3d = v3 / 3600.0
 
@@ -44,7 +48,7 @@ def attitude(v2, v3, ra, dec, pa):
     mv3 = rotate(2, v3d)
     mra = rotate(3, ra)
     mdec = rotate(2, -dec)
-    mpa = rotate(1, -pa)
+    mpa = rotate(1, pa_sign*pa)
 
     # Combine as mra*mdec*mpa*mv3*mv2
     m = np.dot(mv3, mv2)
@@ -78,7 +82,7 @@ def axial_rotation(ax, phi, u):
     return v
 
 
-def getv2v3(attitude, ra, dec):
+def getv2v3(attitude, ra, dec, return_cartesian=False):
     """Return v2,v3 position of any RA and Dec using the inverse of attitude matrix.
 
     Parameters
@@ -96,10 +100,21 @@ def getv2v3(attitude, ra, dec):
         V2,V3 value at matching position
 
     """
-    urd = unit(ra, dec)
+    if return_cartesian:
+        ra_rad = np.deg2rad(ra)
+        dec_rad = np.deg2rad(dec)
+        urd = np.array([np.sqrt(1. - (ra_rad ** 2 + dec_rad ** 2)), ra_rad, dec_rad])
+    else:
+        urd = unit(ra, dec)
+
     inverse_attitude = np.transpose(attitude)
     uv = np.dot(inverse_attitude, urd)
-    v2, v3 = v2v3(uv)
+
+    if return_cartesian:
+        v2 = 3600. * np.rad2deg(uv[1])
+        v3 = 3600. * np.rad2deg(uv[2])
+    else:
+        v2, v3 = v2v3(uv)
 
     return v2, v3
 
@@ -126,7 +141,7 @@ def cross(a, b):
     return c
 
 
-def pointing(attitude, v2, v3, positive_ra=True, verbose=False):
+def pointing(attitude, v2, v3, positive_ra=True, input_cartesian=False):
     """Calculate where a v2v3 position points on the sky using the attitude matrix.
 
     Parameters
@@ -148,17 +163,24 @@ def pointing(attitude, v2, v3, positive_ra=True, verbose=False):
     """
     v2d = v2 / 3600.0
     v3d = v3 / 3600.0
-    if verbose:
-        print('POINTING v2v3')
-        print(v2)
-        print(v3)
-        print(v2d)
-        print(v3d)
-    v = unit(v2d, v3d)
+
+    # compute unit vector
+    if input_cartesian:
+        v2_rad = np.deg2rad(v2d)
+        v3_rad = np.deg2rad(v3d)
+        v = np.array([np.sqrt(1. - (v2_rad ** 2 + v3_rad ** 2)), v2_rad, v3_rad])
+    else:
+        v = unit(v2d, v3d)
+
+    # apply attitude transformation
     w = np.dot(attitude, v)
 
-    # tuple containing ra and dec in degrees
-    rd = radec(w, positive_ra=positive_ra)
+    # compute tuple containing ra and dec in degrees
+    if input_cartesian:
+        rd = np.rad2deg(w[1]), np.rad2deg(w[2])
+    else:
+        rd = radec(w, positive_ra=positive_ra)
+
     return rd
 
 
@@ -213,8 +235,8 @@ def radec(u, positive_ra=False):
     """
     assert len(u) == 3, 'Not a vector'
     norm = np.sqrt(u[0] ** 2 + u[1] ** 2 + u[2] ** 2)  # Works for list or array
-    dec = np.degrees(np.arcsin(u[2] / norm))
     ra = np.degrees(np.arctan2(u[1], u[0]))  # atan2 puts it in the correct quadrant
+    dec = np.degrees(np.arcsin(u[2] / norm))
     if positive_ra:
         if np.isscalar(ra) and ra < 0.0:
             ra += 360.0
@@ -390,9 +412,9 @@ def slew(v2t, v3t, v2a, v3a):
 
 
 def unit(ra, dec):
-    """Convert inertial frame vector expressed in Euler angles to unit vector components.
+    """Convert inertial frame vector expressed in polar coordinates / Euler angles to unit vector components.
 
-    See Section 5 of JWST-STScI-001550.
+    See Section 5 of JWST-STScI-001550 and Equation 4.1 of JWST-PLAN-006166.
 
     Parameters
     ----------
@@ -414,14 +436,14 @@ def unit(ra, dec):
 
 
 def v2v3(u):
-    """Compute v2,v3 spherical coordinates corresponding to a unit vector in the rotated (telescope) frame.
+    """Compute v2,v3 polar coordinates corresponding to a unit vector in the rotated (telescope) frame.
 
     See Section 5 of JWST-STScI-001550.
 
     Parameters
     ----------
     u : float list or array of length 3
-        unit vector in the rotated (telescope) frame
+        unit vector of cartesian coordinates in the rotated (telescope) frame
 
     Returns
     -------
