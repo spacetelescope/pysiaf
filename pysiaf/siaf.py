@@ -128,16 +128,16 @@ def get_jwst_apertures(apertures_dict, include_oss_apertures=False, exact_patter
     return ApertureCollection(aperture_dict=all_aps)
 
 
-def plot_all_apertures(subarrays=True, showorigin=True, showchannels=True, **kwargs):
+def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, **kwargs):
     """Plot all apertures."""
     for instr in ['NIRCam', 'NIRISS', 'NIRSpec', 'FGS', 'MIRI']:
-        aps = Siaf(instr, **kwargs)
+        aps = Siaf(instr)
         print("{0} has {1} apertures".format(aps.instrument, len(aps)))
 
         aps.plot(clear=False, subarrays=subarrays, **kwargs)
         if showorigin:
             aps.plot_frame_origin()
-        if showchannels:
+        if detector_channels:
             aps.plot_detector_channels()
 
 
@@ -192,7 +192,7 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='tel', name_label=label, **kwargs)
+            ap.plot(color=col, frame='tel', label=label, **kwargs)
             if detector_channels:
                 try:
                     ap.plot_detector_channels('tel')
@@ -225,6 +225,15 @@ def plot_master_apertures(**kwargs):
     if xlim[0] < xlim[1]:
         ax.set_xlim(xlim[::-1])
 
+
+ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst'.split()
+
+# mapping from internal lower-case names to mixed-case names used for xml file names
+JWST_INSTRUMENT_NAME_MAPPING = {'nircam': 'NIRCam',
+                                'nirspec': 'NIRSpec',
+                                'miri': 'MIRI',
+                                'niriss': 'NIRISS',
+                                'fgs': 'FGS'}
 
 class Siaf(ApertureCollection):
     """Science Instrument Aperture File class.
@@ -259,7 +268,7 @@ class Siaf(ApertureCollection):
         Parameters
         -----------
         instrument : string
-            one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case sensitive.
+            one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case-insensitive.
         basepath : string
             Directory to look in for SIAF files
         filename : string, optional
@@ -268,20 +277,20 @@ class Siaf(ApertureCollection):
         """
         super(Siaf, self).__init__()
 
-        if instrument is None:
-            return
+        if (instrument is None) or (isinstance(instrument, str) is False):
+            raise RuntimeError('Please specify a valid instrument name.')
 
-        elif instrument not in ['NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS', 'HST']:
-            raise ValueError('Invalid instrument name: {0}. Note that this is case '
-                             'sensitive.'.format(instrument))
+        elif instrument.lower() not in ACCEPTED_INSTRUMENT_NAMES:
+            raise ValueError('Invalid instrument name: {}. It has to be one of {} '
+                             '(case-insensitive).'.format(instrument, ACCEPTED_INSTRUMENT_NAMES))
 
-        self.instrument = instrument
+        self.instrument = instrument.lower()
 
-        if instrument == 'HST':
+        if self.instrument == 'hst':
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
         else:
-            self.apertures = read.read_jwst_siaf(instrument, filename=filename, basepath=basepath)
+            self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
             self.observatory = 'JWST'
 
     def __repr__(self):
@@ -295,19 +304,19 @@ class Siaf(ApertureCollection):
     def _getFullApertures(self):
         """Return whichever subset of apertures correspond to the entire detectors."""
         fullaps = []
-        if self.instrument == 'NIRCam':
+        if self.instrument == 'nircam':
             fullaps.append(self.apertures['NRCA5_FULL'])
             fullaps.append(self.apertures['NRCB5_FULL'])
-        elif self.instrument == 'NIRSpec':
+        elif self.instrument == 'nirspec':
             fullaps.append(self.apertures['NRS_FULL_MSA1'])
             fullaps.append(self.apertures['NRS_FULL_MSA2'])
             fullaps.append(self.apertures['NRS_FULL_MSA3'])
             fullaps.append(self.apertures['NRS_FULL_MSA4'])
-        elif self.instrument == 'NIRISS':
+        elif self.instrument == 'niriss':
             fullaps.append(self.apertures['NIS_CEN'])
-        elif self.instrument == 'MIRI':
+        elif self.instrument == 'miri':
             fullaps.append(self.apertures['MIRIM_FULL'])
-        elif self.instrument == 'FGS':
+        elif self.instrument == 'fgs':
             fullaps.append(self.apertures['FGS1_FULL'])
             fullaps.append(self.apertures['FGS2_FULL'])
         return fullaps
@@ -326,7 +335,7 @@ class Siaf(ApertureCollection):
         """List of aperture names defined in this SIAF."""
         return self.apertures.keys()
 
-    def plot(self, frame='tel', names=None, label=None, units=None, clear=True,
+    def plot(self, frame='tel', names=None, label=False, units=None, clear=True,
              show_frame_origin=None, mark_ref=False, subarrays=True, ax=None, **kwargs):
         """Plot all apertures in this SIAF.
 
@@ -348,7 +357,7 @@ class Siaf(ApertureCollection):
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
-            Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
+            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
@@ -376,7 +385,7 @@ class Siaf(ApertureCollection):
                 if ap.AperName not in names:
                     continue
 
-            ap.plot(frame=frame, name_label=label, ax=ax, units=units, mark_ref=mark_ref,
+            ap.plot(frame=frame, label=label, ax=ax, units=units, mark_ref=mark_ref,
                     show_frame_origin=show_frame_origin, **kwargs)
 
         if frame == 'Tel' or frame == 'Idl':
@@ -415,7 +424,7 @@ class Siaf(ApertureCollection):
         for ap in self._getFullApertures():
             ap.plot_frame_origin(frame=frame, which=which, units=units, ax=ax)
 
-    def plot_detector_channels(self, frame=None):
+    def plot_detector_channels(self, frame=None, ax=None):
         """Mark on the plot the various detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -427,11 +436,17 @@ class Siaf(ApertureCollection):
             Which coordinate system to plot in: 'Tel', 'Idl', 'Sci', 'Det'
             Optional if you have already called plot() to specify a
             coordinate frame.
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
-        raise NotImplementedError
+
+        if ax is None:
+            ax = pl.gca()
 
         if frame is None:
             frame = self._last_plot_frame
+
         for ap in self._getFullApertures():
-            ap.plot_detector_channels(frame=frame)
+            ap.plot_detector_channels(frame=frame, ax=ax)

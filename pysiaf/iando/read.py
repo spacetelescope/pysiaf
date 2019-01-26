@@ -15,12 +15,32 @@ References
 """
 from collections import OrderedDict
 import os
+import re
 
 import numpy as np
 from astropy.table import Table
+from astropy.time import Time
 import lxml.etree as ET
 
-from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT
+from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT, HST_PRD_VERSION
+from ..siaf import JWST_INSTRUMENT_NAME_MAPPING
+
+
+def _parse_line(line, rx_dict):
+    """Do a regex search against all defined regexes.
+
+    Return the key and match result of the first matching regex.
+
+    See https://www.vipinajayakumar.com/parsing-text-with-python/
+    """
+
+    for key, rx in rx_dict.items():
+        match = rx.search(line)
+        if match:
+            return key, match
+
+    # if there are no matches
+    return None, None
 
 
 def get_siaf(input_siaf, observatory='JWST'):
@@ -44,12 +64,7 @@ def get_siaf(input_siaf, observatory='JWST'):
         # initilize siaf as empty object
         siaf_object = siaf.Siaf(None)
         siaf_object.instrument = aperture_collection[list(aperture_collection.items())[0][0]].\
-            InstrName
-
-        if siaf_object.instrument == 'NIRCAM':
-            siaf_object.instrument = 'NIRCam'
-        elif siaf_object.instrument == 'NIRSPEC':
-            siaf_object.instrument = 'NIRSpec'
+            InstrName.lower()
 
         siaf_object.apertures = aperture_collection
         siaf_object.description = os.path.basename(input_siaf)
@@ -64,7 +79,13 @@ def get_siaf(input_siaf, observatory='JWST'):
     return siaf_object
 
 
-def read_hst_siaf(file=None):
+def month_name_to_number(month):
+    """Convert month name to digit."""
+    months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    return months.index(month.lower()) + 1
+
+
+def read_hst_siaf(file=None, version=None):
     """Read apertures from HST SIAF file and return a collection.
 
     This was partially ported from Lallo's plotap.f.
@@ -81,8 +102,11 @@ def read_hst_siaf(file=None):
 
     """
     from pysiaf import aperture  # runtime import to avoid circular import on startup
+
+    if version is None:
+        version = HST_PRD_VERSION  # defaults to 'Latest
     if file is None:
-        file = os.path.join(HST_PRD_DATA_ROOT, 'siaf.dat')
+        file = os.path.join(HST_PRD_DATA_ROOT, 'siaf.dat-{}'.format(version))
 
     # read all lines
     siaf_stream = open(file)
@@ -236,6 +260,84 @@ def read_hst_siaf(file=None):
     return apertures
 
 
+def read_hst_fgs_amudotrep(file=None, version=None):
+    """Read HST FGS amu.rep file which contain the TVS matrices.
+
+    Parameters
+    ----------
+    filepath : str
+        Path to file.
+
+    Returns
+    -------
+    data : dict
+        Dictionary that holds the file content ordered by FGS number
+
+    """
+    if version is None:
+        version = HST_PRD_VERSION  # defaults to 'Latest'
+    if file is None:
+        file = os.path.join(HST_PRD_DATA_ROOT, 'amu.rep-{}'.format(version))
+
+    # set up regular expressions
+    # use https://regexper.com to visualise these if required
+    rx_dict = {
+        'fgs': re.compile(r'FGS - (?P<fgs>\d)'),
+        'n_cones': re.compile(r'NUMBER OF CONES:   (?P<n_cones>\d)'),
+        'date': re.compile(r'(?P<day>[ 123][0-9])-(?P<month>[A-Z][A-Z][A-Z])-(?P<year>[0-9][0-9])'),
+        'cone_vector': re.compile(r'(CONE)*(CONE VECTOR)*(CONE ANGLE)'),
+        'tvs': re.compile(r'(FGS TO ST TRANSFORMATION MATRICES)'),
+    }
+
+    data = {}
+    with open(file, 'r') as file_object:
+        line_index = 0
+        astropy_table_index = 0
+        line = file_object.readline()
+        while line:
+            # print(line)
+            # at each line check for a match with a regex
+            key, match = _parse_line(line, rx_dict)
+            if key == 'fgs':
+                fgs_number = int(match.group('fgs'))
+                # print('FGS {}:'.format(fgs_number))
+                fgs_id = 'fgs{}'.format(fgs_number)
+                data[fgs_id] = {}
+            elif key == 'n_cones':
+                n_cones = int(match.group('n_cones'))
+            elif key == 'cone_vector':
+                table = Table.read(file, format='ascii.no_header', delimiter=' ',
+                                   data_start=astropy_table_index+2, data_end=astropy_table_index + 2 + n_cones,
+                                   guess=False, names=('CONE', 'X', 'Y', 'Z', 'CONE_ANGLE_DEG'))
+                # table.pprint()
+                data[fgs_id]['cone_parameters'] = table
+            elif key == 'tvs':
+                table = Table.read(file, format='ascii.no_header', delimiter=' ',
+                                   data_start=astropy_table_index+2, data_end=astropy_table_index+2+3,
+                                   guess=False, names=('NEW_1', 'NEW_2', 'NEW_3', 'OLD_1', 'OLD_2', 'OLD_3'))
+                # table.pprint()
+                data[fgs_id]['tvs_parameters'] = table
+                data[fgs_id]['tvs'] = np.zeros((3,3))
+                data[fgs_id]['tvs_old'] = np.zeros((3,3))
+                for i in range(3):
+                    data[fgs_id]['tvs'][i,:] = [data[fgs_id]['tvs_parameters']['NEW_{}'.format(j+1)][i] for j in range(3)]
+                    data[fgs_id]['tvs_old'][i,:] = [data[fgs_id]['tvs_parameters']['OLD_{}'.format(j+1)][i] for j in range(3)]
+
+            elif key == 'date':
+                match.group('day')
+                match.group('month')
+                match.group('year')
+                data[fgs_id]['timestamp'] = Time('20{}-{:02d}-{}'.format(match.group('year'), month_name_to_number(match.group('month')), match.group('year')))
+
+            line = file_object.readline()
+            line_index += 1
+            if line.strip():
+                astropy_table_index += 1  # astropy.table.Table.read ignores blank lines
+        data['ORIGIN'] = file
+        data['VERSION'] = version
+    return data
+
+
 def get_jwst_siaf_instrument(tree):
     """Return the instrument specified in the first aperture of a SIAF xml tree.
 
@@ -256,9 +358,12 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
 
     Parameters
     ----------
-    instrument
-    filename
-    basepath
+    instrument : str
+        instrument name (case-insensitive)
+    filename : str
+        Absolute path to alternative SIAF xml file
+    basepath : str
+        Directory containing alternative SIAF xml file conforming with standard naming convention
 
     Returns
     -------
@@ -277,7 +382,8 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         if not os.path.isdir(basepath):
             raise RuntimeError("Could not find SIAF data "
                                "in {}".format(basepath))
-        filename = os.path.join(basepath, instrument + '_SIAF.xml')
+        filename = os.path.join(basepath, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()]
+                                + '_SIAF.xml')
     else:
         filename = filename
 
@@ -377,15 +483,17 @@ def read_siaf_aperture_definitions(instrument, directory=None):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
+        content of SIAF reference file
 
     """
     if directory is None:
-        directory = os.path.join(JWST_SOURCE_DATA_ROOT, instrument)
+        directory = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()])
         if instrument.lower() == 'miri':
             directory = os.path.join(directory, 'delivery')
 
@@ -399,14 +507,15 @@ def read_siaf_ddc_mapping_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+    ddc_mapping_file = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                     '{}_siaf_ddc_apername_mapping.txt'.format(instrument.lower()))
 
     ddc_mapping_table = Table.read(ddc_mapping_file, format='ascii.basic', delimiter=',')
@@ -437,15 +546,16 @@ def read_siaf_detector_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_detector_parameters.txt'.
-                            format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+                            '{}_siaf_detector_parameters.txt'.format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
@@ -455,15 +565,17 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
 
     Parameters
     ----------
-    instrument
-    aperture_name
+    instrument : str
+        instrument name (case insensitive)
+    aperture_name : str
+        name of master aperture
 
     Returns
     -------
     : astropy table
 
     """
-    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument,
+    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                                   '{}_siaf_distortion_{}.txt'.format(
                                                       instrument.lower(), aperture_name.lower()))
 
@@ -475,13 +587,15 @@ def read_siaf_xml_field_format_reference_file(instrument):
 
     Parameters
     ----------
-    instrument
+    instrument  : str
+        instrument name (case insensitive)
 
     Returns
     -------
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_xml_field_format.txt'.
-                            format(instrument.lower()))
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+                            '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
+
     return Table.read(filename, format='ascii.basic', delimiter=',')
