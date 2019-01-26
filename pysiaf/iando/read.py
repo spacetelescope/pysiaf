@@ -372,7 +372,7 @@ def read_siaf_alignment_parameters(instrument):
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_aperture_definitions(instrument):
+def read_siaf_aperture_definitions(instrument, directory=None):
     """Return astropy table.
 
     Parameters
@@ -384,11 +384,13 @@ def read_siaf_aperture_definitions(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_aperture_definition.txt'.
-                            format(instrument.lower()))
+    if directory is None:
+        directory = os.path.join(JWST_SOURCE_DATA_ROOT, instrument)
+        if instrument.lower() == 'miri':
+            directory = os.path.join(directory, 'delivery')
 
-    # converters = {'XDetRef': [ascii.convert_numpy(np.float32)]}
-    # , converters = converters, guess = False
+    filename = os.path.join(directory, '{}_siaf_aperture_definition.txt'.format(instrument.lower()))
+
     return Table.read(filename, format='ascii.basic', delimiter=',', fill_values=('None', 0))
 
 

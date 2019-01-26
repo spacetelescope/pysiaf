@@ -1,7 +1,0 @@
-# 2018-10-17
-# Created by user dlaw at varda.stsci.edu
-# Created by hand based on extant SIAF values
-# Using reference file: MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits
-# 
-            AperName,   AperType,  SliceName, SliceNum,  V3IdlYAngle, VIdlParity,      v2ref,      v3ref,       v2ll,       v2ul,       v2ur,       v2lr,       v3ll,       v3ul,       v3ur,       v3lr
-          MIRIM_SLIT,       SLIT,         -1,        1,     4.358324,         -1,    -414.33,    -400.69,    -411.99,    -416.72,    -416.68,    -411.95,    -401.14,    -400.76,    -400.24,    -400.62
