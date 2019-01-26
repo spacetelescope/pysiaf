@@ -506,7 +506,7 @@ for aperture_index, AperName in enumerate(aperture_name_list):
 
         if aperture.AperType == 'OSS':
             aperture.VIdlParity = 1
-            aperture.DetSciYAngle = 0.
+            aperture.DetSciYAngle = 0
             aperture.DetSciParity = 1
             csv_aperture_name = 'DET_OSS'
         else:

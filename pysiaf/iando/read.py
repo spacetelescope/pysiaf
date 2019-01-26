@@ -582,7 +582,7 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
     return Table.read(distortion_reference_file_name, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_xml_field_format_reference_file(instrument):
+def read_siaf_xml_field_format_reference_file(instrument=None):
     """Return astropy table.
 
     Parameters
@@ -595,7 +595,10 @@ def read_siaf_xml_field_format_reference_file(instrument):
     : astropy table
 
     """
-    filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+    if instrument is None:
+        filename = os.path.join(JWST_SOURCE_DATA_ROOT, 'siaf_xml_field_format.txt')
+    else:
+        filename = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                             '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')

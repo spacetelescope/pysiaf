@@ -66,8 +66,7 @@ VALIDATION_ATTRIBUTES = ('InstrName AperName AperType AperShape '
 # list of attributes written to the JWST SIAFXML required by the JWST PRD
 # the order of the XML tags in the SIAFXML is relevant, therefore define IRCD order here
 # see JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3
-SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file(
-    'NIRCam')  # use NIRCam as model temporarily
+SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file()
 PRD_REQUIRED_ATTRIBUTES_ORDERED = list(SIAF_XML_FIELD_FORMAT['field_name'])
 
 # As per JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3,
@@ -1710,7 +1709,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [float, np.float64]:
+    if type(angle_deg) not in [int, float, np.float64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
