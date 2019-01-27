@@ -406,9 +406,12 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                 elif node.tag in aperture.INTEGER_ATTRIBUTES:
                     try:
                         value = int(node.text)
-                    except TypeError:
-                        print('{}: {}'.format(node.tag, node.text))
-                        raise TypeError
+                    except (TypeError, ValueError) as e:
+                        # print('{}: {}: {}'.format(e, node.tag, node.text))
+                        if node.tag == 'DetSciYAngle':
+                            value = np.int(float((node.text)))
+                        else:
+                            raise TypeError
                 elif node.tag in aperture.STRING_ATTRIBUTES:
                     value = node.text
                 else:
