@@ -931,16 +931,47 @@ class Aperture(object):
         V3Ref_arcsec : float
             overwrites self.V3Ref
         method : str
-            must be one of ['planar_approximation', 'spherical_transformation']
+            must be one of ['planar_approximation', 'spherical_transformation', 'spherical']
         input_coordinates : str
-            must be one of ['tangent_plane', 'spherical']
+            must be one of ['tangent_plane', 'spherical', 'planar']
 
         Returns
         -------
             tuple of floats containing V2, V3 coordinates in arcsec
 
         """
-        if method == 'planar_approximation':
+
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
+        if V2Ref_arcsec is None:
+            V2Ref_arcsec = self.V2Ref
+        if V3Ref_arcsec is None:
+            V3Ref_arcsec = self.V3Ref
+
+        print(method)
+        if method == 'spherical':
+            if input_coordinates == 'planar':
+                # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
+                # then apply 3D rotation matrix to tel
+                unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+
+            if input_coordinates == 'spherical':
+                # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
+                unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
+                unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec, V3IdlYAngle_deg)
+
+            # transformation to cartesian unit vector in telescope frame
+            unit_vector_tel = np.dot(np.linalg.inv(l_matrix), unit_vector_idl)
+            print(unit_vector_tel)
+
+            # get angular coordinates on idealized focal sphere
+            nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+
+            v2, v3 = nu2_arcsec, nu3_arcsec
+
+        elif method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
                 raise RuntimeError('Input has to be in tangent plane.')
             x_model, y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
@@ -976,6 +1007,8 @@ class Aperture(object):
             M = np.dot(M3, M4)
 
             unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
+
+            print(unit_vector)
 
             unit_vector[1] = self.VIdlParity * unit_vector[1]
             rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
