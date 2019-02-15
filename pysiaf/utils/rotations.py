@@ -7,6 +7,7 @@ Authors
 
 """
 from __future__ import absolute_import, print_function, division
+import copy
 import numpy as np
 
 import astropy.units as u
@@ -57,6 +58,32 @@ def attitude(v2, v3, ra, dec, pa):
     m = np.dot(mra, m)
 
     return m
+
+
+def convert_quantity(x_in, to_unit, factor=1.):
+    """Check if astropy quantity and apply conversion factor
+
+    Parameters
+    ----------
+    x_in : float or quantity
+        input
+    to_unit : astropy.units unit
+        unit to convert to
+    factor : float
+        Factor to apply if input is not a quantity
+
+    Returns
+    -------
+    x_out : float
+        converted value
+
+    """
+    x = copy.deepcopy(x_in)
+    if isinstance(x, u.Quantity):
+        x_out = x.to(to_unit).value
+    else:
+        x_out = x * factor
+    return x_out
 
 
 def attitude_matrix(nu2, nu3, ra, dec, pa, convention='JWST'):
@@ -116,17 +143,12 @@ def attitude_matrix(nu2, nu3, ra, dec, pa, convention='JWST'):
         dec_value = dec
 
     # Get separate rotation matrices
-    # astropy's rotation matrix takes inverse sign compared to rotate
+    # astropy's rotation matrix takes inverse sign compared to rotations.rotate
     mv2 = rotation_matrix(-1*-nu2_value, axis='z')
     mv3 = rotation_matrix(-1*nu3_value, axis='y')
     mra = rotation_matrix(-1*ra_value, axis='z')
     mdec = rotation_matrix(-1*-dec_value, axis='y')
     mpa = rotation_matrix(-1*pa_sign*pa_value, axis='x')
-    # mv2 = rotate(3, -nu2_deg)
-    # mv3 = rotate(2, nu3_deg)
-    # mra = rotate(3, ra)
-    # mdec = rotate(2, -dec)
-    # mpa = rotate(1, pa_sign*pa)
 
     # Combine as mra*mdec*mpa*mv3*mv2
     m = np.dot(mv3, mv2)
@@ -160,8 +182,8 @@ def axial_rotation(ax, phi, vector):
     return v
 
 
-def sky_to_tel(attitude, ra, dec, return_cartesian=False):
-    """Transform from sky to telescope coordinates.
+def sky_to_tel(attitude, ra, dec): #, return_cartesian=False):
+    """Transform from sky (RA, Dec) to telescope (nu2, nu3) angles.
 
     Return nu2,nu3 position on the idealized focal sphere of any RA and
     Dec using the inverse of attitude matrix.
@@ -170,35 +192,39 @@ def sky_to_tel(attitude, ra, dec, return_cartesian=False):
     ----------
     attitude : 3 by 3 float array
         The attitude matrix.
-    ra : float
+    ra : float (default unit is degree)
         RA of sky position
-    dec : float
+    dec : float (default unit is degree)
         Dec of sky position
 
     Returns
     -------
-    nu2,nu3 : tuple of floats
+    nu2, nu3 : tuple of floats with quantity
         spherical coordinates at matching position on the idealized focal sphere
 
     """
-    if return_cartesian:
-        ra_rad = np.deg2rad(ra)
-        dec_rad = np.deg2rad(dec)
-        urd = np.array([np.sqrt(1. - (ra_rad ** 2 + dec_rad ** 2)), ra_rad, dec_rad])
-    else:
-        urd = unit(ra, dec)
+    # ra = convert_quantity(ra, u.deg)
+    # dec = convert_quantity(dec, u.deg)
+    if attitude.shape != (3,3):
+        raise ValueError('Attitude has to be 3x3 array.')
 
+    # if return_cartesian:
+    #     ra_rad = np.deg2rad(ra)
+    #     dec_rad = np.deg2rad(dec)
+    #     urd = np.array([np.sqrt(1. - (ra_rad ** 2 + dec_rad ** 2)), ra_rad, dec_rad])
+    # else:
+    #     urd = unit(ra, dec)
+
+    unit_vector_sky_side = unit_vector_sky(ra, dec)
     inverse_attitude = np.transpose(attitude)
-    uv = np.dot(inverse_attitude, urd)
 
-    if return_cartesian:
-        v2 = 3600. * np.rad2deg(uv[1])
-        v3 = 3600. * np.rad2deg(uv[2])
-    else:
-        v2, v3 = v2v3(uv)
+    # apply transformation
+    unit_vector_tel = np.dot(inverse_attitude, unit_vector_sky_side)
 
-    return v2, v3
+    # extract spherical coordinates
+    nu2, nu3 = polar_angles(unit_vector_tel)
 
+    return nu2, nu3
 
 
 def getv2v3(attitude, ra, dec):
@@ -294,6 +320,54 @@ def pointing(attitude, v2, v3, positive_ra=True, input_cartesian=False):
     return rd
 
 
+def tel_to_sky(attitude, nu2, nu3, positive_ra=True):#, input_cartesian=False):
+    """Calculate where a nu2,nu3 position points on the sky.
+
+    Parameters
+    ----------
+    attitude : 3 by 3 float array
+        the telescope attitude matrix
+    nu2 : float or array of floats (default unit is arcsecond)
+        V2 coordinate in arc-seconds
+    nu3 : float or array of floats (default unit is arcsecond)
+        V3 coordinate in arc-seconds
+    positive_ra : bool.
+        If True forces ra value to be positive
+
+    Returns
+    -------
+    rd : tuple of floats with quantity
+        (ra, dec) - RA and Dec
+
+    """
+
+    nu2_deg = convert_quantity(nu2, u.deg, factor=u.arcsec.to(u.deg))
+    nu3_deg = convert_quantity(nu3, u.deg, factor=u.arcsec.to(u.deg))
+
+    # v2d = v2 / 3600.0
+    # v3d = v3 / 3600.0
+
+    # # compute unit vector
+    # if input_cartesian:
+    #     v2_rad = np.deg2rad(v2d)
+    #     v3_rad = np.deg2rad(v3d)
+    #     v = np.array([np.sqrt(1. - (v2_rad ** 2 + v3_rad ** 2)), v2_rad, v3_rad])
+    # else:
+    #     v = unit(v2d, v3d)
+    unit_vector_tel = unit_vector_sky(nu2_deg, nu3_deg)
+
+    # apply attitude transformation
+    unit_vector_sky_side = np.dot(attitude, unit_vector_tel)
+
+    # compute tuple containing ra and dec in degrees
+    # if input_cartesian:
+    #     rd = np.rad2deg(w[1]), np.rad2deg(w[2])
+    # else:
+    #     rd = radec(w, positive_ra=positive_ra)
+    ra, dec = polar_angles(unit_vector_sky_side, positive_azimuth=positive_ra)
+    return ra, dec
+
+
 def posangle(attitude, v2, v3):
     """Return the V3 angle at arbitrary v2,v3 using the attitude matrix.
 
@@ -324,36 +398,6 @@ def posangle(attitude, v2, v3):
         + (attitude[0, 1] * attitude[1, 2] - attitude[1, 1] * attitude[0, 2]) * np.sin(v2r)
     pa = np.degrees(np.arctan2(y, x))
     return pa
-
-
-def radec(vector, positive_ra=False):
-    """Return RA and Dec in degrees corresponding to the unit vector vector.
-
-    Parameters
-    ----------
-    vector : a float array or list of length 3
-        represents a unit vector so should have unit magnitude
-        if not, the normalization is forced within the method
-    positive_ra : bool
-        indicating whether to force ra to be positive
-
-    Returns
-    -------
-    ra , dec : tuple of floats
-        RA and Dec in degrees corresponding to the unit vector vector
-
-    """
-    assert len(vector) == 3, 'Not a vector'
-    norm = np.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)  # Works for list or array
-    ra = np.degrees(np.arctan2(vector[1], vector[0]))  # atan2 puts it in the correct quadrant
-    dec = np.degrees(np.arcsin(vector[2] / norm))
-    if positive_ra:
-        if np.isscalar(ra) and ra < 0.0:
-            ra += 360.0
-        if not np.isscalar(ra) and np.any(ra < 0.0):
-            index = np.where(ra < 0.0)[0]
-            ra[index] += 360.0
-    return ra, dec
 
 
 def rodrigues(attitude):
@@ -545,6 +589,85 @@ def unit(ra, dec):
     return vector
 
 
+def unit_vector_sky(ra, dec):
+    """Return unit vector on the celestial sphere.
+
+    Parameters
+    ----------
+    ra : float or array of floats (default unit is degree)
+        RA of sky position
+    dec : float or array of floats (default unit is degree)
+        Dec of sky position
+
+    Returns
+    -------
+    vector : float array of length 3
+        the equivalent unit vector in the inertial frame
+
+    """
+    ra_rad = convert_quantity(ra, u.rad, factor=np.deg2rad(1.))
+    dec_rad = convert_quantity(dec, u.rad, factor=np.deg2rad(1.))
+    vector = np.array([np.cos(ra_rad)*np.cos(dec_rad), np.sin(ra_rad)*np.cos(dec_rad), np.sin(dec_rad)])
+    print(np.linalg.norm(vector))
+    return vector
+
+
+def unit_vector_hst_fgs_object(rho, phi):
+    """Return unit vector on the celestial sphere.
+
+    This is according to the HST object space angle definitions,
+    CSC/TM-82/6045 1987, Section 4.1.2.2.4
+
+    Parameters
+    ----------
+    rho : float or array of floats (default unit is degree)
+        RA of sky position
+    phi : float or array of floats (default unit is degree)
+        Dec of sky position
+
+    Returns
+    -------
+    vector : float array of length 3
+        the equivalent unit vector in the inertial frame
+
+    """
+    rho_rad = convert_quantity(rho, u.rad, factor=np.deg2rad(1.))
+    phi_rad = convert_quantity(phi, u.rad, factor=np.deg2rad(1.))
+    vector = np.array([np.sin(rho_rad)*np.cos(phi_rad), np.sin(rho_rad)*np.sin(phi_rad), np.cos(rho_rad)])
+    print(np.linalg.norm(vector))
+    return vector
+
+
+def radec(vector, positive_ra=False):
+    """Return RA and Dec in degrees corresponding to the unit vector vector.
+
+    Parameters
+    ----------
+    vector : a float array or list of length 3
+        represents a unit vector so should have unit magnitude
+        if not, the normalization is forced within the method
+    positive_ra : bool
+        indicating whether to force ra to be positive
+
+    Returns
+    -------
+    ra , dec : tuple of floats
+        RA and Dec in degrees corresponding to the unit vector vector
+
+    """
+    assert len(vector) == 3, 'Not a vector'
+    norm = np.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)  # Works for list or array
+    ra = np.degrees(np.arctan2(vector[1], vector[0]))  # atan2 puts it in the correct quadrant
+    dec = np.degrees(np.arcsin(vector[2] / norm))
+    if positive_ra:
+        if np.isscalar(ra) and ra < 0.0:
+            ra += 360.0
+        if not np.isscalar(ra) and np.any(ra < 0.0):
+            index = np.where(ra < 0.0)[0]
+            ra[index] += 360.0
+    return ra, dec
+
+
 def v2v3(vector):
     """Compute v2,v3 polar coordinates corresponding to a unit vector in the rotated (telescope) frame.
 
@@ -567,6 +690,37 @@ def v2v3(vector):
     v2 = 3600. * np.degrees(np.arctan2(vector[1], vector[0]))  # atan2 puts it in the correct quadrant
     v3 = 3600. * np.degrees(np.arcsin(vector[2]/norm))
     return v2, v3
+
+
+def polar_angles(vector, positive_azimuth=False):
+    """Compute polar coordinates of an unit vector.
+
+    Parameters
+    ----------
+    vector : float list or array of length 3
+        3-component unit vector
+
+    Returns
+    -------
+    nu2, nu3 : tuple of floats with astropy quantity
+        The same position represented by polar coordinates
+
+    """
+    if len(vector) != 3:
+        raise ValueError('Input is not a vector or an array of vectors')
+
+    # norm = np.linalg.norm(vector, axis=1)
+    norm = np.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
+    nu2 = np.arctan2(vector[1], vector[0]) * u.rad
+    nu3 = np.arcsin(vector[2]/norm) * u.rad
+
+    if positive_azimuth:
+        if np.isscalar(nu2.value) and nu2.value < 0.0:
+            nu2 += 360.0 * u.deg
+        if not np.isscalar(nu2.value) and np.any(nu2.value < 0.0):
+            index = np.where(nu2.value < 0.0)[0]
+            nu2[index] += 360.0 * u.deg
+    return nu2, nu3
 
 
 def unit_vector_from_cartesian(x=None, y=None, z=None):
@@ -641,10 +795,5 @@ def idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec, V3IdlYAngle_deg):
     M3 = rotate(1, V3IdlYAngle_deg)
     M4 = np.dot(M2, M1)
     M = np.dot(M3, M4)
-    # M1 = rotate(3, -1 * V2Ref_arcsec / 3600.)
-    # M2 = rotate(2, V3Ref_arcsec / 3600.)
-    # M3 = rotate(1, V3IdlYAngle_deg)
-    # M4 = np.dot(M2, M1)
-    # M = np.dot(M3, M4)
 
     return M

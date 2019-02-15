@@ -950,26 +950,30 @@ class Aperture(object):
 
         print(method)
         if method == 'spherical':
-            if input_coordinates == 'planar':
+            if input_coordinates == 'cartesian':
                 # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
                 # then apply 3D rotation matrix to tel
                 unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
 
             if input_coordinates == 'spherical':
                 # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
-                unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
+                # unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
+                xi_idl = x_idl * u.arcsec
+                eta_idl = y_idl * u.arcsec
+                unit_vector_idl = rotations.unit_vector_sky(xi_idl, eta_idl)
                 unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
 
             l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec, V3IdlYAngle_deg)
 
             # transformation to cartesian unit vector in telescope frame
             unit_vector_tel = np.dot(np.linalg.inv(l_matrix), unit_vector_idl)
-            print(unit_vector_tel)
+            # print(unit_vector_tel)
 
             # get angular coordinates on idealized focal sphere
-            nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+            # nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+            nu2, nu3 = rotations.polar_angles(unit_vector_tel)
 
-            v2, v3 = nu2_arcsec, nu3_arcsec
+            v2, v3 = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
 
         elif method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
@@ -1594,7 +1598,7 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates=None):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
 
         INPUT COORDINATES HAVE TO BE FGS OBJECT SPACE CARTESIAN X,Y coordinates
@@ -1636,42 +1640,73 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
+            print('Method: {}, inout_coordinates {}'.format(method, input_coordinates))
+            if method == 'spherical':
+                # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
+                # this is a distortion corrected object space vector
+
+                if input_coordinates == 'cartesian':
+                    unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                # unit_vector_idl = rotations.unit_vector_from_cartesian(y=x_idl*u.arcsec, z=y_idl*u.arcsec)
+                # print(unit_vector_idl.T)
+                # unit_vector_idl_2 = rotations.unit_vector_sky(x_idl*u.arcsec, y_idl*u.arcsec)
+                # print(unit_vector_idl_2.T)
+                # print()
+
+                # unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                # print(unit_vector_idl.T)
+                # unit_vector_idl_2 = rotations.unit_vector_hst_fgs_object(x_idl*u.arcsec, (x_idl*y_idl)*u.arcsec)
+                # print(unit_vector_idl_2.T)
+
+                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
+                unit_vector_tel = np.dot(tvs, unit_vector_idl)
+
+                # polar coordinates on focal sphere
+                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+
+                v2_spherical_arcsec, v3_spherical_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+                # v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
 
 
-            # if method == 'spherical_transformation':
-            #     #apply TVS formalism to spherical coordinates
-            #     if input_coordinates == 'spherical':
-            #         x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
-            #                                                    y_idl * u.arcsec.to(u.deg)
-            #
-            #     elif input_coordinates == 'tangent_plane':
-            #         # deproject coordinates before applying rotations
-            #         # uses origin of idl system x,y=0,0 as reference point
-            #         x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-            #         x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
-            #
-            #     x_rad = np.deg2rad(x_idl_spherical_deg)
-            #     y_rad = np.deg2rad(y_idl_spherical_deg)
-            # else:
-            x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
-            y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
 
-            # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
-            # this is a distortion corrected object space vector
-            xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
+            elif False:
 
-            # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
-            v = np.rad2deg(np.dot(tvs, xyz))
 
-            # use the cartesian coordinates of the output vector as v=[v1, v2, v3]
-            v2_spherical_arcsec, v3_spherical_arcsec = v[1]*u.deg.to(u.arcsec), v[2]*u.deg.to(u.arcsec)
+                # if method == 'spherical_transformation':
+                #     #apply TVS formalism to spherical coordinates
+                #     if input_coordinates == 'spherical':
+                #         x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
+                #                                                    y_idl * u.arcsec.to(u.deg)
+                #
+                #     elif input_coordinates == 'tangent_plane':
+                #         # deproject coordinates before applying rotations
+                #         # uses origin of idl system x,y=0,0 as reference point
+                #         x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
+                #         x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
+                #
+                #     x_rad = np.deg2rad(x_idl_spherical_deg)
+                #     y_rad = np.deg2rad(y_idl_spherical_deg)
+                # else:
+                x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
+                y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
 
-            print(v2_spherical_arcsec, v3_spherical_arcsec)
-            print(rotations.v2v3(v))
-            1/0
+                # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
+                # this is a distortion corrected object space vector
+                xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
+
+                1/0
+                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
+                v = np.rad2deg(np.dot(tvs, xyz))
+
+                # use the cartesian coordinates of the output vector as v=[v1, v2, v3]
+                v2_spherical_arcsec, v3_spherical_arcsec = v[1]*u.deg.to(u.arcsec), v[2]*u.deg.to(u.arcsec)
+
+                print(v2_spherical_arcsec, v3_spherical_arcsec)
+                print(rotations.v2v3(v))
+                1/0
 
             # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
-            if (method == 'spherical_transformation') & (1):
+            elif (method == 'spherical_transformation') & (1):
                 # apply different, more accurate formalism
 
                 unit_vector = rotations.unit(np.rad2deg(x_rad), np.rad2deg(y_rad))

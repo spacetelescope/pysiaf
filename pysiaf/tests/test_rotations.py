@@ -4,6 +4,7 @@
 Authors
 -------
     Colin Cox
+    Johannes Sahlmann
 
 """
 from math import sin, cos, acos, pi
@@ -11,7 +12,7 @@ import numpy as np
 
 import astropy.units as u
 
-from pysiaf.utils import rotations
+from pysiaf.utils import rotations, tools
 
 # Some values used in both tests
 #  Set up some arbitrary values
@@ -27,6 +28,11 @@ dec_array = np.array([70.0, -20.0, -70.0, 50.0])
 v2_array = np.array([200.0, -500.0, 300.0, -400.0])
 v3_array = np.array([300.0, -600.0, -400.0, 500.0])
 
+ra_deg = 20.0
+dec_deg = 70.0
+pa_deg = 15.0
+v2_arcsec = 200.0
+v3_arcsec = 300.0
 
 
 
@@ -102,12 +108,6 @@ def test_attitude(verbose=False):
 def test_attitude_matrix():
     """Compare original and new attitude matrix generator functions."""
 
-    ra_deg = 20.0
-    dec_deg = 70.0
-    pa_deg = 15.0
-    v2_arcsec = 200.0
-    v3_arcsec = 300.0
-
     ra = ra_deg * u.deg
     dec = dec_deg * u.deg
     pa = pa_deg * u.deg
@@ -118,6 +118,44 @@ def test_attitude_matrix():
     attitude_matrix = rotations.attitude_matrix(v2, v3, ra, dec, pa)
 
     assert np.all(attitude==attitude_matrix)
+
+
+def test_sky_to_tel():
+    """Test application of the attitude matrix"""
+
+    # test with quantities
+    ra = ra_deg * u.deg
+    dec = dec_deg * u.deg
+    pa = pa_deg * u.deg
+    v2 = v2_arcsec * u.arcsec
+    v3 = v3_arcsec * u.arcsec
+
+    attitude = rotations.attitude_matrix(v2, v3, ra, dec, pa)
+    ra_2, dec_2 = rotations.tel_to_sky(attitude, *rotations.sky_to_tel(attitude, ra, dec))
+    assert np.abs((ra - ra_2).to(u.milliarcsecond).value) < 1e-6
+    assert np.abs((dec - dec_2).to(u.milliarcsecond).value) < 1e-6
+
+    # test without quantities
+    attitude = rotations.attitude_matrix(v2_arcsec, v3_arcsec, ra_deg, dec_deg, pa_deg)
+    ra_2, dec_2 = rotations.tel_to_sky(attitude, *rotations.sky_to_tel(attitude, ra_deg, dec_deg))
+    assert np.abs(ra_deg - ra_2.to(u.deg).value)*u.deg.to(u.milliarcsecond) < 1e-6
+    assert np.abs(dec_deg - dec_2.to(u.deg).value)*u.deg.to(u.milliarcsecond) < 1e-6
+
+    # test array inputs
+    n_side = 3
+    span = 2 * u.arcmin
+    x_width = span.to(u.deg).value
+    centre_deg = (ra_deg, dec_deg)
+    ra_array_deg, dec_array_deg = tools.get_grid_coordinates(n_side, centre_deg, x_width)
+
+    ra_array_2, dec_array_2 = rotations.tel_to_sky(attitude, *rotations.sky_to_tel(attitude, ra_array_deg*u.deg, dec_array_deg*u.deg))
+    assert np.all(np.abs(ra_array_deg*u.deg - ra_array_2) < 1e-6 * u.milliarcsecond)
+    assert np.all(np.abs(dec_array_deg*u.deg - dec_array_2) < 1e-6 * u.milliarcsecond)
+
+    ra_array_2, dec_array_2 = rotations.tel_to_sky(attitude, *rotations.sky_to_tel(attitude, ra_array_deg, dec_array_deg))
+    assert np.all(np.abs(ra_array_deg*u.deg - ra_array_2) < 1e-6 * u.milliarcsecond)
+    assert np.all(np.abs(dec_array_deg*u.deg - dec_array_2) < 1e-6 * u.milliarcsecond)
+
 
 
 def test_axial_rotation(verbose=False):
@@ -179,4 +217,4 @@ def test_unit_vector_from_cartesian():
     x = np.linspace(-100, 100, 10) * u.arcsec
     y = np.linspace(-500, -100, 10) * u.arcsec
     unit_vector = rotations.unit_vector_from_cartesian(x=x, y=y)
-    assert np.all((np.linalg.norm(unit_vector, axis=0) - 1) < 1e-14)
+    assert np.all(np.abs(np.linalg.norm(unit_vector, axis=0) - 1)) < 1e-14
