@@ -948,14 +948,16 @@ class Aperture(object):
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
 
-        print(method)
+        # print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method,
+        #                                                                        input_coordinates,
+        #                                                                        output_coordinates))
         if method == 'spherical':
             if input_coordinates == 'cartesian':
                 # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
                 # then apply 3D rotation matrix to tel
                 unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
 
-            if input_coordinates == 'spherical':
+            if input_coordinates == 'polar':
                 # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
                 # unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
                 xi_idl = x_idl * u.arcsec
@@ -1640,7 +1642,7 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
-            print('Method: {}, inout_coordinates {}'.format(method, input_coordinates))
+            print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method, input_coordinates, output_coordinates))
             if method == 'spherical':
                 # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
                 # this is a distortion corrected object space vector
@@ -1661,10 +1663,15 @@ class HstAperture(Aperture):
                 # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
                 unit_vector_tel = np.dot(tvs, unit_vector_idl)
 
-                # polar coordinates on focal sphere
-                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+                if output_coordinates == 'polar':
+                    # polar coordinates on focal sphere
+                    nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+                    v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
 
-                v2_spherical_arcsec, v3_spherical_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+                if output_coordinates == 'cartesian':
+                    v2_arcsec, v3_arcsec = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
+
+
                 # v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
 
 
@@ -1706,7 +1713,7 @@ class HstAperture(Aperture):
                 1/0
 
             # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
-            elif (method == 'spherical_transformation') & (1):
+            elif (method == 'spherical_transformation'):
                 # apply different, more accurate formalism
 
                 unit_vector = rotations.unit(np.rad2deg(x_rad), np.rad2deg(y_rad))
@@ -1809,7 +1816,8 @@ class HstAperture(Aperture):
                 # 1 / 0
 
 
-            v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
+            # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
+            # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
 
 
 
@@ -1863,11 +1871,15 @@ class HstAperture(Aperture):
         inverted_tvs = np.linalg.inv(db_tvs)
 
         # construct the normalized vector of the reference point in the V/tel frame
-        tel_vector_rad = np.array([0., np.deg2rad(v2_ref / 3600.), np.deg2rad(v3_ref / 3600.)])
-        tel_vector_rad_normalized = tel_vector_rad.copy()
-        tel_vector_rad_normalized[0] = np.sqrt(1. - tel_vector_rad[1] ** 2 - tel_vector_rad[2] ** 2)
+        # tel_vector_rad = rotations.unit_vector_from_cartesian(y=v2_ref*u.arcsec, z=v3_ref*u.arcsec)
+        tel_vector_rad = rotations.unit_vector_sky(v2_ref*u.arcsec, v3_ref*u.arcsec)
 
-        idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad_normalized)
+        # tel_vector_rad = np.array([0., np.deg2rad(v2_ref / 3600.), np.deg2rad(v3_ref / 3600.)])
+        # tel_vector_rad_normalized = tel_vector_rad.copy()
+        # tel_vector_rad_normalized[0] = np.sqrt(1. - tel_vector_rad[1] ** 2 - tel_vector_rad[2] ** 2)
+        # idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad_normalized)
+
+        idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad)
         idl_vector_arcsec = np.rad2deg(idl_vector_rad) * 3600.
 
         self.idl_x_ref_arcsec = idl_vector_arcsec[0]

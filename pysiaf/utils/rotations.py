@@ -608,7 +608,7 @@ def unit_vector_sky(ra, dec):
     ra_rad = convert_quantity(ra, u.rad, factor=np.deg2rad(1.))
     dec_rad = convert_quantity(dec, u.rad, factor=np.deg2rad(1.))
     vector = np.array([np.cos(ra_rad)*np.cos(dec_rad), np.sin(ra_rad)*np.cos(dec_rad), np.sin(dec_rad)])
-    print(np.linalg.norm(vector))
+    # print(np.linalg.norm(vector))
     return vector
 
 
@@ -634,7 +634,7 @@ def unit_vector_hst_fgs_object(rho, phi):
     rho_rad = convert_quantity(rho, u.rad, factor=np.deg2rad(1.))
     phi_rad = convert_quantity(phi, u.rad, factor=np.deg2rad(1.))
     vector = np.array([np.sin(rho_rad)*np.cos(phi_rad), np.sin(rho_rad)*np.sin(phi_rad), np.cos(rho_rad)])
-    print(np.linalg.norm(vector))
+    # print(np.linalg.norm(vector))
     return vector
 
 

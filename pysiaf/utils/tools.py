@@ -274,7 +274,7 @@ def correct_V3SciYAngle(V3SciYAngle_deg):
     return V3SciYAngle_deg_corrected
 
 
-def get_grid_coordinates(n_side, centre, x_width, y_width=None):
+def get_grid_coordinates(n_side, centre, x_width, y_width=None, max_radius=None):
     """Return tuple of arrays that contain the coordinates on a regular grid.
 
     Parameters
@@ -304,6 +304,10 @@ def get_grid_coordinates(n_side, centre, x_width, y_width=None):
     x_mesh, y_mesh = np.meshgrid(x_linear, y_linear)
     x = x_mesh.flatten()
     y = y_mesh.flatten()
+
+    if max_radius is not None:
+        index = np.where(np.sqrt((x-centre[0])**2+(y-centre[1])**2) < max_radius)[0]
+        return x[index], y[index]
 
     return x, y
 
