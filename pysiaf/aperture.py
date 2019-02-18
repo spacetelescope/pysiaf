@@ -1014,7 +1014,7 @@ class Aperture(object):
 
             unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
 
-            print(unit_vector)
+            # print(unit_vector)
 
             unit_vector[1] = self.VIdlParity * unit_vector[1]
             rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
@@ -1573,6 +1573,8 @@ class HstAperture(Aperture):
         if pa_deg is None:
             pa_deg = self.db_tvs_pa_deg
 
+        print('Computing TVS with tvs_v2_arcsec={}, tvs_v3_arcsec={}, tvs_pa_deg={}'.format(v2_arcsec, v3_arcsec, pa_deg))
+
         attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
         # attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg, convention=self.observatory)
         tvs = np.dot(self.tvs_flip_matrix, attitude)
@@ -1716,8 +1718,20 @@ class HstAperture(Aperture):
             elif (method == 'spherical_transformation'):
                 # apply different, more accurate formalism
 
+                unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
+                unit_vector_tel = np.dot(tvs, unit_vector_idl)
+
+                # polar coordinates on focal sphere
+                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+                v2_spherical_arcsec, v3_spherical_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+                v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
+
+
+            elif False:
+
                 unit_vector = rotations.unit(np.rad2deg(x_rad), np.rad2deg(y_rad))
-                print(v[:,0:10])
+                # print(v[:,0:10])
                 # unit_vector[1] = self.VIdlParity * unit_vector[1]
                 # rotated_vector = np.dot(np.linalg.inv(tvs), unit_vector)
                 # rotated_vector = np.dot(tvs, unit_vector)
@@ -1819,7 +1833,14 @@ class HstAperture(Aperture):
             # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
             # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
 
+            elif method == 'planar_approximation':
+                # unit vector
+                x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
+                y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
+                xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
 
+                v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
+                v2_arcsec, v3_arcsec = v[1], v[2]
 
             if (method == 'spherical_transformation') and (output_coordinates == 'tangent_plane'):
                 # tangent plane projection using tel boresight
