@@ -40,15 +40,22 @@ def test_idl_to_tel(verbose=True):
     # for aper_name in 'FGS1 FGS2 FGS3'.split():
         aperture = siaf[aper_name]
 
-        for idl_to_tel_method in ['planar_approximation', 'spherical_transformation']:
+        for idl_to_tel_method in ['planar_approximation', 'spherical_transformation', 'spherical']:
+        # for idl_to_tel_method in ['planar_approximation']:
+        # for idl_to_tel_method in ['spherical']:
             if idl_to_tel_method == 'spherical_transformation':
                 input_coordinate_types = ['tangent_plane', 'spherical']
+            elif idl_to_tel_method == 'spherical':
+                input_coordinate_types = ['polar', 'cartesian']
             else:
                 input_coordinate_types = ['tangent_plane']
 
             for input_coordinates in input_coordinate_types:
+                # print(x_idl, y_idl)
                 v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                # print(v2, v3)
                 x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                # print(x_idl_2, y_idl_2)
                 x_diff = np.abs(x_idl - x_idl_2)
                 y_diff = np.abs(y_idl - y_idl_2)
                 if verbose:
@@ -60,11 +67,53 @@ def test_idl_to_tel(verbose=True):
                         threshold = 5e-10
                 elif idl_to_tel_method == 'planar_approximation':
                     threshold = 7e-14
+                elif idl_to_tel_method == 'spherical':
+                    if input_coordinates == 'polar':
+                        threshold = 6e-13
+                    elif input_coordinates == 'cartesian':
+                        threshold = 5e-8
                 assert np.max(x_diff) < threshold
                 assert np.max(y_diff) < threshold
 
 
-def est_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
+def test_hst_fgs_idl_to_tel(verbose=True):
+    """Test the transformations between ideal and telescope frames."""
+
+    siaf = Siaf('HST')
+
+    x_idl, y_idl = get_grid_coordinates(2, (0, -50), 1000, y_width=400)
+
+    for aper_name in 'FGS1 FGS2 FGS3'.split():
+        aperture = siaf[aper_name]
+        for idl_to_tel_method in ['planar_approximation', 'spherical']:
+            if idl_to_tel_method == 'spherical':
+                input_coordinate_types = ['polar', 'cartesian']
+            else:
+                input_coordinate_types = ['tangent_plane']
+
+            for input_coordinates in input_coordinate_types:
+                if input_coordinates == 'polar':
+                    v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method=idl_to_tel_method,
+                                                 input_coordinates='cartesian',
+                                                 output_coordinates=input_coordinates)
+                    x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method=idl_to_tel_method,
+                                                           input_coordinates=input_coordinates,
+                                                           output_coordinates='cartesian')
+                else:
+                    v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                    x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
+                x_diff = np.abs(x_idl - x_idl_2)
+                y_diff = np.abs(y_idl - y_idl_2)
+                if verbose:
+                    print('{} {}: Aperture {} {} x_diff {} y_diff {}'.format(idl_to_tel_method, input_coordinates, aper_name, input_coordinates, np.max(x_diff), np.max(y_diff)))
+
+                threshold = 2e-13
+
+                assert np.max(x_diff) < threshold
+                assert np.max(y_diff) < threshold
+
+
+def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -128,7 +177,7 @@ def est_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
                                 siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                         assert error < threshold
 
-def est_jwst_aperture_vertices(siaf_objects):
+def test_jwst_aperture_vertices(siaf_objects):
     """Test the JwstAperture vertices by rederiving them and comparing to SIAF.
 
     Rederive Idl vertices and compare with content of SIAFXML
@@ -177,7 +226,7 @@ def est_jwst_aperture_vertices(siaf_objects):
                 assert x_mean_error < threshold
                 assert y_mean_error < threshold
 
-def est_raw_transformations(verbose=False):
+def test_raw_transformations(verbose=False):
     """Test raw_to_sci and sci_to_raw transformations"""
     siaf_detector_layout = read.read_siaf_detector_layout()
     master_aperture_names = siaf_detector_layout['AperName'].data

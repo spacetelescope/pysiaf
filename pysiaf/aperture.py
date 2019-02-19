@@ -971,11 +971,15 @@ class Aperture(object):
             unit_vector_tel = np.dot(np.linalg.inv(l_matrix), unit_vector_idl)
             # print(unit_vector_tel)
 
-            # get angular coordinates on idealized focal sphere
-            # nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
-            nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+            if output_coordinates == 'polar':
+                # get angular coordinates on idealized focal sphere
+                # nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
 
-            v2, v3 = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+                v2, v3 = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+            if output_coordinates == 'cartesian':
+                v2, v3 = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
+
 
         elif method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
@@ -1076,6 +1080,8 @@ class Aperture(object):
             V2Ref_arcsec = self.V2Ref
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
 
         if method == 'planar_approximation':
             if output_coordinates != 'tangent_plane':
@@ -1085,6 +1091,34 @@ class Aperture(object):
             x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
             return x_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec), \
                    y_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec)
+
+        elif method == 'spherical':
+            if input_coordinates == 'cartesian':
+                unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec * u.arcsec,
+                                                                       z=v3_arcsec * u.arcsec)
+            elif input_coordinates == 'polar':
+                unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec,
+                                                            v3_arcsec * u.arcsec)
+
+            # unit_vector_tel[1] *= self.VIdlParity
+
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec,
+                                                            V3IdlYAngle_deg)
+
+            unit_vector_idl = np.dot(l_matrix, unit_vector_tel)
+
+
+            # unit_vector_idl[1] += self.VIdlParity
+
+            if output_coordinates == 'cartesian':
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0] * u.rad.to(u.arcsec), unit_vector_idl[
+                1] * u.rad.to(u.arcsec)
+            elif output_coordinates == 'polar':
+                unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+                x_idl, y_idl = rotations.polar_angles(unit_vector_idl)
+                x_idl_arcsec, y_idl_arcsec = x_idl.to(u.arcsec).value, y_idl.to(u.arcsec).value
+
+            return x_idl_arcsec, y_idl_arcsec
 
         elif method == 'spherical_transformation':
 
@@ -1524,7 +1558,7 @@ class HstAperture(Aperture):
     def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline."""
         if self.a_shape == 'PICK':
-            # TODO: implement methos based on the FGS cones defined in amu.rep file
+            # TODO: implement method based on the FGS cones defined in amu.rep file
             x0 = 0.
             y0 = 0.
             outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
@@ -1573,10 +1607,10 @@ class HstAperture(Aperture):
         if pa_deg is None:
             pa_deg = self.db_tvs_pa_deg
 
-        print('Computing TVS with tvs_v2_arcsec={}, tvs_v3_arcsec={}, tvs_pa_deg={}'.format(v2_arcsec, v3_arcsec, pa_deg))
+        if verbose:
+            print('Computing TVS with tvs_v2_arcsec={}, tvs_v3_arcsec={}, tvs_pa_deg={}'.format(v2_arcsec, v3_arcsec, pa_deg))
 
         attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
-        # attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg, convention=self.observatory)
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
@@ -1644,13 +1678,15 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
-            print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method, input_coordinates, output_coordinates))
+            # print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method, input_coordinates, output_coordinates))
             if method == 'spherical':
                 # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
                 # this is a distortion corrected object space vector
 
                 if input_coordinates == 'cartesian':
                     unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                else:
+                    raise ValueError('Input coordinates must be `cartesian`.')
                 # unit_vector_idl = rotations.unit_vector_from_cartesian(y=x_idl*u.arcsec, z=y_idl*u.arcsec)
                 # print(unit_vector_idl.T)
                 # unit_vector_idl_2 = rotations.unit_vector_sky(x_idl*u.arcsec, y_idl*u.arcsec)
@@ -1855,6 +1891,53 @@ class HstAperture(Aperture):
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
                                                        input_coordinates=input_coordinates,
                                                        output_coordinates=output_coordinates)
+
+
+    def tel_to_idl(self, v2_arcsec, v3_arcsec, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
+                   V3Ref_arcsec=None, method='planar_approximation',
+                   output_coordinates='tangent_plane', input_coordinates='tangent_plane'):
+
+        if 'FGS' in self.AperName:
+            tvs_pa_deg = V3IdlYAngle_deg
+            tvs_v2_arcsec = V2Ref_arcsec
+            tvs_v3_arcsec = V3Ref_arcsec
+
+            # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
+            tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
+
+            if method == 'spherical':
+                if input_coordinates == 'cartesian':
+                    unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec * u.arcsec,
+                                                                           z=v3_arcsec * u.arcsec)
+                elif input_coordinates == 'polar':
+                    unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec, v3_arcsec * u.arcsec)
+
+                # apply inverse TVS alignment matrix to unit vector, produces Star Vector in FGS object space
+                unit_vector_idl = np.dot(np.transpose(tvs), unit_vector_tel)
+
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0]*u.rad.to(u.arcsec), unit_vector_idl[1]*u.rad.to(u.arcsec)
+
+                return x_idl_arcsec, y_idl_arcsec
+
+
+
+            elif method == 'planar_approximation':
+
+                # unit vector
+                unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec*u.arcsec, z=v3_arcsec*u.arcsec)
+                unit_vector_idl = np.dot(np.transpose(tvs), unit_vector_tel)
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0]*u.rad.to(u.arcsec), unit_vector_idl[1]*u.rad.to(u.arcsec)
+
+                return x_idl_arcsec, y_idl_arcsec
+        else:
+            return super(HstAperture, self).idl_to_tel(v2_arcsec, v3_arcsec,
+                                                       V3IdlYAngle_deg=V3IdlYAngle_deg,
+                                                       V2Ref_arcsec=V2Ref_arcsec,
+                                                       V3Ref_arcsec=V3Ref_arcsec, method=method,
+                                                       input_coordinates=input_coordinates,
+                                                       output_coordinates=output_coordinates)
+
+
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame.
