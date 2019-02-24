@@ -1474,6 +1474,7 @@ class HstAperture(Aperture):
         """Initialize HST aperture by inheriting from Aperture class."""
         super(HstAperture, self).__init__()
         self.observatory = 'HST'
+        self._fgs_use_rearranged_alignment_parameters = True
 
     # dictionary that allows to set attributes using JWST naming convention
     _hst_to_jwst_keys = ({'SI_mne': 'InstrName',
@@ -1548,12 +1549,22 @@ class HstAperture(Aperture):
             v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
             v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
             pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
-            return v2_arcsec, v3_arcsec, pa_deg, tvs
-        else:
-            v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
-            v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
-            pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
-            return v2, v3, pa, tvs
+            if self._fgs_use_rearranged_alignment_parameters:
+                pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
+                return v2, v3, pa, tvs
+            else:
+                return v2_arcsec, v3_arcsec, pa_deg, tvs
+        # else:
+        #     v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
+        #     v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
+        #     pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
+        #     if self._fgs_use_rearranged_alignment_parameters:
+        #         pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
+        #         return v2, v3, pa, tvs
+        #     else:
+        #     return v2, v3, pa, tvs
+
+
 
     def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline."""
@@ -1580,8 +1591,59 @@ class HstAperture(Aperture):
         return points_x[np.append(np.arange(len(points_x)), 0)], points_y[
             np.append(np.arange(len(points_y)), 0)]
 
+    def rearrange_fgs_alignment_parameters(self, pa_deg_in, v2_arcsec_in, v3_arcsec_in, direction):
+        """Convert to/from alignment parameters make FGS `look` like a regular camera aperture.
+
+        Parameters
+        ----------
+        pa_deg_in : float
+        v2_arcsec_in : float
+        v3_arcsec_in : float
+        direction : str
+            One of ['fgs_to_camera', ]
+
+        Returns
+        -------
+        pa, v2, v3 : tuple
+            re-arranged and sometimes sign-inverted alignment parameters
+
+        """
+        pa_deg = copy.deepcopy(pa_deg_in)
+        v2_arcsec = copy.deepcopy(v2_arcsec_in)
+        v3_arcsec = copy.deepcopy(v3_arcsec_in)
+
+        if direction not in ['fgs_to_camera', 'camera_to_fgs']:
+            raise ValueError
+
+        if self.AperName == 'FGS1':
+            # for FGS1 `forward` and `backward` transformation are the same
+            v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+            v3 = -1 * v3_arcsec
+            pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+        else:
+            if direction == 'fgs_to_camera':
+                if self.AperName == 'FGS2':
+                    v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+                    pa = -1 * v3_arcsec * u.arcsec.to(u.deg)
+                    v3 = -1 * v2_arcsec
+                elif self.AperName == 'FGS3':
+                    v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+                    v3 = +1 * v3_arcsec
+                    pa = -1 * v2_arcsec * u.arcsec.to(u.deg)
+            elif direction == 'camera_to_fgs':
+                if self.AperName == 'FGS2':
+                    v3 = -1 * pa_deg * u.deg.to(u.arcsec)
+                    pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+                    v2 = -1 * v3_arcsec
+                elif self.AperName == 'FGS3':
+                    v2 = -1 * pa_deg * u.deg.to(u.arcsec)
+                    v3 = +1 * v3_arcsec
+                    pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+        return pa, v2, v3
+
+
     def compute_tvs_matrix(self, v2_arcsec=None, v3_arcsec=None, pa_deg=None, verbose=False):
-        """Compute the TVS matrix from 'virtual' v2,v3,pa parameters.
+        """Compute the TVS matrix from tvs-specific v2,v3,pa parameters.
 
         Parameters
         ----------
@@ -1610,7 +1672,12 @@ class HstAperture(Aperture):
         if verbose:
             print('Computing TVS with tvs_v2_arcsec={}, tvs_v3_arcsec={}, tvs_pa_deg={}'.format(v2_arcsec, v3_arcsec, pa_deg))
 
-        attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
+        if self._fgs_use_rearranged_alignment_parameters:
+            pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'fgs_to_camera')
+            attitude = rotations.attitude(v2, v3, 0.0, 0.0, pa)
+        else:
+            attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
+
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
@@ -1687,6 +1754,11 @@ class HstAperture(Aperture):
                     unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
                 else:
                     raise ValueError('Input coordinates must be `cartesian`.')
+
+                # if self.AperName == 'FGS2':
+                #     unit_vector_idl[[1, 2]] *= -1.
+                    # unit_vector_tel[[0, 2]] *= -1.
+
                 # unit_vector_idl = rotations.unit_vector_from_cartesian(y=x_idl*u.arcsec, z=y_idl*u.arcsec)
                 # print(unit_vector_idl.T)
                 # unit_vector_idl_2 = rotations.unit_vector_sky(x_idl*u.arcsec, y_idl*u.arcsec)
@@ -1700,6 +1772,10 @@ class HstAperture(Aperture):
 
                 # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
                 unit_vector_tel = np.dot(tvs, unit_vector_idl)
+
+                # if self.AperName == 'FGS2':
+                #     # unit_vector_tel[[1, 2]] *= -1.
+                #     unit_vector_tel[[0, 2]] *= -1.
 
                 if output_coordinates == 'polar':
                     # polar coordinates on focal sphere
@@ -1965,6 +2041,9 @@ class HstAperture(Aperture):
         else:
             raise NotImplementedError
 
+        # if self._fgs_use_rearranged_alignment_parameters:
+        #     flip = HST_FLIP_1
+
         self.tvs_flip_matrix = flip
 
         self.db_tvs_v2_arcsec, self.db_tvs_v3_arcsec, self.db_tvs_pa_deg, db_tvs = \
@@ -2014,6 +2093,10 @@ class HstAperture(Aperture):
 
         This is after using those V2Ref and V3Ref attributes for TVS matrix update.
 
+        TODO
+        ----
+            - use new rotations.methods
+
         """
         # reference point in idl frame
         idl_vector_rad = np.deg2rad(
@@ -2039,8 +2122,8 @@ class HstAperture(Aperture):
 
         if verbose:
             for attribute_name in 'V2Ref V3Ref V3IdlYAngle'.split():
-                print('Setting {} to {}'.format(attribute_name, getattr(self, attribute_name)))
-                print('Setting {} to {}'.format(attribute_name + '_corrected',
+                print('HST FGS fiducial point update: Setting {} back to {:2.2f} '.format(attribute_name, getattr(self, attribute_name)), end='')
+                print('and {} to {:2.2f}'.format(attribute_name + '_corrected',
                                                 getattr(self, attribute_name + '_corrected')))
 
 
