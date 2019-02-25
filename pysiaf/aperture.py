@@ -1526,7 +1526,7 @@ class HstAperture(Aperture):
                             m, k]
                     m += 1
 
-    def _tvs_parameters(self, tvs=None, units=None):
+    def _tvs_parameters(self, tvs=None, units=None, apply_rearrangement=True):
         """Compute V2_tvs, V3_tvs, and V3angle_tvs from the TVS matrices stored in the database.
 
         TVS matrices come from SOCPRD amu.rep files.
@@ -1549,7 +1549,7 @@ class HstAperture(Aperture):
             v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
             v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
             pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
-            if self._fgs_use_rearranged_alignment_parameters:
+            if (self._fgs_use_rearranged_alignment_parameters) & (apply_rearrangement):
                 pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
                 return v2, v3, pa, tvs
             else:
@@ -1674,7 +1674,8 @@ class HstAperture(Aperture):
 
         if self._fgs_use_rearranged_alignment_parameters:
             pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'fgs_to_camera')
-            attitude = rotations.attitude(v2, v3, 0.0, 0.0, pa)
+            # attitude = rotations.attitude(v2, v3, 0.0, 0.0, pa)
+            attitude = rotations.attitude_matrix(v2, v3, 0.0, 0.0, pa)
         else:
             attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
 
