@@ -56,7 +56,7 @@ def test_idl_to_tel():
             assert np.max(y_diff) < threshold
 
 
-def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
+def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -169,6 +169,7 @@ def test_jwst_aperture_vertices(siaf_objects):
                 assert x_mean_error < threshold
                 assert y_mean_error < threshold
 
+
 def test_raw_transformations(verbose=False):
     """Test raw_to_sci and sci_to_raw transformations"""
     siaf_detector_layout = read.read_siaf_detector_layout()
@@ -198,5 +199,3 @@ def test_raw_transformations(verbose=False):
                 print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                     aperture.InstrName, aper_name, from_frame, to_frame, labels[i], error))
             assert error < threshold
-
-
