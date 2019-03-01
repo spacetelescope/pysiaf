@@ -182,7 +182,7 @@ def axial_rotation(ax, phi, vector):
     return v
 
 
-def sky_to_tel(attitude, ra, dec): #, return_cartesian=False):
+def sky_to_tel(attitude, ra, dec, verbose=False): #, return_cartesian=False):
     """Transform from sky (RA, Dec) to telescope (nu2, nu3) angles.
 
     Return nu2,nu3 position on the idealized focal sphere of any RA and
@@ -216,10 +216,14 @@ def sky_to_tel(attitude, ra, dec): #, return_cartesian=False):
     #     urd = unit(ra, dec)
 
     unit_vector_sky_side = unit_vector_sky(ra, dec)
+    if verbose:
+        print('Sky-side unit vector: {}'.format(unit_vector_sky_side))
     inverse_attitude = np.transpose(attitude)
 
     # apply transformation
     unit_vector_tel = np.dot(inverse_attitude, unit_vector_sky_side)
+    if verbose:
+        print('Tel-side unit vector: {}'.format(unit_vector_tel))
 
     # extract spherical coordinates
     nu2, nu3 = polar_angles(unit_vector_tel)
