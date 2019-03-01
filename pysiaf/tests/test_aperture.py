@@ -10,7 +10,6 @@ Authors
 import numpy as np
 import pytest
 
-from ..aperture import HstAperture
 from ..iando import read
 from ..siaf import Siaf, get_jwst_apertures
 from ..utils.tools import get_grid_coordinates
@@ -28,12 +27,6 @@ def siaf_objects():
         siafs.append(siaf)
     return siafs
 
-
-def test_hst_aperture_init():
-    """Test the initialization of an HstAperture object."""
-    hst_aperture = HstAperture()
-    hst_aperture.a_v2_ref = -100.
-    assert hst_aperture.a_v2_ref == hst_aperture.V2Ref #, 'HST aperture initialisation failed')
 
 def test_idl_to_tel():
     """Test the transformations between ideal and telescope frames that do not use the planar approximation."""

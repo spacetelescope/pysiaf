@@ -39,8 +39,9 @@ JWST_PRD_DATA_ROOT = os.path.join(_DATA_ROOT, 'JWST', JWST_PRD_VERSION, 'SIAFXML
 JWST_PRD_DATA_ROOT_EXCEL = os.path.join(_DATA_ROOT, 'JWST', JWST_PRD_VERSION, 'SIAFXML', 'Excel')
 
 # see helpers.download_latest_hst_siaf()
-HST_PRD_VERSION = 'SCIOPSDB-v1.84'  # as of 2017-11-19
-HST_PRD_DATA_ROOT = os.path.join(_DATA_ROOT, 'HST', HST_PRD_VERSION)
+# HST_PRD_VERSION = 'SCIOPSDB-v1.84'  # as of 2017-11-19
+HST_PRD_VERSION = 'Latest'  # refactor JSA 2018-12-05
+HST_PRD_DATA_ROOT = os.path.join(_DATA_ROOT, 'HST')
 
 
 # numerical constants
