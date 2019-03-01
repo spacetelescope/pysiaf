@@ -1117,9 +1117,8 @@ class Aperture(object):
                     x_sci = self.XDetSize - x_raw + 1
                     y_sci = y_raw
                 else:
-                    # FGS2, GUIDER2
-                    # rotate 90 degrees anticlockwise
-                    x_sci = -1*y_raw
+                    # FGS2, GUIDER2, empirical determination, does not seem to match documentation
+                    x_sci = self.YDetSize - y_raw + 1
                     y_sci = x_raw
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
@@ -1186,10 +1185,10 @@ class Aperture(object):
                     x_raw = self.XDetSize - x_sci + 1
                     y_raw = y_sci
                 else:
-                    # GUIDER2, FGS2
-                    # rotate 90 degrees clockwise
+                    # GUIDER2, FGS2, empirical
+                    y_raw = self.YDetSize - x_sci + 1
                     x_raw = y_sci
-                    y_raw = -1*x_sci
+
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
                 # Flip in the y direction
