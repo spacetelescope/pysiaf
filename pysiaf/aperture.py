@@ -41,6 +41,7 @@ import matplotlib
 from .utils import rotations, projection, polynomial
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
+from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
 
 # shorthands for supported coordinate systems
 FRAMES = ('det', 'sci', 'idl', 'tel', 'raw')
@@ -65,8 +66,7 @@ VALIDATION_ATTRIBUTES = ('InstrName AperName AperType AperShape '
 # list of attributes written to the JWST SIAFXML required by the JWST PRD
 # the order of the XML tags in the SIAFXML is relevant, therefore define IRCD order here
 # see JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3
-SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file(
-    'NIRCam')  # use NIRCam as model temporarily
+SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file()
 PRD_REQUIRED_ATTRIBUTES_ORDERED = list(SIAF_XML_FIELD_FORMAT['field_name'])
 
 # As per JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3,
@@ -484,7 +484,7 @@ class Aperture(object):
         """
         return matplotlib.path.Path(np.array(self.closed_polygon_points(to_frame)).T)
 
-    def plot(self, frame='tel', name_label=None, ax=None, title=False, units='arcsec',
+    def plot(self, frame='tel', label=False, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
              **kwargs):
         """Plot this aperture.
@@ -493,8 +493,8 @@ class Aperture(object):
         ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
-        name_label : str
-            Add text label stating aperture name
+        label : str or bool
+            Add text label. If True, text will be the default aperture name.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pylab)
@@ -565,14 +565,14 @@ class Aperture(object):
 
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
-        if name_label is not None:
+        if label is not False:
             rotation = 0
-            if name_label == 'default':
+            if label is True:
                 # partially mitigate overlapping NIRCam labels
                 rotation = 30 if self.AperName.startswith('NRC') else 0
-                name_label = self.AperName
+                label = self.AperName
             ax.text(
-                x.mean() * scale, y.mean() * scale, name_label,
+                x.mean() * scale, y.mean() * scale, label,
                 verticalalignment='center',
                 horizontalalignment='center',
                 rotation=rotation,
@@ -643,7 +643,7 @@ class Aperture(object):
             c1, c2 = self.convert(0, 0, 'raw', frame)
             ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
 
-    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5):
+    def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5, ax=None):
         """Outline the detector readout channels.
 
         These are depicted as alternating light/dark bars to show the
@@ -662,12 +662,29 @@ class Aperture(object):
         evenoddratio : float
             Ratio of opacity between even and odd amplifier region
             overlays
+        ax : matplotlib.Axes
+            Desired destination axes to plot into (If None, current
+            axes are inferred from pyplot.)
 
         """
-        npixels = self.XDetSize
+
+        # NIRSpec MSA requires plotting underlying channels
+        msa_dict = {"NRS_FULL_MSA1": "NRS2_FULL", "NRS_FULL_MSA2": "NRS2_FULL",
+                    "NRS_FULL_MSA3": "NRS1_FULL", "NRS_FULL_MSA4": "NRS1_FULL",
+                    "NRS_S1600A1_SLIT": "NRS1_FULL"}
+
+        if self.AperName not in msa_dict.keys():
+            npixels = self.XDetSize
+        else:
+            aper = msa_dict[self.AperName]
+            nrs = read.read_jwst_siaf(self.InstrName)[aper]
+            npixels = nrs.XDetSize
+
         ch = npixels / 4
 
-        ax = pl.gca()
+        if ax is None:
+            ax = pl.gca()
+
         if self.InstrName in ['NIRISS', 'FGS', 'NIRSPEC']:
             pts = ((0, 0), (0, ch), (npixels, ch), (npixels, 0))
         else:
@@ -804,8 +821,7 @@ class Aperture(object):
         return x_model, y_model
 
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
-                            V3Ref_arcsec=None,
-                            verbose=False):
+                            V3Ref_arcsec=None, verbose=False):
         """Return transformation model between tel<->idl.
 
         V3IdlYAngle_deg, V2Ref_arcsec, V3Ref_arcsec can be given as arguments to override aperture
@@ -996,11 +1012,14 @@ class Aperture(object):
             V2Ref_arcsec = self.V2Ref
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
 
         if method == 'planar_approximation':
             if output_coordinates != 'tangent_plane':
                 raise RuntimeError('Output has to be in tangent plane.')
-            x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
+            x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg=V3IdlYAngle_deg,
+                                                        V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
             return x_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec), \
                    y_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec)
 
@@ -1321,23 +1340,15 @@ def get_hst_to_jwst_coefficient_order(polynomial_degree):
 
 #######################################
 # support for HST apertures
-
 HST_FLIP_1 = np.array([[0, 0, 1], [0, 1, 0], [-1, 0, 0]])
 HST_FLIP_2 = np.array([[0, 0, 1], [-1, 0, 0], [0, -1, 0]])
 HST_FLIP_3 = np.array([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
 
-# TVS matrices (from FGS Geometry Products on GSFC/SAC web page)
-HST_TVS_FGS_1R = np.array([-0.000034791201, +0.000021915510, +0.999999999155,
-                           -0.003589864866, +0.999993556171, -0.000022040265,
-                           -0.999993555809, -0.003589865630, -0.000034712303]).reshape(3, 3)
-
-HST_TVS_FGS_2R2 = np.array([-0.000001019786, +0.000025918600, +0.999999999664,
-                            -0.999997535003, +0.002220357221, -0.000001077332,
-                            -0.002220357248, -0.999997534668, +0.000025916272]).reshape(3, 3)
-
-HST_TVS_FGS_3 = np.array([+0.000030012865, +0.000022612406, +0.999999999294,
-                          -0.002060622958, -0.999997876657, +0.000022674204,
-                          +0.999997876464, -0.002060623637, -0.000029966206]).reshape(3, 3)
+# TVS matrices
+amudotrep = read.read_hst_fgs_amudotrep()
+HST_TVS_FGS_1R = amudotrep['fgs1']['tvs']
+HST_TVS_FGS_2R2 = amudotrep['fgs2']['tvs']
+HST_TVS_FGS_3 = amudotrep['fgs3']['tvs']
 
 
 class HstAperture(Aperture):
@@ -1633,19 +1644,23 @@ class HstAperture(Aperture):
         idl_vector_rad = np.deg2rad(
             [self.idl_x_ref_arcsec / 3600., self.idl_y_ref_arcsec / 3600., self.idl_angle_deg])
 
-        # transform to tel frame
+        # transform to tel frame using corrected TVS matrix
         tel_vector_rad = np.array(np.dot(self.corrected_tvs, idl_vector_rad)).flatten()
 
         tel_vector_arcsec = np.rad2deg(tel_vector_rad) * 3600.
 
-        # set V2Ref and V3Ref
+        # set V2Ref and V3Ref and  V3IdlYAngle back to original SIAF value
         self.V2Ref = copy.deepcopy(self.a_v2_ref)
         self.V3Ref = copy.deepcopy(self.a_v3_ref)
         self.V3IdlYAngle = copy.deepcopy(self.theta)
 
+        # set corrected values for fiducial point. This shows the effect on the fiducial point of
+        # changing the TVS matrix
         self.V2Ref_corrected = tel_vector_arcsec[1]
         self.V3Ref_corrected = tel_vector_arcsec[2]
-        self.V3IdlYAngle_corrected = self.theta  # correction = 0 by convention
+
+        # angle correction = 0 by convention
+        self.V3IdlYAngle_corrected = self.theta
 
         if verbose:
             for attribute_name in 'V2Ref V3Ref V3IdlYAngle'.split():
@@ -1694,7 +1709,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [float, np.float64]:
+    if type(angle_deg) not in [int, float, np.float64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
