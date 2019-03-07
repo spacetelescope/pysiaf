@@ -1,0 +1,14 @@
+# MIRI DDC mapping definition file for SIAF
+# 
+# This file contains the DDC aperture mapping.
+# 
+# Generated 2018-04-11T00:55:34.126 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+       SIAF_NAME ,          DDC_NAME
+     MIRIM_ILLUM ,  MIRIMAGE_ILLCNTR
+MIRIFU_CHANNEL2B ,       MIRIFU_CNTR
+  MIRIM_MASKLYOT , MIRIMAGE_MASKLYOT
+  MIRIM_MASK1140 , MIRIMAGE_MASK1140
+  MIRIM_MASK1550 , MIRIMAGE_MASK1550
+  MIRIM_MASK1065 , MIRIMAGE_MASK1065

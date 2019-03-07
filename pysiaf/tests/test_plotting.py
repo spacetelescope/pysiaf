@@ -10,19 +10,23 @@ Authors
 
 import os
 
+import matplotlib
+matplotlib.use('agg')
 import pylab as pl
 import pytest
 
 from ..constants import JWST_TEMPORARY_DATA_ROOT
 from ..siaf import Siaf, plot_master_apertures
 
-@pytest.mark.skip(reason="Need to figure out how to set backend")
+# @pytest.mark.skip(reason="Need to figure out how to set backend")
 def test_aperture_plotting():
     """Generate aperture plots and save to png.
 
     """
     save_plot = True
     plot_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT)
+    if not os.path.isdir(plot_dir):
+        os.makedirs(plot_dir)
 
     instrument = 'NIRISS'
     siaf = Siaf(instrument)

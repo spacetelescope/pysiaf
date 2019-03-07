@@ -1,25 +1,19 @@
 """Functions to write Science Instrument Aperture Files (SIAF).
 
-SIAF content in an aperture_collection object can be written to an xml file that can be ingested in the PRD.
-Format and order of the xml fields are defined in SIAF reference files.
-
+SIAF content in an aperture_collection object can be written to an xml file that can be ingested in
+the PRD. Format and order of the xml fields are defined in SIAF reference files.
 Writing to Microsoft Excel .xlsx format is supported.
-
 Writing to .csv and other formats supported by astropy.table.Table.write is enabled.
-
 
 Authors
 -------
-
     Johannes Sahlmann
-
 
 """
 
-import numpy as np
 import os
 
-# import git
+import numpy as np
 import lxml.etree as ET
 from astropy.time import Time
 from astropy.table import Table, Column
@@ -29,7 +23,6 @@ from openpyxl.styles import Alignment
 
 from ..version import __version__
 from ..constants import _JWST_TEMPORARY_ROOT
-# from ..constants import PACKAGE_VERSION, _JWST_TEMPORARY_ROOT
 from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED, SIAF_XML_FIELD_FORMAT, FLOAT_ATTRIBUTES
 
 # dictionary used to set field precision in SIAF.XML
@@ -40,9 +33,9 @@ for attr in PRD_REQUIRED_ATTRIBUTES_ORDERED:
     xml_decimal_precision[attr] = SIAF_XML_FIELD_FORMAT['pyformat'][index]
 
 
-def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=None, file_format='xml', verbose=True):
-    """Write the content of aperture_collection into xml and xlsx files that can be delivered to
-    the PRD.
+def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=None,
+                    file_format='xml', verbose=True):
+    """Write the content of aperture_collection into xml and xlsx files that are PRD-compliant.
 
     Parameters
     ----------
@@ -66,7 +59,6 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
     """
     if type(file_format) == str:
         file_format = [file_format]
-
 
     aperture_names = np.array([key for key in aperture_collection.apertures.keys()])
     instrument = aperture_collection.apertures[aperture_names[0]].InstrName
@@ -125,16 +117,20 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
                 aperture = aperture_collection.apertures[aperture_name]
                 siaf_entry = ET.SubElement(root, 'SiafEntry')
                 for attribute in PRD_REQUIRED_ATTRIBUTES_ORDERED:
-                    attribute_value = getattr(aperture_collection.apertures[aperture_name], attribute)
+                    attribute_value = getattr(aperture_collection.apertures[aperture_name],
+                                              attribute)
                     if attribute_value is None:
                         attribute_text = None
 
                     # NIRSpec special case
-                    elif (aperture.AperType in ['TRANSFORM']) and (attribute in 'XSciRef YSciRef XSciScale YSciScale V2Ref V3Ref'.split()):
+                    elif (aperture.AperType in ['TRANSFORM']) and \
+                            (attribute in 'XSciRef YSciRef XSciScale YSciScale V2Ref V3Ref'.
+                             split()):
                         attribute_text = '{:{prec}}'.format(attribute_value,
                                                             prec=12).strip()
                     elif attribute in FLOAT_ATTRIBUTES:
-                        attribute_text = '{:{prec}}'.format(attribute_value, prec=xml_decimal_precision[attribute]).strip()
+                        attribute_text = '{:{prec}}'.format(
+                            attribute_value, prec=xml_decimal_precision[attribute]).strip()
                     else:
                         attribute_text = str(attribute_value)
 
@@ -186,7 +182,8 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
             # write aperture attributes
             for j, attribute_name in enumerate(PRD_REQUIRED_ATTRIBUTES_ORDERED):
                 col = j + 1
-                cell = ws1.cell(column=col, row=header_row_attributes, value="{}".format(attribute_name))
+                cell = ws1.cell(column=col, row=header_row_attributes, value="{}".
+                                format(attribute_name))
                 cell.font = Font(name='Calibri', b=True, family=2.0, sz=15.0)
                 cell.alignment = Alignment(horizontal='center')
 
@@ -198,8 +195,10 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
                 row = i + 1 + header_row_attributes
                 for j, attribute_name in enumerate(PRD_REQUIRED_ATTRIBUTES_ORDERED):
                     col = j + 1
-                    cell = ws1.cell(column=col, row=row, value="{}".format(getattr(aperture, attribute_name)))
-                    if attribute_name not in 'InstrName	AperName DDCName AperType AperShape'.split():
+                    cell = ws1.cell(column=col, row=row, value="{}".
+                                    format(getattr(aperture, attribute_name)))
+                    if attribute_name not in 'InstrName	AperName DDCName AperType AperShape'.\
+                            split():
                         cell.alignment = Alignment(horizontal='right')
 
             # adjust column width
@@ -213,7 +212,8 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
         else:
             table = Table()
             for attribute_name in PRD_REQUIRED_ATTRIBUTES_ORDERED:
-                data = [getattr(aperture_collection.apertures[aperture_name], attribute_name) for aperture_name in aperture_names]
+                data = [getattr(aperture_collection.apertures[aperture_name], attribute_name) for
+                        aperture_name in aperture_names]
                 table.add_column(Column(data=data, name=attribute_name))
             table.write(out_filename, format=file_format)
             if verbose:
