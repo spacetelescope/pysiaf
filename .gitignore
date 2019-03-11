@@ -15,3 +15,4 @@ docs/_build
 wedge_offsets.txt
 miri_siaf_ifu_slice_table.fits
 *.pdf
+examples/.ipynb_checkpoints

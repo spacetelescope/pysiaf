@@ -10,7 +10,7 @@ References
     This script was partially adapted from Colin Cox' miriifu.py.
 
     For a detailed description of the MIRI SIAF, the underlying reference files, and the
-    transformations, see Law et al., 2016: MIRI SIAF Input (JWST-STScI-004741).
+    transformations, see Law et al., (latest revision): MIRI SIAF Input (JWST-STScI-004741).
 
     The term `worksheet` refers to the excel worksheet in the respective SIAF.xlsx, which contained
     some of the SIAF generation logic previously.
@@ -23,6 +23,7 @@ import os
 from astropy.io import fits
 import numpy as np
 import pylab as pl
+
 import pysiaf
 from pysiaf.utils import polynomial
 from pysiaf import iando
@@ -57,6 +58,8 @@ source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print('Loading source data files from directory: {}'.format(source_data_dir))
 
 miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits'
+# miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits'
+
 
 # Fundamental aperture definitions: names, types, reference positions, dependencies
 # for MIRI this file is part of the delivered source files and contains more columns
@@ -626,6 +629,11 @@ if emulate_delivery:
 
     # compare new SIAF with PRD version
     ref_siaf = pysiaf.Siaf(instrument)
+    ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
+    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                         fractional_tolerance=1e-6,
+                         tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'})
+    1/0
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
 
