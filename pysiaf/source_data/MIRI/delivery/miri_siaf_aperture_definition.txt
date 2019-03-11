@@ -4,10 +4,10 @@
 # This file also defines the order in which the apertures are presented.
 #
 # Imager/LRS information is based on CDP-7 reference file: MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits
-# Modified by hand 2019-02-14 by dlaw
+# Modified by hand 2019-02-14 by D. Law
 #
 # MRS
-# Created  2019-01-25T09:44:23.518451  by user dlaw at varda.stsci.edu
+# Created  2019-01-25T09:44:23.518451  by D. Law
 # Using program makesiaf_mrs.py
 # Using input files:
 # 1A : MIRI_FM_MIRIFUSHORT_12SHORT_DISTORTION_06.04.00.fits
