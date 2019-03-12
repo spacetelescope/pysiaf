@@ -664,7 +664,8 @@ if emulate_delivery:
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
 
-    compare_against_prd = False
+    # compare_against_prd = False
+    compare_against_prd = True
     # compare_against_cdp7b = True
     compare_against_cdp7b = False
 
@@ -672,9 +673,8 @@ if emulate_delivery:
         from pysiaf.tests import test_miri
 
         print('\nRunning regression test of pre_delivery_siaf against test_data:')
-        test_miri.test_against_test_data(siaf=pre_delivery_siaf)
-
-        1/0
+        test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
+        # 1/0
 
 
     if compare_against_cdp7b:
@@ -684,15 +684,17 @@ if emulate_delivery:
                              tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'},
                              selected_aperture_name=['MIRIM_FULL'],
                              )
-        1/0
-        # compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-        #                      fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
-        #                      tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'})
+        # 1/0
+        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
+                             tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'})
+
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                                  tags={'reference' : 'cdp7b',
-                                                       'comparison': 'pre_delivery'})
+                                                       'comparison': 'pre_delivery'},
+                                                 report_dir=pre_delivery_dir)
 
-    1/0
+    # 1/0
     if compare_against_prd:
         # compare new SIAF with PRD version
         ref_siaf = pysiaf.Siaf(instrument)
@@ -706,7 +708,7 @@ if emulate_delivery:
     from pysiaf.tests import test_aperture
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
     # test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=True, threshold=0.1)
-    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=True, threshold=0.5)
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.5)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 

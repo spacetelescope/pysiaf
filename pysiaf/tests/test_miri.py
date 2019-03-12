@@ -26,7 +26,7 @@ from ..siaf import Siaf
 instrument = 'MIRI'
 
 
-@pytest.xfail
+@pytest.mark.xfail
 def test_against_test_data(siaf=None, verbose=False):
     """MIRI test data comparison.
 
@@ -65,7 +65,7 @@ def test_against_test_data(siaf=None, verbose=False):
         print('')
         t.pprint(max_width=-1)
 
-    absolute_tolerance = 0.02
+    absolute_tolerance = 0.04
 
     assert_allclose(x_test, x_pysiaf, atol=absolute_tolerance)
     assert_allclose(y_test, y_pysiaf, atol=absolute_tolerance)
