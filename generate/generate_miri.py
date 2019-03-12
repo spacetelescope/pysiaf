@@ -142,13 +142,12 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     T = miri['T matrix'].data
     TI = miri['TI matrix'].data
 
-    # VtoAN = np.array([[1.0 / 60.0, 0.0, 0.0], [0.0, -1.0 / 60.0, -7.8], [0.0, 0.0, 1.0]])
+    # CDP7 T matrices transform from/to v2,v3 in arcsec
+    # set VtoAN and ANtoV to unit matrix
     VtoAN = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
-    # VtoAN = np.array([[1.0/60., 0.0, 0.0], [0.0, 1.0/60., 0.0], [0.0, 0.0, 1.0]])
-    TV = np.dot(T, VtoAN)
-    # ANtoV = np.array([[60.0, 0.0, 0.0], [0.0, -60.0, -468.0], [0.0, 0.0, 1.0]])
     ANtoV = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
-    # ANtoV = np.array([[60.0, 0.0, 0.0], [0.0, 60.0, 1.0], [0.0, 0.0, 1.0]])
+
+    TV = np.dot(T, VtoAN)
     VT = np.dot(ANtoV, TI)
     prod = np.dot(VT, TV)
     TT = np.dot(T, TI)
@@ -198,6 +197,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     AF[0] = AF[0] + VT[0, 2]
     BF = VT[1, 0] * AL + VT[1, 1] * BL
     BF[0] = BF[0] + VT[1, 2]
+
     if verbose:
         polynomial.print_triangle(AF)
         polynomial.print_triangle(BF)
@@ -223,7 +223,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         print('\nC Final')
         print('\nD Final')
 
-    if verbose:
+    # if verbose:
 
         # Test two_step
         v2 = -280
@@ -278,7 +278,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         print('\nDS')
         print('\nDetector Center')
 
-    if verbose:
+    # if verbose:
         xscalec = np.hypot(AF[1], BF[1])
         yscalec = np.hypot(AF[2], BF[2])
 
@@ -291,7 +291,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         print('Scales %10.6f %10.6f' % (xscalec, yscalec))
         print('Angles %10.6f %10.6f' % (xanglec, yanglec))
 
-    if verbose:
+    # if verbose:
         xcen = 1033 / 2
         ycen = 1025 / 2
         xref = 693.5 - xcen
@@ -304,24 +304,24 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         dV3dy = polynomial.dpdy(BF, xref, yref)
         xangler = np.arctan2(dV2dx, dV3dx)
         yangler = np.arctan2(dV2dy, dV3dy)
-    if verbose:
+    # if verbose:
         print('Axis angles', np.rad2deg(xangler), np.rad2deg(yangler))
 
-    if verbose:
+    # if verbose:
         # Illum reference position
         xscaler = np.hypot(dV2dx, dV3dx)
         yscaler = np.hypot(dV2dy, dV3dy)
         xangler = np.rad2deg(np.arctan2(dV2dx, dV3dx))
         yangler = np.rad2deg(np.arctan2(dV2dy, dV3dy))
 
-    if verbose:
+    # if verbose:
         print('\nIllum reference position')
         print('xref=', xref)
         print('Position', V2Ref, V3Ref)
         print('Scales %10.6f %10.6f' % (xscaler, yscaler))
         print('Angles %10.6f %10.6f %10.6f' % (xangler, yangler, yangler - xangler))
 
-    if verbose:
+    # if verbose:
         # Slit position
         xslit = (326.13)
         yslit = (300.70)
@@ -336,13 +336,13 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         xangles = np.arctan2(dV2dx, dV3dx)
         yangles = np.arctan2(dV2dy, dV3dy)
 
-    if verbose:
+    # if verbose:
         print('\nSlit')
         print('Position', dxslit, dyslit)
         print('V2,V3', V2slit, V3slit)
         print('Slit angles', np.rad2deg(xangles), np.rad2deg(yangles))
 
-    if verbose:
+    # if verbose:
         # Corners
         xc = np.array([-516.0, 516.0, 516.0, -516.0, -516.0])
         yc = np.array([-512.0, -512.0, 512.0, 512.0, -512.0])
@@ -350,7 +350,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
         V3c = polynomial.poly(BF, xc, yc, 4)
         V2c = V2c + V2cen
         V3c = V3c + V3cen
-    if verbose:
+    # if verbose:
         print('\nCorners')
         print('V2 %10.4f %10.4f %10.4f %10.4f' % (V2c[0], V2c[1], V2c[2], V2c[3]))
         print('V3 %10.4f %10.4f %10.4f %10.4f' % (V3c[0], V3c[1], V3c[2], V3c[3]))
@@ -377,27 +377,27 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     AR = AF * np.cos(a) - BF * np.sin(a)
     BR = AF * np.sin(a) + BF * np.cos(a)
 
+
+    CR = polynomial.prepend_rotation_to_polynomial(CS, yanglec)
+    DR = polynomial.prepend_rotation_to_polynomial(DS, yanglec)
+
     if verbose:
         print('AR')
         polynomial.print_triangle(AR)
         print('BR')
         polynomial.print_triangle(BF)
         print('\n', AR[2], ' near zero')
-
-    CR = polynomial.prepend_rotation_to_polynomial(CS, yanglec)
-    DR = polynomial.prepend_rotation_to_polynomial(DS, yanglec)
-
-    if verbose:
+    # if verbose:
         invcheck(AR, BR, CR, DR, 4, -512.0, 512.0)
 
     # Check positions using rotated (Ideal) coefficients
-    if verbose:
+    # if verbose:
 
         xi = polynomial.poly(AR, xc, yc, 4)
         yi = polynomial.poly(BR, xc, yc, 4)
         v2r = xi * np.cos(a) + yi * np.sin(a) + V2cen
         v3r = -xi * np.sin(a) + yi * np.cos(a) + V3cen
-    if verbose:
+    # if verbose:
         print('V2', v2r)
         print('V3', v3r)
         pl.plot(v2r, v3r, '--')
@@ -666,8 +666,8 @@ if emulate_delivery:
 
     # compare_against_prd = False
     compare_against_prd = True
-    # compare_against_cdp7b = True
-    compare_against_cdp7b = False
+    compare_against_cdp7b = True
+    # compare_against_cdp7b = False
 
     if 1:
         from pysiaf.tests import test_miri

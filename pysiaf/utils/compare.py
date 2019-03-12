@@ -355,8 +355,8 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         pl.subplots_adjust(bottom=0.15)
         pl.show()
 
-        figure_name = os.path.join(report_dir, '{}_comparison_roundtrip_error.pdf'.format(
-            instrument))
+        figure_name = os.path.join(report_dir, '{}_{}_{}_sci_idl_roundtrip_error.pdf'.format(
+            instrument, tags['reference'], tags['comparison']))
         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     return roundtrip_table
