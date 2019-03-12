@@ -147,7 +147,7 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     # VtoAN = np.array([[1.0/60., 0.0, 0.0], [0.0, 1.0/60., 0.0], [0.0, 0.0, 1.0]])
     TV = np.dot(T, VtoAN)
     # ANtoV = np.array([[60.0, 0.0, 0.0], [0.0, -60.0, -468.0], [0.0, 0.0, 1.0]])
-    ANtoV = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 1.0], [0.0, 0.0, 1.0]])
+    ANtoV = np.array([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
     # ANtoV = np.array([[60.0, 0.0, 0.0], [0.0, 60.0, 1.0], [0.0, 0.0, 1.0]])
     VT = np.dot(ANtoV, TI)
     prod = np.dot(VT, TV)
@@ -665,7 +665,17 @@ if emulate_delivery:
 
 
     compare_against_prd = False
-    compare_against_cdp7b = True
+    # compare_against_cdp7b = True
+    compare_against_cdp7b = False
+
+    if 1:
+        from pysiaf.tests import test_miri
+
+        print('\nRunning regression test of pre_delivery_siaf against test_data:')
+        test_miri.test_against_test_data(siaf=pre_delivery_siaf)
+
+        1/0
+
 
     if compare_against_cdp7b:
         ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
