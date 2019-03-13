@@ -271,7 +271,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     # index 0 is for reference SIAF (defaults to PRD)
     # index 1 is for comparison SIAF
     for AperName, aperture in reference_siaf.apertures.items():
-        # pl.close('all')
+        pl.close('all')
         if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
             continue
         for j, siaf in enumerate(siaf_list):
@@ -286,30 +286,33 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                                                  coefficients['Idl2SciY'],
                                                                  offset_x=aperture.XSciRef,
                                                                  offset_y=aperture.YSciRef,
-                                                                 instrument=instrument)
+                                                                 instrument=instrument,
+                                                                 grid_amplitude=aperture.XSciSize)
                 for k, tag in enumerate(round_trip_tags):
                     # if tag != 'data':
                     roundtrip_dict['siaf{}_{}'.format(j, tag)].append(roundtrip_errors[k])
 
                 if make_plot:
                     data = roundtrip_errors[-1]
-                    pl.figure(19, figsize=(6, 6), facecolor='w', edgecolor='k')
+                    pl.figure(figsize=(6, 6), facecolor='w', edgecolor='k')
                     pl.quiver(data['x'], data['y'], data['x']-data['x2'], data['y']-data['y2'],
                               angles='xy')
                     pl.xlabel('x_sci')
                     pl.ylabel('y_sci')
+                    aperture.plot(frame='sci', ax=pl.gca())
                     ax = pl.gca()
                     pl.text(0.5, 0.9, 'Maximum arrow length {:3.3f} pix'.format(
                         np.max(np.linalg.norm([data['x']-data['x2'], data['y']-data['y2']],
                                               axis=0))), horizontalalignment='center',
                             transform=ax.transAxes)
                     pl.title('siaf{}: {} Roundtrip error sci->idl->sci'.format(j, AperName))
-                    # pl.show()
+                    pl.show()
                     if report_dir is not None:
                         figure_name = os.path.join(report_dir, '{}_{}_siaf{}_roundtrip_error.pdf'.
                                                    format(instrument, AperName, j))
                         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
+    # 1/0
     roundtrip_table = Table(roundtrip_dict)
     for k, tag in enumerate(round_trip_tags):
         roundtrip_table['difference_{}'.format(tag)] = roundtrip_table['siaf{}_{}'.format(1, tag)] \
