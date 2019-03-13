@@ -36,7 +36,8 @@ if 0:
 
 _ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
 
-siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file(instrument)
+# siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file(instrument)
+siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file()
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
@@ -135,7 +136,7 @@ for AperName in aperture_name_list:
 
     if (parent_apertures is not None):
 
-        if (dependency_type in ['default', 'wedge', 'dhspil_wedge']):
+        if (dependency_type in ['default', 'wedge', 'dhspil_wedge', 'grism_f444w']):
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -147,7 +148,7 @@ for AperName in aperture_name_list:
             if aperture.AperType == 'OSS':
                 aperture.VIdlParity = 1
                 aperture.DetSciParity = 1
-                aperture.DetSciYAngle = 0.
+                aperture.DetSciYAngle = 0
                 # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
                 aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
             else:
@@ -165,6 +166,9 @@ for AperName in aperture_name_list:
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
                 aperture.V3Ref += 43.
+            elif dependency_type == 'grism_f444w':
+                1/0
+
 
             aperture.complement()
 

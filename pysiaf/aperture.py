@@ -1708,7 +1708,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [int, float, np.float64]:
+    if type(angle_deg) not in [int, float, np.float64, np.int64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
