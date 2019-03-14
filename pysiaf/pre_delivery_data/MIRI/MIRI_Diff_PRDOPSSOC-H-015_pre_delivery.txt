@@ -4796,14 +4796,15 @@ MIRIM_FP5MIMF                  Idl2SciY44   -5.994592158584e-09 -1.3629000052363
 
 MIRIM_SLIT                          V2Ref               -414.33              -415.069        0.739000     0.1780
 MIRIM_SLIT                          V3Ref               -400.69              -400.576        0.114000     0.0285
-MIRIM_SLIT                      XIdlVert1               -2.3674               -2.3616        0.005800     0.2450
-MIRIM_SLIT                      XIdlVert2                2.3778                2.3646        0.013200     0.5551
-MIRIM_SLIT                      XIdlVert3                2.3774                2.3617        0.015700     0.6604
-MIRIM_SLIT                      XIdlVert4               -2.3678               -2.3645        0.003300     0.1394
-MIRIM_SLIT                      YIdlVert1               -0.2709               -0.2733        0.002400     0.8782
-MIRIM_SLIT                      YIdlVert2               -0.2514               -0.2404        0.011000     4.3755
-MIRIM_SLIT                      YIdlVert3                0.2701                0.2743        0.004200     1.5312
-MIRIM_SLIT                      YIdlVert4                0.2507                0.2414        0.009300     3.7096
+MIRIM_SLIT                    V3IdlYAngle              4.358324               4.71028        0.351956     7.4721
+MIRIM_SLIT                      XIdlVert1               -2.3674               -2.3632        0.004200     0.1774
+MIRIM_SLIT                      XIdlVert2                2.3778                 2.363        0.014800     0.6224
+MIRIM_SLIT                      XIdlVert3                2.3774                2.3633        0.014100     0.5931
+MIRIM_SLIT                      XIdlVert4               -2.3678                -2.363        0.004800     0.2027
+MIRIM_SLIT                      YIdlVert1               -0.2709               -0.2588        0.012100     4.4666
+MIRIM_SLIT                      YIdlVert2               -0.2514               -0.2549        0.003500     1.3731
+MIRIM_SLIT                      YIdlVert3                0.2701                0.2598        0.010300     3.8134
+MIRIM_SLIT                      YIdlVert4                0.2507                0.2559        0.005200     2.0320
 
 MIRIFU_CHANNEL1A                XIdlVert1                1.3807                1.3806        0.000100     0.0072
 MIRIFU_CHANNEL1A                XIdlVert4                1.9141                 1.914        0.000100     0.0052

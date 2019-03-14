@@ -594,6 +594,12 @@ for aperture_index, AperName in enumerate(aperture_name_list):
         aperture.V2Ref = csv_data[csv_aperture_name]['Xref_inv'] + aperture.VIdlParity * dxIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle))
         aperture.V3Ref = csv_data[csv_aperture_name]['Yref_inv'] - aperture.VIdlParity * dxIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle))
 
+        # overwrite V3IdlYAngle if set in definition files
+        for attribute in 'V3IdlYAngle'.split():
+            value = siaf_aperture_definitions[attribute][aperture_definitions_index]
+            if np.ma.is_masked(value) is False:
+                setattr(aperture, attribute, value)
+
         aperture.complement()
 
     elif AperName in slice_table['AperName']:
@@ -677,23 +683,28 @@ if emulate_delivery:
 
 
     if compare_against_cdp7b:
+        tags = {'reference': 'cdp7b', 'comparison': 'pre_delivery'}
         ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6,
-                             tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'},
+                             tags=tags,
                              selected_aperture_name=['MIRIM_FULL'],
                              )
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
-                             tags={'reference': 'cdp7b', 'comparison': 'pre_delivery'})
+                             tags=tags)
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                                 tags={'reference' : 'cdp7b',
-                                                       'comparison': 'pre_delivery'},
+                                                 tags=tags,
                                                  report_dir=pre_delivery_dir,)
                                                  # make_figures=True, make_plot=True)
                                                  # , selected_aperture_name=['MIRIM_SUB128'])
+
+        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                   report_dir=pre_delivery_dir, tags=tags)
+
+
     if compare_against_prd:
         # compare new SIAF with PRD version
         ref_siaf = pysiaf.Siaf(instrument)

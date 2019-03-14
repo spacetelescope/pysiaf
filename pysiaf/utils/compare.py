@@ -392,3 +392,60 @@ def dict_compare(dictionary_1, dictionary_2):
                 if dictionary_1[o] != dictionary_2[o]}
     same = set(o for o in intersect_keys if dictionary_1[o] == dictionary_2[o])
     return added, removed, modified, same
+
+
+def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, report_dir=None,
+                               selected_aperture_name=None, tags=None, save_plot=True):
+    """Visualize aperture of two SIAF files.
+
+    Parameters
+    ----------
+    comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
+        The SIAF that will be compared to the reference_siaf
+    reference_siaf_input : str (absolute file name) or pysiaf.Siaf object
+        The reference SIAF. Defaults to the current PRD content.
+    report_dir
+    selected_aperture_name
+    tags
+
+    Returns
+    -------
+
+    """
+    comparison_siaf = get_siaf(comparison_siaf_input)
+    instrument = comparison_siaf.instrument
+
+    if reference_siaf_input is None:
+        reference_siaf = Siaf(instrument)
+        reference_siaf_description = '{}-{}'.format(instrument, JWST_PRD_VERSION)
+    else:
+        reference_siaf = get_siaf(reference_siaf_input)
+        reference_siaf_description = reference_siaf.description.replace('.', '_')
+
+    reference_tag = reference_siaf_description
+    comparison_tag = comparison_siaf.description.replace('.', '_')
+    if tags is not None:
+        reference_tag = '{}'.format(tags['reference'])
+        comparison_tag = '{}'.format(tags['comparison'])
+
+    if report_dir is None:
+        report_dir = os.environ['HOME']
+
+    siaf_list = [reference_siaf, comparison_siaf]
+    tag_list = [reference_tag, comparison_tag]
+
+
+    # index 0 is for reference SIAF (defaults to PRD)
+    # index 1 is for comparison SIAF
+    for j, siaf in enumerate(siaf_list):
+        pl.figure(figsize=(15, 15), facecolor='w', edgecolor='k')
+        pl.clf()
+        for aperture_name, aperture in siaf.apertures.items():
+            if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
+                continue
+            aperture.plot()
+        pl.title(tag_list[j])
+        pl.show()
+        if save_plot:
+            figure_name = os.path.join(report_dir, '{}_{}_siaf{}_apertures.pdf'.format(instrument, tag_list[j], j))
+            pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
