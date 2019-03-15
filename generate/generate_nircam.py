@@ -136,7 +136,7 @@ for AperName in aperture_name_list:
 
     if (parent_apertures is not None):
 
-        if (dependency_type in ['default', 'wedge', 'dhspil_wedge', 'grism_f444w']):
+        if (dependency_type in ['default', 'wedge', 'dhspil_wedge']):
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -166,8 +166,8 @@ for AperName in aperture_name_list:
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
                 aperture.V3Ref += 43.
-            elif dependency_type == 'grism_f444w':
-                1/0
+            # elif dependency_type == 'grism_f444w':
+            #     1/0
 
 
             aperture.complement()
@@ -284,6 +284,10 @@ for AperName in aperture_name_list:
             for j in range(4):
                 setattr(aperture, 'XIdlVert{:d}'.format(j + 1), corners_Idl_x[j])
                 setattr(aperture, 'YIdlVert{:d}'.format(j + 1), corners_Idl_y[j])
+
+        elif dependency_type == 'grism_f444w':
+            1/0
+
 
     aperture_dict[AperName] = aperture
 
