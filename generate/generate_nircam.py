@@ -286,6 +286,7 @@ for AperName in aperture_name_list:
                 setattr(aperture, 'YIdlVert{:d}'.format(j + 1), corners_Idl_y[j])
 
         elif dependency_type == 'grism_f444w':
+
             1/0
 
 
