@@ -254,10 +254,9 @@ class Aperture(object):
                 '}).'.format(
                     key, type(value)))
         elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float32, np.float64]):
-            # print(np.ma.is_masked(value))
-            # if value == 0:  # accomodate `None` entries in SIAF definition source files
-            #     value = 0.0
-            # else:
+            if np.ma.is_masked(value):  # accomodate `None` entries in SIAF definition source files
+                value = 0.0
+            else:
                 raise AttributeError('pysiaf Aperture attribute `{}` has to be a float.'.format(key))
 
         self.__dict__[key] = value
