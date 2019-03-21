@@ -748,8 +748,15 @@ def unit_vector_from_cartesian(x=None, y=None, z=None):
 
     """
     # check that two arguments are provided
-    if np.sum(np.array([x, y, z]) != None) != 2:
-        raise TypeError('Function requires axactly two arguments.')
+    if x is None:
+        if y is None or z is None:
+            raise TypeError('Function requires axactly two arguments.')
+    if y is None:
+        if x is None or z is None:
+            raise TypeError('Function requires axactly two arguments.')
+    if z is None:
+        if x is None or y is None:
+            raise TypeError('Function requires axactly two arguments.')
 
     # convert to radian
     if isinstance(x, u.Quantity):
@@ -767,11 +774,12 @@ def unit_vector_from_cartesian(x=None, y=None, z=None):
     else:
         z_rad = z
 
-    if x and y:
+    # handle array and scalar inputs
+    if np.array([x_rad]).all() and np.array([y_rad]).all():
         unit_vector = np.array([x_rad, y_rad, np.sqrt(1-(x_rad**2+y_rad**2))])
-    elif y and z:
+    elif np.array([y_rad]).all() and np.array([z_rad]).all():
         unit_vector = np.array([np.sqrt(1-(y_rad**2+z_rad**2)), y_rad, z_rad])
-    elif x and z:
+    elif np.array([x_rad]).all() and np.array([z_rad]).all():
         unit_vector = np.array([x_rad, np.sqrt(1-(x_rad**2+z_rad**2)), z_rad])
 
     if np.any(np.isnan(unit_vector)):

@@ -1475,6 +1475,8 @@ class HstAperture(Aperture):
         super(HstAperture, self).__init__()
         self.observatory = 'HST'
         self._fgs_use_rearranged_alignment_parameters = True
+        # self._fgs_use_welter_method_to_plot = True
+        self._fgs_use_welter_method_to_plot = False
 
     # dictionary that allows to set attributes using JWST naming convention
     _hst_to_jwst_keys = ({'SI_mne': 'InstrName',
@@ -1570,16 +1572,74 @@ class HstAperture(Aperture):
         """Compute closed polygon points of aperture outline."""
         if self.a_shape == 'PICK':
             # TODO: implement method based on the FGS cones defined in amu.rep file
-            x0 = 0.
-            y0 = 0.
-            outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
-                                                           self.pi_angle - self.pi_ext,
-                                                           self.pi_angle + self.pi_ext, N=100)
-            inner_points_x, inner_points_y = points_on_arc(x0, y0, self.min,
-                                                           self.po_angle - self.po_ext,
-                                                           self.po_angle + self.po_ext, N=100)
-            x_Tel = np.hstack((outer_points_x, inner_points_x[::-1]))
-            y_Tel = np.hstack((outer_points_y, inner_points_y[::-1]))
+            if self._fgs_use_welter_method_to_plot is False:
+            #     use SIAF pickle description
+                x0 = 0.
+                y0 = 0.
+                outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
+                                                               self.pi_angle - self.pi_ext,
+                                                               self.pi_angle + self.pi_ext, N=100)
+                inner_points_x, inner_points_y = points_on_arc(x0, y0, self.min,
+                                                               self.po_angle - self.po_ext,
+                                                               self.po_angle + self.po_ext, N=100)
+                x_Tel = np.hstack((outer_points_x, inner_points_x[::-1]))
+                y_Tel = np.hstack((outer_points_y, inner_points_y[::-1]))
+
+            else:
+                def cart2pol(x, y):
+                    rho = np.sqrt(x ** 2 + y ** 2)
+                    phi = np.arctan2(y, x)
+                    return (rho, phi)
+
+                def pol2cart(rho, phi):
+                    x = rho * np.cos(phi)
+                    y = rho * np.sin(phi)
+                    return (x, y)
+                # use Gary Welter's method
+                sq2 = 0.5 * np.sqrt(2)
+                object_space_corners = {}
+                object_space_corners['fgs1'] = np.array([[+0.004, 0.004],
+                                                         [+0.003, 0.003],
+                                                         [-0.003, 0.003],
+                                                         [-0.004, 0.004],
+                                                         ])*sq2
+
+                unit_vectors_idl = rotations.unit_vector_from_cartesian(x=object_space_corners['fgs1'][:, 0],
+                                                     y=object_space_corners['fgs1'][:, 1])
+                tvs = self.compute_tvs_matrix()
+                unit_vectors_tel = np.dot(tvs, unit_vectors_idl) * u.rad.to(u.arcsec)
+                x_Tel = unit_vectors_tel[1,:] #np.hstack((unit_vectors_tel[1,:], inner_points_x[::-1]))
+                y_Tel = unit_vectors_tel[2,:] #np.hstack((outer_points_y, inner_points_y[::-1]))
+                rho, phi = cart2pol(unit_vectors_tel[1,:], unit_vectors_tel[2,:])
+                print(x_Tel)
+                print(y_Tel)
+                print(rho)
+                print(phi)
+                pl.figure()
+                pl.polar(phi, rho)
+                pl.show()
+
+                1/0
+                # # Corner Vectors for FGS-1R
+                # fgs1_corners = {}
+                # fgs1_corners['a'] = rotations.unit_vector_from_cartesian(x=-0.003 * sq2,
+                #                                                                 y=0.003 * sq2)
+                # fgs1_corners['b'] = pysiaf.rotations.unit_vector_from_cartesian(x=-0.004 * sq2,
+                #                                                                 y=0.004 * sq2)
+                # fgs1_corners['c'] = pysiaf.rotations.unit_vector_from_cartesian(x=0.003 * sq2,
+                #                                                                 y=0.003 * sq2)
+                # fgs1_corners['d'] = pysiaf.rotations.unit_vector_from_cartesian(x=0.004 * sq2,
+                #                                                                 y=0.004 * sq2)
+                #
+                # pl.figure()
+                # aperture.plot()
+                # initial_keys = list(fgs1_corners.keys())
+                # for key in initial_keys:
+                #     fgs1_corners['{}_tel'.format(key)] = np.dot(tvs, fgs1_corners[key]) * u.rad.to(
+                #         u.arcsec)
+                #     v1, v2, v3 = fgs1_corners['{}_tel'.format(key)]
+                #     pl.plot(v2, v3, 'bo')
+
 
             curve = SiafCoordinates(x_Tel, y_Tel, 'tel')
             points_x, points_y = self.convert(curve.x, curve.y, curve.frame, to_frame)
