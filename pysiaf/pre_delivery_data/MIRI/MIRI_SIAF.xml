@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2019-03-14T18:22:03.499 utc-->
+  <!--Generated 2019-03-21T17:20:22.568 utc-->
   <!--by jsahlmann-->
   <!--pysiaf version 0.2.4.dev3+g96f0c582-->
   <SiafEntry>
@@ -2052,10 +2052,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>70.50</XDetRef>
     <YDetRef>952.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.10973229</XSciScale>
     <YSciScale>0.11005123</YSciScale>
     <V2Ref>-381.275291</V2Ref>
@@ -2066,14 +2066,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5351</XIdlVert1>
-    <XIdlVert2>3.4902</XIdlVert2>
-    <XIdlVert3>3.5307</XIdlVert3>
-    <XIdlVert4>-3.4896</XIdlVert4>
-    <YIdlVert1>-3.5464</YIdlVert1>
-    <YIdlVert2>-3.5012</YIdlVert2>
-    <YIdlVert3>3.5420</YIdlVert3>
-    <YIdlVert4>3.4968</YIdlVert4>
+    <XIdlVert1>-2.6509</XIdlVert1>
+    <XIdlVert2>2.6176</XIdlVert2>
+    <XIdlVert3>2.6485</XIdlVert3>
+    <XIdlVert4>-2.6172</XIdlVert4>
+    <YIdlVert1>-2.6594</YIdlVert1>
+    <YIdlVert2>-2.6255</YIdlVert2>
+    <YIdlVert3>2.6570</YIdlVert3>
+    <YIdlVert4>2.6230</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -2172,10 +2172,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>211.50</XDetRef>
     <YDetRef>952.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.10961268</XSciScale>
     <YSciScale>0.11005830</YSciScale>
     <V2Ref>-396.676238</V2Ref>
@@ -2186,14 +2186,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5252</XIdlVert1>
-    <XIdlVert2>3.4931</XIdlVert2>
-    <XIdlVert3>3.5209</XIdlVert3>
-    <XIdlVert4>-3.4913</XIdlVert4>
-    <YIdlVert1>-3.5390</YIdlVert1>
-    <YIdlVert2>-3.5099</YIdlVert2>
-    <YIdlVert3>3.5340</YIdlVert3>
-    <YIdlVert4>3.5046</YIdlVert4>
+    <XIdlVert1>-2.6435</XIdlVert1>
+    <XIdlVert2>2.6196</XIdlVert2>
+    <XIdlVert3>2.6411</XIdlVert3>
+    <XIdlVert4>-2.6186</XIdlVert4>
+    <YIdlVert1>-2.6538</YIdlVert1>
+    <YIdlVert2>-2.6319</YIdlVert2>
+    <YIdlVert3>2.6509</YIdlVert3>
+    <YIdlVert4>2.6289</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -2292,10 +2292,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>65.50</XDetRef>
     <YDetRef>813.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.10991468</XSciScale>
     <YSciScale>0.11043765</YSciScale>
     <V2Ref>-381.919801</V2Ref>
@@ -2306,14 +2306,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5434</XIdlVert1>
-    <XIdlVert2>3.4938</XIdlVert2>
-    <XIdlVert3>3.5396</XIdlVert3>
-    <XIdlVert4>-3.4921</XIdlVert4>
-    <YIdlVert1>-3.5571</YIdlVert1>
-    <YIdlVert2>-3.5150</YIdlVert2>
-    <YIdlVert3>3.5539</YIdlVert3>
-    <YIdlVert4>3.5096</YIdlVert4>
+    <XIdlVert1>-2.6572</XIdlVert1>
+    <XIdlVert2>2.6202</XIdlVert2>
+    <XIdlVert3>2.6550</XIdlVert3>
+    <XIdlVert4>-2.6192</XIdlVert4>
+    <YIdlVert1>-2.6676</YIdlVert1>
+    <YIdlVert2>-2.6357</YIdlVert2>
+    <YIdlVert3>2.6657</YIdlVert3>
+    <YIdlVert4>2.6327</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -2412,10 +2412,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>211.50</XDetRef>
     <YDetRef>810.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.10983767</XSciScale>
     <YSciScale>0.11051365</YSciScale>
     <V2Ref>-397.923049</V2Ref>
@@ -2426,14 +2426,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5341</XIdlVert1>
-    <XIdlVert2>3.4989</XIdlVert2>
-    <XIdlVert3>3.5300</XIdlVert3>
-    <XIdlVert4>-3.4962</XIdlVert4>
-    <YIdlVert1>-3.5520</YIdlVert1>
-    <YIdlVert2>-3.5259</YIdlVert2>
-    <YIdlVert3>3.5477</YIdlVert3>
-    <YIdlVert4>3.5199</YIdlVert4>
+    <XIdlVert1>-2.6502</XIdlVert1>
+    <XIdlVert2>2.6239</XIdlVert2>
+    <XIdlVert3>2.6479</XIdlVert3>
+    <XIdlVert4>-2.6224</XIdlVert4>
+    <YIdlVert1>-2.6636</YIdlVert1>
+    <YIdlVert2>-2.6438</YIdlVert2>
+    <YIdlVert3>2.6612</YIdlVert3>
+    <YIdlVert4>2.6405</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -3012,10 +3012,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>62.50</XDetRef>
     <YDetRef>638.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11015296</XSciScale>
     <YSciScale>0.11081276</YSciScale>
     <V2Ref>-383.087919</V2Ref>
@@ -3026,14 +3026,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5507</XIdlVert1>
-    <XIdlVert2>3.5017</XIdlVert2>
-    <XIdlVert3>3.5480</XIdlVert3>
-    <XIdlVert4>-3.4989</XIdlVert4>
-    <YIdlVert1>-3.5631</YIdlVert1>
-    <YIdlVert2>-3.5312</YIdlVert2>
-    <YIdlVert3>3.5627</YIdlVert3>
-    <YIdlVert4>3.5262</YIdlVert4>
+    <XIdlVert1>-2.6628</XIdlVert1>
+    <XIdlVert2>2.6260</XIdlVert2>
+    <XIdlVert3>2.6613</XIdlVert3>
+    <XIdlVert4>-2.6244</XIdlVert4>
+    <YIdlVert1>-2.6723</YIdlVert1>
+    <YIdlVert2>-2.6480</YIdlVert2>
+    <YIdlVert3>2.6721</YIdlVert3>
+    <YIdlVert4>2.6451</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -3132,10 +3132,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>174.50</XDetRef>
     <YDetRef>627.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11014665</XSciScale>
     <YSciScale>0.11094433</YSciScale>
     <V2Ref>-395.471492</V2Ref>
@@ -3146,14 +3146,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5455</XIdlVert1>
-    <XIdlVert2>3.5071</XIdlVert2>
-    <XIdlVert3>3.5424</XIdlVert3>
-    <XIdlVert4>-3.5038</XIdlVert4>
-    <YIdlVert1>-3.5624</YIdlVert1>
-    <YIdlVert2>-3.5409</YIdlVert2>
-    <YIdlVert3>3.5611</YIdlVert3>
-    <YIdlVert4>3.5358</YIdlVert4>
+    <XIdlVert1>-2.6588</XIdlVert1>
+    <XIdlVert2>2.6300</XIdlVert2>
+    <XIdlVert3>2.6571</XIdlVert3>
+    <XIdlVert4>-2.6281</XIdlVert4>
+    <YIdlVert1>-2.6717</YIdlVert1>
+    <YIdlVert2>-2.6552</YIdlVert2>
+    <YIdlVert3>2.6710</YIdlVert3>
+    <YIdlVert4>2.6524</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -3252,10 +3252,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>60.50</XDetRef>
     <YDetRef>525.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11029579</XSciScale>
     <YSciScale>0.11087519</YSciScale>
     <V2Ref>-383.839892</V2Ref>
@@ -3266,14 +3266,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5532</XIdlVert1>
-    <XIdlVert2>3.5081</XIdlVert2>
-    <XIdlVert3>3.5515</XIdlVert3>
-    <XIdlVert4>-3.5049</XIdlVert4>
-    <YIdlVert1>-3.5588</YIdlVert1>
-    <YIdlVert2>-3.5374</YIdlVert2>
-    <YIdlVert3>3.5613</YIdlVert3>
-    <YIdlVert4>3.5336</YIdlVert4>
+    <XIdlVert1>-2.6648</XIdlVert1>
+    <XIdlVert2>2.6308</XIdlVert2>
+    <XIdlVert3>2.6638</XIdlVert3>
+    <XIdlVert4>-2.6290</XIdlVert4>
+    <YIdlVert1>-2.6694</YIdlVert1>
+    <YIdlVert2>-2.6527</YIdlVert2>
+    <YIdlVert3>2.6708</YIdlVert3>
+    <YIdlVert4>2.6506</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -3372,10 +3372,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>170.50</XDetRef>
     <YDetRef>518.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11031037</XSciScale>
     <YSciScale>0.11102613</YSciScale>
     <V2Ref>-395.987899</V2Ref>
@@ -3386,14 +3386,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5492</XIdlVert1>
-    <XIdlVert2>3.5135</XIdlVert2>
-    <XIdlVert3>3.5469</XIdlVert3>
-    <XIdlVert4>-3.5100</XIdlVert4>
-    <YIdlVert1>-3.5601</YIdlVert1>
-    <YIdlVert2>-3.5464</YIdlVert2>
-    <YIdlVert3>3.5614</YIdlVert3>
-    <YIdlVert4>3.5427</YIdlVert4>
+    <XIdlVert1>-2.6617</XIdlVert1>
+    <XIdlVert2>2.6348</XIdlVert2>
+    <XIdlVert3>2.6604</XIdlVert3>
+    <XIdlVert4>-2.6328</XIdlVert4>
+    <YIdlVert1>-2.6702</YIdlVert1>
+    <YIdlVert2>-2.6595</YIdlVert2>
+    <YIdlVert3>2.6710</YIdlVert3>
+    <YIdlVert4>2.6574</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -3972,10 +3972,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>62.50</XDetRef>
     <YDetRef>414.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11041592</XSciScale>
     <YSciScale>0.11072580</YSciScale>
     <V2Ref>-385.022117</V2Ref>
@@ -3986,14 +3986,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5533</XIdlVert1>
-    <XIdlVert2>3.5152</XIdlVert2>
-    <XIdlVert3>3.5527</XIdlVert3>
-    <XIdlVert4>-3.5118</XIdlVert4>
-    <YIdlVert1>-3.5460</YIdlVert1>
-    <YIdlVert2>-3.5379</YIdlVert2>
-    <YIdlVert3>3.5520</YIdlVert3>
-    <YIdlVert4>3.5360</YIdlVert4>
+    <XIdlVert1>-2.6649</XIdlVert1>
+    <XIdlVert2>2.6361</XIdlVert2>
+    <XIdlVert3>2.6646</XIdlVert3>
+    <XIdlVert4>-2.6342</XIdlVert4>
+    <YIdlVert1>-2.6602</YIdlVert1>
+    <YIdlVert2>-2.6533</YIdlVert2>
+    <YIdlVert3>2.6635</YIdlVert3>
+    <YIdlVert4>2.6522</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -4092,10 +4092,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>174.50</XDetRef>
     <YDetRef>411.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11045223</XSciScale>
     <YSciScale>0.11091063</YSciScale>
     <V2Ref>-397.371665</V2Ref>
@@ -4106,14 +4106,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5509</XIdlVert1>
-    <XIdlVert2>3.5204</XIdlVert2>
-    <XIdlVert3>3.5495</XIdlVert3>
-    <XIdlVert4>-3.5169</XIdlVert4>
-    <YIdlVert1>-3.5499</YIdlVert1>
-    <YIdlVert2>-3.5465</YIdlVert2>
-    <YIdlVert3>3.5544</YIdlVert3>
-    <YIdlVert4>3.5448</YIdlVert4>
+    <XIdlVert1>-2.6631</XIdlVert1>
+    <XIdlVert2>2.6400</XIdlVert2>
+    <XIdlVert3>2.6623</XIdlVert3>
+    <XIdlVert4>-2.6380</XIdlVert4>
+    <YIdlVert1>-2.6630</YIdlVert1>
+    <YIdlVert2>-2.6597</YIdlVert2>
+    <YIdlVert3>2.6655</YIdlVert3>
+    <YIdlVert4>2.6588</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -4212,10 +4212,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>57.50</XDetRef>
     <YDetRef>300.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11050420</XSciScale>
     <YSciScale>0.11026302</YSciScale>
     <V2Ref>-385.470849</V2Ref>
@@ -4226,14 +4226,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5509</XIdlVert1>
-    <XIdlVert2>3.5225</XIdlVert2>
-    <XIdlVert3>3.5517</XIdlVert3>
-    <XIdlVert4>-3.5192</XIdlVert4>
-    <YIdlVert1>-3.5212</YIdlVert1>
-    <YIdlVert2>-3.5295</YIdlVert2>
-    <YIdlVert3>3.5316</YIdlVert3>
-    <YIdlVert4>3.5303</YIdlVert4>
+    <XIdlVert1>-2.6633</XIdlVert1>
+    <XIdlVert2>2.6416</XIdlVert2>
+    <XIdlVert3>2.6638</XIdlVert3>
+    <XIdlVert4>-2.6397</XIdlVert4>
+    <YIdlVert1>-2.6420</YIdlVert1>
+    <YIdlVert2>-2.6473</YIdlVert2>
+    <YIdlVert3>2.6478</YIdlVert3>
+    <YIdlVert4>2.6477</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -4332,10 +4332,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>170.50</XDetRef>
     <YDetRef>296.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11056979</XSciScale>
     <YSciScale>0.11047803</YSciScale>
     <V2Ref>-397.953276</V2Ref>
@@ -4346,14 +4346,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5506</XIdlVert1>
-    <XIdlVert2>3.5275</XIdlVert2>
-    <XIdlVert3>3.5505</XIdlVert3>
-    <XIdlVert4>-3.5241</XIdlVert4>
-    <YIdlVert1>-3.5279</YIdlVert1>
-    <YIdlVert2>-3.5372</YIdlVert2>
-    <YIdlVert3>3.5366</YIdlVert3>
-    <YIdlVert4>3.5385</YIdlVert4>
+    <XIdlVert1>-2.6630</XIdlVert1>
+    <XIdlVert2>2.6453</XIdlVert2>
+    <XIdlVert3>2.6629</XIdlVert3>
+    <XIdlVert4>-2.6434</XIdlVert4>
+    <YIdlVert1>-2.6468</YIdlVert1>
+    <YIdlVert2>-2.6531</YIdlVert2>
+    <YIdlVert3>2.6518</YIdlVert3>
+    <YIdlVert4>2.6538</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -4932,10 +4932,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>61.50</XDetRef>
     <YDetRef>191.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11055270</XSciScale>
     <YSciScale>0.10949552</YSciScale>
     <V2Ref>-386.878794</V2Ref>
@@ -4946,14 +4946,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5458</XIdlVert1>
-    <XIdlVert2>3.5298</XIdlVert2>
-    <XIdlVert3>3.5481</XIdlVert3>
-    <XIdlVert4>-3.5266</XIdlVert4>
-    <YIdlVert1>-3.4854</YIdlVert1>
-    <YIdlVert2>-3.5122</YIdlVert2>
-    <YIdlVert3>3.5006</YIdlVert3>
-    <YIdlVert4>3.5162</YIdlVert4>
+    <XIdlVert1>-2.6596</XIdlVert1>
+    <XIdlVert2>2.6471</XIdlVert2>
+    <XIdlVert3>2.6609</XIdlVert3>
+    <XIdlVert4>-2.6453</XIdlVert4>
+    <YIdlVert1>-2.6156</YIdlVert1>
+    <YIdlVert2>-2.6346</YIdlVert2>
+    <YIdlVert3>2.6241</YIdlVert3>
+    <YIdlVert4>2.6368</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -5052,10 +5052,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>176.50</XDetRef>
     <YDetRef>188.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11064453</XSciScale>
     <YSciScale>0.10974590</YSciScale>
     <V2Ref>-399.582407</V2Ref>
@@ -5066,14 +5066,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5479</XIdlVert1>
-    <XIdlVert2>3.5340</XIdlVert2>
-    <XIdlVert3>3.5492</XIdlVert3>
-    <XIdlVert4>-3.5310</XIdlVert4>
-    <YIdlVert1>-3.4954</YIdlVert1>
-    <YIdlVert2>-3.5187</YIdlVert2>
-    <YIdlVert3>3.5087</YIdlVert3>
-    <YIdlVert4>3.5235</YIdlVert4>
+    <XIdlVert1>-2.6611</XIdlVert1>
+    <XIdlVert2>2.6503</XIdlVert2>
+    <XIdlVert3>2.6618</XIdlVert3>
+    <XIdlVert4>-2.6485</XIdlVert4>
+    <YIdlVert1>-2.6229</YIdlVert1>
+    <YIdlVert2>-2.6396</YIdlVert2>
+    <YIdlVert3>2.6304</YIdlVert3>
+    <YIdlVert4>2.6423</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -5172,10 +5172,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>57.50</XDetRef>
     <YDetRef>78.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11054292</XSciScale>
     <YSciScale>0.10825252</YSciScale>
     <V2Ref>-387.454677</V2Ref>
@@ -5186,14 +5186,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5370</XIdlVert1>
-    <XIdlVert2>3.5367</XIdlVert2>
-    <XIdlVert3>3.5412</XIdlVert3>
-    <XIdlVert4>-3.5339</XIdlVert4>
-    <YIdlVert1>-3.4319</YIdlVert1>
-    <YIdlVert2>-3.4810</YIdlVert2>
-    <YIdlVert3>3.4529</YIdlVert3>
-    <YIdlVert4>3.4892</YIdlVert4>
+    <XIdlVert1>-2.6532</XIdlVert1>
+    <XIdlVert2>2.6523</XIdlVert2>
+    <XIdlVert3>2.6556</XIdlVert3>
+    <XIdlVert4>-2.6507</XIdlVert4>
+    <YIdlVert1>-2.5760</YIdlVert1>
+    <YIdlVert2>-2.6116</YIdlVert2>
+    <YIdlVert3>2.5879</YIdlVert3>
+    <YIdlVert4>2.6162</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
@@ -5292,10 +5292,10 @@
     <YDetSize>1024</YDetSize>
     <XDetRef>170.50</XDetRef>
     <YDetRef>73.50</YDetRef>
-    <XSciSize>64</XSciSize>
-    <YSciSize>64</YSciSize>
-    <XSciRef>32.50</XSciRef>
-    <YSciRef>32.50</YSciRef>
+    <XSciSize>48</XSciSize>
+    <YSciSize>48</YSciSize>
+    <XSciRef>24.50</XSciRef>
+    <YSciRef>24.50</YSciRef>
     <XSciScale>0.11066033</XSciScale>
     <YSciScale>0.10850316</YSciScale>
     <V2Ref>-399.959358</V2Ref>
@@ -5306,14 +5306,14 @@
     <DetSciParity>1</DetSciParity>
     <V3SciXAngle>-85.30599027</V3SciXAngle>
     <V3SciYAngle>4.83425324</V3SciYAngle>
-    <XIdlVert1>-3.5419</XIdlVert1>
-    <XIdlVert2>3.5398</XIdlVert2>
-    <XIdlVert3>3.5449</XIdlVert3>
-    <XIdlVert4>-3.5373</XIdlVert4>
-    <YIdlVert1>-3.4443</YIdlVert1>
-    <YIdlVert2>-3.4851</YIdlVert2>
-    <YIdlVert3>3.4634</YIdlVert3>
-    <YIdlVert4>3.4943</YIdlVert4>
+    <XIdlVert1>-2.6568</XIdlVert1>
+    <XIdlVert2>2.6546</XIdlVert2>
+    <XIdlVert3>2.6584</XIdlVert3>
+    <XIdlVert4>-2.6533</XIdlVert4>
+    <YIdlVert1>-2.5851</YIdlVert1>
+    <YIdlVert2>-2.6148</YIdlVert2>
+    <YIdlVert3>2.5959</YIdlVert3>
+    <YIdlVert4>2.6200</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>4</Sci2IdlDeg>
