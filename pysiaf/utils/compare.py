@@ -395,7 +395,7 @@ def dict_compare(dictionary_1, dictionary_2):
 
 
 def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, report_dir=None,
-                               selected_aperture_name=None, tags=None, save_plot=True):
+                               selected_aperture_name=None, tags=None, save_plot=True, mark_ref=False):
     """Visualize aperture of two SIAF files.
 
     Parameters
@@ -443,7 +443,7 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
         for aperture_name, aperture in siaf.apertures.items():
             if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
                 continue
-            aperture.plot()
+            aperture.plot(mark_ref=mark_ref)
         pl.title(tag_list[j])
         pl.show()
         if save_plot:

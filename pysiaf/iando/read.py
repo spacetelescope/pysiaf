@@ -502,7 +502,7 @@ def read_siaf_aperture_definitions(instrument, directory=None):
 
     filename = os.path.join(directory, '{}_siaf_aperture_definition.txt'.format(instrument.lower()))
 
-    return Table.read(filename, format='ascii.basic', delimiter=',', fill_values=('None', 0), guess=False)
+    return Table.read(filename, format='ascii.basic', delimiter=',', fill_values=('None', 0)).filled(0.)
 
 
 def read_siaf_ddc_mapping_reference_file(instrument):

@@ -497,7 +497,8 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
 
 
 def match_v2v3(aperture_1, aperture_2, verbose=False):
-    """Use the V2V3 from aperture_1 in aperture_2 modifying X[Y]DetRef,X[Y]SciRef to match.
+    """Modify the X[Y]DetRef,X[Y]SciRef attributes of aperture_2 such
+    that V2Ref,V3Ref of both apertures match.
 
     Also shift the polynomial coefficients to reflect the new reference point origin
     and for NIRCam recalculate angles.
