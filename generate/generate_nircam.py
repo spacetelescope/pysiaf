@@ -361,7 +361,7 @@ if emulate_delivery:
     ref_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
     # compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': 'includes_all_previous_changes', 'comparison': 'changes_related_to_jwstsiaf-129'})
 
-    tags = {'reference': 'includes_all_previous_changes', 'comparison': 'changes_related_to_jwstsiaf-129'}
+    tags = {'reference': 'outdated pre-delivery', 'comparison': 'new pre-delivery'}
     compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags) #
     # compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}) #
 

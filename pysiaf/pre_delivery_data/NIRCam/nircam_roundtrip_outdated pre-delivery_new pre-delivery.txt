@@ -1,5 +1,5 @@
-Reference:  189 apertures in includes_all_previous_changes (index 0 in table below)
-Comparison: 189 apertures in changes_related_to_jwstsiaf-129 (index 1 in table below)
+Reference:  189 apertures in outdated pre-delivery (index 0 in table below)
+Comparison: 189 apertures in new pre-delivery (index 1 in table below)
 
                   AperName , siaf0_dx_mean , siaf0_dy_mean , siaf1_dx_mean , siaf1_dy_mean , difference_dx_mean , difference_dy_mean
             NRCA1_FULL_OSS ,      0.021213 ,      0.018763 ,      0.021213 ,      0.018763 ,          -0.000000 ,          -0.000000
