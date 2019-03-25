@@ -41,9 +41,10 @@ def test_jwst_fgs2_fgs1_matrix():
 
     fgs1_x_idl_rad = fgs1_x_idl * u.arcsec.to(u.rad)
     fgs1_y_idl_rad = fgs1_y_idl * u.arcsec.to(u.rad)
-    fgs1_unit_vector_idl = np.array([fgs1_x_idl_rad, fgs1_y_idl_rad, np.sqrt(1 - (fgs1_x_idl_rad**2+fgs1_y_idl_rad**2))])
+    # fgs1_unit_vector_idl = np.array([fgs1_x_idl_rad, fgs1_y_idl_rad, np.sqrt(1 - (fgs1_x_idl_rad**2+fgs1_y_idl_rad**2))])
+    fgs1_unit_vector_idl = np.array([np.sqrt(1 - (fgs1_x_idl_rad**2+fgs1_y_idl_rad**2)), fgs1_x_idl_rad, fgs1_y_idl_rad])
     # fgs2_unit_vector_idl = np.dot(rotation_2to1.T, fgs1_unit_vector_idl)
     fgs2_unit_vector_idl = np.dot(rotation_1to2, fgs1_unit_vector_idl)
-    print(fgs2_unit_vector_idl * u.rad.to(u.arcsec))
-    fgs2_x_idl, fgs2_y_idl = fgs2_unit_vector_idl[0:2] * u.rad.to(u.arcsec)
+    # print(fgs2_unit_vector_idl * u.rad.to(u.arcsec))
+    fgs2_x_idl, fgs2_y_idl = fgs2_unit_vector_idl[1:] * u.rad.to(u.arcsec)
     print(fgs2_x_idl, fgs2_y_idl)
