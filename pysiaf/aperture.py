@@ -907,7 +907,8 @@ class Aperture(object):
                                                                             y_sci - self.YSciRef)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   output_coordinates='tangent_plane', verbose=False):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -948,9 +949,10 @@ class Aperture(object):
         if V3Ref_arcsec is None:
             V3Ref_arcsec = self.V3Ref
 
-        # print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method,
-        #                                                                        input_coordinates,
-        #                                                                        output_coordinates))
+        if verbose:
+            print('Method: {}, input_coordinates {}, output_coordinates={}'.format(
+                method, input_coordinates, output_coordinates))
+
         if method == 'spherical':
             if input_coordinates == 'cartesian':
                 # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
@@ -980,7 +982,6 @@ class Aperture(object):
             if output_coordinates == 'cartesian':
                 v2, v3 = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
 
-
         elif method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
                 raise RuntimeError('Input has to be in tangent plane.')
@@ -989,49 +990,6 @@ class Aperture(object):
 
             v2 = x_model(x_idl, y_idl)
             v3 = y_model(x_idl, y_idl)
-
-        elif method == 'spherical_transformation':
-            if input_coordinates == 'spherical':
-                x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
-                                                           y_idl * u.arcsec.to(u.deg)
-
-            elif input_coordinates == 'tangent_plane':
-                # deproject coordinates before applying rotations
-                # uses origin of idl system x,y=0,0 as reference point
-                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
-
-            if V3IdlYAngle_deg is None:
-                V3IdlYAngle_deg = self.V3IdlYAngle
-            if V2Ref_arcsec is None:
-                V2Ref_arcsec = self.V2Ref
-            if V3Ref_arcsec is None:
-                V3Ref_arcsec = self.V3Ref
-
-            # only matrix rotations, this transforms from a spherical to a spherical coordinate
-            # system. These matrices transform the V-reference point to the ideal reference point
-            M1 = rotations.rotate(3, -1 * V2Ref_arcsec / 3600.)
-            M2 = rotations.rotate(2, V3Ref_arcsec / 3600.)
-            M3 = rotations.rotate(1, V3IdlYAngle_deg)
-            M4 = np.dot(M2, M1)
-            M = np.dot(M3, M4)
-
-            unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
-
-            # print(unit_vector)
-
-            unit_vector[1] = self.VIdlParity * unit_vector[1]
-            rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
-            v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-            # 1/0
-            # v2_spherical_arcsec, v3_spherical_arcsec = rotated_vector[1]*u.deg.to(u.arcsec), rotated_vector[2]*u.deg.to(u.arcsec)
-
-            if output_coordinates=='tangent_plane':
-                # tangent plane projection using tel boresight
-                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg), v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
-                v2, v3 = v2_tangent_deg*3600., v3_tangent_deg*3600.
-            else:
-                v2, v3 = v2_spherical_arcsec, v3_spherical_arcsec
 
         if self._correct_dva:
             if 'FGS' in self.AperName:
@@ -1100,15 +1058,10 @@ class Aperture(object):
                 unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec,
                                                             v3_arcsec * u.arcsec)
 
-            # unit_vector_tel[1] *= self.VIdlParity
-
             l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec,
                                                             V3IdlYAngle_deg)
 
             unit_vector_idl = np.dot(l_matrix, unit_vector_tel)
-
-
-            # unit_vector_idl[1] += self.VIdlParity
 
             if output_coordinates == 'cartesian':
                 x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0] * u.rad.to(u.arcsec), unit_vector_idl[
@@ -1120,47 +1073,6 @@ class Aperture(object):
 
             return x_idl_arcsec, y_idl_arcsec
 
-        elif method == 'spherical_transformation':
-
-            if input_coordinates == 'spherical':
-                v2_spherical_deg, v3_spherical_deg = v2_arcsec * u.arcsec.to(u.deg), v3_arcsec * u.arcsec.to(u.deg)
-
-            elif input_coordinates == 'tangent_plane':
-                # deproject coordinates before applying rotations
-                # uses origin of idl system x,y=0,0 as reference point
-                v2_spherical_deg, v3_spherical_deg = projection.deproject_from_tangent_plane(v2_arcsec * u.arcsec.to(u.deg), v3_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
-
-            if V3IdlYAngle_deg is None:
-                V3IdlYAngle_deg = self.V3IdlYAngle
-            if V2Ref_arcsec is None:
-                V2Ref_arcsec = self.V2Ref
-            if V3Ref_arcsec is None:
-                V3Ref_arcsec = self.V3Ref
-
-            # only matrix rotations, this transforms from a spherical to a spherical coordinate
-            # system
-            M1 = rotations.rotate(3, -1 * V2Ref_arcsec/3600.)
-            M2 = rotations.rotate(2, V3Ref_arcsec/3600.)
-            M3 = rotations.rotate(1, V3IdlYAngle_deg)
-            M4 = np.dot(M2, M1)
-            M = np.dot(M3, M4)
-
-            unit_vector = rotations.unit(v2_spherical_deg, v3_spherical_deg)
-            rotated_vector = np.dot(M, unit_vector)
-            rotated_vector[1] = self.VIdlParity * rotated_vector[1]
-            x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
-
-            if output_coordinates == 'spherical':
-                return x_idl_spherical_arcsec, y_idl_spherical_arcsec
-
-            elif output_coordinates == 'tangent_plane':
-                # Add tangent-plane projection with reference point at origin (0,0) of ideal system
-                x_idl_tangent_deg, y_idl_tangent_deg = projection.project_to_tangent_plane(
-                    x_idl_spherical_arcsec * u.arcsec.to(u.deg),
-                    y_idl_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
-
-                return x_idl_tangent_deg * u.deg.to(u.arcsec), \
-                       y_idl_tangent_deg * u.deg.to(u.arcsec)
 
     def sci_to_idl(self, x_sci, y_sci):
         """Science to ideal frame transformation."""
@@ -1556,15 +1468,16 @@ class HstAperture(Aperture):
                 return v2, v3, pa, tvs
             else:
                 return v2_arcsec, v3_arcsec, pa_deg, tvs
-        # else:
-        #     v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
-        #     v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
-        #     pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
-        #     if self._fgs_use_rearranged_alignment_parameters:
-        #         pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
-        #         return v2, v3, pa, tvs
-        #     else:
-        #     return v2, v3, pa, tvs
+        else:
+            raise NotImplementedError
+            #     v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
+            #     v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
+            #     pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
+            #     if self._fgs_use_rearranged_alignment_parameters:
+            #         pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
+            #         return v2, v3, pa, tvs
+            #     else:
+            #     return v2, v3, pa, tvs
 
 
 
@@ -1573,7 +1486,7 @@ class HstAperture(Aperture):
         if self.a_shape == 'PICK':
             # TODO: implement method based on the FGS cones defined in amu.rep file
             if self._fgs_use_welter_method_to_plot is False:
-            #     use SIAF pickle description
+                #     use SIAF pickle description
                 x0 = 0.
                 y0 = 0.
                 outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
@@ -1586,60 +1499,39 @@ class HstAperture(Aperture):
                 y_Tel = np.hstack((outer_points_y, inner_points_y[::-1]))
 
             else:
-                def cart2pol(x, y):
-                    rho = np.sqrt(x ** 2 + y ** 2)
-                    phi = np.arctan2(y, x)
-                    return (rho, phi)
-
-                def pol2cart(rho, phi):
-                    x = rho * np.cos(phi)
-                    y = rho * np.sin(phi)
-                    return (x, y)
-                # use Gary Welter's method
-                sq2 = 0.5 * np.sqrt(2)
-                object_space_corners = {}
-                object_space_corners['fgs1'] = np.array([[+0.004, 0.004],
-                                                         [+0.003, 0.003],
-                                                         [-0.003, 0.003],
-                                                         [-0.004, 0.004],
-                                                         ])*sq2
-
-                unit_vectors_idl = rotations.unit_vector_from_cartesian(x=object_space_corners['fgs1'][:, 0],
-                                                     y=object_space_corners['fgs1'][:, 1])
-                tvs = self.compute_tvs_matrix()
-                unit_vectors_tel = np.dot(tvs, unit_vectors_idl) * u.rad.to(u.arcsec)
-                x_Tel = unit_vectors_tel[1,:] #np.hstack((unit_vectors_tel[1,:], inner_points_x[::-1]))
-                y_Tel = unit_vectors_tel[2,:] #np.hstack((outer_points_y, inner_points_y[::-1]))
-                rho, phi = cart2pol(unit_vectors_tel[1,:], unit_vectors_tel[2,:])
-                print(x_Tel)
-                print(y_Tel)
-                print(rho)
-                print(phi)
-                pl.figure()
-                pl.polar(phi, rho)
-                pl.show()
-
-                1/0
-                # # Corner Vectors for FGS-1R
-                # fgs1_corners = {}
-                # fgs1_corners['a'] = rotations.unit_vector_from_cartesian(x=-0.003 * sq2,
-                #                                                                 y=0.003 * sq2)
-                # fgs1_corners['b'] = pysiaf.rotations.unit_vector_from_cartesian(x=-0.004 * sq2,
-                #                                                                 y=0.004 * sq2)
-                # fgs1_corners['c'] = pysiaf.rotations.unit_vector_from_cartesian(x=0.003 * sq2,
-                #                                                                 y=0.003 * sq2)
-                # fgs1_corners['d'] = pysiaf.rotations.unit_vector_from_cartesian(x=0.004 * sq2,
-                #                                                                 y=0.004 * sq2)
-                #
-                # pl.figure()
-                # aperture.plot()
-                # initial_keys = list(fgs1_corners.keys())
-                # for key in initial_keys:
-                #     fgs1_corners['{}_tel'.format(key)] = np.dot(tvs, fgs1_corners[key]) * u.rad.to(
-                #         u.arcsec)
-                #     v1, v2, v3 = fgs1_corners['{}_tel'.format(key)]
-                #     pl.plot(v2, v3, 'bo')
-
+                raise NotImplementedError
+                    # def cart2pol(x, y):
+                    #     rho = np.sqrt(x ** 2 + y ** 2)
+                    #     phi = np.arctan2(y, x)
+                    #     return (rho, phi)
+                    #
+                    # def pol2cart(rho, phi):
+                    #     x = rho * np.cos(phi)
+                    #     y = rho * np.sin(phi)
+                    #     return (x, y)
+                    # # use Gary Welter's method
+                    # sq2 = 0.5 * np.sqrt(2)
+                    # object_space_corners = {}
+                    # object_space_corners['fgs1'] = np.array([[+0.004, 0.004],
+                    #                                          [+0.003, 0.003],
+                    #                                          [-0.003, 0.003],
+                    #                                          [-0.004, 0.004],
+                    #                                          ])*sq2
+                    #
+                    # unit_vectors_idl = rotations.unit_vector_from_cartesian(x=object_space_corners['fgs1'][:, 0],
+                    #                                      y=object_space_corners['fgs1'][:, 1])
+                    # tvs = self.compute_tvs_matrix()
+                    # unit_vectors_tel = np.dot(tvs, unit_vectors_idl) * u.rad.to(u.arcsec)
+                    # x_Tel = unit_vectors_tel[1,:] #np.hstack((unit_vectors_tel[1,:], inner_points_x[::-1]))
+                    # y_Tel = unit_vectors_tel[2,:] #np.hstack((outer_points_y, inner_points_y[::-1]))
+                    # rho, phi = cart2pol(unit_vectors_tel[1,:], unit_vectors_tel[2,:])
+                    # print(x_Tel)
+                    # print(y_Tel)
+                    # print(rho)
+                    # print(phi)
+                    # pl.figure()
+                    # pl.polar(phi, rho)
+                    # pl.show()
 
             curve = SiafCoordinates(x_Tel, y_Tel, 'tel')
             points_x, points_y = self.convert(curve.x, curve.y, curve.frame, to_frame)
@@ -1764,7 +1656,8 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane', output_coordinates=None):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   output_coordinates=None, verbose=False):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
 
         INPUT COORDINATES HAVE TO BE FGS OBJECT SPACE CARTESIAN X,Y coordinates
@@ -1806,7 +1699,10 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
-            # print('Method: {}, input_coordinates {}, output_coordinates={}'.format(method, input_coordinates, output_coordinates))
+            if verbose:
+                print('Method: {}, input_coordinates {}, output_coordinates={}'.format(
+                    method, input_coordinates, output_coordinates))
+
             if method == 'spherical':
                 # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
                 # this is a distortion corrected object space vector
@@ -1816,195 +1712,19 @@ class HstAperture(Aperture):
                 else:
                     raise ValueError('Input coordinates must be `cartesian`.')
 
-                # if self.AperName == 'FGS2':
-                #     unit_vector_idl[[1, 2]] *= -1.
-                    # unit_vector_tel[[0, 2]] *= -1.
-
-                # unit_vector_idl = rotations.unit_vector_from_cartesian(y=x_idl*u.arcsec, z=y_idl*u.arcsec)
-                # print(unit_vector_idl.T)
-                # unit_vector_idl_2 = rotations.unit_vector_sky(x_idl*u.arcsec, y_idl*u.arcsec)
-                # print(unit_vector_idl_2.T)
-                # print()
-
-                # unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
-                # print(unit_vector_idl.T)
-                # unit_vector_idl_2 = rotations.unit_vector_hst_fgs_object(x_idl*u.arcsec, (x_idl*y_idl)*u.arcsec)
-                # print(unit_vector_idl_2.T)
-
                 # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
                 unit_vector_tel = np.dot(tvs, unit_vector_idl)
-
-                # if self.AperName == 'FGS2':
-                #     # unit_vector_tel[[1, 2]] *= -1.
-                #     unit_vector_tel[[0, 2]] *= -1.
 
                 if output_coordinates == 'polar':
                     # polar coordinates on focal sphere
                     nu2, nu3 = rotations.polar_angles(unit_vector_tel)
                     v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
-
-                if output_coordinates == 'cartesian':
+                elif output_coordinates == 'cartesian':
                     v2_arcsec, v3_arcsec = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
 
-
-                # v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
-
-
-
-            elif False:
-
-
-                # if method == 'spherical_transformation':
-                #     #apply TVS formalism to spherical coordinates
-                #     if input_coordinates == 'spherical':
-                #         x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
-                #                                                    y_idl * u.arcsec.to(u.deg)
-                #
-                #     elif input_coordinates == 'tangent_plane':
-                #         # deproject coordinates before applying rotations
-                #         # uses origin of idl system x,y=0,0 as reference point
-                #         x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                #         x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
-                #
-                #     x_rad = np.deg2rad(x_idl_spherical_deg)
-                #     y_rad = np.deg2rad(y_idl_spherical_deg)
-                # else:
-                x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
-                y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
-
-                # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
-                # this is a distortion corrected object space vector
-                xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
-
-                1/0
-                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
-                v = np.rad2deg(np.dot(tvs, xyz))
-
-                # use the cartesian coordinates of the output vector as v=[v1, v2, v3]
-                v2_spherical_arcsec, v3_spherical_arcsec = v[1]*u.deg.to(u.arcsec), v[2]*u.deg.to(u.arcsec)
-
-                print(v2_spherical_arcsec, v3_spherical_arcsec)
-                print(rotations.v2v3(v))
-                1/0
-
-            # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
-            elif (method == 'spherical_transformation'):
-                # apply different, more accurate formalism
-
-                unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
-                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
-                unit_vector_tel = np.dot(tvs, unit_vector_idl)
-
-                # polar coordinates on focal sphere
-                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
-                v2_spherical_arcsec, v3_spherical_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
-                v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
-
-
-            elif False:
-
-                unit_vector = rotations.unit(np.rad2deg(x_rad), np.rad2deg(y_rad))
-                # print(v[:,0:10])
-                # unit_vector[1] = self.VIdlParity * unit_vector[1]
-                # rotated_vector = np.dot(np.linalg.inv(tvs), unit_vector)
-                # rotated_vector = np.dot(tvs, unit_vector)
-                # rotated_vector = np.rad2deg(np.dot(tvs, unit_vector))
-
-                if 0:
-                    # need to use inverted and rearranged TVS to make it work this way
-                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs), unit_vector))
-                    if np.ndim(rotated_vector) == 1:
-                        # rotated_vector = np.expand_dims(rotated_vector, axis=1)
-                        rotated_vector[[0,2]] = rotated_vector[[2,0]]
-                        rotated_vector[[1,2]] = rotated_vector[[2,1]]
-                        if self.AperName != 'FGS2':
-                            rotated_vector[[1,2]] *= -1.
-
-                    else:
-                        rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
-                        rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
-                        if self.AperName != 'FGS2':
-                            rotated_vector[[1,2],:] *= -1.
-
-                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-                elif 1:
-                    # need to use rearranged TVS to make it work this way
-                    v2_angle, v3_angle, v1_angle, tvs = self._tvs_parameters(units=u.arcsec)
-                    # print(v1_angle, v2_angle, v3_angle)
-                    if self.AperName == 'FGS1':
-                        # tvs_new = self.compute_tvs_matrix(v2_angle-1481, +1*v1_angle, -v3_angle*u.arcsec.to(u.deg))
-                        tvs_new = self.compute_tvs_matrix(v2_angle, +1*v1_angle, -v3_angle*u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS2':
-                        tvs_new = self.compute_tvs_matrix(v2_angle, +1*v3_angle, v1_angle*u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS3':
-                        tvs_new = self.compute_tvs_matrix(v2_angle, -1*v1_angle, v3_angle*u.arcsec.to(u.deg))
-                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs_new), unit_vector))
-                    # rotated_vector = np.rad2deg(np.dot(tvs_new, unit_vector))
-                    rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
-                    rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
-                    if self.AperName != 'FGS2':
-                        rotated_vector[[1,2],:] *= -1.
-
-                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-
-                elif 0:
-                    # attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
-                    # tvs = np.dot(self.tvs_flip_matrix, attitude)
-
-                    # need to use rearranged TVS to make it work this way
-                    v2_angle, v3_angle, v1_angle, tvs = self._tvs_parameters(units=u.arcsec)
-                    # print(v1_angle, v2_angle, v3_angle)
-                    if self.AperName == 'FGS1':
-
-                        # tvs_new = self.compute_tvs_matrix(-v3_angle, 1*v1_angle, -v2_angle*u.arcsec.to(u.deg))
-                        # tvs_new = rotations.attitude(-v1_angle, v3_angle, 0.0, 0.0, v2_angle*u.arcsec.to(u.deg))
-                        tvs_new = rotations.attitude(-v2_angle, -v3_angle, 0.0, 0.0, -v1_angle*u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS2':
-                        tvs_new = self.compute_tvs_matrix(v2_angle, +1*v3_angle, v1_angle*u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS3':
-                        tvs_new = self.compute_tvs_matrix(v2_angle, -1*v1_angle, v3_angle*u.arcsec.to(u.deg))
-                    # rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs_new), unit_vector))
-                    rotated_vector = np.rad2deg(np.dot(tvs_new, unit_vector))
-                    # rotated_vector[[0,2],:] = rotated_vector[[2,0],:]
-                    # rotated_vector[[1,2],:] = rotated_vector[[2,1],:]
-                    # if self.AperName != 'FGS2':
-                    #     rotated_vector[[1,2],:] *= -1.
-
-                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-
-                else:
-                    # need to use rearranged TVS to make it work this way
-                    v2_angle, v3_angle, v1_angle, tvs = self._tvs_parameters(units=u.arcsec)
-                    # print(v1_angle, v2_angle, v3_angle)
-                    if self.AperName == 'FGS1':
-                        tvs_new = self.compute_tvs_matrix(-v3_angle, 1 * v1_angle, -v2_angle * u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS2':
-                        tvs_new = self.compute_tvs_matrix(-v3_angle, -1 * v1_angle, v2_angle * u.arcsec.to(u.deg))
-                    elif self.AperName == 'FGS3':
-                        tvs_new = self.compute_tvs_matrix(v3_angle, 1 * v1_angle, -v2_angle * u.arcsec.to(u.deg))
-                    rotated_vector = np.rad2deg(np.dot(np.linalg.inv(tvs_new), unit_vector))
-                    # rotated_vector = np.rad2deg(np.dot(tvs_new, unit_vector))
-                    rotated_vector[[0, 2], :] = rotated_vector[[2, 0], :]
-                    rotated_vector[[1, 2], :] = rotated_vector[[2, 1], :]
-                    # if self.AperName != 'FGS2':
-                    #     rotated_vector[[1, 2], :] *= -1.
-
-                    v2_spherical_arcsec, v3_spherical_arcsec = rotations.v2v3(rotated_vector)
-
-                    # v3_spherical_arcsec, v2_spherical_arcsec = rotations.v2v3(rotated_vector)
-                    # v3_spherical_arcsec *= -1.
-
-                # print(v2_spherical_arcsec[0], v3_spherical_arcsec[0])
-
-                print(rotated_vector[:,0:10])
-                # rotated_vector = np.dot(tvs, unit_vector)
-                # print(v2_spherical_arcsec[0:10], v3_spherical_arcsec[0:10])
-                # print(v2_spherical_arcsec_b[0:10], v3_spherical_arcsec_b[0:10])
-                # 1 / 0
-
-
-            # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
-            # v2_arcsec, v3_arcsec = v2_spherical_arcsec, v3_spherical_arcsec
+                # temporary fix until default is set
+                elif output_coordinates is None:
+                    raise NotImplementedError
 
             elif method == 'planar_approximation':
                 # unit vector
@@ -2015,9 +1735,13 @@ class HstAperture(Aperture):
                 v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
                 v2_arcsec, v3_arcsec = v[1], v[2]
 
+            else:
+                raise NotImplementedError
+
             if (method == 'spherical_transformation') and (output_coordinates == 'tangent_plane'):
                 # tangent plane projection using tel boresight
-                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg), v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg),
+                                                                                     v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
                 v2_arcsec, v3_arcsec = v2_tangent_deg*3600., v3_tangent_deg*3600.
 
             return v2_arcsec, v3_arcsec
@@ -2056,10 +1780,7 @@ class HstAperture(Aperture):
 
                 return x_idl_arcsec, y_idl_arcsec
 
-
-
             elif method == 'planar_approximation':
-
                 # unit vector
                 unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec*u.arcsec, z=v3_arcsec*u.arcsec)
                 unit_vector_idl = np.dot(np.transpose(tvs), unit_vector_tel)
@@ -2073,7 +1794,6 @@ class HstAperture(Aperture):
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
                                                        input_coordinates=input_coordinates,
                                                        output_coordinates=output_coordinates)
-
 
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
@@ -2102,9 +1822,6 @@ class HstAperture(Aperture):
         else:
             raise NotImplementedError
 
-        # if self._fgs_use_rearranged_alignment_parameters:
-        #     flip = HST_FLIP_1
-
         self.tvs_flip_matrix = flip
 
         self.db_tvs_v2_arcsec, self.db_tvs_v3_arcsec, self.db_tvs_pa_deg, db_tvs = \
@@ -2115,14 +1832,7 @@ class HstAperture(Aperture):
         inverted_tvs = np.linalg.inv(db_tvs)
 
         # construct the normalized vector of the reference point in the V/tel frame
-        # tel_vector_rad = rotations.unit_vector_from_cartesian(y=v2_ref*u.arcsec, z=v3_ref*u.arcsec)
         tel_vector_rad = rotations.unit_vector_sky(v2_ref*u.arcsec, v3_ref*u.arcsec)
-
-        # tel_vector_rad = np.array([0., np.deg2rad(v2_ref / 3600.), np.deg2rad(v3_ref / 3600.)])
-        # tel_vector_rad_normalized = tel_vector_rad.copy()
-        # tel_vector_rad_normalized[0] = np.sqrt(1. - tel_vector_rad[1] ** 2 - tel_vector_rad[2] ** 2)
-        # idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad_normalized)
-
         idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad)
         idl_vector_arcsec = np.rad2deg(idl_vector_rad) * 3600.
 
