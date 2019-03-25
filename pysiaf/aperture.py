@@ -66,8 +66,7 @@ VALIDATION_ATTRIBUTES = ('InstrName AperName AperType AperShape '
 # list of attributes written to the JWST SIAFXML required by the JWST PRD
 # the order of the XML tags in the SIAFXML is relevant, therefore define IRCD order here
 # see JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3
-SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file(
-    'NIRCam')  # use NIRCam as model temporarily
+SIAF_XML_FIELD_FORMAT = read.read_siaf_xml_field_format_reference_file()
 PRD_REQUIRED_ATTRIBUTES_ORDERED = list(SIAF_XML_FIELD_FORMAT['field_name'])
 
 # As per JWST PRDS IRCD Volume III: S&OC Subsystems (JWST-STScI-000949) Table 4-3,
@@ -826,8 +825,7 @@ class Aperture(object):
         return x_model, y_model
 
     def telescope_transform(self, from_system, to_system, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
-                            V3Ref_arcsec=None,
-                            verbose=False):
+                            V3Ref_arcsec=None, verbose=False):
         """Return transformation model between tel<->idl.
 
         V3IdlYAngle_deg, V2Ref_arcsec, V3Ref_arcsec can be given as arguments to override aperture
@@ -1046,7 +1044,8 @@ class Aperture(object):
                 raise RuntimeError('Output has to be in tangent plane.')
             if input_coordinates != 'tangent_plane':
                 raise RuntimeError('Input has to be in tangent plane.')
-            x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg)
+            x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg=V3IdlYAngle_deg,
+                                                        V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
             return x_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec), \
                    y_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec)
 
@@ -1143,9 +1142,8 @@ class Aperture(object):
                     x_sci = self.XDetSize - x_raw + 1
                     y_sci = y_raw
                 else:
-                    # FGS2, GUIDER2
-                    # rotate 90 degrees anticlockwise
-                    x_sci = -1*y_raw
+                    # FGS2, GUIDER2, empirical determination, does not seem to match documentation
+                    x_sci = self.YDetSize - y_raw + 1
                     y_sci = x_raw
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
@@ -1212,10 +1210,10 @@ class Aperture(object):
                     x_raw = self.XDetSize - x_sci + 1
                     y_raw = y_sci
                 else:
-                    # GUIDER2, FGS2
-                    # rotate 90 degrees clockwise
+                    # GUIDER2, FGS2, empirical
+                    y_raw = self.YDetSize - x_sci + 1
                     x_raw = y_sci
-                    y_raw = -1*x_sci
+
 
             elif (self.DetSciYAngle == 180) and (self.DetSciParity == -1):
                 # Flip in the y direction
@@ -1938,7 +1936,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [float, np.float64]:
+    if type(angle_deg) not in [int, float, np.float64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 

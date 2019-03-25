@@ -16,11 +16,7 @@ from ..utils.tools import get_grid_coordinates
 
 @pytest.fixture(scope='module')
 def siaf_objects():
-    """Return list of Siaf objects.
-
-    :return:
-    """
-    # for instrument in 'NIRISS NIRCam MIRI FGS NIRSpec'.split():
+    """Return list of Siaf objects."""
     siafs = []
     for instrument in 'NIRCam NIRISS FGS MIRI'.split():
         siaf = Siaf(instrument)
@@ -29,8 +25,7 @@ def siaf_objects():
 
 
 def test_idl_to_tel(verbose=True):
-    """Test the transformations between ideal and telescope frames."""
-
+    """Test the transformations between ideal and telescope frames that do not use the planar approximation."""
     siaf = Siaf('NIRISS')
     # siaf = Siaf('HST')
 
@@ -136,7 +131,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     for siaf in siaf_objects:
         if threshold is None:
             if siaf.instrument in ['miri']:
-                threshold = 0.2
+                threshold = 0.04
             elif siaf.instrument in ['nircam']:
                 threshold = 42.
             else:
@@ -176,6 +171,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
                             print('{} {}:  rms absolute error in {}<->{} {}-transform is {:02.6f})'.format(
                                 siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                         assert error < threshold
+
 
 def test_jwst_aperture_vertices(siaf_objects):
     """Test the JwstAperture vertices by rederiving them and comparing to SIAF.
@@ -226,6 +222,7 @@ def test_jwst_aperture_vertices(siaf_objects):
                 assert x_mean_error < threshold
                 assert y_mean_error < threshold
 
+
 def test_raw_transformations(verbose=False):
     """Test raw_to_sci and sci_to_raw transformations"""
     siaf_detector_layout = read.read_siaf_detector_layout()
@@ -255,5 +252,3 @@ def test_raw_transformations(verbose=False):
                 print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                     aperture.InstrName, aper_name, from_frame, to_frame, labels[i], error))
             assert error < threshold
-
-

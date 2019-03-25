@@ -271,7 +271,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     # index 0 is for reference SIAF (defaults to PRD)
     # index 1 is for comparison SIAF
     for AperName, aperture in reference_siaf.apertures.items():
-        # pl.close('all')
+        pl.close('all')
         if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
             continue
         for j, siaf in enumerate(siaf_list):
@@ -286,30 +286,33 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                                                  coefficients['Idl2SciY'],
                                                                  offset_x=aperture.XSciRef,
                                                                  offset_y=aperture.YSciRef,
-                                                                 instrument=instrument)
+                                                                 instrument=instrument,
+                                                                 grid_amplitude=aperture.XSciSize)
                 for k, tag in enumerate(round_trip_tags):
                     # if tag != 'data':
                     roundtrip_dict['siaf{}_{}'.format(j, tag)].append(roundtrip_errors[k])
 
                 if make_plot:
                     data = roundtrip_errors[-1]
-                    pl.figure(19, figsize=(6, 6), facecolor='w', edgecolor='k')
+                    pl.figure(figsize=(6, 6), facecolor='w', edgecolor='k')
                     pl.quiver(data['x'], data['y'], data['x']-data['x2'], data['y']-data['y2'],
                               angles='xy')
                     pl.xlabel('x_sci')
                     pl.ylabel('y_sci')
+                    aperture.plot(frame='sci', ax=pl.gca())
                     ax = pl.gca()
                     pl.text(0.5, 0.9, 'Maximum arrow length {:3.3f} pix'.format(
                         np.max(np.linalg.norm([data['x']-data['x2'], data['y']-data['y2']],
                                               axis=0))), horizontalalignment='center',
                             transform=ax.transAxes)
                     pl.title('siaf{}: {} Roundtrip error sci->idl->sci'.format(j, AperName))
-                    # pl.show()
+                    pl.show()
                     if report_dir is not None:
                         figure_name = os.path.join(report_dir, '{}_{}_siaf{}_roundtrip_error.pdf'.
                                                    format(instrument, AperName, j))
                         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
+    # 1/0
     roundtrip_table = Table(roundtrip_dict)
     for k, tag in enumerate(round_trip_tags):
         roundtrip_table['difference_{}'.format(tag)] = roundtrip_table['siaf{}_{}'.format(1, tag)] \
@@ -335,10 +338,10 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         fig = pl.figure(figsize=(30, 6), facecolor='w', edgecolor='k')
         pl.clf()
         # pl.subplot(2,1,1)
-        pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='PRD dx_mean')
-        pl.plot(roundtrip_table['siaf0_dy_mean'], 'r-', label='PRD dy_mean')
-        pl.plot(roundtrip_table['siaf1_dx_mean'], 'ko--', label='fixed dx_mean')
-        pl.plot(roundtrip_table['siaf1_dy_mean'], 'go--', label='fixed dy_mean')
+        pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='{} dx_mean'.format(tags['reference']))
+        pl.plot(roundtrip_table['siaf0_dy_mean'], 'r-', label='{} dy_mean'.format(tags['reference']))
+        pl.plot(roundtrip_table['siaf1_dx_mean'], 'ko--', label='{} dx_mean'.format(tags['comparison']))
+        pl.plot(roundtrip_table['siaf1_dy_mean'], 'go--', label='{} dy_mean'.format(tags['comparison']))
         pl.title('Mean absolute difference')
         pl.legend()
         # pl.subplot(2,1,2)
@@ -355,8 +358,8 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         pl.subplots_adjust(bottom=0.15)
         pl.show()
 
-        figure_name = os.path.join(report_dir, '{}_comparison_roundtrip_error.pdf'.format(
-            instrument))
+        figure_name = os.path.join(report_dir, '{}_{}_{}_sci_idl_roundtrip_error.pdf'.format(
+            instrument, tags['reference'], tags['comparison']))
         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     return roundtrip_table
@@ -389,3 +392,60 @@ def dict_compare(dictionary_1, dictionary_2):
                 if dictionary_1[o] != dictionary_2[o]}
     same = set(o for o in intersect_keys if dictionary_1[o] == dictionary_2[o])
     return added, removed, modified, same
+
+
+def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, report_dir=None,
+                               selected_aperture_name=None, tags=None, save_plot=True):
+    """Visualize aperture of two SIAF files.
+
+    Parameters
+    ----------
+    comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
+        The SIAF that will be compared to the reference_siaf
+    reference_siaf_input : str (absolute file name) or pysiaf.Siaf object
+        The reference SIAF. Defaults to the current PRD content.
+    report_dir
+    selected_aperture_name
+    tags
+
+    Returns
+    -------
+
+    """
+    comparison_siaf = get_siaf(comparison_siaf_input)
+    instrument = comparison_siaf.instrument
+
+    if reference_siaf_input is None:
+        reference_siaf = Siaf(instrument)
+        reference_siaf_description = '{}-{}'.format(instrument, JWST_PRD_VERSION)
+    else:
+        reference_siaf = get_siaf(reference_siaf_input)
+        reference_siaf_description = reference_siaf.description.replace('.', '_')
+
+    reference_tag = reference_siaf_description
+    comparison_tag = comparison_siaf.description.replace('.', '_')
+    if tags is not None:
+        reference_tag = '{}'.format(tags['reference'])
+        comparison_tag = '{}'.format(tags['comparison'])
+
+    if report_dir is None:
+        report_dir = os.environ['HOME']
+
+    siaf_list = [reference_siaf, comparison_siaf]
+    tag_list = [reference_tag, comparison_tag]
+
+
+    # index 0 is for reference SIAF (defaults to PRD)
+    # index 1 is for comparison SIAF
+    for j, siaf in enumerate(siaf_list):
+        pl.figure(figsize=(15, 15), facecolor='w', edgecolor='k')
+        pl.clf()
+        for aperture_name, aperture in siaf.apertures.items():
+            if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
+                continue
+            aperture.plot()
+        pl.title(tag_list[j])
+        pl.show()
+        if save_plot:
+            figure_name = os.path.join(report_dir, '{}_{}_siaf{}_apertures.pdf'.format(instrument, tag_list[j], j))
+            pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
