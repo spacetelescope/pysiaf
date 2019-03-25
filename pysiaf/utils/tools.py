@@ -281,7 +281,7 @@ def correct_V3SciYAngle(V3SciYAngle_deg):
     return V3SciYAngle_deg_corrected
 
 
-def jwst_fgs2_fgs1_matrix(siaf=None):
+def jwst_fgs2_fgs1_matrix(siaf=None, verbose=False):
     """Return JWST FGS2 to FGS1 transformation matrix as stored in LoadsPRD.
 
     See JWST-PLAN-006166, Section 5.8.3 for definition.
@@ -306,6 +306,7 @@ def jwst_fgs2_fgs1_matrix(siaf=None):
     FGS1V2 = fgs1.V2Ref#207.19
     FGS1V3 = fgs1.V3Ref#-697.50
     FGS1pa = fgs1.V3IdlYAngle#-1.2508
+
     FGS2V2 = fgs2.V2Ref
     FGS2V3 = fgs2.V3Ref
     FGS2pa = fgs2.V3IdlYAngle
@@ -316,7 +317,6 @@ def jwst_fgs2_fgs1_matrix(siaf=None):
     R3 = rotations.rotate(3, FGS1V2 / 3600.0)
     RA = np.dot(R2, R1)
     RA = np.dot(R3, RA)
-    print('RA\n', RA)
 
     # Form RB = R6.R5.R4
     R4 = rotations.rotate(1, -FGS2pa)
@@ -324,12 +324,16 @@ def jwst_fgs2_fgs1_matrix(siaf=None):
     R6 = rotations.rotate(3, FGS2V2 / 3600.0)
     RB = np.dot(R5, R4)
     RB = np.dot(R6, RB)
-    print('RB\n', RB)
 
     R12 = np.dot(RB, np.transpose(RA))
-    print('\nTransform from FGS1 to FGS2\nR12\n', R12)
     R21 = np.dot(RA, np.transpose(RB))
-    print('\nTransform from FGS2 to FGS1\nR21\n', R21)
+    if verbose:
+        print('RA\n', RA)
+        print('RB\n', RB)
+        print('\nTransform from FGS1 to FGS2\nR12\n', R12)
+        print('\nTransform from FGS2 to FGS1\nR21\n', R21)
+
+    return R12
 
 
 
