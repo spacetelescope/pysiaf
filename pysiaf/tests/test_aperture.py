@@ -35,7 +35,8 @@ def test_idl_to_tel(verbose=True):
     # for aper_name in 'FGS1 FGS2 FGS3'.split():
         aperture = siaf[aper_name]
 
-        for idl_to_tel_method in ['planar_approximation', 'spherical_transformation', 'spherical']:
+        # for idl_to_tel_method in ['planar_approximation', 'spherical_transformation', 'spherical']:
+        for idl_to_tel_method in ['planar_approximation' 'spherical']:
         # for idl_to_tel_method in ['planar_approximation']:
         # for idl_to_tel_method in ['spherical']:
             if idl_to_tel_method == 'spherical_transformation':
