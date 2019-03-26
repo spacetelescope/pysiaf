@@ -989,6 +989,9 @@ class Aperture(object):
             v2 = x_model(x_idl, y_idl)
             v3 = y_model(x_idl, y_idl)
 
+        else:
+            raise NotImplementedError
+
         if self._correct_dva:
             if 'FGS' in self.AperName:
                 1/0

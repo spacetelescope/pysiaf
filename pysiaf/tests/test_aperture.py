@@ -25,43 +25,28 @@ def siaf_objects():
 
 
 def test_idl_to_tel(verbose=True):
-    """Test the transformations between ideal and telescope frames that do not use the planar approximation."""
+    """Test the transformations between ideal and telescope frames."""
     siaf = Siaf('NIRISS')
-    # siaf = Siaf('HST')
 
     x_idl, y_idl = get_grid_coordinates(10, (0, 0), 100)
 
     for aper_name in siaf.apertures.keys():
-    # for aper_name in 'FGS1 FGS2 FGS3'.split():
         aperture = siaf[aper_name]
 
-        # for idl_to_tel_method in ['planar_approximation', 'spherical_transformation', 'spherical']:
-        for idl_to_tel_method in ['planar_approximation' 'spherical']:
-        # for idl_to_tel_method in ['planar_approximation']:
-        # for idl_to_tel_method in ['spherical']:
-            if idl_to_tel_method == 'spherical_transformation':
-                input_coordinate_types = ['tangent_plane', 'spherical']
-            elif idl_to_tel_method == 'spherical':
+        for idl_to_tel_method in ['planar_approximation', 'spherical']:
+            if idl_to_tel_method == 'spherical':
                 input_coordinate_types = ['polar', 'cartesian']
             else:
                 input_coordinate_types = ['tangent_plane']
 
             for input_coordinates in input_coordinate_types:
-                # print(x_idl, y_idl)
                 v2, v3 = aperture.idl_to_tel(x_idl, y_idl, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
-                # print(v2, v3)
                 x_idl_2, y_idl_2 = aperture.tel_to_idl(v2, v3, method=idl_to_tel_method, input_coordinates=input_coordinates, output_coordinates=input_coordinates)
-                # print(x_idl_2, y_idl_2)
                 x_diff = np.abs(x_idl - x_idl_2)
                 y_diff = np.abs(y_idl - y_idl_2)
                 if verbose:
                     print('{} {}: Aperture {} {} x_diff {} y_diff {}'.format(idl_to_tel_method, input_coordinates, aper_name, input_coordinates, np.max(x_diff), np.max(y_diff)))
-                if idl_to_tel_method == 'spherical_transformation':
-                    if input_coordinates == 'spherical':
-                        threshold = 6e-13
-                    elif input_coordinates == 'tangent_plane':
-                        threshold = 5e-10
-                elif idl_to_tel_method == 'planar_approximation':
+                if idl_to_tel_method == 'planar_approximation':
                     threshold = 7e-14
                 elif idl_to_tel_method == 'spherical':
                     if input_coordinates == 'polar':

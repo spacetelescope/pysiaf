@@ -52,6 +52,8 @@ def test_jwst_fgs2_fgs1_matrix(verbose=False):
                              rotations.polar_angles(fgs2_unit_vector_idl)[1].to(u.arcsec).value
     if verbose:
         print(fgs2_x_idl, fgs2_y_idl)
+        np.set_printoptions(precision=15, suppress=True)
+        print(rotation_1to2)
 
     # require agreement within 1.5 mas
     absolute_tolerance = 1.5e-3
