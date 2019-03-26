@@ -24,7 +24,7 @@ def siaf_objects():
     return siafs
 
 
-def test_idl_to_tel(verbose=True):
+def test_idl_to_tel(verbose=False):
     """Test the transformations between ideal and telescope frames."""
     siaf = Siaf('NIRISS')
 
@@ -57,7 +57,7 @@ def test_idl_to_tel(verbose=True):
                 assert np.max(y_diff) < threshold
 
 
-def test_hst_fgs_idl_to_tel(verbose=True):
+def test_hst_fgs_idl_to_tel(verbose=False):
     """Test the transformations between ideal and telescope frames."""
 
     siaf = Siaf('HST')
@@ -88,7 +88,7 @@ def test_hst_fgs_idl_to_tel(verbose=True):
                 if verbose:
                     print('{} {}: Aperture {} {} x_diff {} y_diff {}'.format(idl_to_tel_method, input_coordinates, aper_name, input_coordinates, np.max(x_diff), np.max(y_diff)))
 
-                threshold = 2e-13
+                threshold = 2.5e-13
 
                 assert np.max(x_diff) < threshold
                 assert np.max(y_diff) < threshold
