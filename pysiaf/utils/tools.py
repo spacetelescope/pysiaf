@@ -15,6 +15,8 @@ from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
 from .polynomial import shift_coefficients, flip_y, flip_x, add_rotation, \
     prepend_rotation_to_polynomial, poly, print_triangle
+from ..siaf import Siaf
+from ..utils import rotations
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -278,11 +280,8 @@ def correct_V3SciYAngle(V3SciYAngle_deg):
     return V3SciYAngle_deg_corrected
 
 
-def jwst_fgs2_fgs1_matrix(siaf=None, verbose=False):
-    """Return JWST FGS2 to FGS1 transformation matrix as stored in LoadsPRD.
-
-    See JWST-PLAN-006166, Section 5.8.3 for definition.
-
+def jwst_fgs1_to_fgs2_matrix(siaf=None, verbose=False):
+    """Return JWST FGS1_OSS to FGS2_OSS transformation matrix as stored in LoadsPRD.
 
     Parameters
     ----------
@@ -291,18 +290,25 @@ def jwst_fgs2_fgs1_matrix(siaf=None, verbose=False):
 
     Returns
     -------
+    R12 : ndarray
+        rotation matrix
+
+    References
+    ----------
+        See JWST-PLAN-006166, Section 5.8.3 for definitions.
+
+        Implementation adapted from Cox' BetweenFGS.ipynb
 
     """
-
     if siaf is None:
         siaf = Siaf('fgs')
 
-    fgs1 = siaf['FGS1_FULL']
-    fgs2 = siaf['FGS2_FULL']
+    fgs1 = siaf['FGS1_FULL_OSS']
+    fgs2 = siaf['FGS2_FULL_OSS']
 
-    FGS1V2 = fgs1.V2Ref#207.19
-    FGS1V3 = fgs1.V3Ref#-697.50
-    FGS1pa = fgs1.V3IdlYAngle#-1.2508
+    FGS1V2 = fgs1.V2Ref
+    FGS1V3 = fgs1.V3Ref
+    FGS1pa = fgs1.V3IdlYAngle
 
     FGS2V2 = fgs2.V2Ref
     FGS2V3 = fgs2.V3Ref
@@ -327,8 +333,8 @@ def jwst_fgs2_fgs1_matrix(siaf=None, verbose=False):
     if verbose:
         print('RA\n', RA)
         print('RB\n', RB)
-        print('\nTransform from FGS1 to FGS2\nR12\n', R12)
-        print('\nTransform from FGS2 to FGS1\nR21\n', R21)
+        print('\nTransform from FGS1_OSS to FGS2_OSS\nR12\n', R12)
+        print('\nTransform from FGS2_OSS to FGS1_OSS\nR21\n', R21)
 
     return R12
 
