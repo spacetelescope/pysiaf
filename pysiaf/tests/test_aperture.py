@@ -10,18 +10,13 @@ Authors
 import numpy as np
 import pytest
 
-from ..aperture import HstAperture
 from ..iando import read
 from ..siaf import Siaf, get_jwst_apertures
 from ..utils.tools import get_grid_coordinates
 
 @pytest.fixture(scope='module')
 def siaf_objects():
-    """Return list of Siaf objects.
-
-    :return:
-    """
-    # for instrument in 'NIRISS NIRCam MIRI FGS NIRSpec'.split():
+    """Return list of Siaf objects."""
     siafs = []
     for instrument in 'NIRCam NIRISS FGS MIRI'.split():
         siaf = Siaf(instrument)
@@ -29,15 +24,8 @@ def siaf_objects():
     return siafs
 
 
-def test_hst_aperture_init():
-    """Test the initialization of an HstAperture object."""
-    hst_aperture = HstAperture()
-    hst_aperture.a_v2_ref = -100.
-    assert hst_aperture.a_v2_ref == hst_aperture.V2Ref #, 'HST aperture initialisation failed')
-
 def test_idl_to_tel():
     """Test the transformations between ideal and telescope frames that do not use the planar approximation."""
-
     siaf = Siaf('NIRISS')
 
     x_idl, y_idl = get_grid_coordinates(10, (0, 0), 100)
@@ -63,7 +51,7 @@ def test_idl_to_tel():
             assert np.max(y_diff) < threshold
 
 
-def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
+def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     """Test transformations between frames.
 
     Transform back and forth between frames and verify that input==output.
@@ -85,9 +73,9 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
 
     for siaf in siaf_objects:
         if threshold is None:
-            if siaf.instrument in ['MIRI']:
-                threshold = 0.2
-            elif siaf.instrument in ['NIRCam']:
+            if siaf.instrument in ['miri']:
+                threshold = 0.04
+            elif siaf.instrument in ['nircam']:
                 threshold = 42.
             else:
                 threshold = 0.1
@@ -98,7 +86,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
             aperture = siaf[aper_name]
 
             if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or (
-                    siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec'] and
+                    siaf.instrument in ['nircam', 'miri', 'nirspec'] and
                     aperture.AperType == 'SLIT'):
                 skip = True
 
@@ -127,6 +115,7 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=True, threshold=None):
                                 siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                         assert error < threshold
 
+
 def test_jwst_aperture_vertices(siaf_objects):
     """Test the JwstAperture vertices by rederiving them and comparing to SIAF.
 
@@ -146,7 +135,7 @@ def test_jwst_aperture_vertices(siaf_objects):
             aperture = siaf[aper_name]
 
             if (aperture.AperType in ['COMPOUND', 'TRANSFORM']) or \
-                    (siaf.instrument in ['NIRCam', 'MIRI', 'NIRSpec']
+                    (siaf.instrument in ['nircam', 'miri', 'nirspec']
                      and aperture.AperType == 'SLIT'):
                 skip = True
 
@@ -175,6 +164,7 @@ def test_jwst_aperture_vertices(siaf_objects):
 
                 assert x_mean_error < threshold
                 assert y_mean_error < threshold
+
 
 def test_raw_transformations(verbose=False):
     """Test raw_to_sci and sci_to_raw transformations"""
@@ -205,5 +195,3 @@ def test_raw_transformations(verbose=False):
                 print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                     aperture.InstrName, aper_name, from_frame, to_frame, labels[i], error))
             assert error < threshold
-
-

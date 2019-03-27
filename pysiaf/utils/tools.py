@@ -31,7 +31,8 @@ def tel_to_an(v2_arcsec, v3_arcsec):
     return xan_arcsec, yan_arcsec
 
 
-def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False, instrument=''):
+def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False, instrument='',
+                            grid_amplitude=None):
     """Return the roundtrip error of the distortion transformations specified by A,B,C,D.
 
     Test whether the forward and inverse idl-sci transformations are consistent.
@@ -66,9 +67,12 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
     order = polynomial_degree
 
     # regular grid of points (in science pixel coordinates) in the full frame science frame
-    grid_amplitude = 2048
-    if instrument.lower() == 'miri':
-        grid_amplitude = 1024
+    if grid_amplitude is None:
+        if instrument.lower() == 'miri':
+            grid_amplitude = 1024
+        else:
+            grid_amplitude = 2048
+
     x, y = get_grid_coordinates(10, (grid_amplitude/2+1, grid_amplitude/2+1), grid_amplitude)
 
     x_in = x - offset_x
