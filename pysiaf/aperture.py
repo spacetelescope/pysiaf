@@ -489,7 +489,7 @@ class Aperture(object):
 
     def plot(self, frame='tel', label=False, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
-             **kwargs):
+             label_rotation=0., **kwargs):
         """Plot this aperture.
 
         Parameters
@@ -569,17 +569,12 @@ class Aperture(object):
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
         if label is not False:
-            rotation = 0
+            label_rotation = 0
             if label is True:
-                # partially mitigate overlapping NIRCam labels
-                rotation = 30 if self.AperName.startswith('NRC') else 0
                 label = self.AperName
-            ax.text(
-                x.mean() * scale, y.mean() * scale, label,
-                verticalalignment='center',
-                horizontalalignment='center',
-                rotation=rotation,
-                color=ax.lines[-1].get_color())
+            ax.text(x.mean() * scale, y.mean() * scale, label, verticalalignment='center',
+                    horizontalalignment='center', rotation=label_rotation,
+                    color=ax.lines[-1].get_color())
         if fill:
             ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha)
 

@@ -435,8 +435,12 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
         AF, BF, CF, DF = convert_polynomial_coefficients(A, B, C, D, inverse=True,
                                                          parent_aperture=parent_aperture)
 
+        if aperture.XDetRef is None:
+            raise ValueError
         # now shift to child aperture reference point
         AFS_child = shift_coefficients(AF, aperture.XDetRef, aperture.YDetRef)
+        # if aperture.AperName == 'NRCA1_GRISMTS':
+        #     1/0
         BFS_child = shift_coefficients(BF, aperture.XDetRef, aperture.YDetRef)
         CFS_child = CF
         DFS_child = DF
@@ -523,6 +527,13 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     assert instrument != 'NIRSPEC', 'Program not working for NIRSpec'
     assert (aperture_2.AperType in ['FULLSCA', 'SUBARRAY', 'ROI']), \
         "2nd aperture must be pixel-based"
+
+    if verbose:
+        print('{}\nBEFORE match_v2v3:'.format(aperture_2.AperName))
+        for attribute in 'XDetRef YDetRef XSciRef YSciRef V2Ref V3Ref'.split():
+            print('{} {:2.3f}'.format(attribute, getattr(aperture_2, attribute)), end=' ')
+        print()
+
     order = aperture_1.Sci2IdlDeg
     V2Ref1 = aperture_1.V2Ref
     V3Ref1 = aperture_1.V3Ref
@@ -675,5 +686,11 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         suffix = "{}".format(c+1)
         setattr(new_aperture_2, 'XIdlVert' + suffix, xcorners[c])
         setattr(new_aperture_2, 'YIdlVert' + suffix, ycorners[c])
+
+    if verbose:
+        print('{}\nAFTER match_v2v3:'.format(new_aperture_2.AperName))
+        for attribute in 'XDetRef YDetRef XSciRef YSciRef V2Ref V3Ref'.split():
+            print('{} {:2.3f}'.format(attribute, getattr(new_aperture_2, attribute)), end=' ')
+        print()
 
     return new_aperture_2
