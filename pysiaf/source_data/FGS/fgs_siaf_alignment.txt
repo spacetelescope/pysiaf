@@ -1,0 +1,12 @@
+# FGS alignment parameter reference file for SIAF
+# 
+# This file contains the focal plane alignment parameters calibrated during FGS-FGS alignment.
+# 
+# Generated 2018-04-19T16:44:22.865 utc
+# jsahlmann@nereus.stsci.edu
+# 
+                      AperName ,         V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,              V2Ref ,              V3Ref
+                     FGS2_FULL , 0.21318823253536742 , -89.56051021555075 , 0.21318823253536742 ,  22.44971373381832 , -700.7760326983023
+                 FGS1_FULL_OSS , -1.2524485708553925 ,  90.43948978444926 ,   178.7475514291446 , 207.13065839289632 , -699.3572297361118
+                     FGS1_FULL , -1.2524485708554207 , -89.56051021555075 , -1.2524485708554207 , 207.13065839289632 , -699.3572297361118
+                 FGS2_FULL_OSS , 0.21318823253536742 ,  89.22330606563723 , 0.21318823253536742 ,  22.44971373381832 , -700.7760326983023
