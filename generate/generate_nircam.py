@@ -289,7 +289,8 @@ for AperName in aperture_name_list:
             aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
 
             # modify aperture so that V2Ref, V3Ref match the a5_aperture
-            aperture = tools.match_v2v3(copy.deepcopy(a5_aperture), copy.deepcopy(aperture), verbose=False)
+            aperture = tools.match_v2v3(copy.deepcopy(a5_aperture), copy.deepcopy(aperture),
+                                        verbose=False, match_v2_only=True)
 
             aperture.complement()
 
@@ -362,8 +363,9 @@ if emulate_delivery:
 
     compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                        report_dir=pre_delivery_dir, tags=tags,
-                                       selected_aperture_name=selected_aperture_name, mark_ref=True,
-                                       xlimits=(0, 160))
+                                       selected_aperture_name=selected_aperture_name, mark_ref=True)
+                                       # ,
+                                       # xlimits=(0, 160))
 
     # make figures for JWSTSIAF-129 Jira ticket
     selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
@@ -377,7 +379,7 @@ if emulate_delivery:
                                            report_dir=pre_delivery_dir, tags=tags,
                                            selected_aperture_name=selected_aperture_name,
                                            mark_ref=True, filename_appendix=selected_aperture_name[0],
-                                           label=True, xlimits=(0, 160))
+                                           label=True)#, xlimits=(0, 160))
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture

@@ -500,7 +500,7 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
     return v3sciyangle
 
 
-def match_v2v3(aperture_1, aperture_2, verbose=False):
+def match_v2v3(aperture_1, aperture_2, verbose=False, match_v2_only=False):
     """Modify the X[Y]DetRef,X[Y]SciRef attributes of aperture_2 such
     that V2Ref,V3Ref of both apertures match.
 
@@ -536,9 +536,14 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
 
     order = aperture_1.Sci2IdlDeg
     V2Ref1 = aperture_1.V2Ref
-    V3Ref1 = aperture_1.V3Ref
+    if match_v2_only is False:
+        V3Ref1 = aperture_1.V3Ref
+    elif match_v2_only is True:
+        # do not change V3
+        V3Ref1 = aperture_2.V3Ref
     newV2Ref = V2Ref1
     newV3Ref = V3Ref1
+
     if verbose:
         print('Current Vref', aperture_2.V2Ref, aperture_2.V3Ref)
         print('Shift to    ', V2Ref1, V3Ref1)
