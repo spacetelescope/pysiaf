@@ -254,7 +254,10 @@ class Aperture(object):
                 '}).'.format(
                     key, type(value)))
         elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float32, np.float64]):
-            raise AttributeError('pysiaf Aperture attribute `{}` has to be a float.'.format(key))
+            if np.ma.is_masked(value):  # accomodate `None` entries in SIAF definition source files
+                value = 0.0
+            else:
+                raise AttributeError('pysiaf Aperture attribute `{}` has to be a float.'.format(key))
 
         self.__dict__[key] = value
 
@@ -486,7 +489,7 @@ class Aperture(object):
 
     def plot(self, frame='tel', label=False, ax=None, title=False, units='arcsec',
              show_frame_origin=None, mark_ref=False, fill=True, fill_color='cyan', fill_alpha=None,
-             **kwargs):
+             label_rotation=0., **kwargs):
         """Plot this aperture.
 
         Parameters
@@ -566,17 +569,12 @@ class Aperture(object):
         ax.plot(x2 * scale, y2 * scale, **kwargs)
 
         if label is not False:
-            rotation = 0
+            label_rotation = 0
             if label is True:
-                # partially mitigate overlapping NIRCam labels
-                rotation = 30 if self.AperName.startswith('NRC') else 0
                 label = self.AperName
-            ax.text(
-                x.mean() * scale, y.mean() * scale, label,
-                verticalalignment='center',
-                horizontalalignment='center',
-                rotation=rotation,
-                color=ax.lines[-1].get_color())
+            ax.text(x.mean() * scale, y.mean() * scale, label, verticalalignment='center',
+                    horizontalalignment='center', rotation=label_rotation,
+                    color=ax.lines[-1].get_color())
         if fill:
             ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha)
 
@@ -1708,7 +1706,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [int, float, np.float64]:
+    if type(angle_deg) not in [int, float, np.float64, np.int64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
