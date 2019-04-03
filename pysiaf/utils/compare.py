@@ -76,8 +76,8 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
         comparison_tag = '{}'.format(tags['comparison'])
 
     if report_dir is not None:
-        report_file = os.path.join(report_dir, '{}_Diff_{}_{}.txt'.format(
-            instrument, reference_tag, comparison_tag))
+        report_file = os.path.join(report_dir, '{}_diff_{}_{}.txt'.format(
+            instrument, reference_tag, comparison_tag)).replace(' ', '_')
         print_file = open(report_file, 'w')
 
     if verbose:
@@ -180,9 +180,9 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                 pl.title(aperture_name)
                 # pl.show()
                 if report_dir is not None:
-                    figure_name = os.path.join(report_dir, '{}_{}_Diff_{}_{}.pdf'.format(
+                    figure_name = os.path.join(report_dir, '{}_{}_diff_{}_{}.pdf'.format(
                         instrument, aperture_name, reference_siaf_description,
-                        comparison_siaf.description.replace('.', '_')))
+                        comparison_siaf.description.replace('.', '_'))).replace(' ', '_')
                     pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0,
                                dpi=300)
 
@@ -247,7 +247,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
 
     if report_dir is not None:
         report_file = os.path.join(report_dir, '{}_roundtrip_{}_{}.txt'.
-                                   format(instrument, reference_tag, comparison_tag))
+                                   format(instrument, reference_tag, comparison_tag)).replace(' ', '_')
 
         print_file = open(report_file, 'w')
 
@@ -309,7 +309,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                     pl.show()
                     if report_dir is not None:
                         figure_name = os.path.join(report_dir, '{}_{}_siaf{}_roundtrip_error.pdf'.
-                                                   format(instrument, AperName, j))
+                                                   format(instrument, AperName, j)).replace(' ', '_')
                         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     # 1/0
@@ -359,7 +359,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         pl.show()
 
         figure_name = os.path.join(report_dir, '{}_{}_{}_sci_idl_roundtrip_error.pdf'.format(
-            instrument, tags['reference'], tags['comparison']))
+            instrument, tags['reference'], tags['comparison'])).replace(' ', '_')
         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
     return roundtrip_table
@@ -450,5 +450,5 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
             pl.xlim(xlimits)
         pl.show()
         if save_plot:
-            figure_name = os.path.join(report_dir, '{}_{}_siaf{}_apertures_{}.pdf'.format(instrument, tag_list[j], j, filename_appendix))
+            figure_name = os.path.join(report_dir, '{}_{}_apertures_{}.pdf'.format(instrument, tag_list[j], filename_appendix).replace(' ','_'))
             pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)

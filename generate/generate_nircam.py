@@ -335,51 +335,42 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml'], label='jwstsiaf-129')
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
 
     # pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
     pre_delivery_siaf = pysiaf.Siaf(instrument, filename=filenames[0])
 
-    # compare new SIAF with PRD version
-    # ref_siaf = pysiaf.Siaf(instrument)
-    ref_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-    tags = {'reference': 'outdated pre-delivery', 'comparison': 'new pre-delivery'}
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
-    compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'outdated pre-delivery']:
+        if compare_to == 'outdated pre-delivery':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
+        else:
+            # compare new SIAF with PRD version
+            ref_siaf = pysiaf.Siaf(instrument)
+        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
+
+
+        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+        compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                              tags=tags, report_dir=pre_delivery_dir)
 
-    # selected_aperture_name = None
-    selected_aperture_name = """
-        NRCA1_GRISMTS
-        NRCA1_GRISMTS64
-        NRCA1_GRISMTS128
-        NRCA1_GRISMTS256    
-        NRCA5_GRISM_F444W
-        NRCA5_GRISM64_F444W
-        NRCA5_GRISM128_F444W
-        NRCA5_GRISM256_F444W
-        NRCA5_TAGRISMTS_SCI_F444W
-        """.split()
-
-    compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                       report_dir=pre_delivery_dir, tags=tags,
-                                       selected_aperture_name=selected_aperture_name, mark_ref=True)
-                                       # ,
-                                       # xlimits=(0, 160))
-
-    # make figures for JWSTSIAF-129 Jira ticket
-    selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
-                               ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
-                               ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
-                               ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
-                               ['NRCA5_TAGRISMTS_SCI_F444W'],
-                               ]
-    for selected_aperture_name in selected_aperture_names:
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags,
-                                           selected_aperture_name=selected_aperture_name,
-                                           mark_ref=True, filename_appendix=selected_aperture_name[0],
-                                           label=True)#, xlimits=(0, 160))
+                                           report_dir=pre_delivery_dir, tags=tags, mark_ref=True,)
+
+        # make figures for JWSTSIAF-129 Jira ticket
+        selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
+                                   ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
+                                   ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
+                                   ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
+                                   ['NRCA5_TAGRISMTS_SCI_F444W'],
+                                   ]
+
+        for selected_aperture_name in selected_aperture_names:
+            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                               report_dir=pre_delivery_dir, tags=tags,
+                                               selected_aperture_name=selected_aperture_name,
+                                               mark_ref=True, filename_appendix=selected_aperture_name[0],
+                                               label=True)
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
