@@ -4,10 +4,9 @@
 # This is compliant with the IRCD (JWST-STScI-000949) and complementary because the decimal
 # precision of float fields is specified.
 # 
-# Generated 2018-02-20T02:00:15.117 utc
-# jsahlmann@nereus.local.stsci.edu
+# Generated 2018-02-20T02:00:15.117 utc by Johannes Sahlmann
 #
-# jsahlmann 2018-07-30:
+# Updated 2018-07-30 by Johannes Sahlmann:
 # Adapted from NIRSpec for uniform formatting across instruments
 #
 field_nr ,           field_name ,     format ,   pyformat ,                        example
