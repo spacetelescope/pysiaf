@@ -127,7 +127,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
                             (attribute in 'XSciRef YSciRef XSciScale YSciScale V2Ref V3Ref'.
                              split()):
                         attribute_text = '{:{prec}}'.format(attribute_value,
-                                                            prec=12).strip()
+                                                            prec='.15e').strip()
                     elif attribute in FLOAT_ATTRIBUTES:
                         attribute_text = '{:{prec}}'.format(
                             attribute_value, prec=xml_decimal_precision[attribute]).strip()

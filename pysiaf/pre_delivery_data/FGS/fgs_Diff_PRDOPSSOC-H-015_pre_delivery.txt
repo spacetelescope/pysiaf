@@ -1,0 +1,8 @@
+Reference:  32 apertures in PRDOPSSOC-H-015
+Comparison: 32 apertures in pre_delivery
+
+Number of modified apertures 32. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
