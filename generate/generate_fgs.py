@@ -46,7 +46,7 @@ import generate_reference_files
 #
 import importlib
 #
-# importlib.reload(pysiaf.tools)
+importlib.reload(pysiaf.tools)
 # importlib.reload(pysiaf.aperture)
 # # importlib.reload(pysiaf.aperture)
 # importlib.reload(pysiaf.certify.compare)
@@ -65,9 +65,13 @@ instrument = 'FGS'
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 
 # regenerate SIAF reference files if needed
+
+if 0:
+    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
+    1/0
 if 0:
     generate_reference_files.generate_siaf_detector_layout()
-    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
+
     generate_reference_files.generate_siaf_detector_reference_file(instrument)
     generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
 
@@ -894,16 +898,12 @@ def generate_siaf_pre_flight_reference_files_fgs(use_cv3=False):
 
     return
 
-if 0:
-    generate_siaf_pre_flight_reference_files_fgs()
 
-
-if 1:
-    import generate_reference_files
+generate_preflight_alignemnt_and_distortion_reference_files = False
+if generate_preflight_alignemnt_and_distortion_reference_files:
     generate_reference_files.generate_siaf_pre_flight_reference_files_fgs()
 
 siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
-# 1/0
 
 aperture_dict = OrderedDict()
 aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
@@ -946,7 +946,7 @@ for AperName in aperture_name_list:
         aperture.V3SciYAngle = siaf_alignment_parameters['V3SciYAngle'][index]
         aperture.V3SciXAngle = siaf_alignment_parameters['V3SciXAngle'][index]
         aperture.V3IdlYAngle = siaf_alignment_parameters['V3IdlYAngle'][index]
-        # aperture.V3IdlYAngle = tools.v3sciyangle_to_v3idlyangle(aperture.V3SciYAngle)
+
         for attribute_name in 'V2Ref V3Ref'.split():
             setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][index])
 
@@ -963,10 +963,6 @@ for AperName in aperture_name_list:
                 for colname in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
                     setattr(aperture, '{}{:d}{:d}'.format(colname, i, j), polynomial_coefficients[colname][row_index])
 
-    # else:
-    #     aperture.DetSciYAngle = 180.
-    #     aperture.VIdlParity = -1
-
         aperture.Sci2IdlDeg = polynomial_degree
         aperture.complement()
 
@@ -979,7 +975,6 @@ for AperName in aperture_name_list:
 
     if (siaf_aperture_definitions['parent_apertures'][index] is not None) and (siaf_aperture_definitions['dependency_type'][index] == 'default'):
 
-    # if AperName not in ['NIS_CEN', 'NIS_CEN_OSS']:
         aperture._parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
         parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -987,10 +982,9 @@ for AperName in aperture_name_list:
                          'VIdlParity'.split():
             setattr(aperture, attribute, getattr(parent_aperture, attribute))
 
-        # aperture.V3SciYAngle = parent_aperture.V3SciYAngle
-        # aperture.V3SciXAngle = parent_aperture.V3SciXAngle
 
         aperture.V3IdlYAngle = tools.v3sciyangle_to_v3idlyangle(aperture.V3SciYAngle)
+        # aperture.V3IdlYAngle = aperture.V3SciYAngle
 
         aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
 
@@ -1081,11 +1075,11 @@ new_siaf = pysiaf.Siaf(instrument, filename)
 # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType in ['FULLSCA', 'OSS']]
 # comparison_aperture_names = pcf_file_mapping.keys()
 
-comparison_aperture_names = ['FGS1_FULL', 'FGS1_FULL_OSS', 'FGS2_FULL', 'FGS2_FULL_OSS']
+comparison_aperture_names = ['FGS1_FULL', 'FGS1_FULL_OSS', 'FGS2_FULL', 'FGS2_FULL_OSS', 'FGS2_SUB32DIAG']
 # comparison_aperture_names = ['FGS1_FULL_OSS']
 # comparison_aperture_names = ['FGS1_FULL', 'FGS2_FULL']
 compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names)
 # 1/0
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-
+compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+#
 
