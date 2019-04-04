@@ -32,29 +32,32 @@ import time
 import numpy as np
 from astropy.io import ascii
 from astropy.table import Table, vstack, Column
+from astropy.time import Time
 import pylab as pl
 
 import pysiaf
-from pysiaf.utils import polynomial, tools
+from pysiaf.utils import polynomial, tools, compare
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
 # from pysiaf.aperture import DISTORTION_ATTRIBUTES
 # # from pysiaf.certify import compare
 from pysiaf import iando
 #
-# import generate_reference_files
+import generate_reference_files
 #
-# import importlib
+import importlib
 #
 # importlib.reload(pysiaf.tools)
 # importlib.reload(pysiaf.aperture)
 # # importlib.reload(pysiaf.aperture)
 # importlib.reload(pysiaf.certify.compare)
 # importlib.reload(pysiaf.iando.read)
-# importlib.reload(generate_reference_files)
+importlib.reload(generate_reference_files)
 # from pysiaf.certify import compare
 # from pysiaf import iando
 # from pysiaf import aperture
 
+username = os.getlogin()
+timestamp = Time.now()
 
 
 #############################
@@ -141,25 +144,74 @@ def addcoeffs(apline, CF, order):
             k += 1
     return apline
 
-def generate_siaf_pre_flight_reference_files_fgs():
+def generate_siaf_pre_flight_reference_files_fgs(use_cv3=False):
 # def fit(order):
     order = 4
-    print ('\n\n\n*********************** FIT *************************************')
-    print (time.ctime())  # Show when task was run
-    print ('Fit of order', order)
-    fgs = ascii.read(os.path.join(source_data_dir, 'FGS_RawCV3Data.csv'))
-    x = fgs['X']
-    y = fgs['Y']
-    ix1 = fgs['V2F1']
-    iy1 = fgs['V3F1']
-    ix2 = fgs['V2F2']
-    iy2 = fgs['V3F2']
 
-    # Forward polynomials for FDGS1 and FGS2
-    A1 = polynomial.polyfit(ix1, x, y, order)
-    B1 = polynomial.polyfit(iy1, x, y, order)
-    A2 = polynomial.polyfit(ix2, x, y, order)
-    B2 = polynomial.polyfit(iy2, x, y, order)
+    if use_cv3:
+        print ('\n\n\n*********************** FIT *************************************')
+        print (time.ctime())  # Show when task was run
+        print ('Fit of order', order)
+        fgs = ascii.read(os.path.join(source_data_dir, 'FGS_RawCV3Data.csv'))
+        x = fgs['X']
+        y = fgs['Y']
+        ix1 = fgs['V2F1']
+        iy1 = fgs['V3F1']
+        ix2 = fgs['V2F2']
+        iy2 = fgs['V3F2']
+
+        # Forward polynomials for FDGS1 and FGS2
+        A1 = polynomial.polyfit(ix1, x, y, order)
+        B1 = polynomial.polyfit(iy1, x, y, order)
+        A2 = polynomial.polyfit(ix2, x, y, order)
+        B2 = polynomial.polyfit(iy2, x, y, order)
+    else:
+
+        # copied from Cox' makeSIAF.py to reproduce PRDOPSSOC-H-015
+        # February 2015 FGS delivery
+        # Initialize the parameters
+        xOffset = 1023.5,
+        yOffset = 1023.5,
+        scale = 0.06738281367
+
+        A1 = np.array([-2.33369320E+01, 9.98690490E-01, 1.05024970E-02, 2.69889020E-06, 6.74362640E-06,
+                           9.91415010E-07, 1.21090320E-09, -2.84802930E-11, 1.27892930E-09, -1.91322470E-11,
+                           5.34567520E-14, 9.29791010E-14, 8.27060020E-14, 9.70576590E-14, 1.94203870E-14])
+
+        B1 = np.array([-2.70337440E+01, -2.54596080E-03, 1.01166810E+00, 2.46371870E-06, 2.08880620E-06,
+                           9.32489680E-06, -4.11885660E-11, 1.26383770E-09, -7.60173360E-11, 1.36525900E-09,
+                           2.70499280E-14, 5.70198270E-14, 1.43943080E-13, 7.02321790E-14, 1.21579450E-13])
+
+        C1 = np.array(
+            [2.31013520E+01, 1.00091800E+00, -1.06389620E-02, -2.65680980E-06, -6.51704610E-06,
+             -7.45631440E-07, -1.29600400E-09, -4.27453220E-12, -1.27808870E-09, 5.01165140E-12,
+             2.72622090E-15, 5.42715750E-15, 3.46979980E-15, 2.49124350E-15, 1.22848570E-15])
+
+        D1 = np.array([2.67853100E+01, 2.26545910E-03, 9.87816850E-01, -2.35598140E-06, -1.91455620E-06,
+                           -8.92779540E-06, -3.24201520E-11, -1.30056630E-09, -1.73730700E-11,
+                           -1.27341590E-09, 1.84205730E-15, 3.13647160E-15, -2.99705840E-16, 1.98589690E-15,
+                           -1.26523200E-15])
+
+        A2 = np.array(
+            [-3.28410900E+01, 1.03455010E+00, 2.11920160E-02, -9.08746430E-06, -1.43516480E-05,
+             -3.93814140E-06, 1.60956450E-09, 5.82814640E-10, 2.02870570E-09, 2.08582470E-10,
+             -2.79748590E-14, -8.11622820E-14, -4.76943000E-14, -9.01937740E-14, -8.76203780E-15])
+
+        B2 = np.array(
+            [-7.76806220E+01, 2.92234710E-02, 1.07790000E+00, -6.31144890E-06, -7.87266390E-06,
+             -2.14170580E-05, 2.13293560E-10, 2.03376270E-09, 6.74607790E-10, 2.41463060E-09,
+             -2.30267730E-14, -3.63681270E-14, -1.35117660E-13, -4.22207660E-14, -1.16201020E-13])
+
+        C2 = np.array([3.03390890E+01, 9.68539030E-01, -1.82288450E-02, 7.72758330E-06, 1.17536430E-05,
+                           2.71516870E-06, -1.28167820E-09, -6.34376120E-12, -1.24563160E-09,
+                           -9.26192040E-12, 8.14604260E-16, -5.93798790E-16, -2.69247540E-15,
+                           -4.05196100E-15, 2.14529600E-15])
+
+        D2 = np.array([7.13783150E+01, -2.55191710E-02, 9.30941560E-01, 5.01322910E-06, 5.10548510E-06,
+                           1.68083960E-05, 9.41565630E-12, -1.29749490E-09, -1.89194230E-11,
+                           -1.29425530E-09, -2.81501600E-15, -1.73025000E-15, 2.57732600E-15,
+                           1.75268080E-15, 2.95238320E-15])
+
     print ('A1')
     polynomial.print_triangle(A1)
     print ('B1')
@@ -169,183 +221,324 @@ def generate_siaf_pre_flight_reference_files_fgs():
     print ('B2')
     polynomial.print_triangle(B2)
 
-    print ('\nA1')
-    dax1 = fitstat(A1, ix1, x, y, order)
-    print ('B1')
-    day1 = fitstat(B1, iy1, x, y, order)
-    print ('A2')
-    dax2 = fitstat(A2, ix2, x, y, order)
-    print ('B2')
-    day2 = fitstat(B2, iy2, x, y, order)
-
-    # Inverse polynomials for FGS1 and FGS2
-    C1 = polynomial.polyfit(x, ix1, iy1, order)
-    D1 = polynomial.polyfit(y, ix1, iy1, order)
-    C2 = polynomial.polyfit(x, ix2, iy2, order)
-    D2 = polynomial.polyfit(y, ix2, iy2, order)
-
-    print ('C2')
-    polynomial.print_triangle(C2)
-    print ('D2')
-    polynomial.print_triangle(D2)
-
-    # Fit statistics
-    print ('\nC1')
-    dpx1 = fitstat(C1, x, ix1, iy1, order)
-    print ('D1')
-    dpy1 = fitstat(D1, y, ix1, iy1, order)
-    print ('C2')
-    dpx2 = fitstat(C2, x, ix2, iy2, order)
-    print ('D2')
-    dpy2 = fitstat(D2, y, ix2, iy2, order)
-
-    print ('\nCenter')
-    V2Ref = polynomial.poly(A1, 1023.5, 1023.5, order)
-    V3Ref = polynomial.poly(B1, 1023.5, 1023.5, order)
-    print (V2Ref, V3Ref)
-    print('\nCalculated Corners')
-    cx = np.array([-0.5, 2047.5, 2047.5, -0.5, -0.5])
-    cy = np.array([-0.5, -0.5, 2047.5, 2047.5, -0.5])
-    xcorner = polynomial.poly(A1, cx, cy, order)
-    ycorner = polynomial.poly(B1, cx, cy, order)
-    for c in range(4):
-        print ('%10.4f %10.4f' % (xcorner[c], ycorner[c]))
-
-    betax1 = np.arctan2(A1[1], B1[1])
-    betay1 = np.arctan2(A1[2], B1[2])
-    print ('\nBefore Shifting')
-    print (
-    'Angles1 %10.4f %10.4f %10.4f' % (np.rad2deg(betax1), np.rad2deg(betay1), np.rad2deg(betay1 - betax1)))
-
-    A1S = polynomial.shift_coefficients(A1, 1023.5, 1023.5, order)
-    B1S = polynomial.shift_coefficients(B1, 1023.5, 1023.5, order)
-    print ('Shifted')
-    print('A1S')
-    polynomial.print_triangle(A1S)
-    print('B1S')
-    polynomial.print_triangle(B1S)
-    parity = 1  # for OSS
-    xscale = np.hypot(A1S[1], B1S[1])
-    yscale = np.hypot(A1S[2], B1S[2])
-    xangle = np.rad2deg(np.arctan2(parity * A1S[1], B1S[1]))
-    yangle = np.rad2deg(np.arctan2(parity * A1S[2], B1S[2]))
-
-    print ('\nLinear matrix\n %10.6f %10.6f \n %10.6f %10.6f' % (A1S[1], A1S[2], B1S[1], B1S[2]))
-    print ('Scales %12.6f %12.6f' % (xscale, yscale))
-    print ('Angles %12.6f %12.6f' % (xangle, yangle))
-
-    print ('\nRecalculated Corners')
-    cxs = np.array([-1024.0, 1024.0, 1024.0, -1024.0, -1024.0])
-    cys = np.array([-1024.0, -1024.0, 1024.0, 1024.0, -1024.0])
-    xcorner = polynomial.poly(A1S, cxs, cys, order)
-    ycorner = polynomial.poly(B1S, cxs, cys, order)
-    for c in range(4):
-        print ('%10.4f %10.4f' % (xcorner[c], ycorner[c]))
-
-    V2Ref1 = A1S[0]
-    V3Ref1 = B1S[0]
-    A1S[0] = 0.0
-    B1S[0] = 0.0
-
-    pl.figure(1)
-    pl.clf()
-    pl.plot(xcorner, ycorner, '-')
-    pl.plot(xcorner[0], ycorner[0], 'bs')
-    pl.plot(V2Ref, V3Ref, 'b+')
-    pl.text(V2Ref, V3Ref, 'FGS1')
-    pl.text(xcorner[1], ycorner[1], 'X')
-    pl.text(xcorner[3], ycorner[3], 'Y')
-    pl.grid(True)
-    pl.axis('equal')
-    pl.show()
-
-    print ('\nAfter Shifting')
-    print ('Angles %10.4f %10.4f' % (xangle, yangle))
-    if abs(yangle) > 90.0:
-        V3angle = yangle - np.sign(yangle) * 180.0
-        print ('Modified yangle %10.4f' % V3angle)
-    else:
-        V3angle = yangle
-
-    # Rotate polynomial to create Ideal coefficients
-    A1SR = A1S * np.cos(np.deg2rad(V3angle)) - B1S * np.sin(np.deg2rad(V3angle))
-    B1SR = A1S * np.sin(np.deg2rad(V3angle)) + B1S * np.cos(np.deg2rad(V3angle))
-    print (A1SR[2])
-    if abs(A1SR[2]) < 1.0e-10:
-        A1SR[2] = 0.0
-        print ('A1SR[2] set to zero')
-    else:
-        print('-----------------------------------A1SR[2] non-zero')
-
-    print ('\nRotated coefficiients\nA1SR')
-    polynomial.print_triangle(A1SR)
-    print ('B1SR')
-    polynomial.print_triangle(B1SR)
-
-    # Prepare csv file with output parameters
     fgs = open(os.path.join(test_dir, 'FGScoeffs.csv'), 'w')
-    topline = 'Aperture,   V3IdlYangle, xangle,  yangle'
+    if use_cv3:
+        print ('\nA1')
+        dax1 = fitstat(A1, ix1, x, y, order)
+        print ('B1')
+        day1 = fitstat(B1, iy1, x, y, order)
+        print ('A2')
+        dax2 = fitstat(A2, ix2, x, y, order)
+        print ('B2')
+        day2 = fitstat(B2, iy2, x, y, order)
 
-    for i in range(order + 1):
-        for j in range(i + 1):
-            topline += ', A' + str(i) + str(j)
-    for i in range(order + 1):
-        for j in range(i + 1):
-            topline += ', B' + str(i) + str(j)
+        # Inverse polynomials for FGS1 and FGS2
+        C1 = polynomial.polyfit(x, ix1, iy1, order)
+        D1 = polynomial.polyfit(y, ix1, iy1, order)
+        C2 = polynomial.polyfit(x, ix2, iy2, order)
+        D2 = polynomial.polyfit(y, ix2, iy2, order)
 
-    for i in range(order + 1):
-        for j in range(i + 1):
-            topline += ', C' + str(i) + str(j)
+        print ('C2')
+        polynomial.print_triangle(C2)
+        print ('D2')
+        polynomial.print_triangle(D2)
 
-    for i in range(order + 1):
-        for j in range(i + 1):
-            topline += ', D' + str(i) + str(j)
-    topline = topline + '\n'
-    fgs.write(topline)
+    # if use_cv3:
+        # Fit statistics
+        print ('\nC1')
+        dpx1 = fitstat(C1, x, ix1, iy1, order)
+        print ('D1')
+        dpy1 = fitstat(D1, y, ix1, iy1, order)
+        print ('C2')
+        dpx2 = fitstat(C2, x, ix2, iy2, order)
+        print ('D2')
+        dpy2 = fitstat(D2, y, ix2, iy2, order)
+
+        print ('\nCenter')
+        if use_cv3:
+            V2Ref = polynomial.poly(A1, 1023.5, 1023.5, order)
+            V3Ref = polynomial.poly(B1, 1023.5, 1023.5, order)
+        else:
+            V2Ref = 207.1900
+            V3Ref = -697.5000
+        print (V2Ref, V3Ref)
+        print('\nCalculated Corners')
+        cx = np.array([-0.5, 2047.5, 2047.5, -0.5, -0.5])
+        cy = np.array([-0.5, -0.5, 2047.5, 2047.5, -0.5])
+        xcorner = polynomial.poly(A1, cx, cy, order)
+        ycorner = polynomial.poly(B1, cx, cy, order)
+        for c in range(4):
+            print ('%10.4f %10.4f' % (xcorner[c], ycorner[c]))
+
+        betax1 = np.arctan2(A1[1], B1[1])
+        betay1 = np.arctan2(A1[2], B1[2])
+        print ('\nBefore Shifting')
+        print (
+        'Angles1 %10.4f %10.4f %10.4f' % (np.rad2deg(betax1), np.rad2deg(betay1), np.rad2deg(betay1 - betax1)))
+
+        A1S = polynomial.shift_coefficients(A1, 1023.5, 1023.5, order)
+        B1S = polynomial.shift_coefficients(B1, 1023.5, 1023.5, order)
+        print ('Shifted')
+        print('A1S')
+        polynomial.print_triangle(A1S)
+        print('B1S')
+        polynomial.print_triangle(B1S)
+        parity = 1  # for OSS
+        xscale = np.hypot(A1S[1], B1S[1])
+        yscale = np.hypot(A1S[2], B1S[2])
+        xangle = np.rad2deg(np.arctan2(parity * A1S[1], B1S[1]))
+        yangle = np.rad2deg(np.arctan2(parity * A1S[2], B1S[2]))
+
+        print ('\nLinear matrix\n %10.6f %10.6f \n %10.6f %10.6f' % (A1S[1], A1S[2], B1S[1], B1S[2]))
+        print ('Scales %12.6f %12.6f' % (xscale, yscale))
+        print ('Angles %12.6f %12.6f' % (xangle, yangle))
+
+        print ('\nRecalculated Corners')
+        cxs = np.array([-1024.0, 1024.0, 1024.0, -1024.0, -1024.0])
+        cys = np.array([-1024.0, -1024.0, 1024.0, 1024.0, -1024.0])
+        xcorner = polynomial.poly(A1S, cxs, cys, order)
+        ycorner = polynomial.poly(B1S, cxs, cys, order)
+        for c in range(4):
+            print ('%10.4f %10.4f' % (xcorner[c], ycorner[c]))
+
+        V2Ref1 = A1S[0]
+        V3Ref1 = B1S[0]
+        A1S[0] = 0.0
+        B1S[0] = 0.0
+
+        pl.figure(1)
+        pl.clf()
+        pl.plot(xcorner, ycorner, '-')
+        pl.plot(xcorner[0], ycorner[0], 'bs')
+        pl.plot(V2Ref, V3Ref, 'b+')
+        pl.text(V2Ref, V3Ref, 'FGS1')
+        pl.text(xcorner[1], ycorner[1], 'X')
+        pl.text(xcorner[3], ycorner[3], 'Y')
+        pl.grid(True)
+        pl.axis('equal')
+        pl.show()
+
+        print ('\nAfter Shifting')
+        print ('Angles %10.4f %10.4f' % (xangle, yangle))
+        if abs(yangle) > 90.0:
+            V3angle = yangle - np.sign(yangle) * 180.0
+            print ('Modified yangle %10.4f' % V3angle)
+        else:
+            V3angle = yangle
+
+        # Rotate polynomial to create Ideal coefficients
+        A1SR = A1S * np.cos(np.deg2rad(V3angle)) - B1S * np.sin(np.deg2rad(V3angle))
+        B1SR = A1S * np.sin(np.deg2rad(V3angle)) + B1S * np.cos(np.deg2rad(V3angle))
+        print (A1SR[2])
+        if abs(A1SR[2]) < 1.0e-10:
+            A1SR[2] = 0.0
+            print ('A1SR[2] set to zero')
+        else:
+            print('-----------------------------------A1SR[2] non-zero')
+
+        print ('\nRotated coefficiients\nA1SR')
+        polynomial.print_triangle(A1SR)
+        print ('B1SR')
+        polynomial.print_triangle(B1SR)
+
+        # Prepare csv file with output parameters
+
+        topline = 'Aperture,   V3IdlYangle, xangle,  yangle'
+
+        for i in range(order + 1):
+            for j in range(i + 1):
+                topline += ', A' + str(i) + str(j)
+        for i in range(order + 1):
+            for j in range(i + 1):
+                topline += ', B' + str(i) + str(j)
+
+        for i in range(order + 1):
+            for j in range(i + 1):
+                topline += ', C' + str(i) + str(j)
+
+        for i in range(order + 1):
+            for j in range(i + 1):
+                topline += ', D' + str(i) + str(j)
+        topline = topline + '\n'
+        fgs.write(topline)
+
+
+        # Inverse
+        print ('\nNow do inverses')
+        print ('C1')
+        polynomial.print_triangle(C1)
+        print ('D1')
+        polynomial.print_triangle(D1)
+
+        C1S = polynomial.shift_coefficients(C1, V2Ref1, V3Ref1, order)
+        D1S = polynomial.shift_coefficients(D1, V2Ref1, V3Ref1, order)
+        C1S[0] = 0.0
+        D1S[0] = 0.0
+        print ('\nC1S')
+        polynomial.print_triangle(C1S)
+        print('D1S')
+        polynomial.print_triangle(D1S)
+
+        print ('Check 1S transforms')
+        checkinv(A1S, B1S, C1S, D1S, order, center=True)
+
+        print ('Rotate by ', V3angle)
+        C1SR = polynomial.prepend_rotation_to_polynomial(C1S, V3angle, order)
+        D1SR = polynomial.prepend_rotation_to_polynomial(D1S, V3angle, order)
+        print ('\nC1SR')
+        polynomial.print_triangle(C1SR)
+        print('D1SR')
+        polynomial.print_triangle(D1SR)
+        print ('Check 1SR transformations')
+        checkinv(A1SR, B1SR, C1SR, D1SR, order, center=True)
+    else:
+        A = A1
+        B = B1
+        C = C1
+        D = D1
+
+
+        V2Ref = 207.1900
+        V3Ref = -697.5000
+        xiRef = polynomial.poly(A, 1023.5, 1023.5)
+        yiRef = polynomial.poly(B, 1023.5, 1023.5)
+        print('Ideal center %8.3f %8.3f' % (xiRef, yiRef))
+        print('Inverse check of incoming poynomials')
+        checkinv(A, B, C, D, order)
+        AS = polynomial.shift_coefficients(A, 1023.5, 1023.5)
+        AS[0] = 0.0
+        BS = polynomial.shift_coefficients(B, 1023.5, 1023.5)
+        BS[0] = 0.0
+        CS = polynomial.shift_coefficients(C, xiRef, yiRef)
+        CS[0] = 0.0
+        DS = polynomial.shift_coefficients(D, xiRef, yiRef)
+        DS[0] = 0.0
+
+        # print('\nAS')
+        # triangle(AS)
+        # print('BS')
+        # triangle(BS)
+        # print('Shifted')
+        # checkinv(AS, BS, CS, DS, 4)
+
+        # parity = 1  # for OSS
+        # xangle = np.rad2deg(np.arctan2(parity * AS[1], BS[1]))
+        # yangle = np.rad2deg(np.arctan2(parity * AS[2], BS[2]))
+        # parity = 1  # for OSS
+
+
+
+        xd = 300
+        yd = 700
+        u = polynomial.poly(AS, xd, yd)
+        v = polynomial.poly(BS, xd, yd)
+        print('Solution   %8.3f %8.3f' % (xd, yd))
+        print('Raw values %8.3f %8.3f' % (u, v))
+        xs = xd  # For OSS detector and science are identical
+        ys = yd
+
+        AF = AS
+        BF = -BS
+
+        # print('\nAF')
+        # triangle(AF)
+        # print('BF')
+        # triangle(BF)
+
+        xi = polynomial.poly(AF, xs, ys)
+        yi = polynomial.poly(BF, xs, ys)
+        print('Ideal values')
+        print(' %8.3f %8.3f' % (xs, ys))
+        print(' %8.3f %8.3f' % (xi, yi))
+
+        CF = polynomial.flip_y(CS)
+        DF = polynomial.flip_y(DS)
+
+        # print('\nCS')
+        # triangle(CS)
+        # print('DS')
+        # triangle(DS)
+        # print('CF')
+        # triangle(CF)
+        # print('DF')
+        # triangle(DF)
+
+        xdr = polynomial.poly(CF, xi, yi)
+        ydr = polynomial.poly(DF, xi, yi)
+        print('Regained Detector  %8.3f %8.3f' % (xdr, ydr))
+
+        betaX = np.arctan2(AF[1], BF[1])
+        betaY = np.arctan2(AF[2], BF[2])
+        xangle = np.rad2deg(betaX)
+        yangle = np.rad2deg(betaY)
+        if np.abs(betaY) > np.pi / 2:
+            V3angle = betaY - np.copysign(np.pi, betaY)
+        else:
+            V3angle = betaY
+
+        print('\nAngles')
+        print('betaX   %10.4f' % np.degrees(betaX))
+        print('betaY   %10.4f' % np.degrees(betaY))
+        print('V3angle %10.4f' % np.degrees(V3angle))
+
+
+        (AR, BR) = polynomial.add_rotation(AF, BF, -np.degrees(V3angle))
+        # print('AR')
+        # triangle(AR)
+        # print('BR')
+        # triangle(BR)
+
+        xii = polynomial.poly(AR, xs, ys)
+        yii = polynomial.poly(BR, xs, ys)
+        print('Ideal Rotated  %8.3f %8.3f' % (xii, yii))
+        (u, v) = polynomial.add_rotation(xii, yii, -betaY)
+        print('Ideal again %8.3f %8.3f' % (u, v))
+
+        # (CR,DR) = polynomial.add_rotation(CF,DF, -betaY)
+        CR = polynomial.prepend_rotation_to_polynomial(CF, np.degrees(V3angle))
+        DR = polynomial.prepend_rotation_to_polynomial(DF, np.degrees(V3angle))
+        # print('\nCR')
+        # triangle(CR)
+        # print('DR')
+        # triangle(DR)
+        xs3 = polynomial.poly(CR, xii, yii)
+        ys3 = polynomial.poly(DR, xii, yii)
+        print('Regained rotated Science %8.3f %8.3f' % (xs3, ys3))
+        print('Final coefficients before scaling')
+        checkinv(AR, BR, CR, DR, order)
+        print('Ideal pixel size', scale, ' arcsec')
+
+        (AR, BR, CR, DR) = polynomial.rescale(AR, BR, CR, DR, scale)
+        A1SR, B1SR, C1SR, D1SR = AR, BR, CR, DR
+        # print('After Scaling')
+        # print('AR')
+        # triangle(AR, 4)
+        # print('BR')
+        # triangle(BR, 4)
+        # print('CR')
+        # triangle(CR, 4)
+        # print('DR')
+        # triangle(DR, 4)
+        # checkinv(AR, BR, CR, DR, order)  # Add to csv file
+
+        # hack!
+        A1S, B1S, C1S, D1S = AS, BS, CS, DS
+        cx = np.zeros(4)
+        cy = np.zeros(4)
+        cxs = np.zeros(4)
+        cys = np.zeros(4)
 
     apline = 'FGS1_FULL_OSS,  %12.6f,  %12.6f,  %12.6f' % (V3angle, xangle, yangle)
     apline = addcoeffs(apline, A1SR, order)
     apline = addcoeffs(apline, B1SR, order)
-
-    # Inverse
-    print ('\nNow do inverses')
-    print ('C1')
-    polynomial.print_triangle(C1)
-    print ('D1')
-    polynomial.print_triangle(D1)
-
-    C1S = polynomial.shift_coefficients(C1, V2Ref1, V3Ref1, order)
-    D1S = polynomial.shift_coefficients(D1, V2Ref1, V3Ref1, order)
-    C1S[0] = 0.0
-    D1S[0] = 0.0
-    print ('\nC1S')
-    polynomial.print_triangle(C1S)
-    print('D1S')
-    polynomial.print_triangle(D1S)
-
-    print ('Check 1S transforms')
-    checkinv(A1S, B1S, C1S, D1S, order, center=True)
-
-    print ('Rotate by ', V3angle)
-    C1SR = polynomial.prepend_rotation_to_polynomial(C1S, V3angle, order)
-    D1SR = polynomial.prepend_rotation_to_polynomial(D1S, V3angle, order)
-    print ('\nC1SR')
-    polynomial.print_triangle(C1SR)
-    print('D1SR')
-    polynomial.print_triangle(D1SR)
-    print ('Check 1SR transformations')
-    checkinv(A1SR, B1SR, C1SR, D1SR, order, center=True)
-
-    # Add to csv file
     apline = addcoeffs(apline, C1SR, order)
     apline = addcoeffs(apline, D1SR, order)
     fgs1_oss = {'A': A1SR, 'B': B1SR, 'C': C1SR, 'D': D1SR}
     fgs1_oss['V2Ref'] = V2Ref
     fgs1_oss['V3Ref'] = V3Ref
-    fgs1_oss['V3IdlYAngle'] = V3angle
+    fgs1_oss['V3IdlYAngle'] = np.rad2deg(V3angle)
     fgs1_oss['V3SciXAngle'] = xangle
     fgs1_oss['V3SciYAngle'] = yangle
-
     apline += '\n'
     fgs.write(apline)
 
@@ -664,7 +857,7 @@ def generate_siaf_pre_flight_reference_files_fgs():
         comments.append('These parameters are stored in PRDOPSSOC-H-014.')
         comments.append('')
         comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-        comments.append('{}@{}'.format(username, hostname))
+        comments.append('by {}'.format(username))
         comments.append('')
         distortion_reference_table.meta['comments'] = comments
         distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width',
@@ -693,7 +886,7 @@ def generate_siaf_pre_flight_reference_files_fgs():
     comments.append('This file contains the focal plane alignment parameters calibrated during FGS-FGS alignment.')
     comments.append('')
     comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
-    comments.append('{}@{}'.format(username, hostname))
+    comments.append('by {}'.format(username))
     comments.append('')
     siaf_alignment.meta['comments'] = comments
     siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
@@ -705,7 +898,12 @@ if 0:
     generate_siaf_pre_flight_reference_files_fgs()
 
 
+if 1:
+    import generate_reference_files
+    generate_reference_files.generate_siaf_pre_flight_reference_files_fgs()
+
 siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
+# 1/0
 
 aperture_dict = OrderedDict()
 aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
@@ -856,7 +1054,7 @@ for AperName in aperture_name_list:
 #sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
 
-if 0:
+if 1:
     #third pass to set DDCNames apertures, which depend on other apertures
     ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
     ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
@@ -873,8 +1071,8 @@ aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 print('SIAFXML written in {}'.format(filename))
 
 # compare to SIAFXML produced the old way
-ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'FGS_SIAF_2018-04-17.xml'))
-# ref_siaf = pysiaf.Siaf(instrument)
+# ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'FGS_SIAF_2018-04-17.xml'))
+ref_siaf = pysiaf.Siaf(instrument)
 new_siaf = pysiaf.Siaf(instrument, filename)
 
 # comparison_aperture_names = [AperName for AperName in aperture_name_list if 'NRS_IFU' in AperName]
@@ -884,8 +1082,10 @@ new_siaf = pysiaf.Siaf(instrument, filename)
 # comparison_aperture_names = pcf_file_mapping.keys()
 
 comparison_aperture_names = ['FGS1_FULL', 'FGS1_FULL_OSS', 'FGS2_FULL', 'FGS2_FULL_OSS']
+# comparison_aperture_names = ['FGS1_FULL_OSS']
 # comparison_aperture_names = ['FGS1_FULL', 'FGS2_FULL']
 compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names)
-compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+# 1/0
+# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
 
 
