@@ -9,6 +9,8 @@ from __future__ import absolute_import, print_function, division
 import copy
 import math
 from math import sin, cos, atan2, degrees, radians
+
+from astropy.table import Table
 import numpy as np
 
 from ..constants import V3_TO_YAN_OFFSET_DEG
@@ -280,7 +282,7 @@ def correct_V3SciYAngle(V3SciYAngle_deg):
     return V3SciYAngle_deg_corrected
 
 
-def jwst_fgs1_to_fgs2_matrix(siaf=None, verbose=False):
+def jwst_fgs_to_fgs_matrix(direction='fgs2_to_fgs1', siaf=None, verbose=False):
     """Return JWST FGS1_OSS to FGS2_OSS transformation matrix as stored in LoadsPRD.
 
     Parameters
@@ -303,8 +305,12 @@ def jwst_fgs1_to_fgs2_matrix(siaf=None, verbose=False):
     if siaf is None:
         siaf = Siaf('fgs')
 
-    fgs1 = siaf['FGS1_FULL_OSS']
-    fgs2 = siaf['FGS2_FULL_OSS']
+    if direction=='fgs2_to_fgs1':
+        fgs1 = siaf['FGS2_FULL_OSS']
+        fgs2 = siaf['FGS1_FULL_OSS']
+    elif direction=='fgs1_to_fgs2':
+        fgs1 = siaf['FGS1_FULL_OSS']
+        fgs2 = siaf['FGS2_FULL_OSS']
 
     FGS1V2 = fgs1.V2Ref
     FGS1V3 = fgs1.V3Ref
@@ -333,8 +339,12 @@ def jwst_fgs1_to_fgs2_matrix(siaf=None, verbose=False):
     if verbose:
         print('RA\n', RA)
         print('RB\n', RB)
-        print('\nTransform from FGS1_OSS to FGS2_OSS\nR12\n', R12)
-        print('\nTransform from FGS2_OSS to FGS1_OSS\nR21\n', R21)
+        if direction == 'fgs1_to_fgs2':
+            print('\nTransform from FGS1_OSS to FGS2_OSS\nR12\n', R12)
+            print('\nTransform from FGS2_OSS to FGS1_OSS\nR21\n', R21)
+        elif direction == 'fgs2_to_fgs1':
+            print('\nTransform from FGS2_OSS to FGS1_OSS\nR12\n', R12)
+            print('\nTransform from FGS1_OSS to FGS2_OSS\nR21\n', R21)
 
     return R12
 
@@ -537,6 +547,43 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
             aperture.V3IdlYAngle = aperture.V3SciYAngle - np.sign(aperture.V3SciYAngle)*180.
 
     return aperture
+
+
+def write_matrix_to_file(matrix, file, comments=None, format='jwst_fsw_patch_request'):
+    """Write the elements of a matrix to a text file.
+
+    Parameters
+    ----------
+    matrix : ndarray
+        the matrix
+    file : str
+        output file name
+    comments : dict
+        comments to include in the commented file header
+    format : str
+        Formatting of matrix elements in output
+
+    """
+    if format=='jwst_fsw_patch_request':
+        index = []
+        value = []
+        for row_index in range(matrix.shape[0]):
+            for column_index in range(matrix.shape[1]):
+                index.append('[{}][{}]'.format(row_index, column_index))
+                value.append('{:.15f}'.format(matrix[row_index, column_index]))
+        table = Table()
+        table['[Row][Column]'] = index
+        table['Value'] = value
+        if comments is not None:
+            table.meta['comments'] = comments
+        table.write(file, format='ascii.fixed_width', delimiter=',', bookend=False, overwrite=True)
+
+    elif format is None:
+        table = Table(matrix)
+        if comments is not None:
+            table.meta['comments'] = comments
+        fstring = '{' + ','.join(["'{}':  '%.15f'".format(c) for c in table.colnames]) + '}'
+        table.write(file, format='ascii.fixed_width', delimiter=',', bookend=False, overwrite=True, formats=eval(fstring))
 
 
 def v3sciyangle_to_v3idlyangle(v3sciyangle):
