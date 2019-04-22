@@ -570,7 +570,7 @@ def write_matrix_to_file(matrix, file, comments=None, format='jwst_fsw_patch_req
         for row_index in range(matrix.shape[0]):
             for column_index in range(matrix.shape[1]):
                 index.append('[{}][{}]'.format(row_index, column_index))
-                value.append('{:.15f}'.format(matrix[row_index, column_index]))
+                value.append('{:+.15f}'.format(matrix[row_index, column_index]))
         table = Table()
         table['[Row][Column]'] = index
         table['Value'] = value

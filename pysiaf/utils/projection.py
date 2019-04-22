@@ -9,6 +9,7 @@ Authors
 import numpy as np
 from astropy.modeling import models as astmodels
 from astropy.modeling import rotations as astrotations
+import astropy.units as u
 
 
 def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
@@ -43,7 +44,10 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
 
     """
     # for zenithal projections, i.e. gnomonic, i.e. TAN:
-    lonpole = 180.
+    if isinstance(ra_ref, u.Quantity):
+        lonpole = 180. * u.deg
+    else:
+        lonpole = 180.
 
     # tangent plane projection from phi/theta to x,y
     tan = astmodels.Sky2Pix_TAN()
@@ -92,7 +96,10 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1., unwrap=True):
 
     """
     # for zenithal projections, i.e. gnomonic, i.e. TAN
-    lonpole = 180.
+    if isinstance(ra_ref, u.Quantity):
+        lonpole = 180. * u.deg
+    else:
+        lonpole = 180.
 
     x = x / scale
     y = y / scale
