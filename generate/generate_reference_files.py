@@ -1021,8 +1021,11 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
 
             # coefficients copied from Cox' makeSIAF.py to reproduce PRDOPSSOC-H-015
             # February 2015 FGS delivery
-            # Initialize the parameters
+            # these numbers match the `To be Updated for CV3` column in the Tables on page 6ff
+            # of an unpublished word document entitled `FGS Transformation for CV3.docx` by
+            # Julia Zhou, e.g. C = IDEALPTOREALPXCOE_N
 
+            # Initialize the parameters
             A = np.array(
                 [-2.33369320E+01, 9.98690490E-01, 1.05024970E-02, 2.69889020E-06, 6.74362640E-06,
                  9.91415010E-07, 1.21090320E-09, -2.84802930E-11, 1.27892930E-09, -1.91322470E-11,
