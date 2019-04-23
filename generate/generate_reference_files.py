@@ -995,7 +995,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
 
 
 # FGS reference files
-def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
+def generate_siaf_pre_flight_reference_files_fgs(verbose=False, mode='siaf'):
 
     instrument = 'FGS'
 
@@ -1005,13 +1005,19 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
     # hardcoded pixelscale, reference?
     scale = 0.06738281367  # arcsec/pixel
 
-    # write focal plane alignment reference file
-    outfile = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.format(instrument.lower()))
+    if mode == 'siaf':
+        # write focal plane alignment reference file
+        outfile = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.format(instrument.lower()))
+        oss_flags = [False, True]
+    elif mode == 'fsw':
+        outfile = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_fsw_coefficients.txt'.format(instrument.lower()))
+        oss_flags = [True]
+
     if os.path.isfile(outfile):
         os.remove(outfile)
-    oss_flags = [False, True]
 
     siaf_alignment = None
+    counter = 0
 
     for aperture_id in 'FGS1 FGS2'.split():
 
@@ -1073,6 +1079,20 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
                  1.68083960E-05, 9.41565630E-12, -1.29749490E-09, -1.89194230E-11, -1.29425530E-09,
                  -2.81501600E-15, -1.73025000E-15, 2.57732600E-15, 1.75268080E-15, 2.95238320E-15])
 
+        number_of_coefficients = len(A)
+        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+
+        # generate distortion coefficient files
+        siaf_index = []
+        exponent_x = []
+        exponent_y = []
+        for i in range(polynomial_degree + 1):
+            for j in np.arange(i + 1):
+                siaf_index.append('{:d}{:d}'.format(i, j))
+                exponent_x.append(i-j)
+                exponent_y.append(j)
+
+
         print('*'*100)
         aperture_name = '{}_FULL'.format(aperture_id)
         for oss in oss_flags:
@@ -1085,59 +1105,114 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
 
             print('{}'.format(aperture_name))
 
-            # Scale to arcsec
-            (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, scale)
+            if mode == 'fsw':
+                (AX, BX, CX, DX) = (A, B, C, D)
 
-            V2c = polynomial.poly(AX, center_offset_x, center_offset_y)
-            V3c = polynomial.poly(BX, center_offset_x, center_offset_y)
+                AS = polynomial.shift_coefficients(AX, center_offset_x, center_offset_y)
+                BS = polynomial.shift_coefficients(BX, center_offset_x, center_offset_y)
 
-            AS = polynomial.shift_coefficients(AX, center_offset_x, center_offset_y)
-            AS[0] = 0.0
-            BS = polynomial.shift_coefficients(BX, center_offset_x, center_offset_y)
-            BS[0] = 0.0
-            CS = polynomial.shift_coefficients(CX, V2c, V3c)
-            CS[0] = 0.0
-            DS = polynomial.shift_coefficients(DX, V2c, V3c)
-            DS[0] = 0.0
+                AS0 = copy.deepcopy(AS[0])
+                BS0 = copy.deepcopy(BS[0])
+                AS[0] = 0.0
+                BS[0] = 0.0
 
-            if aperture_id == 'FGS1':
-                if oss is False:
-                    AF = -polynomial.flip_x(polynomial.flip_y(AS))
-                    BF = -polynomial.flip_x(polynomial.flip_y(BS))
-                    CF = -polynomial.flip_x(polynomial.flip_y(CS))
-                    DF = -polynomial.flip_x(polynomial.flip_y(DS))
-                else:
-                    AF = AS # For OSS detector and science are identical
-                    BF = -BS
-                    CF = polynomial.flip_y(CS)
-                    DF = polynomial.flip_y(DS)
-            elif aperture_id == 'FGS2':
-                if oss is False:
-                    AF = -polynomial.flip_x(AS)
-                    BF =  polynomial.flip_x(BS)
-                    CF = -polynomial.flip_x(CS)
-                    DF =  polynomial.flip_x(DS)
-                else:
-                    AF = AS # For OSS detector and science are identical
-                    BF = BS
-                    CF = CS
-                    DF = DS
+                betaY = np.arctan2(AS[2], BS[2])
+                print('Beta Y', np.degrees(betaY))
+                print('Shift zeros', AS0, BS0)
 
-            betaX = np.arctan2(oss_factor * AF[1], BF[1])
-            betaY = np.arctan2(oss_factor * AF[2], BF[2])
+                AR = AS * np.cos(betaY) - BS * np.sin(betaY)
+                BR = AS * np.sin(betaY) + BS * np.cos(betaY)
 
-            V3angle = copy.deepcopy(betaY)
-            if (abs(V3angle) > np.pi/2):
-                V3angle = V3angle - np.copysign(np.pi, V3angle)
 
-            (AR,BR) = polynomial.add_rotation(AF, BF, -1 * oss_factor * np.rad2deg(V3angle))
+                AR[0] = center_offset_x
+                BR[0] = center_offset_y
 
-            # take out the rotation, carried separately in V3IdlYangle
-            CR = polynomial.prepend_rotation_to_polynomial(CF, oss_factor * np.rad2deg(V3angle))
-            DR = polynomial.prepend_rotation_to_polynomial(DF, oss_factor * np.rad2deg(V3angle))
+                AF = polynomial.shift_coefficients(AR, -center_offset_x, -center_offset_y)
+                BF = polynomial.shift_coefficients(BR, -center_offset_x, -center_offset_y)
+
+                # Inverse matrices
+                xc = polynomial.poly(AX, center_offset_x, center_offset_y)
+                yc = polynomial.poly(BX, center_offset_x, center_offset_y)
+                # CS1 = 1.0*C1 # Force a real copy
+                CS = polynomial.shift_coefficients(CX, xc, yc)
+                DS = polynomial.shift_coefficients(DX, xc, yc)
+                CS0 = copy.deepcopy(CS[0])
+                DS0 = copy.deepcopy(DS[0])
+
+                # print('Sci Ref', xsref,ysref)
+                CS[0] = 0.0
+                DS[0] = 0.0
+                CR = polynomial.prepend_rotation_to_polynomial(CS, np.degrees(betaY))
+                DR = polynomial.prepend_rotation_to_polynomial(DS, np.degrees(betaY))
+                CR[0] = CS0
+                DR[0] = DS0
+                CF = polynomial.shift_coefficients(CR, -center_offset_x, -center_offset_y)
+                DF = polynomial.shift_coefficients(DR, -center_offset_x, -center_offset_y)
+                distortion_reference_table = Table((siaf_index, exponent_x, exponent_y, AF, BF, CF, DF),
+                                                   names=('siaf_index', 'exponent_x', 'exponent_y', 'Sci2IdlX', 'Sci2IdlY', 'Idl2SciX','Idl2SciY'))
+
+                V3angle = 0
+                betaX = 0
+
+
+            else:
+                # Scale to arcsec
+                (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, scale)
+
+
+                V2c = polynomial.poly(AX, center_offset_x, center_offset_y)
+                V3c = polynomial.poly(BX, center_offset_x, center_offset_y)
+
+                AS = polynomial.shift_coefficients(AX, center_offset_x, center_offset_y)
+                AS[0] = 0.0
+                BS = polynomial.shift_coefficients(BX, center_offset_x, center_offset_y)
+                BS[0] = 0.0
+                CS = polynomial.shift_coefficients(CX, V2c, V3c)
+                CS[0] = 0.0
+                DS = polynomial.shift_coefficients(DX, V2c, V3c)
+                DS[0] = 0.0
+
+                if aperture_id == 'FGS1':
+                    if oss is False:
+                        AF = -polynomial.flip_x(polynomial.flip_y(AS))
+                        BF = -polynomial.flip_x(polynomial.flip_y(BS))
+                        CF = -polynomial.flip_x(polynomial.flip_y(CS))
+                        DF = -polynomial.flip_x(polynomial.flip_y(DS))
+                    else:
+                        AF = AS # For OSS detector and science are identical
+                        BF = -BS
+                        CF = polynomial.flip_y(CS)
+                        DF = polynomial.flip_y(DS)
+                elif aperture_id == 'FGS2':
+                    if oss is False:
+                        AF = -polynomial.flip_x(AS)
+                        BF =  polynomial.flip_x(BS)
+                        CF = -polynomial.flip_x(CS)
+                        DF =  polynomial.flip_x(DS)
+                    else:
+                        AF = AS # For OSS detector and science are identical
+                        BF = BS
+                        CF = CS
+                        DF = DS
+
+                betaX = np.arctan2(oss_factor * AF[1], BF[1])
+                betaY = np.arctan2(oss_factor * AF[2], BF[2])
+
+                V3angle = copy.deepcopy(betaY)
+                if (abs(V3angle) > np.pi/2):
+                    V3angle = V3angle - np.copysign(np.pi, V3angle)
+
+                (AR,BR) = polynomial.add_rotation(AF, BF, -1 * oss_factor * np.rad2deg(V3angle))
+
+                # take out the rotation, carried separately in V3IdlYangle
+                CR = polynomial.prepend_rotation_to_polynomial(CF, oss_factor * np.rad2deg(V3angle))
+                DR = polynomial.prepend_rotation_to_polynomial(DF, oss_factor * np.rad2deg(V3angle))
+                distortion_reference_table = Table((siaf_index, exponent_x, exponent_y, AR, BR, CR, DR),
+                                                   names=('siaf_index', 'exponent_x', 'exponent_y', 'Sci2IdlX', 'Sci2IdlY', 'Idl2SciX','Idl2SciY'))
 
             print('{} {}'.format(aperture_name, np.rad2deg(betaY)))
-            if aperture_name == 'FGS1_FULL':  # first in loop
+            # if aperture_name == 'FGS1_FULL':  # first in loop
+            if counter == 0:  # first in loop
                 siaf_alignment = Table()
                 siaf_alignment['AperName'] = ['{:>30}'.format(aperture_name)]
                 siaf_alignment['V3IdlYAngle'] = [np.rad2deg(V3angle)]
@@ -1148,23 +1223,15 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False):
             else:
                 siaf_alignment.add_row(['{:>30}'.format(aperture_name), np.rad2deg(V3angle), np.rad2deg(betaX), np.rad2deg(betaY), V2Ref, V3Ref])
 
+            counter += 1
 
-            number_of_coefficients = len(AR)
-            polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
 
-            # generate distortion coefficient files
-            siaf_index = []
-            exponent_x = []
-            exponent_y = []
-            for i in range(polynomial_degree + 1):
-                for j in np.arange(i + 1):
-                    siaf_index.append('{:d}{:d}'.format(i, j))
-                    exponent_x.append(i-j)
-                    exponent_y.append(j)
-
-            distortion_reference_table = Table((siaf_index, exponent_x, exponent_y, AR, BR, CR, DR), names=('siaf_index', 'exponent_x', 'exponent_y', 'Sci2IdlX', 'Sci2IdlY', 'Idl2SciX', 'Idl2SciY'))
             distortion_reference_table.add_column(Column([aperture_name] * len(distortion_reference_table), name='AperName'), index=0)
-            distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'fgs_siaf_distortion_{}.txt'.format(aperture_name.lower()))
+            if mode == 'fsw':
+                distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'fgs_fsw_distortion_{}.txt'.format(aperture_name.lower()))
+            else:
+                distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'fgs_siaf_distortion_{}.txt'.format(aperture_name.lower()))
+
             comments = []
             comments.append('FGS distortion reference file for SIAF\n')
             comments.append('')
