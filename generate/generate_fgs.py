@@ -79,6 +79,10 @@ generate_preflight_alignment_and_distortion_reference_files = False
 if generate_preflight_alignment_and_distortion_reference_files:
     generate_reference_files.generate_siaf_pre_flight_reference_files_fgs()
 
+if 1:
+    generate_reference_files.generate_siaf_pre_flight_reference_files_fgs(mode='fsw')
+    1/0
+
 siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
 
 aperture_dict = OrderedDict()
