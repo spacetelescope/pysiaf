@@ -563,7 +563,7 @@ def read_siaf_detector_reference_file(instrument):
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_distortion_coefficients(instrument, aperture_name):
+def read_siaf_distortion_coefficients(instrument, aperture_name, file_name=None):
     """Return astropy table.
 
     Parameters
@@ -572,13 +572,18 @@ def read_siaf_distortion_coefficients(instrument, aperture_name):
         instrument name (case insensitive)
     aperture_name : str
         name of master aperture
+    file_name : str
+        file name to read from, ignoring the first two arguments
 
     Returns
     -------
     : astropy table
 
     """
-    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+    if file_name is not None:
+        distortion_reference_file_name = file_name
+    else:
+        distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                                   '{}_siaf_distortion_{}.txt'.format(
                                                       instrument.lower(), aperture_name.lower()))
 
