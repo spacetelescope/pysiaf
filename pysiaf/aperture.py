@@ -442,6 +442,57 @@ class Aperture(object):
                                    seed in s])[0:number_of_coefficients]
         return cdict
 
+    def get_polynomial_scales(self):
+        """Return scale estimate."""
+        if self.Sci2IdlDeg is None:
+            raise RuntimeError('No distortion coefficients available.')
+
+        scale_dict = {}
+
+        # partial derivatives in first-order approximation
+        coefficient_seed = 'Sci2Idl'
+        b = getattr(self, '{}{}{}0'.format(coefficient_seed, 'X', 1))
+        c = getattr(self, '{}{}{}1'.format(coefficient_seed, 'X', 1))
+        e = getattr(self, '{}{}{}0'.format(coefficient_seed, 'Y', 1))
+        f = getattr(self, '{}{}{}1'.format(coefficient_seed, 'Y', 1))
+
+        x_scale_siaf = np.sqrt(b**2 + e**2) # this mixes crossterms
+        y_scale_siaf = np.sqrt(c**2 + f**2)
+
+        x_scale_approx = np.sqrt(b**2 + c**2)
+        y_scale_approx = np.sqrt(e**2 + f**2)
+
+        global_scale_approx = np.sqrt(b*f - c*e)
+
+        scale_dict[coefficient_seed] = {}
+        scale_dict[coefficient_seed]['x_scale_siaf'] = x_scale_siaf
+        scale_dict[coefficient_seed]['y_scale_siaf'] = y_scale_siaf
+        scale_dict[coefficient_seed]['x_scale_approx'] = x_scale_approx
+        scale_dict[coefficient_seed]['y_scale_approx'] = y_scale_approx
+        scale_dict[coefficient_seed]['global_scale_approx'] = global_scale_approx
+
+        # compute partial derivatives at reference point
+        # reference_point_x = 1.
+        # reference_point_y = 1.
+        reference_point_x = getattr(self, 'XSciRef')
+        reference_point_y = getattr(self, 'YSciRef')
+
+        coefficients = self.get_polynomial_coefficients()
+        b = polynomial.dpdx(coefficients['{}X'.format(coefficient_seed)], reference_point_x, reference_point_y)
+        c = polynomial.dpdy(coefficients['{}X'.format(coefficient_seed)], reference_point_x, reference_point_y)
+        e = polynomial.dpdx(coefficients['{}Y'.format(coefficient_seed)], reference_point_x, reference_point_y)
+        f = polynomial.dpdy(coefficients['{}Y'.format(coefficient_seed)], reference_point_x, reference_point_y)
+
+        x_scale = np.sqrt(b**2 + c**2)
+        y_scale = np.sqrt(e**2 + f**2)
+        global_scale = np.sqrt(b*f - c*e)
+
+        scale_dict[coefficient_seed]['x_scale'] = x_scale
+        scale_dict[coefficient_seed]['y_scale'] = y_scale
+        scale_dict[coefficient_seed]['global_scale'] = global_scale
+
+        return scale_dict
+
     def set_polynomial_coefficients(self, sci2idlx, sci2idly, idl2scix, idl2sciy):
         """Set the values of polynomial coefficients.
 

@@ -39,12 +39,99 @@ from astropy.time import Time
 import lxml.etree as ET
 
 import pysiaf
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION, JWST_DELIVERY_DATA_ROOT
 from pysiaf.utils import polynomial, tools
 from pysiaf import iando
 
 username = os.getlogin()
 timestamp = Time.now()
+
+def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
+
+    if siaf is None:
+        siaf = pysiaf.Siaf('fgs')
+
+    instrument = 'FGS'
+
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    if not os.path.isdir(pre_delivery_dir):
+        os.makedirs(pre_delivery_dir)
+
+    for aperture_name in ['FGS1_FULL_OSS', 'FGS2_FULL_OSS']:
+
+        aperture = siaf[aperture_name]
+
+        # center_offset_x = 1023.5
+        # center_offset_y = 1023.5
+        center_offset_x = aperture.XSciRef - 1.
+        center_offset_y = aperture.YSciRef - 1.
+        scale = 0.06738281367  # arcsec/pixel
+
+        if verbose:
+            print(aperture.get_polynomial_scales())
+
+        # get SIAF coefficients
+        coefficients = aperture.get_polynomial_coefficients()
+
+        ar = coefficients['Sci2IdlX']
+        br = coefficients['Sci2IdlY']
+        cr = coefficients['Idl2SciX']
+        dr = coefficients['Idl2SciY']
+
+        a_fsw, b_fsw, c_fsw, d_fsw = polynomial.rescale(ar, br, cr, dr, 1. / scale)
+        factor = -1.
+
+        if 'FGS1' in aperture_name:
+            b_fsw *= -1
+            c_fsw = polynomial.flip_y(c_fsw)
+            d_fsw = polynomial.flip_y(d_fsw)
+
+        a_fsw = polynomial.shift_coefficients(a_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        b_fsw = polynomial.shift_coefficients(b_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        c_fsw = polynomial.shift_coefficients(c_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        d_fsw = polynomial.shift_coefficients(d_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+
+        a_fsw[0] += center_offset_x
+        b_fsw[0] += center_offset_y
+        c_fsw[0] += center_offset_x
+        d_fsw[0] += center_offset_y
+
+        # print FSW coefficients to screen
+        fsw_coefficients = Table((c_fsw, d_fsw, a_fsw, b_fsw), names=(
+         'IDEALPTOREALPXCOE', 'IDEALPTOREALPYCOE', 'REALPTOIDEALPXCOE', 'REALPTOIDEALPYCOE'))
+        fsw_coefficients.pprint()
+
+
+        table = Table(names=('parameter_name', 'value'), dtype=(object, float))
+        table.add_row(['XOFFSET', center_offset_x])
+        table.add_row(['YOFFSET', center_offset_y])
+        table.add_row(['PLATESCALE', scale])
+        for colname in fsw_coefficients.colnames:
+            for i in range(len(fsw_coefficients[colname])):
+                table.add_row(['{}_{}'.format(colname, i), fsw_coefficients[colname][i]])
+        table['parameter_name'] = np.array(table['parameter_name']).astype(str)
+
+
+        # write to file
+        fsw_distortion_file = os.path.join(pre_delivery_dir, 'ifgs{}_distortion_tbl.txt'.format(aperture_name[3]))
+        comments = []
+        comments.append('FGS distortion coefficients for FSW')
+        comments.append('')
+        comments.append('Derived from SIAF distortion coefficients.')
+        comments.append('')
+        comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+        comments.append('by {}'.format(username))
+        comments.append('')
+        table.meta['comments'] = comments
+        formats={'parameter_name': '%-20s', 'value': '%+2.6e'}
+        table.write(fsw_distortion_file, format='ascii.fixed_width',
+                                         delimiter=',', delimiter_pad=' ', bookend=False,
+                                         overwrite=True, formats=formats)
+
 
 def generate_initial_siaf_aperture_definitions(instrument):
     """Write text file that contains all the necessary aperture information to generate the full SIAF given the
