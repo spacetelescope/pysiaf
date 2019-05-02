@@ -68,6 +68,7 @@ def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
         scale = 0.06738281367  # arcsec/pixel
 
         if verbose:
+            print('External scale {}'.format(scale))
             print(aperture.get_polynomial_scales())
 
         # get SIAF coefficients
@@ -103,7 +104,8 @@ def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
         # print FSW coefficients to screen
         fsw_coefficients = Table((c_fsw, d_fsw, a_fsw, b_fsw), names=(
          'IDEALPTOREALPXCOE', 'IDEALPTOREALPYCOE', 'REALPTOIDEALPXCOE', 'REALPTOIDEALPYCOE'))
-        fsw_coefficients.pprint()
+        if verbose:
+            fsw_coefficients.pprint()
 
 
         table = Table(names=('parameter_name', 'value'), dtype=(object, float))

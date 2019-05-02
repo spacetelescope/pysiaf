@@ -456,17 +456,17 @@ class Aperture(object):
         e = getattr(self, '{}{}{}0'.format(coefficient_seed, 'Y', 1))
         f = getattr(self, '{}{}{}1'.format(coefficient_seed, 'Y', 1))
 
-        x_scale_siaf = np.sqrt(b**2 + e**2) # this mixes crossterms
-        y_scale_siaf = np.sqrt(c**2 + f**2)
+        # x_scale_siaf = np.sqrt(b**2 + e**2)
+        # y_scale_siaf = np.sqrt(c**2 + f**2)
 
-        x_scale_approx = np.sqrt(b**2 + c**2)
-        y_scale_approx = np.sqrt(e**2 + f**2)
+        x_scale_approx = np.sqrt(b**2 + e**2)
+        y_scale_approx = np.sqrt(c**2 + f**2)
 
         global_scale_approx = np.sqrt(b*f - c*e)
 
         scale_dict[coefficient_seed] = {}
-        scale_dict[coefficient_seed]['x_scale_siaf'] = x_scale_siaf
-        scale_dict[coefficient_seed]['y_scale_siaf'] = y_scale_siaf
+        # scale_dict[coefficient_seed]['x_scale_siaf'] = x_scale_siaf
+        # scale_dict[coefficient_seed]['y_scale_siaf'] = y_scale_siaf
         scale_dict[coefficient_seed]['x_scale_approx'] = x_scale_approx
         scale_dict[coefficient_seed]['y_scale_approx'] = y_scale_approx
         scale_dict[coefficient_seed]['global_scale_approx'] = global_scale_approx
@@ -483,8 +483,8 @@ class Aperture(object):
         e = polynomial.dpdx(coefficients['{}Y'.format(coefficient_seed)], reference_point_x, reference_point_y)
         f = polynomial.dpdy(coefficients['{}Y'.format(coefficient_seed)], reference_point_x, reference_point_y)
 
-        x_scale = np.sqrt(b**2 + c**2)
-        y_scale = np.sqrt(e**2 + f**2)
+        x_scale = np.sqrt(b**2 + e**2)
+        y_scale = np.sqrt(c**2 + f**2)
         global_scale = np.sqrt(b*f - c*e)
 
         scale_dict[coefficient_seed]['x_scale'] = x_scale
