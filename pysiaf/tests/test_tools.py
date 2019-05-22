@@ -14,13 +14,13 @@ from numpy.testing import assert_allclose
 
 from ..siaf import Siaf
 from ..utils.tools import get_grid_coordinates
-from ..utils.tools import jwst_fgs1_to_fgs2_matrix
+from ..utils.tools import jwst_fgs_to_fgs_matrix
 from ..utils import rotations
 
 
-def test_jwst_fgs2_fgs1_matrix(verbose=False):
+def test_jwst_fgs_to_fgs_matrix(verbose=False):
     """Test 3D matrix transformation against planar approximation."""
-    rotation_1to2 = jwst_fgs1_to_fgs2_matrix()
+    rotation_1to2 = jwst_fgs_to_fgs_matrix(direction='fgs1_to_fgs2')
 
     siaf = Siaf('fgs')
     fgs1 = siaf['FGS1_FULL_OSS']
