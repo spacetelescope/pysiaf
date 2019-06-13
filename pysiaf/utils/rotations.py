@@ -612,7 +612,6 @@ def unit_vector_sky(ra, dec):
     ra_rad = convert_quantity(ra, u.rad, factor=np.deg2rad(1.))
     dec_rad = convert_quantity(dec, u.rad, factor=np.deg2rad(1.))
     vector = np.array([np.cos(ra_rad)*np.cos(dec_rad), np.sin(ra_rad)*np.cos(dec_rad), np.sin(dec_rad)])
-    # print(np.linalg.norm(vector))
     return vector
 
 
@@ -638,7 +637,6 @@ def unit_vector_hst_fgs_object(rho, phi):
     rho_rad = convert_quantity(rho, u.rad, factor=np.deg2rad(1.))
     phi_rad = convert_quantity(phi, u.rad, factor=np.deg2rad(1.))
     vector = np.array([np.sin(rho_rad)*np.cos(phi_rad), np.sin(rho_rad)*np.sin(phi_rad), np.cos(rho_rad)])
-    # print(np.linalg.norm(vector))
     return vector
 
 
@@ -659,7 +657,8 @@ def radec(vector, positive_ra=False):
         RA and Dec in degrees corresponding to the unit vector vector
 
     """
-    assert len(vector) == 3, 'Not a vector'
+    if len(vector) != 3:
+        raise ValueError('Input is not a 3D vector')
     norm = np.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)  # Works for list or array
     ra = np.degrees(np.arctan2(vector[1], vector[0]))  # atan2 puts it in the correct quadrant
     dec = np.degrees(np.arcsin(vector[2] / norm))
@@ -703,6 +702,8 @@ def polar_angles(vector, positive_azimuth=False):
     ----------
     vector : float list or array of length 3
         3-component unit vector
+    positive_azimuth : bool
+        If True, the returned nu2 value is forced to be positive.
 
     Returns
     -------
@@ -713,7 +714,6 @@ def polar_angles(vector, positive_azimuth=False):
     if len(vector) != 3:
         raise ValueError('Input is not a vector or an array of vectors')
 
-    # norm = np.linalg.norm(vector, axis=1)
     norm = np.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
     nu2 = np.arctan2(vector[1], vector[0]) * u.rad
     nu3 = np.arcsin(vector[2]/norm) * u.rad

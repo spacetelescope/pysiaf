@@ -991,8 +991,8 @@ class Aperture(object):
             raise NotImplementedError
 
         if self._correct_dva:
-            if 'FGS' in self.AperName:
-                1/0
+            if (self.observatory == 'HST') and ('FGS' in self.AperName):
+                raise NotImplementedError('DVA correction for HST FGS not supported')
             return self.correct_for_dva(v2, v3)
         else:
             return v2, v3
@@ -1386,7 +1386,6 @@ class HstAperture(Aperture):
         super(HstAperture, self).__init__()
         self.observatory = 'HST'
         self._fgs_use_rearranged_alignment_parameters = True
-        # self._fgs_use_welter_method_to_plot = True
         self._fgs_use_welter_method_to_plot = False
 
     # dictionary that allows to set attributes using JWST naming convention
@@ -1469,15 +1468,6 @@ class HstAperture(Aperture):
                 return v2_arcsec, v3_arcsec, pa_deg, tvs
         else:
             raise NotImplementedError
-            #     v2 = np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0])) * u.deg.to(units)
-            #     v3 = np.rad2deg(np.arcsin(m1f[0, 2])) * u.deg.to(units)
-            #     pa = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2])) * u.deg.to(units)
-            #     if self._fgs_use_rearranged_alignment_parameters:
-            #         pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
-            #         return v2, v3, pa, tvs
-            #     else:
-            #     return v2, v3, pa, tvs
-
 
 
     def closed_polygon_points(self, to_frame, rederive=False):
@@ -1499,38 +1489,6 @@ class HstAperture(Aperture):
 
             else:
                 raise NotImplementedError
-                    # def cart2pol(x, y):
-                    #     rho = np.sqrt(x ** 2 + y ** 2)
-                    #     phi = np.arctan2(y, x)
-                    #     return (rho, phi)
-                    #
-                    # def pol2cart(rho, phi):
-                    #     x = rho * np.cos(phi)
-                    #     y = rho * np.sin(phi)
-                    #     return (x, y)
-                    # # use Gary Welter's method
-                    # sq2 = 0.5 * np.sqrt(2)
-                    # object_space_corners = {}
-                    # object_space_corners['fgs1'] = np.array([[+0.004, 0.004],
-                    #                                          [+0.003, 0.003],
-                    #                                          [-0.003, 0.003],
-                    #                                          [-0.004, 0.004],
-                    #                                          ])*sq2
-                    #
-                    # unit_vectors_idl = rotations.unit_vector_from_cartesian(x=object_space_corners['fgs1'][:, 0],
-                    #                                      y=object_space_corners['fgs1'][:, 1])
-                    # tvs = self.compute_tvs_matrix()
-                    # unit_vectors_tel = np.dot(tvs, unit_vectors_idl) * u.rad.to(u.arcsec)
-                    # x_Tel = unit_vectors_tel[1,:] #np.hstack((unit_vectors_tel[1,:], inner_points_x[::-1]))
-                    # y_Tel = unit_vectors_tel[2,:] #np.hstack((outer_points_y, inner_points_y[::-1]))
-                    # rho, phi = cart2pol(unit_vectors_tel[1,:], unit_vectors_tel[2,:])
-                    # print(x_Tel)
-                    # print(y_Tel)
-                    # print(rho)
-                    # print(phi)
-                    # pl.figure()
-                    # pl.polar(phi, rho)
-                    # pl.show()
 
             curve = SiafCoordinates(x_Tel, y_Tel, 'tel')
             points_x, points_y = self.convert(curve.x, curve.y, curve.frame, to_frame)
