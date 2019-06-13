@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Script to extract and display the field formatting of the SIAF xml files.
 
 Authors
@@ -25,19 +26,23 @@ def read_xml_field_formats(instrument, filename, verbose=False):
 
     Parameters
     ----------
-    instrument
-    filename
-    verbose
+    instrument : str
+        instrument name
+    filename : str
+        Absolute path to SIAF.xml
+    verbose : bool
+        verbosity
 
     Returns
     -------
     T : astropy table
+        Table containing the field formatting
 
     """
     T = Table()
     print('*' * 100)
     print('{}'.format(instrument))
-    # filename = os.path.join(basepath, instrument + '_SIAF.xml')
+
     primary_master_aperture_name = \
     siaf_detector_layout['AperName'][siaf_detector_layout['InstrName'] == instrument.upper()][0]
 
@@ -101,7 +106,7 @@ def read_xml_field_formats(instrument, filename, verbose=False):
             if show:
                 if verbose:
                     print('{:5} {} {:10} {:10} {:30}'.format(field_number, node.tag, prd_data_class,
-                                                         python_format, str(node.text)))
+                                                             python_format, str(node.text)))
                 if len(T) == 0:
                     T['field_nr'] = ['{:>5}'.format(field_number)]
                     T['field_name'] = ['{:>20}'.format(node.tag)]
@@ -121,9 +126,12 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
 
     Parameters
     ----------
-    xml_formats
-    reference_instrument_name
-    out_dir
+    xml_formats : dict
+        Dictionary of extracted formats
+    reference_instrument_name : str
+        Name of instrument to compare against and used as example
+    out_dir : str
+        Directory to write csv output file
 
     """
     reference_table = xml_formats[reference_instrument_name]
@@ -145,7 +153,8 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
     rows_to_delete = [i for i in range(len(reference_table)) if ('Sci2IdlX' in tag_list[i] or
                                                                  'Sci2IdlY' in tag_list[i] or
                                                                  'Idl2SciX' in tag_list[i] or
-                                                                 'Idl2SciY' in tag_list[i]) and (tag_list[i] not in ['Sci2IdlX00', 'Idl2SciY00'])]
+                                                                 'Idl2SciY' in tag_list[i]) and
+                      (tag_list[i] not in ['Sci2IdlX00', 'Idl2SciY00'])]
 
     reference_table.remove_rows(rows_to_delete)
 
@@ -157,12 +166,12 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
                                            format='ascii.basic', delimiter=',', overwrite=True)
 
 
-xml_formats = OrderedDict()
-for instrument in ['NIRCam', 'FGS', 'MIRI', 'NIRSpec', 'NIRISS']:
+if __name__ == '__main__':
+    xml_formats = OrderedDict()
+    for instrument in ['NIRCam', 'FGS', 'MIRI', 'NIRSpec', 'NIRISS']:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        filename = os.path.join(pre_delivery_dir, '{}_SIAF.xml'.format(instrument))
+        xml_formats[instrument] = read_xml_field_formats(instrument, filename)
 
-    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
-    filename = os.path.join(pre_delivery_dir, '{}_SIAF.xml'.format(instrument))
-    xml_formats[instrument] = read_xml_field_formats(instrument, filename)
-
-if show_field_formats:
-    show_xml_field_formats(xml_formats, reference_instrument_name='NIRCam')
+    if show_field_formats:
+        show_xml_field_formats(xml_formats, reference_instrument_name='NIRCam')
