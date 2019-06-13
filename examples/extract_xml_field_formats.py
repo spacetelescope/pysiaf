@@ -1,7 +1,5 @@
-"""Script to generate NIRISS, FGS, NIRSpec SIAF files with homogeneous XML formatting.
-
-See https://jira.stsci.edu/browse/JWSTSIAF-120 for details.
-
+#!/usr/bin/env python
+"""Script to extract and display the field formatting of the SIAF xml files.
 
 Authors
 -------
@@ -10,20 +8,17 @@ Authors
 
 """
 import os
+from collections import OrderedDict
 
 from astropy.table import Table
 import lxml.etree as ET
 
 import pysiaf
 from pysiaf.constants import JWST_DELIVERY_DATA_ROOT
-from pysiaf.utils import compare
-from pysiaf.tests import test_aperture
-from pysiaf.tests import test_nirspec
 
 show_field_formats = True
 
 siaf_detector_layout = pysiaf.iando.read.read_siaf_detector_layout()
-
 
 
 def read_xml_field_formats(instrument, filename, verbose=False):
@@ -31,19 +26,23 @@ def read_xml_field_formats(instrument, filename, verbose=False):
 
     Parameters
     ----------
-    instrument
-    filename
-    verbose
+    instrument : str
+        instrument name
+    filename : str
+        Absolute path to SIAF.xml
+    verbose : bool
+        verbosity
 
     Returns
     -------
     T : astropy table
+        Table containing the field formatting
 
     """
     T = Table()
     print('*' * 100)
     print('{}'.format(instrument))
-    # filename = os.path.join(basepath, instrument + '_SIAF.xml')
+
     primary_master_aperture_name = \
     siaf_detector_layout['AperName'][siaf_detector_layout['InstrName'] == instrument.upper()][0]
 
@@ -70,10 +69,10 @@ def read_xml_field_formats(instrument, filename, verbose=False):
                 python_format = 'd'
                 try:
                     value = int(node.text)
-                except (TypeError):
+                except TypeError:
                     print('{}: {}'.format(node.tag, node.text))
                     raise TypeError
-            elif (node.tag in pysiaf.aperture.STRING_ATTRIBUTES):
+            elif node.tag in pysiaf.aperture.STRING_ATTRIBUTES:
                 prd_data_class = 'string'
                 python_format = ''
                 value = node.text
@@ -95,7 +94,7 @@ def read_xml_field_formats(instrument, filename, verbose=False):
 
                     try:
                         value = float(node.text)
-                    except (TypeError):
+                    except TypeError:
                         print('{}: {}'.format(node.tag, node.text))
                         raise TypeError
 
@@ -107,7 +106,7 @@ def read_xml_field_formats(instrument, filename, verbose=False):
             if show:
                 if verbose:
                     print('{:5} {} {:10} {:10} {:30}'.format(field_number, node.tag, prd_data_class,
-                                                         python_format, str(node.text)))
+                                                             python_format, str(node.text)))
                 if len(T) == 0:
                     T['field_nr'] = ['{:>5}'.format(field_number)]
                     T['field_name'] = ['{:>20}'.format(node.tag)]
@@ -123,7 +122,18 @@ def read_xml_field_formats(instrument, filename, verbose=False):
 
 
 def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_dir=None):
+    """Print field formats to screen and write to file.
 
+    Parameters
+    ----------
+    xml_formats : dict
+        Dictionary of extracted formats
+    reference_instrument_name : str
+        Name of instrument to compare against and used as example
+    out_dir : str
+        Directory to write csv output file
+
+    """
     reference_table = xml_formats[reference_instrument_name]
 
     for col in ['format', 'pyformat', 'example']:
@@ -135,7 +145,7 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
 
     columns_to_show = ['field_nr', 'field_name']
     for col in reference_table.colnames:
-        if ('pyformat' in col) or ('format' in col):  # col.split('_')[1] in ['Format', 'pyformat']:
+        if ('pyformat' in col) or ('format' in col):
             columns_to_show.append(col)
     columns_to_show.append('{}_example'.format(reference_instrument_name.lower()))
 
@@ -143,7 +153,8 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
     rows_to_delete = [i for i in range(len(reference_table)) if ('Sci2IdlX' in tag_list[i] or
                                                                  'Sci2IdlY' in tag_list[i] or
                                                                  'Idl2SciX' in tag_list[i] or
-                                                                 'Idl2SciY' in tag_list[i]) and (tag_list[i] not in ['Sci2IdlX00', 'Idl2SciY00'])]
+                                                                 'Idl2SciY' in tag_list[i]) and
+                      (tag_list[i] not in ['Sci2IdlX00', 'Idl2SciY00'])]
 
     reference_table.remove_rows(rows_to_delete)
 
@@ -155,44 +166,12 @@ def show_xml_field_formats(xml_formats, reference_instrument_name='NIRISS', out_
                                            format='ascii.basic', delimiter=',', overwrite=True)
 
 
-xml_formats = {}
-for instrument in ['NIRISS', 'FGS', 'NIRSpec']:
+if __name__ == '__main__':
+    xml_formats = OrderedDict()
+    for instrument in ['NIRCam', 'FGS', 'MIRI', 'NIRSpec', 'NIRISS']:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        filename = os.path.join(pre_delivery_dir, '{}_SIAF.xml'.format(instrument))
+        xml_formats[instrument] = read_xml_field_formats(instrument, filename)
 
-    siaf = pysiaf.Siaf(instrument)
-
-    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
-    if not os.path.isdir(pre_delivery_dir):
-        os.makedirs(pre_delivery_dir)
-
-    # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(siaf, basepath=pre_delivery_dir,
-                                                   file_format=['xml', 'xlsx'])
-
-    xml_formats[instrument] = read_xml_field_formats(instrument, filenames[0])
-
-    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-
-    # run checks on SIAF content
-    ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                         fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
-                         tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-
-    if instrument.lower() not in ['nirspec']:
-        print('\nRunning aperture_transforms test for pre_delivery_siaf')
-        test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf],
-                                                    verbose=False)
-        print('\nRunning aperture_vertices test for pre_delivery_siaf')
-        test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
-    else:
-        print('\nRunning regression test of pre_delivery_siaf against IDT test_data:')
-        test_nirspec.test_against_test_data(siaf=pre_delivery_siaf)
-
-        print('\nRunning nirspec_aperture_transforms test for pre_delivery_siaf')
-        test_nirspec.test_nirspec_aperture_transforms(siaf=pre_delivery_siaf, verbose=False)
-
-        print('\nRunning nirspec_slit_transforms test for pre_delivery_siaf')
-        test_nirspec.test_nirspec_slit_transformations(siaf=pre_delivery_siaf, verbose=False)
-
-if show_field_formats:
-    show_xml_field_formats(xml_formats)
+    if show_field_formats:
+        show_xml_field_formats(xml_formats, reference_instrument_name='NIRCam')
