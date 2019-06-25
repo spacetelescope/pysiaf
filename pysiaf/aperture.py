@@ -376,7 +376,8 @@ class Aperture(object):
         data = Table([v2_arcsec, v3_arcsec])
         tmp_file_in = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file.txt')
         tmp_file_out = os.path.join(os.environ['HOME'], 'hst_dva_temporary_file_out.txt')
-        data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ', bookend=False)
+        data.write(tmp_file_in, format='ascii.fixed_width_no_header', delimiter=' ', bookend=False,
+                   overwrite=True)
 
         dva_source_dir = self._dva_parameters['dva_source_dir']
         parameter_file = self._dva_parameters['parameter_file']
@@ -390,6 +391,9 @@ class Aperture(object):
 
         data = Table.read(tmp_file_out, format='ascii.no_header',
                           names=('v2_original', 'v3_original', 'v2_corrected', 'v3_corrected'))
+
+        if not np.issubdtype(data['v2_corrected'].dtype, np.floating):
+            raise RuntimeError('DVA correction failed. Output is not float. Please check inputs.')
 
         # clean up
         for filename in [tmp_file_in, tmp_file_out]:
@@ -899,7 +903,8 @@ class Aperture(object):
                                                                             y_sci - self.YSciRef)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   output_coordinates='tangent_plane', verbose=False):
         """Convert from ideal to telescope (V2/V3) coordinate system.
 
         By default, this implements the planar approximation, which is adequate for most
@@ -923,65 +928,87 @@ class Aperture(object):
         V3Ref_arcsec : float
             overwrites self.V3Ref
         method : str
-            must be one of ['planar_approximation', 'spherical_transformation']
+            must be one of ['planar_approximation', 'spherical_transformation', 'spherical']
         input_coordinates : str
-            must be one of ['tangent_plane', 'spherical']
+            must be one of ['tangent_plane', 'spherical', 'planar']
 
         Returns
         -------
             tuple of floats containing V2, V3 coordinates in arcsec
 
         """
-        if method == 'planar_approximation':
+
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
+        if V2Ref_arcsec is None:
+            V2Ref_arcsec = self.V2Ref
+        if V3Ref_arcsec is None:
+            V3Ref_arcsec = self.V3Ref
+
+        if verbose:
+            print('Method: {}, input_coordinates {}, output_coordinates={}'.format(
+                method, input_coordinates, output_coordinates))
+
+        if method == 'spherical':
+            if input_coordinates == 'cartesian':
+                # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
+                # then apply 3D rotation matrix to tel
+                unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+
+            if input_coordinates == 'polar':
+                # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
+                # unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
+                xi_idl = x_idl * u.arcsec
+                eta_idl = y_idl * u.arcsec
+                unit_vector_idl = rotations.unit_vector_sky(xi_idl, eta_idl)
+                unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec, V3IdlYAngle_deg)
+
+            # transformation to cartesian unit vector in telescope frame
+            unit_vector_tel = np.dot(np.linalg.inv(l_matrix), unit_vector_idl)
+            # print(unit_vector_tel)
+
+            if output_coordinates == 'polar':
+                # get angular coordinates on idealized focal sphere
+                # nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+                nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+
+                v2, v3 = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+            if output_coordinates == 'cartesian':
+                v2, v3 = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
+
+        elif method == 'planar_approximation':
             if input_coordinates != 'tangent_plane':
-                raise RuntimeError('Output has to be in tangent plane.')
+                raise RuntimeError('Input has to be in tangent plane.')
             x_model, y_model = self.telescope_transform('idl', 'tel', V3IdlYAngle_deg, V2Ref_arcsec,
                                                         V3Ref_arcsec)
 
             v2 = x_model(x_idl, y_idl)
             v3 = y_model(x_idl, y_idl)
 
-        elif method == 'spherical_transformation':
-            if input_coordinates == 'spherical':
-                x_idl_spherical_deg, y_idl_spherical_deg = x_idl * u.arcsec.to(u.deg), \
-                                                           y_idl * u.arcsec.to(u.deg)
-
-            elif input_coordinates == 'tangent_plane':
-                # deproject coordinates before applying rotations
-                x_idl_spherical_deg, y_idl_spherical_deg = projection.deproject_from_tangent_plane(
-                    x_idl * u.arcsec.to(u.deg), y_idl * u.arcsec.to(u.deg), 0.0, 0.0)
-
-            # only matrix rotations, this transforms from a spherical to a spherical coordinate
-            # system. These matrices transform the V-reference point to the ideal reference point
-            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
-            M2 = rotations.rotate(2, self.V3Ref / 3600.)
-            M3 = rotations.rotate(1, self.V3IdlYAngle)
-            M4 = np.dot(M2, M1)
-            M = np.dot(M3, M4)
-
-            unit_vector = rotations.unit(x_idl_spherical_deg, y_idl_spherical_deg)
-
-            unit_vector[1] = self.VIdlParity * unit_vector[1]
-            rotated_vector = np.dot(np.linalg.inv(M), unit_vector)
-            v2, v3 = rotations.v2v3(rotated_vector)
+        else:
+            raise NotImplementedError
 
         if self._correct_dva:
+            if (self.observatory == 'HST') and ('FGS' in self.AperName):
+                raise NotImplementedError('DVA correction for HST FGS not supported')
             return self.correct_for_dva(v2, v3)
         else:
             return v2, v3
 
     def tel_to_idl(self, v2_arcsec, v3_arcsec, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
                    V3Ref_arcsec=None, method='planar_approximation',
-                   output_coordinates='tangent_plane'):
+                   output_coordinates='tangent_plane', input_coordinates='tangent_plane'):
         """Convert from telescope (V2/V3) to ideal coordinate system.
 
-        By default, this implementats the planar approximation, which is adequate for most
+        By default, this implements the planar approximation, which is adequate for most
         purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
         point. See JWST-STScI-1550 for more details.
         For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
         are applied.
 
-        Also by default, the output coordinates are in a tangent plane with a reference points at
+        Also by default, the output coordinates are in a tangent plane with a reference point at
         the origin (0,0) of the ideal frame.
 
         Parameters
@@ -1016,35 +1043,36 @@ class Aperture(object):
         if method == 'planar_approximation':
             if output_coordinates != 'tangent_plane':
                 raise RuntimeError('Output has to be in tangent plane.')
+            if input_coordinates != 'tangent_plane':
+                raise RuntimeError('Input has to be in tangent plane.')
             x_model, y_model = self.telescope_transform('tel', 'idl', V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                         V2Ref_arcsec=V2Ref_arcsec, V3Ref_arcsec=V3Ref_arcsec)
             return x_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec), \
                    y_model(v2_arcsec - V2Ref_arcsec, v3_arcsec - V3Ref_arcsec)
 
-        elif method == 'spherical_transformation':
-            # only matrix rotations, this transforms from a spherical to a spherical coordinate
-            # system
-            M1 = rotations.rotate(3, -1 * self.V2Ref / 3600.)
-            M2 = rotations.rotate(2, self.V3Ref / 3600.)
-            M3 = rotations.rotate(1, self.V3IdlYAngle)
-            M4 = np.dot(M2, M1)
-            M = np.dot(M3, M4)
-            unit_vector = rotations.unit(v2_arcsec / 3600., v3_arcsec / 3600.)
-            rotated_vector = np.dot(M, unit_vector)
-            rotated_vector[1] = self.VIdlParity * rotated_vector[1]
-            x_idl_spherical_arcsec, y_idl_spherical_arcsec = rotations.v2v3(rotated_vector)
+        elif method == 'spherical':
+            if input_coordinates == 'cartesian':
+                unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec * u.arcsec,
+                                                                       z=v3_arcsec * u.arcsec)
+            elif input_coordinates == 'polar':
+                unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec,
+                                                            v3_arcsec * u.arcsec)
 
-            if output_coordinates == 'spherical':
-                return x_idl_spherical_arcsec, y_idl_spherical_arcsec
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec,
+                                                            V3IdlYAngle_deg)
 
-            elif output_coordinates == 'tangent_plane':
-                # Add tangent-plane projection with reference point at origin (0,0) of ideal system
-                x_idl_tangent_deg, y_idl_tangent_deg = projection.project_to_tangent_plane(
-                    x_idl_spherical_arcsec * u.arcsec.to(u.deg),
-                    y_idl_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+            unit_vector_idl = np.dot(l_matrix, unit_vector_tel)
 
-                return x_idl_tangent_deg * u.deg.to(u.arcsec), \
-                       y_idl_tangent_deg * u.deg.to(u.arcsec)
+            if output_coordinates == 'cartesian':
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0] * u.rad.to(u.arcsec), unit_vector_idl[
+                1] * u.rad.to(u.arcsec)
+            elif output_coordinates == 'polar':
+                unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+                x_idl, y_idl = rotations.polar_angles(unit_vector_idl)
+                x_idl_arcsec, y_idl_arcsec = x_idl.to(u.arcsec).value, y_idl.to(u.arcsec).value
+
+            return x_idl_arcsec, y_idl_arcsec
+
 
     def sci_to_idl(self, x_sci, y_sci):
         """Science to ideal frame transformation."""
@@ -1357,6 +1385,8 @@ class HstAperture(Aperture):
         """Initialize HST aperture by inheriting from Aperture class."""
         super(HstAperture, self).__init__()
         self.observatory = 'HST'
+        self._fgs_use_rearranged_alignment_parameters = True
+        self._fgs_use_welter_method_to_plot = False
 
     # dictionary that allows to set attributes using JWST naming convention
     _hst_to_jwst_keys = ({'SI_mne': 'InstrName',
@@ -1408,10 +1438,10 @@ class HstAperture(Aperture):
                             m, k]
                     m += 1
 
-    def _tvs_parameters(self, tvs=None):
+    def _tvs_parameters(self, tvs=None, units=None, apply_rearrangement=True):
         """Compute V2_tvs, V3_tvs, and V3angle_tvs from the TVS matrices stored in the database.
 
-        TVS matrices come from GSFC/SAC web page.
+        TVS matrices come from SOCPRD amu.rep files.
         Adapted from Colin Cox's ipython notebook received 11 Dec 2017.
 
         """
@@ -1427,24 +1457,38 @@ class HstAperture(Aperture):
 
         m1f = np.dot(np.transpose(self.tvs_flip_matrix), tvs)
 
-        v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
-        v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
-        pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
-        return v2_arcsec, v3_arcsec, pa_deg, tvs
+        if units is None:
+            v2_arcsec = 3600. * np.rad2deg(np.arctan2(m1f[0, 1], m1f[0, 0]))
+            v3_arcsec = 3600. * np.rad2deg(np.arcsin(m1f[0, 2]))
+            pa_deg = np.rad2deg(np.arctan2(m1f[1, 2], m1f[2, 2]))
+            if (self._fgs_use_rearranged_alignment_parameters) & (apply_rearrangement):
+                pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'camera_to_fgs')
+                return v2, v3, pa, tvs
+            else:
+                return v2_arcsec, v3_arcsec, pa_deg, tvs
+        else:
+            raise NotImplementedError
+
 
     def closed_polygon_points(self, to_frame, rederive=False):
         """Compute closed polygon points of aperture outline."""
         if self.a_shape == 'PICK':
-            x0 = 0.
-            y0 = 0.
-            outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
-                                                           self.pi_angle - self.pi_ext,
-                                                           self.pi_angle + self.pi_ext, N=100)
-            inner_points_x, inner_points_y = points_on_arc(x0, y0, self.min,
-                                                           self.po_angle - self.po_ext,
-                                                           self.po_angle + self.po_ext, N=100)
-            x_Tel = np.hstack((outer_points_x, inner_points_x[::-1]))
-            y_Tel = np.hstack((outer_points_y, inner_points_y[::-1]))
+            # TODO: implement method based on the FGS cones defined in amu.rep file
+            if self._fgs_use_welter_method_to_plot is False:
+                #     use SIAF pickle description
+                x0 = 0.
+                y0 = 0.
+                outer_points_x, outer_points_y = points_on_arc(x0, y0, self.maj,
+                                                               self.pi_angle - self.pi_ext,
+                                                               self.pi_angle + self.pi_ext, N=100)
+                inner_points_x, inner_points_y = points_on_arc(x0, y0, self.min,
+                                                               self.po_angle - self.po_ext,
+                                                               self.po_angle + self.po_ext, N=100)
+                x_Tel = np.hstack((outer_points_x, inner_points_x[::-1]))
+                y_Tel = np.hstack((outer_points_y, inner_points_y[::-1]))
+
+            else:
+                raise NotImplementedError
 
             curve = SiafCoordinates(x_Tel, y_Tel, 'tel')
             points_x, points_y = self.convert(curve.x, curve.y, curve.frame, to_frame)
@@ -1456,8 +1500,59 @@ class HstAperture(Aperture):
         return points_x[np.append(np.arange(len(points_x)), 0)], points_y[
             np.append(np.arange(len(points_y)), 0)]
 
+    def rearrange_fgs_alignment_parameters(self, pa_deg_in, v2_arcsec_in, v3_arcsec_in, direction):
+        """Convert to/from alignment parameters make FGS `look` like a regular camera aperture.
+
+        Parameters
+        ----------
+        pa_deg_in : float
+        v2_arcsec_in : float
+        v3_arcsec_in : float
+        direction : str
+            One of ['fgs_to_camera', ]
+
+        Returns
+        -------
+        pa, v2, v3 : tuple
+            re-arranged and sometimes sign-inverted alignment parameters
+
+        """
+        pa_deg = copy.deepcopy(pa_deg_in)
+        v2_arcsec = copy.deepcopy(v2_arcsec_in)
+        v3_arcsec = copy.deepcopy(v3_arcsec_in)
+
+        if direction not in ['fgs_to_camera', 'camera_to_fgs']:
+            raise ValueError
+
+        if self.AperName == 'FGS1':
+            # for FGS1 `forward` and `backward` transformation are the same
+            v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+            v3 = -1 * v3_arcsec
+            pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+        else:
+            if direction == 'fgs_to_camera':
+                if self.AperName == 'FGS2':
+                    v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+                    pa = -1 * v3_arcsec * u.arcsec.to(u.deg)
+                    v3 = -1 * v2_arcsec
+                elif self.AperName == 'FGS3':
+                    v2 = +1 * pa_deg * u.deg.to(u.arcsec)
+                    v3 = +1 * v3_arcsec
+                    pa = -1 * v2_arcsec * u.arcsec.to(u.deg)
+            elif direction == 'camera_to_fgs':
+                if self.AperName == 'FGS2':
+                    v3 = -1 * pa_deg * u.deg.to(u.arcsec)
+                    pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+                    v2 = -1 * v3_arcsec
+                elif self.AperName == 'FGS3':
+                    v2 = -1 * pa_deg * u.deg.to(u.arcsec)
+                    v3 = +1 * v3_arcsec
+                    pa = +1 * v2_arcsec * u.arcsec.to(u.deg)
+        return pa, v2, v3
+
+
     def compute_tvs_matrix(self, v2_arcsec=None, v3_arcsec=None, pa_deg=None, verbose=False):
-        """Compute the TVS matrix from 'virtual' v2,v3,pa parameters.
+        """Compute the TVS matrix from tvs-specific v2,v3,pa parameters.
 
         Parameters
         ----------
@@ -1478,14 +1573,21 @@ class HstAperture(Aperture):
         """
         if v2_arcsec is None:
             v2_arcsec = self.db_tvs_v2_arcsec
-            if verbose:
-                print('{} using db_tvs_v2_arcsec'.format(self))
         if v3_arcsec is None:
             v3_arcsec = self.db_tvs_v3_arcsec
         if pa_deg is None:
             pa_deg = self.db_tvs_pa_deg
 
-        attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
+        if verbose:
+            print('Computing TVS with tvs_v2_arcsec={}, tvs_v3_arcsec={}, tvs_pa_deg={}'.format(v2_arcsec, v3_arcsec, pa_deg))
+
+        if self._fgs_use_rearranged_alignment_parameters:
+            pa, v2, v3 = self.rearrange_fgs_alignment_parameters(pa_deg, v2_arcsec, v3_arcsec, 'fgs_to_camera')
+            # attitude = rotations.attitude(v2, v3, 0.0, 0.0, pa)
+            attitude = rotations.attitude_matrix(v2, v3, 0.0, 0.0, pa)
+        else:
+            attitude = rotations.attitude(v2_arcsec, v3_arcsec, 0.0, 0.0, pa_deg)
+
         tvs = np.dot(self.tvs_flip_matrix, attitude)
         return tvs
 
@@ -1511,8 +1613,11 @@ class HstAperture(Aperture):
         return self.convert(corners.x, corners.y, corners.frame, to_frame)
 
     def idl_to_tel(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
-                   method='planar_approximation', input_coordinates='tangent_plane'):
+                   method='planar_approximation', input_coordinates='tangent_plane',
+                   output_coordinates=None, verbose=False):
         """Convert ideal coordinates to telescope (V2/V3) coordinates for HST.
+
+        INPUT COORDINATES HAVE TO BE FGS OBJECT SPACE CARTESIAN X,Y coordinates
 
         For HST FGS, transformation is implemented using the FGS TVS matrix. Parameter names
         are overloaded for simplicity:
@@ -1543,6 +1648,73 @@ class HstAperture(Aperture):
             Telescope coordinates in arcsec
 
         """
+        if ('FGS' in self.AperName) and (self.AperType not in ['PSEUDO']):
+            tvs_pa_deg = V3IdlYAngle_deg
+            tvs_v2_arcsec = V2Ref_arcsec
+            tvs_v3_arcsec = V3Ref_arcsec
+
+            # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
+            tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
+
+            if verbose:
+                print('Method: {}, input_coordinates {}, output_coordinates={}'.format(
+                    method, input_coordinates, output_coordinates))
+
+            if method == 'spherical':
+                # unit vector to be used with TVS matrix (see fgs_to_veh.f l496)
+                # this is a distortion corrected object space vector
+
+                if input_coordinates == 'cartesian':
+                    unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                else:
+                    raise ValueError('Input coordinates must be `cartesian`.')
+
+                # apply TVS alignment matrix to unit vector, produces Star Vector in ST vehicle space
+                unit_vector_tel = np.dot(tvs, unit_vector_idl)
+
+                if output_coordinates == 'polar':
+                    # polar coordinates on focal sphere
+                    nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+                    v2_arcsec, v3_arcsec = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+                elif output_coordinates == 'cartesian':
+                    v2_arcsec, v3_arcsec = unit_vector_tel[1]*u.rad.to(u.arcsec), unit_vector_tel[2]*u.rad.to(u.arcsec)
+
+                # temporary fix until default is set
+                elif output_coordinates is None:
+                    raise NotImplementedError
+
+            elif method == 'planar_approximation':
+                # unit vector
+                x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
+                y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
+                xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
+
+                v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
+                v2_arcsec, v3_arcsec = v[1], v[2]
+
+            else:
+                raise NotImplementedError
+
+            if (method == 'spherical_transformation') and (output_coordinates == 'tangent_plane'):
+                # tangent plane projection using tel boresight
+                v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg),
+                                                                                     v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
+                v2_arcsec, v3_arcsec = v2_tangent_deg*3600., v3_tangent_deg*3600.
+
+            return v2_arcsec, v3_arcsec
+        else:
+            return super(HstAperture, self).idl_to_tel(x_idl, y_idl,
+                                                       V3IdlYAngle_deg=V3IdlYAngle_deg,
+                                                       V2Ref_arcsec=V2Ref_arcsec,
+                                                       V3Ref_arcsec=V3Ref_arcsec, method=method,
+                                                       input_coordinates=input_coordinates,
+                                                       output_coordinates=output_coordinates)
+
+
+    def tel_to_idl(self, v2_arcsec, v3_arcsec, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
+                   V3Ref_arcsec=None, method='planar_approximation',
+                   output_coordinates='tangent_plane', input_coordinates='tangent_plane'):
+
         if 'FGS' in self.AperName:
             tvs_pa_deg = V3IdlYAngle_deg
             tvs_v2_arcsec = V2Ref_arcsec
@@ -1551,19 +1723,35 @@ class HstAperture(Aperture):
             # treat V3IdlYAngle, V2Ref, V3Ref in the TVS-specific way
             tvs = self.compute_tvs_matrix(tvs_v2_arcsec, tvs_v3_arcsec, tvs_pa_deg)
 
-            # unit vector
-            x_rad = np.deg2rad(x_idl * u.arcsec.to(u.deg))
-            y_rad = np.deg2rad(y_idl * u.arcsec.to(u.deg))
-            xyz = np.array([x_rad, y_rad, np.sqrt(1. - (x_rad ** 2 + y_rad ** 2))])
+            if method == 'spherical':
+                if input_coordinates == 'cartesian':
+                    unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec * u.arcsec,
+                                                                           z=v3_arcsec * u.arcsec)
+                elif input_coordinates == 'polar':
+                    unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec, v3_arcsec * u.arcsec)
 
-            v = np.rad2deg(np.dot(tvs, xyz)) * u.deg.to(u.arcsec)
-            return v[1], v[2]
+                # apply inverse TVS alignment matrix to unit vector, produces Star Vector in FGS object space
+                unit_vector_idl = np.dot(np.transpose(tvs), unit_vector_tel)
+
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0]*u.rad.to(u.arcsec), unit_vector_idl[1]*u.rad.to(u.arcsec)
+
+                return x_idl_arcsec, y_idl_arcsec
+
+            elif method == 'planar_approximation':
+                # unit vector
+                unit_vector_tel = rotations.unit_vector_from_cartesian(y=v2_arcsec*u.arcsec, z=v3_arcsec*u.arcsec)
+                unit_vector_idl = np.dot(np.transpose(tvs), unit_vector_tel)
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0]*u.rad.to(u.arcsec), unit_vector_idl[1]*u.rad.to(u.arcsec)
+
+                return x_idl_arcsec, y_idl_arcsec
         else:
-            return super(HstAperture, self).idl_to_tel(x_idl, y_idl,
+            return super(HstAperture, self).idl_to_tel(v2_arcsec, v3_arcsec,
                                                        V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                        V2Ref_arcsec=V2Ref_arcsec,
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
-                                                       input_coordinates=input_coordinates)
+                                                       input_coordinates=input_coordinates,
+                                                       output_coordinates=output_coordinates)
+
 
     def set_idl_reference_point(self, v2_ref, v3_ref, verbose=False):
         """Determine the reference point in the Ideal frame.
@@ -1601,11 +1789,8 @@ class HstAperture(Aperture):
         inverted_tvs = np.linalg.inv(db_tvs)
 
         # construct the normalized vector of the reference point in the V/tel frame
-        tel_vector_rad = np.array([0., np.deg2rad(v2_ref / 3600.), np.deg2rad(v3_ref / 3600.)])
-        tel_vector_rad_normalized = tel_vector_rad.copy()
-        tel_vector_rad_normalized[0] = np.sqrt(1. - tel_vector_rad[1] ** 2 - tel_vector_rad[2] ** 2)
-
-        idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad_normalized)
+        tel_vector_rad = rotations.unit_vector_sky(v2_ref*u.arcsec, v3_ref*u.arcsec)
+        idl_vector_rad = np.dot(inverted_tvs, tel_vector_rad)
         idl_vector_arcsec = np.rad2deg(idl_vector_rad) * 3600.
 
         self.idl_x_ref_arcsec = idl_vector_arcsec[0]
@@ -1636,6 +1821,10 @@ class HstAperture(Aperture):
 
         This is after using those V2Ref and V3Ref attributes for TVS matrix update.
 
+        TODO
+        ----
+            - use new rotations.methods
+
         """
         # reference point in idl frame
         idl_vector_rad = np.deg2rad(
@@ -1661,8 +1850,8 @@ class HstAperture(Aperture):
 
         if verbose:
             for attribute_name in 'V2Ref V3Ref V3IdlYAngle'.split():
-                print('Setting {} to {}'.format(attribute_name, getattr(self, attribute_name)))
-                print('Setting {} to {}'.format(attribute_name + '_corrected',
+                print('HST FGS fiducial point update: Setting {} back to {:2.2f} '.format(attribute_name, getattr(self, attribute_name)), end='')
+                print('and {} to {:2.2f}'.format(attribute_name + '_corrected',
                                                 getattr(self, attribute_name + '_corrected')))
 
 
