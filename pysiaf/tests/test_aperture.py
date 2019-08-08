@@ -117,11 +117,11 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
     for siaf in siaf_objects:
         if threshold is None:
             if siaf.instrument in ['miri']:
-                threshold = 0.04
+                threshold = 0.02
             elif siaf.instrument in ['nircam']:
-                threshold = 42.
-            else:
                 threshold = 0.1
+            else:
+                threshold = 0.05
         for aper_name in siaf.apertures.keys():
             skip = False
 
