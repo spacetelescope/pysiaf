@@ -25,20 +25,21 @@ import numpy as np
 import pylab as pl
 
 import pysiaf
-from pysiaf.utils import polynomial
 from pysiaf import iando
-from pysiaf.utils import compare
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
     JWST_DELIVERY_DATA_ROOT
+from pysiaf.tests import test_miri
+from pysiaf.utils import compare
+from pysiaf.utils import polynomial
 
 import generate_reference_files
-
 
 #############################
 instrument = 'MIRI'
 
 # regenerate SIAF reference files if needed
-if 0:
+regerenate_basic_reference_files = False
+if regerenate_basic_reference_files:
     generate_reference_files.generate_siaf_detector_layout()
     generate_reference_files.generate_siaf_detector_reference_file(instrument)
     generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
@@ -57,9 +58,7 @@ master_aperture_names = detector_layout['AperName'].data
 source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print('Loading source data files from directory: {}'.format(source_data_dir))
 
-# miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_7B.03.00.fits'
 miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits'
-
 
 # Fundamental aperture definitions: names, types, reference positions, dependencies
 # for MIRI this file is part of the delivered source files and contains more columns
@@ -482,9 +481,7 @@ def extract_ifu_data(aperture_table):
     return table
 
 
-# csv_data = get_mirim_coefficients(miri_distortion_file, verbose=True)
 csv_data = get_mirim_coefficients(miri_distortion_file, verbose=False)
-# 1/0
 
 number_of_coefficients = len(csv_data['DET_OSS']['A'])
 polynomial_degree = polynomial.polynomial_degree(number_of_coefficients)
@@ -657,7 +654,6 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 emulate_delivery = True
-# emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -665,54 +661,36 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx']) #, label='update'
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
-
-    # compare_against_prd = False
     compare_against_prd = True
     compare_against_cdp7b = True
-    # compare_against_cdp7b = False
-
-    from pysiaf.tests import test_miri
 
     print('\nRunning regression test of pre_delivery_siaf against test_data:')
     test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
 
 
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'cdp7b']:
+        if compare_to == 'cdp7b':
+            ref_siaf = pysiaf.Siaf(instrument,
+                                   filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
+        else:
+            # compare new SIAF with PRD version
+            ref_siaf = pysiaf.Siaf(instrument)
 
-    if compare_against_cdp7b:
-        tags = {'reference': 'cdp7b', 'comparison': 'pre_delivery'}
-        ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
+        tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
+
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                             fractional_tolerance=1e-6,
-                             tags=tags,
-                             selected_aperture_name=['MIRIM_FULL'],
-                             )
+                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
 
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
-                             tags=tags)
-
-        compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                                 tags=tags,
-                                                 report_dir=pre_delivery_dir,)
-                                                 # make_figures=True, make_plot=True)
-                                                 # , selected_aperture_name=['MIRIM_SUB128'])
+        compare.compare_transformation_roundtrip(pre_delivery_siaf,
+                                                 reference_siaf_input=ref_siaf, tags=tags,
+                                                 report_dir=pre_delivery_dir, )
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                   report_dir=pre_delivery_dir, tags=tags)
-
-
-    if compare_against_prd:
-        # compare new SIAF with PRD version
-        ref_siaf = pysiaf.Siaf(instrument)
-        # compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-
-        # compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-        compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}, report_dir=pre_delivery_dir)
+                                           report_dir=pre_delivery_dir, tags=tags)
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
@@ -727,12 +705,7 @@ else:
     if not os.path.isdir(test_dir):
         os.makedirs(test_dir)
 
-    # siaf_1 = '/Users/jsahlmann/jwst/code/github/spacetelescope/pysiaf/pysiaf/pre_delivery_data/MIRI/MIRI_SIAF_update.xml'
-    # siaf_2 = '/Users/jsahlmann/jwst/code/github/spacetelescope/pysiaf/pysiaf/pre_delivery_data/MIRI/MIRI_SIAF.xml'
-    # compare.compare_siaf(pysiaf.Siaf(instrument, siaf_2), reference_siaf_input=pysiaf.Siaf(instrument, siaf_1), fractional_tolerance=1e-6)
-
     # write the SIAFXML to disk
-    # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
     [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir,
                                                     file_format=['xml'])
     print('SIAFXML written in {}'.format(filename))
