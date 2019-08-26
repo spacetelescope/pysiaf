@@ -4,6 +4,9 @@
 
 from __future__ import absolute_import, print_function, division
 
+import re
+import requests
+
 from .version import *
 
 from .aperture import Aperture, HstAperture, JwstAperture
@@ -15,3 +18,13 @@ from .siaf import Siaf, ApertureCollection
 from .utils import polynomial, rotations, tools, projection
 
 __all__ = ['Aperture', 'HstAperture', 'JwstAperture', 'SIAF', 'JWST_PRD_VERSION', 'JWST_PRD_DATA_ROOT', 'HST_PRD_VERSION', 'HST_PRD_DATA_ROOT', '_JWST_STAGING_ROOT', 'siaf', 'iando', 'polynomial', 'rotations', 'tools', 'compare', 'JWST_PRD_DATA_ROOT_EXCEL', 'generate', 'projection']
+
+# Check PRD version is up to date
+req = requests.get('https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST').text
+p = re.compile("/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST/(.*?)/SIAFXML")
+prd_list = p.findall(req)
+newest_prd = [x for x in sorted(prd_list, reverse=True)][0]
+
+if JWST_PRD_VERSION != newest_prd:
+    print("Warning: Local JWST PRD version {} is behind the current online version {}".format(
+        JWST_PRD_VERSION, newest_prd))
