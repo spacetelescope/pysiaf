@@ -9,12 +9,16 @@ from __future__ import absolute_import, print_function, division
 import copy
 import math
 from math import sin, cos, atan2, degrees, radians
+
+from astropy.table import Table
 import numpy as np
 
 from ..constants import V3_TO_YAN_OFFSET_DEG
 from ..iando import read
 from .polynomial import shift_coefficients, flip_y, flip_x, add_rotation, \
     prepend_rotation_to_polynomial, poly, print_triangle
+from ..siaf import Siaf
+from ..utils import rotations
 
 
 def an_to_tel(xan_arcsec, yan_arcsec):
@@ -278,7 +282,74 @@ def correct_V3SciYAngle(V3SciYAngle_deg):
     return V3SciYAngle_deg_corrected
 
 
-def get_grid_coordinates(n_side, centre, x_width, y_width=None):
+def jwst_fgs_to_fgs_matrix(direction='fgs2_to_fgs1', siaf=None, verbose=False):
+    """Return JWST FGS1_OSS to FGS2_OSS transformation matrix as stored in LoadsPRD.
+
+    Parameters
+    ----------
+    siaf : pysiaf.Siaf instance
+        JWST FGS SIAF content
+
+    Returns
+    -------
+    R12 : ndarray
+        rotation matrix
+
+    References
+    ----------
+        See JWST-PLAN-006166, Section 5.8.3 for definitions.
+
+        Implementation adapted from Cox' BetweenFGS.ipynb
+
+    """
+    if siaf is None:
+        siaf = Siaf('fgs')
+
+    if direction=='fgs2_to_fgs1':
+        fgs1 = siaf['FGS2_FULL_OSS']
+        fgs2 = siaf['FGS1_FULL_OSS']
+    elif direction=='fgs1_to_fgs2':
+        fgs1 = siaf['FGS1_FULL_OSS']
+        fgs2 = siaf['FGS2_FULL_OSS']
+
+    FGS1V2 = fgs1.V2Ref
+    FGS1V3 = fgs1.V3Ref
+    FGS1pa = fgs1.V3IdlYAngle
+
+    FGS2V2 = fgs2.V2Ref
+    FGS2V3 = fgs2.V3Ref
+    FGS2pa = fgs2.V3IdlYAngle
+
+    # Form RA = R3.R2.R1
+    R1 = rotations.rotate(1, -FGS1pa)
+    R2 = rotations.rotate(2, -FGS1V3 / 3600.0)
+    R3 = rotations.rotate(3, FGS1V2 / 3600.0)
+    RA = np.dot(R2, R1)
+    RA = np.dot(R3, RA)
+
+    # Form RB = R6.R5.R4
+    R4 = rotations.rotate(1, -FGS2pa)
+    R5 = rotations.rotate(2, -FGS2V3 / 3600.0)
+    R6 = rotations.rotate(3, FGS2V2 / 3600.0)
+    RB = np.dot(R5, R4)
+    RB = np.dot(R6, RB)
+
+    R12 = np.dot(np.transpose(RB), RA)
+    R21 = np.dot(np.transpose(RA), RB)
+    if verbose:
+        print('RA\n', RA)
+        print('RB\n', RB)
+        if direction == 'fgs1_to_fgs2':
+            print('\nTransform from FGS1_OSS to FGS2_OSS\nR12\n', R12)
+            print('\nTransform from FGS2_OSS to FGS1_OSS\nR21\n', R21)
+        elif direction == 'fgs2_to_fgs1':
+            print('\nTransform from FGS2_OSS to FGS1_OSS\nR12\n', R12)
+            print('\nTransform from FGS1_OSS to FGS2_OSS\nR21\n', R21)
+
+    return R12
+
+
+def get_grid_coordinates(n_side, centre, x_width, y_width=None, max_radius=None):
     """Return tuple of arrays that contain the coordinates on a regular grid.
 
     Parameters
@@ -308,6 +379,10 @@ def get_grid_coordinates(n_side, centre, x_width, y_width=None):
     x_mesh, y_mesh = np.meshgrid(x_linear, y_linear)
     x = x_mesh.flatten()
     y = y_mesh.flatten()
+
+    if max_radius is not None:
+        index = np.where(np.sqrt((x-centre[0])**2+(y-centre[1])**2) < max_radius)[0]
+        return x[index], y[index]
 
     return x, y
 
@@ -437,8 +512,12 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
         AF, BF, CF, DF = convert_polynomial_coefficients(A, B, C, D, inverse=True,
                                                          parent_aperture=parent_aperture)
 
+        if aperture.XDetRef is None:
+            raise ValueError
         # now shift to child aperture reference point
         AFS_child = shift_coefficients(AF, aperture.XDetRef, aperture.YDetRef)
+        # if aperture.AperName == 'NRCA1_GRISMTS':
+        #     1/0
         BFS_child = shift_coefficients(BF, aperture.XDetRef, aperture.YDetRef)
         CFS_child = CF
         DFS_child = DF
@@ -476,6 +555,43 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
     return aperture
 
 
+def write_matrix_to_file(matrix, file, comments=None, format='jwst_fsw_patch_request'):
+    """Write the elements of a matrix to a text file.
+
+    Parameters
+    ----------
+    matrix : ndarray
+        the matrix
+    file : str
+        output file name
+    comments : dict
+        comments to include in the commented file header
+    format : str
+        Formatting of matrix elements in output
+
+    """
+    if format=='jwst_fsw_patch_request':
+        index = []
+        value = []
+        for row_index in range(matrix.shape[0]):
+            for column_index in range(matrix.shape[1]):
+                index.append('[{}][{}]'.format(row_index, column_index))
+                value.append('{:+.15f}'.format(matrix[row_index, column_index]))
+        table = Table()
+        table['[Row][Column]'] = index
+        table['Value'] = value
+        if comments is not None:
+            table.meta['comments'] = comments
+        table.write(file, format='ascii.fixed_width', delimiter=',', bookend=False, overwrite=True)
+
+    elif format is None:
+        table = Table(matrix)
+        if comments is not None:
+            table.meta['comments'] = comments
+        fstring = '{' + ','.join(["'{}':  '%.15f'".format(c) for c in table.colnames]) + '}'
+        table.write(file, format='ascii.fixed_width', delimiter=',', bookend=False, overwrite=True, formats=eval(fstring))
+
+
 def v3sciyangle_to_v3idlyangle(v3sciyangle):
     """Convert V3SciYAngle to V3IdlYAngle.
 
@@ -498,8 +614,9 @@ def v3sciyangle_to_v3idlyangle(v3sciyangle):
     return v3sciyangle
 
 
-def match_v2v3(aperture_1, aperture_2, verbose=False):
-    """Use the V2V3 from aperture_1 in aperture_2 modifying X[Y]DetRef,X[Y]SciRef to match.
+def match_v2v3(aperture_1, aperture_2, verbose=False, match_v2_only=False):
+    """Modify the X[Y]DetRef,X[Y]SciRef attributes of aperture_2 such
+    that V2Ref,V3Ref of both apertures match.
 
     Also shift the polynomial coefficients to reflect the new reference point origin
     and for NIRCam recalculate angles.
@@ -524,11 +641,23 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
     assert instrument != 'NIRSPEC', 'Program not working for NIRSpec'
     assert (aperture_2.AperType in ['FULLSCA', 'SUBARRAY', 'ROI']), \
         "2nd aperture must be pixel-based"
+
+    if verbose:
+        print('{}\nBEFORE match_v2v3:'.format(aperture_2.AperName))
+        for attribute in 'XDetRef YDetRef XSciRef YSciRef V2Ref V3Ref'.split():
+            print('{} {:2.3f}'.format(attribute, getattr(aperture_2, attribute)), end=' ')
+        print()
+
     order = aperture_1.Sci2IdlDeg
     V2Ref1 = aperture_1.V2Ref
-    V3Ref1 = aperture_1.V3Ref
+    if match_v2_only is False:
+        V3Ref1 = aperture_1.V3Ref
+    elif match_v2_only is True:
+        # do not change V3
+        V3Ref1 = aperture_2.V3Ref
     newV2Ref = V2Ref1
     newV3Ref = V3Ref1
+
     if verbose:
         print('Current Vref', aperture_2.V2Ref, aperture_2.V3Ref)
         print('Shift to    ', V2Ref1, V3Ref1)
@@ -676,5 +805,11 @@ def match_v2v3(aperture_1, aperture_2, verbose=False):
         suffix = "{}".format(c+1)
         setattr(new_aperture_2, 'XIdlVert' + suffix, xcorners[c])
         setattr(new_aperture_2, 'YIdlVert' + suffix, ycorners[c])
+
+    if verbose:
+        print('{}\nAFTER match_v2v3:'.format(new_aperture_2.AperName))
+        for attribute in 'XDetRef YDetRef XSciRef YSciRef V2Ref V3Ref'.split():
+            print('{} {:2.3f}'.format(attribute, getattr(new_aperture_2, attribute)), end=' ')
+        print()
 
     return new_aperture_2

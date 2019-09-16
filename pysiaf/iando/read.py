@@ -286,6 +286,7 @@ def read_hst_fgs_amudotrep(file=None, version=None):
         'n_cones': re.compile(r'NUMBER OF CONES:   (?P<n_cones>\d)'),
         'date': re.compile(r'(?P<day>[ 123][0-9])-(?P<month>[A-Z][A-Z][A-Z])-(?P<year>[0-9][0-9])'),
         'cone_vector': re.compile(r'(CONE)*(CONE VECTOR)*(CONE ANGLE)'),
+        'cone_vector_tel': re.compile(r'(CONE)*(REVISED CONE VECTOR)*(PREVIOUS CONE VECTOR)'),
         'tvs': re.compile(r'(FGS TO ST TRANSFORMATION MATRICES)'),
     }
 
@@ -310,7 +311,12 @@ def read_hst_fgs_amudotrep(file=None, version=None):
                                    data_start=astropy_table_index+2, data_end=astropy_table_index + 2 + n_cones,
                                    guess=False, names=('CONE', 'X', 'Y', 'Z', 'CONE_ANGLE_DEG'))
                 # table.pprint()
-                data[fgs_id]['cone_parameters'] = table
+                data[fgs_id]['cone_parameters_fgs'] = table
+            elif key == 'cone_vector_tel':
+                table = Table.read(file, format='ascii.no_header', delimiter=' ',
+                                   data_start=astropy_table_index+2, data_end=astropy_table_index + 2 + n_cones,
+                                   guess=False, names=('CONE', 'V1', 'V2', 'V3', 'V1_PREV', 'V2_PREV', 'V3_PREV'))
+                data[fgs_id]['cone_parameters_tel'] = table
             elif key == 'tvs':
                 table = Table.read(file, format='ascii.no_header', delimiter=' ',
                                    data_start=astropy_table_index+2, data_end=astropy_table_index+2+3,

@@ -25,6 +25,11 @@ from ..siaf import Siaf
 
 instrument = 'MIRI'
 
+# directory that holds SIAF XML file
+test_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
+
+sys.path.append(test_data_dir)
+import mirim_siaf_testdata
 
 @pytest.mark.xfail
 def test_against_test_data(siaf=None, verbose=False):
@@ -42,11 +47,6 @@ def test_against_test_data(siaf=None, verbose=False):
         #  a provided siaf, e.g. setting tilt to non-zero value
         siaf = copy.deepcopy(siaf)
 
-    # directory that holds SIAF XML file
-    test_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
-
-    sys.path.append(test_data_dir)
-    import mirim_siaf_testdata
 
     x_test, y_test, v2_test, v3_test = mirim_siaf_testdata.siaf_testdata()
 
