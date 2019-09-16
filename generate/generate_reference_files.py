@@ -1065,9 +1065,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             comments.append('by {}'.format(username))
             comments.append('')
             distortion_reference_table.meta['comments'] = comments
-            # distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
-            distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False)
-            # data = Table.read(distortion_reference_file_name, delimiter=',', format='ascii.fixed_width')
+            distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
 
 
     comments = []

@@ -563,7 +563,7 @@ def read_siaf_detector_reference_file(instrument):
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_distortion_coefficients(instrument, aperture_name, file_name=None):
+def read_siaf_distortion_coefficients(instrument=None, aperture_name=None, file_name=None):
     """Return astropy table.
 
     Parameters
