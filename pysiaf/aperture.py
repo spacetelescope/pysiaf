@@ -269,6 +269,34 @@ class Aperture(object):
         """Representation of instance."""
         return "<pysiaf.Aperture object AperName={0} >".format(self.AperName)
 
+    def set_distortion_coefficients_from_file(self, file_name):
+        """Set polynomial from standardized file.
+
+        Parameters
+        ----------
+        file_name : str
+            Reference file containing coefficients
+
+        Returns
+        -------
+
+        """
+
+        polynomial_coefficients = read.read_siaf_distortion_coefficients(file_name=file_name)
+
+        number_of_coefficients = len(polynomial_coefficients)
+        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        self.Sci2IdlDeg = polynomial_degree
+
+        # set polynomial coefficients
+        siaf_indices = ['{:02d}'.format(d) for d in polynomial_coefficients['siaf_index'].tolist()]
+        for i in range(polynomial_degree + 1):
+            for j in np.arange(i + 1):
+                row_index = siaf_indices.index('{:d}{:d}'.format(i, j))
+                for colname in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
+                    setattr(self, '{}{:d}{:d}'.format(colname, i, j),
+                            polynomial_coefficients[colname][row_index])
+
     def closed_polygon_points(self, to_frame, rederive=True):
         """Compute closed polygon points of aperture outline. Used for plotting and path generation.
 
