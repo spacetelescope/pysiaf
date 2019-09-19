@@ -433,6 +433,8 @@ class Aperture(object):
     def corners(self, to_frame, rederive=True):
         """Return coordinates of the aperture vertices in the specified frame.
 
+        The positions refer to the `outside` corners of the corner pixels, not the pixel centers.
+
         Parameters
         ----------
         to_frame : str
