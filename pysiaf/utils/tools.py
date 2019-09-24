@@ -811,3 +811,14 @@ def match_v2v3(aperture_1, aperture_2, verbose=False, match_v2_only=False):
         print()
 
     return new_aperture_2
+
+
+def is_ipython():
+    """Function that returns True if the user is in an ipython
+    session and False if they are not
+    """
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False

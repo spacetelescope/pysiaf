@@ -31,15 +31,15 @@ from ..aperture import compare_apertures
 # Show plot only if in ipython session, if not in ipython always save plot
 # Either in the specified location, or in the current directory
 def show_save_plot(report_dir):
-    try:
-        __IPYTHON__
+    ipython = tools.is_ipython()
+    if ipython:
         pl.show()
         outdir = report_dir
-    except NameError:
+    else:
         if report_dir is not None:
             outdir = report_dir
         else:
-            outdir = ""
+            outdir = os.environ['HOME']
 
     return outdir
 
