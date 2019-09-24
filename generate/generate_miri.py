@@ -671,8 +671,7 @@ if emulate_delivery:
     print('\nRunning regression test of pre_delivery_siaf against test_data:')
     test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
 
-
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'cdp7b']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
         if compare_to == 'cdp7b':
             ref_siaf = pysiaf.Siaf(instrument,
                                    filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
