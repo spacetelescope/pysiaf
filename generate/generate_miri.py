@@ -376,7 +376,6 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     AR = AF * np.cos(a) - BF * np.sin(a)
     BR = AF * np.sin(a) + BF * np.cos(a)
 
-
     CR = polynomial.prepend_rotation_to_polynomial(CS, yanglec)
     DR = polynomial.prepend_rotation_to_polynomial(DS, yanglec)
 
