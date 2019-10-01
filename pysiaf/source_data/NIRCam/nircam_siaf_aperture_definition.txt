@@ -96,6 +96,7 @@
           NRCA3_GRISMTS128 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,      128 ,  1046.0 ,    65.0 ,                                     NRCA3_FULL ,         default
            NRCA3_GRISMTS64 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,       64 ,  1046.0 ,    33.0 ,                                     NRCA3_FULL ,         default
          NRCA5_TAGRISMTS32 , SUBARRAY ,   821.0 ,   110.0 ,       32 ,       32 ,    16.0 ,    16.0 ,                                     NRCA5_FULL ,         default
+   NRCA5_TAGRISMTS32_F405N , SUBARRAY ,   821.0 ,   110.0 ,       32 ,       32 ,    16.0 ,    16.0 ,                                     NRCA5_FULL ,         default
 NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
  NRCA5_TAGRISMTS_SCI_F444W ,      ROI ,  1097.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
               NRCA3_DHSPIL ,  FULLSCA ,  1034.0 ,  1080.0 ,     2048 ,     2048 ,  1015.0 ,  1080.0 ,                                     NRCA3_FULL ,         default
