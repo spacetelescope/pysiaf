@@ -41,3 +41,4 @@ NIS_SUBSTRIP256 , SUBARRAY ,    94.0 ,   850.0 ,     2098 ,      477 ,  1980.0 ,
     NIS_FP5MIMF ,  FULLSCA ,   100.0 ,   100.0 ,     2048 ,     2048 ,  1949.0 ,  1949.0 ,          NIS_CEN ,         default
     NIS_AMIFULL ,  FULLSCA ,   959.0 ,  2008.0 ,     2048 ,     2048 ,  1090.0 ,    41.0 ,          NIS_CEN ,         default
    NIS_SOSSFULL ,  FULLSCA ,    94.0 ,   850.0 ,     2048 ,     2048 ,  1955.0 ,  1199.0 ,          NIS_CEN ,         default
+       NIS_WFSS ,  FULLSCA ,  1121.0 ,  1035.0 ,     2048 ,     2048 ,   928.0 ,  1014.0 ,          NIS_CEN ,         default
