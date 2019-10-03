@@ -685,10 +685,11 @@ if emulate_delivery:
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf,
                                                  reference_siaf_input=ref_siaf, tags=tags,
-                                                 report_dir=pre_delivery_dir, )
+                                                 report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags)
+                                           report_dir=pre_delivery_dir, tags=tags,
+                                           xlimits=(-360, -520), ylimits=(-440, -300))
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
