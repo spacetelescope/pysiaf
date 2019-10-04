@@ -1,0 +1,1908 @@
+Reference:  277 apertures in PRDOPSSOC-M-024
+Comparison: 277 apertures in pre_delivery
+
+Number of modified apertures 277. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+MIRIM_MASK1550                    YSciRef                 109.5                 109.0        0.500000     0.4566
+MIRIM_MASK1550                  XIdlVert1              -13.2028              -13.2024        0.000400     0.0030
+MIRIM_MASK1550                  XIdlVert2                18.586               18.5862        0.000200     0.0011
+MIRIM_MASK1550                  XIdlVert3               18.6759               18.6762        0.000300     0.0016
+MIRIM_MASK1550                  XIdlVert4              -13.0211              -13.0207        0.000400     0.0031
+MIRIM_MASK1550                  YIdlVert1              -12.1276              -12.0722        0.055400     0.4568
+MIRIM_MASK1550                  YIdlVert2              -12.0687              -12.0131        0.055600     0.4607
+MIRIM_MASK1550                  YIdlVert3               12.8125                12.868        0.055500     0.4313
+MIRIM_MASK1550                  YIdlVert4               12.6801               12.7354        0.055300     0.4342
+
+MIRIFU_CHANNEL1A                XIdlVert1                1.3806                1.3222        0.058400     4.2300
+MIRIFU_CHANNEL1A                XIdlVert2               -1.9164               -1.8331        0.083300     4.3467
+MIRIFU_CHANNEL1A                XIdlVert3               -1.4104               -1.3264        0.084000     5.9558
+MIRIFU_CHANNEL1A                XIdlVert4                 1.914                1.8552        0.058800     3.0721
+MIRIFU_CHANNEL1A                YIdlVert1                2.0782                  2.07        0.008200     0.3946
+MIRIFU_CHANNEL1A                YIdlVert2                1.6127                1.6245        0.011800     0.7264
+MIRIFU_CHANNEL1A                YIdlVert3               -2.1063               -2.0933        0.013000     0.6172
+MIRIFU_CHANNEL1A                YIdlVert4               -1.5892               -1.5983        0.009100     0.5694
+
+MIRIFU_1ASLICE01                XIdlVert1                1.6281                1.6164        0.011700     0.7186
+MIRIFU_1ASLICE01                XIdlVert2               -1.7159               -1.6591        0.056800     3.3102
+MIRIFU_1ASLICE01                XIdlVert3               -1.6918                -1.635        0.056800     3.3574
+MIRIFU_1ASLICE01                XIdlVert4                1.6535                1.6418        0.011700     0.7076
+MIRIFU_1ASLICE01                YIdlVert1                0.3195                0.3179        0.001600     0.5008
+MIRIFU_1ASLICE01                YIdlVert2               -0.1526               -0.1446        0.008000     5.2425
+MIRIFU_1ASLICE01                YIdlVert3               -0.3297               -0.3217        0.008000     2.4264
+MIRIFU_1ASLICE01                YIdlVert4                0.1449                0.1432        0.001700     1.1732
+
+MIRIFU_1ASLICE02                XIdlVert1                1.7179                1.6087        0.109200     6.3566
+MIRIFU_1ASLICE02                XIdlVert2               -1.7248               -1.6805        0.044300     2.5684
+MIRIFU_1ASLICE02                XIdlVert3               -1.7008               -1.6564        0.044400     2.6105
+MIRIFU_1ASLICE02                XIdlVert4                1.7433                1.6341        0.109200     6.2640
+MIRIFU_1ASLICE02                YIdlVert1                0.3334                0.3179        0.015500     4.6491
+MIRIFU_1ASLICE02                YIdlVert2                -0.155               -0.1487        0.006300     4.0645
+MIRIFU_1ASLICE02                YIdlVert3               -0.3322               -0.3258        0.006400     1.9266
+MIRIFU_1ASLICE02                YIdlVert4                0.1589                0.1433        0.015600     9.8175
+
+MIRIFU_1ASLICE03                XIdlVert1                1.7608                1.6853        0.075500     4.2878
+MIRIFU_1ASLICE03                XIdlVert2               -1.6775               -1.6361        0.041400     2.4680
+MIRIFU_1ASLICE03                XIdlVert3               -1.6534                -1.612        0.041400     2.5039
+MIRIFU_1ASLICE03                XIdlVert4                1.7863                1.7107        0.075600     4.2322
+MIRIFU_1ASLICE03                YIdlVert1                0.3408                  0.33        0.010800     3.1690
+MIRIFU_1ASLICE03                YIdlVert2               -0.1494               -0.1435        0.005900     3.9491
+MIRIFU_1ASLICE03                YIdlVert3               -0.3265               -0.3206        0.005900     1.8070
+MIRIFU_1ASLICE03                YIdlVert4                0.1662                0.1554        0.010800     6.4982
+
+MIRIFU_1ASLICE04                XIdlVert1                1.7159                1.6689        0.047000     2.7391
+MIRIFU_1ASLICE04                XIdlVert2               -1.6719               -1.5874        0.084500     5.0541
+MIRIFU_1ASLICE04                XIdlVert3               -1.6478               -1.5633        0.084500     5.1280
+MIRIFU_1ASLICE04                XIdlVert4                1.7413                1.6943        0.047000     2.6991
+MIRIFU_1ASLICE04                YIdlVert1                0.3355                0.3288        0.006700     1.9970
+MIRIFU_1ASLICE04                YIdlVert2               -0.1498               -0.1377        0.012100     8.0774
+MIRIFU_1ASLICE04                YIdlVert3               -0.3269               -0.3148        0.012100     3.7014
+MIRIFU_1ASLICE04                YIdlVert4                0.1609                0.1542        0.006700     4.1641
+
+MIRIFU_1ASLICE05                XIdlVert1                1.7067                1.6335        0.073200     4.2890
+MIRIFU_1ASLICE05                XIdlVert2               -1.6715               -1.6051        0.066400     3.9725
+MIRIFU_1ASLICE05                XIdlVert3               -1.6474                -1.581        0.066400     4.0306
+MIRIFU_1ASLICE05                XIdlVert4                1.7321                1.6589        0.073200     4.2261
+MIRIFU_1ASLICE05                YIdlVert1                0.3354                0.3249        0.010500     3.1306
+MIRIFU_1ASLICE05                YIdlVert2               -0.1509               -0.1413        0.009600     6.3618
+MIRIFU_1ASLICE05                YIdlVert3                -0.328               -0.3184        0.009600     2.9268
+MIRIFU_1ASLICE05                YIdlVert4                0.1608                0.1502        0.010600     6.5920
+
+MIRIFU_1ASLICE06                XIdlVert1                1.7312                1.6522        0.079000     4.5633
+MIRIFU_1ASLICE06                XIdlVert2               -1.6795               -1.6485        0.031000     1.8458
+MIRIFU_1ASLICE06                XIdlVert3               -1.6554               -1.6244        0.031000     1.8727
+MIRIFU_1ASLICE06                XIdlVert4                1.7566                1.6776        0.079000     4.4973
+MIRIFU_1ASLICE06                YIdlVert1                0.3401                0.3286        0.011500     3.3814
+MIRIFU_1ASLICE06                YIdlVert2               -0.1532               -0.1487        0.004500     2.9373
+MIRIFU_1ASLICE06                YIdlVert3               -0.3303               -0.3258        0.004500     1.3624
+MIRIFU_1ASLICE06                YIdlVert4                0.1655                 0.154        0.011500     6.9486
+
+MIRIFU_1ASLICE07                XIdlVert1                1.6999                1.6144        0.085500     5.0297
+MIRIFU_1ASLICE07                XIdlVert2               -1.6812               -1.6461        0.035100     2.0878
+MIRIFU_1ASLICE07                XIdlVert3               -1.6571                -1.622        0.035100     2.1182
+MIRIFU_1ASLICE07                XIdlVert4                1.7254                1.6398        0.085600     4.9612
+MIRIFU_1ASLICE07                YIdlVert1                0.3368                0.3243        0.012500     3.7114
+MIRIFU_1ASLICE07                YIdlVert2               -0.1546               -0.1495        0.005100     3.2988
+MIRIFU_1ASLICE07                YIdlVert3               -0.3317               -0.3266        0.005100     1.5375
+MIRIFU_1ASLICE07                YIdlVert4                0.1622                0.1497        0.012500     7.7065
+
+MIRIFU_1ASLICE08                XIdlVert1                1.7052                1.6241        0.081100     4.7560
+MIRIFU_1ASLICE08                XIdlVert2               -1.7234               -1.6492        0.074200     4.3054
+MIRIFU_1ASLICE08                XIdlVert3               -1.6993               -1.6251        0.074200     4.3665
+MIRIFU_1ASLICE08                XIdlVert4                1.7306                1.6495        0.081100     4.6862
+MIRIFU_1ASLICE08                YIdlVert1                0.3387                0.3269        0.011800     3.4839
+MIRIFU_1ASLICE08                YIdlVert2               -0.1619                -0.151        0.010900     6.7326
+MIRIFU_1ASLICE08                YIdlVert3                -0.339               -0.3281        0.010900     3.2153
+MIRIFU_1ASLICE08                YIdlVert4                0.1642                0.1523        0.011900     7.2473
+
+MIRIFU_1ASLICE09                XIdlVert1                1.7001                1.6144        0.085700     5.0409
+MIRIFU_1ASLICE09                XIdlVert2               -1.7165               -1.6634        0.053100     3.0935
+MIRIFU_1ASLICE09                XIdlVert3               -1.6925               -1.6393        0.053200     3.1433
+MIRIFU_1ASLICE09                XIdlVert4                1.7256                1.6398        0.085800     4.9722
+MIRIFU_1ASLICE09                YIdlVert1                0.3391                0.3265        0.012600     3.7157
+MIRIFU_1ASLICE09                YIdlVert2               -0.1621               -0.1543        0.007800     4.8118
+MIRIFU_1ASLICE09                YIdlVert3               -0.3392               -0.3314        0.007800     2.2995
+MIRIFU_1ASLICE09                YIdlVert4                0.1645                0.1519        0.012600     7.6596
+
+MIRIFU_1ASLICE10                XIdlVert1                1.7019                1.6294        0.072500     4.2599
+MIRIFU_1ASLICE10                XIdlVert2               -1.7359               -1.6634        0.072500     4.1765
+MIRIFU_1ASLICE10                XIdlVert3               -1.7119               -1.6393        0.072600     4.2409
+MIRIFU_1ASLICE10                XIdlVert4                1.7273                1.6548        0.072500     4.1973
+MIRIFU_1ASLICE10                YIdlVert1                0.3406                0.3299        0.010700     3.1415
+MIRIFU_1ASLICE10                YIdlVert2               -0.1661               -0.1554        0.010700     6.4419
+MIRIFU_1ASLICE10                YIdlVert3               -0.3432               -0.3325        0.010700     3.1177
+MIRIFU_1ASLICE10                YIdlVert4                 0.166                0.1553        0.010700     6.4458
+
+MIRIFU_1ASLICE11                XIdlVert1                1.6964                1.6456        0.050800     2.9946
+MIRIFU_1ASLICE11                XIdlVert2                -1.729               -1.6433        0.085700     4.9566
+MIRIFU_1ASLICE11                XIdlVert3               -1.7049               -1.6192        0.085700     5.0267
+MIRIFU_1ASLICE11                XIdlVert4                1.7219                 1.671        0.050900     2.9560
+MIRIFU_1ASLICE11                YIdlVert1                 0.341                0.3335        0.007500     2.1994
+MIRIFU_1ASLICE11                YIdlVert2               -0.1662               -0.1535        0.012700     7.6414
+MIRIFU_1ASLICE11                YIdlVert3               -0.3433               -0.3306        0.012700     3.6994
+MIRIFU_1ASLICE11                YIdlVert4                0.1664                0.1588        0.007600     4.5673
+
+MIRIFU_1ASLICE12                XIdlVert1                1.7513                1.6624        0.088900     5.0762
+MIRIFU_1ASLICE12                XIdlVert2               -1.6918                -1.663        0.028800     1.7023
+MIRIFU_1ASLICE12                XIdlVert3               -1.6677               -1.6389        0.028800     1.7269
+MIRIFU_1ASLICE12                XIdlVert4                1.7767                1.6878        0.088900     5.0037
+MIRIFU_1ASLICE12                YIdlVert1                0.3503                 0.337        0.013300     3.7967
+MIRIFU_1ASLICE12                YIdlVert2               -0.1619               -0.1576        0.004300     2.6560
+MIRIFU_1ASLICE12                YIdlVert3                -0.339               -0.3347        0.004300     1.2684
+MIRIFU_1ASLICE12                YIdlVert4                0.1757                0.1624        0.013300     7.5697
+
+MIRIFU_1ASLICE13                XIdlVert1                1.7376                1.6397        0.097900     5.6342
+MIRIFU_1ASLICE13                XIdlVert2               -1.7218               -1.6684        0.053400     3.1014
+MIRIFU_1ASLICE13                XIdlVert3               -1.6977               -1.6443        0.053400     3.1454
+MIRIFU_1ASLICE13                XIdlVert4                 1.763                1.6651        0.097900     5.5530
+MIRIFU_1ASLICE13                YIdlVert1                0.3495                0.3348        0.014700     4.2060
+MIRIFU_1ASLICE13                YIdlVert2               -0.1675               -0.1595        0.008000     4.7761
+MIRIFU_1ASLICE13                YIdlVert3               -0.3446               -0.3366        0.008000     2.3215
+MIRIFU_1ASLICE13                YIdlVert4                0.1749                0.1602        0.014700     8.4048
+
+MIRIFU_1ASLICE14                XIdlVert1                1.7196                1.6342        0.085400     4.9663
+MIRIFU_1ASLICE14                XIdlVert2                -1.703               -1.6454        0.057600     3.3823
+MIRIFU_1ASLICE14                XIdlVert3                -1.679               -1.6212        0.057800     3.4425
+MIRIFU_1ASLICE14                XIdlVert4                 1.745                1.6596        0.085400     4.8940
+MIRIFU_1ASLICE14                YIdlVert1                0.3479                0.3351        0.012800     3.6792
+MIRIFU_1ASLICE14                YIdlVert2               -0.1659               -0.1572        0.008700     5.2441
+MIRIFU_1ASLICE14                YIdlVert3                -0.343               -0.3343        0.008700     2.5364
+MIRIFU_1ASLICE14                YIdlVert4                0.1733                0.1604        0.012900     7.4437
+
+MIRIFU_1ASLICE15                XIdlVert1                1.6796                1.5946        0.085000     5.0607
+MIRIFU_1ASLICE15                XIdlVert2               -1.7331               -1.6651        0.068000     3.9236
+MIRIFU_1ASLICE15                XIdlVert3                -1.709                -1.641        0.068000     3.9789
+MIRIFU_1ASLICE15                XIdlVert4                 1.705                  1.62        0.085000     4.9853
+MIRIFU_1ASLICE15                YIdlVert1                0.3431                0.3303        0.012800     3.7307
+MIRIFU_1ASLICE15                YIdlVert2               -0.1716               -0.1613        0.010300     6.0023
+MIRIFU_1ASLICE15                YIdlVert3               -0.3487               -0.3384        0.010300     2.9538
+MIRIFU_1ASLICE15                YIdlVert4                0.1685                0.1556        0.012900     7.6558
+
+MIRIFU_1ASLICE16                XIdlVert1                1.7126                1.6359        0.076700     4.4786
+MIRIFU_1ASLICE16                XIdlVert2               -1.6888               -1.6085        0.080300     4.7549
+MIRIFU_1ASLICE16                XIdlVert3               -1.6647               -1.5844        0.080300     4.8237
+MIRIFU_1ASLICE16                XIdlVert4                 1.738                1.6613        0.076700     4.4131
+MIRIFU_1ASLICE16                YIdlVert1                0.3493                0.3376        0.011700     3.3496
+MIRIFU_1ASLICE16                YIdlVert2                -0.166               -0.1538        0.012200     7.3494
+MIRIFU_1ASLICE16                YIdlVert3               -0.3431               -0.3309        0.012200     3.5558
+MIRIFU_1ASLICE16                YIdlVert4                0.1747                 0.163        0.011700     6.6972
+
+MIRIFU_1ASLICE17                XIdlVert1                1.7073                1.6246        0.082700     4.8439
+MIRIFU_1ASLICE17                XIdlVert2               -1.7172               -1.6953        0.021900     1.2753
+MIRIFU_1ASLICE17                XIdlVert3               -1.6931               -1.6712        0.021900     1.2935
+MIRIFU_1ASLICE17                XIdlVert4                1.7327                  1.65        0.082700     4.7729
+MIRIFU_1ASLICE17                YIdlVert1                0.3496                 0.337        0.012600     3.6041
+MIRIFU_1ASLICE17                YIdlVert2               -0.1715               -0.1682        0.003300     1.9242
+MIRIFU_1ASLICE17                YIdlVert3               -0.3486               -0.3453        0.003300     0.9466
+MIRIFU_1ASLICE17                YIdlVert4                 0.175                0.1623        0.012700     7.2571
+
+MIRIFU_1ASLICE18                XIdlVert1                1.6906                1.5805        0.110100     6.5125
+MIRIFU_1ASLICE18                XIdlVert2               -1.7125                 -1.64        0.072500     4.2336
+MIRIFU_1ASLICE18                XIdlVert3               -1.6884               -1.6159        0.072500     4.2940
+MIRIFU_1ASLICE18                XIdlVert4                 1.716                1.6058        0.110200     6.4219
+MIRIFU_1ASLICE18                YIdlVert1                0.3482                0.3314        0.016800     4.8248
+MIRIFU_1ASLICE18                YIdlVert2               -0.1719               -0.1608        0.011100     6.4572
+MIRIFU_1ASLICE18                YIdlVert3                -0.349               -0.3379        0.011100     3.1805
+MIRIFU_1ASLICE18                YIdlVert4                0.1736                0.1567        0.016900     9.7350
+
+MIRIFU_1ASLICE19                XIdlVert1                1.6947                1.6014        0.093300     5.5054
+MIRIFU_1ASLICE19                XIdlVert2               -1.7459               -1.7302        0.015700     0.8992
+MIRIFU_1ASLICE19                XIdlVert3               -1.7218               -1.7061        0.015700     0.9118
+MIRIFU_1ASLICE19                XIdlVert4                1.7202                1.6268        0.093400     5.4296
+MIRIFU_1ASLICE19                YIdlVert1                  0.35                0.3357        0.014300     4.0857
+MIRIFU_1ASLICE19                YIdlVert2               -0.1783               -0.1758        0.002500     1.4021
+MIRIFU_1ASLICE19                YIdlVert3               -0.3554                -0.353        0.002400     0.6753
+MIRIFU_1ASLICE19                YIdlVert4                0.1754                 0.161        0.014400     8.2098
+
+MIRIFU_1ASLICE20                XIdlVert1                1.7034                 1.611        0.092400     5.4244
+MIRIFU_1ASLICE20                XIdlVert2               -1.7355               -1.6871        0.048400     2.7888
+MIRIFU_1ASLICE20                XIdlVert3               -1.7114                -1.663        0.048400     2.8281
+MIRIFU_1ASLICE20                XIdlVert4                1.7288                1.6364        0.092400     5.3447
+MIRIFU_1ASLICE20                YIdlVert1                0.3525                0.3383        0.014200     4.0284
+MIRIFU_1ASLICE20                YIdlVert2               -0.1778               -0.1703        0.007500     4.2182
+MIRIFU_1ASLICE20                YIdlVert3               -0.3549               -0.3474        0.007500     2.1133
+MIRIFU_1ASLICE20                YIdlVert4                0.1779                0.1636        0.014300     8.0382
+
+MIRIFU_1ASLICE21                XIdlVert1                1.6771                1.6476        0.029500     1.7590
+MIRIFU_1ASLICE21                XIdlVert2               -1.7468               -1.7338        0.013000     0.7442
+MIRIFU_1ASLICE21                XIdlVert3               -1.7228               -1.7097        0.013100     0.7604
+MIRIFU_1ASLICE21                XIdlVert4                1.7025                 1.673        0.029500     1.7327
+MIRIFU_1ASLICE21                YIdlVert1                0.3496                0.3451        0.004500     1.2872
+MIRIFU_1ASLICE21                YIdlVert2               -0.1807               -0.1787        0.002000     1.1068
+MIRIFU_1ASLICE21                YIdlVert3               -0.3578               -0.3558        0.002000     0.5590
+MIRIFU_1ASLICE21                YIdlVert4                 0.175                0.1704        0.004600     2.6286
+
+MIRIFU_CHANNEL1B                XIdlVert1                1.4094                1.3198        0.089600     6.3573
+MIRIFU_CHANNEL1B                XIdlVert2               -1.9299               -1.8397        0.090200     4.6738
+MIRIFU_CHANNEL1B                XIdlVert3               -1.4071               -1.3162        0.090900     6.4601
+MIRIFU_CHANNEL1B                XIdlVert4                1.9595                1.8692        0.090300     4.6083
+MIRIFU_CHANNEL1B                YIdlVert1                2.0756                 2.063        0.012600     0.6071
+MIRIFU_CHANNEL1B                YIdlVert2                 1.605                1.6177        0.012700     0.7851
+MIRIFU_CHANNEL1B                YIdlVert3               -2.0931               -2.0793        0.013800     0.6593
+MIRIFU_CHANNEL1B                YIdlVert4               -1.5827               -1.5964        0.013700     0.8582
+
+MIRIFU_1BSLICE01                XIdlVert1                1.6712                1.5996        0.071600     4.2843
+MIRIFU_1BSLICE01                XIdlVert2                -1.682                -1.657        0.025000     1.4863
+MIRIFU_1BSLICE01                XIdlVert3               -1.6572               -1.6321        0.025100     1.5146
+MIRIFU_1BSLICE01                XIdlVert4                1.6974                1.6258        0.071600     4.2182
+MIRIFU_1BSLICE01                YIdlVert1                0.3249                0.3148        0.010100     3.1086
+MIRIFU_1BSLICE01                YIdlVert2               -0.1476               -0.1441        0.003500     2.3713
+MIRIFU_1BSLICE01                YIdlVert3               -0.3237               -0.3202        0.003500     1.0812
+MIRIFU_1BSLICE01                YIdlVert4                0.1507                0.1406        0.010100     6.7021
+
+MIRIFU_1BSLICE02                XIdlVert1                1.6706                1.6461        0.024500     1.4665
+MIRIFU_1BSLICE02                XIdlVert2               -1.6963               -1.6703        0.026000     1.5327
+MIRIFU_1BSLICE02                XIdlVert3               -1.6714               -1.6454        0.026000     1.5556
+MIRIFU_1BSLICE02                XIdlVert4                1.6968                1.6723        0.024500     1.4439
+MIRIFU_1BSLICE02                YIdlVert1                0.3256                0.3222        0.003400     1.0442
+MIRIFU_1BSLICE02                YIdlVert2               -0.1506               -0.1469        0.003700     2.4568
+MIRIFU_1BSLICE02                YIdlVert3               -0.3267                -0.323        0.003700     1.1325
+MIRIFU_1BSLICE02                YIdlVert4                0.1514                 0.148        0.003400     2.2457
+
+MIRIFU_1BSLICE03                XIdlVert1                1.6661                1.6728        0.006700     0.4005
+MIRIFU_1BSLICE03                XIdlVert2               -1.6931               -1.6024        0.090700     5.3570
+MIRIFU_1BSLICE03                XIdlVert3               -1.6682               -1.5775        0.090700     5.4370
+MIRIFU_1BSLICE03                XIdlVert4                1.6923                 1.699        0.006700     0.3943
+MIRIFU_1BSLICE03                YIdlVert1                0.3259                0.3269        0.001000     0.3059
+MIRIFU_1BSLICE03                YIdlVert2               -0.1509               -0.1381        0.012800     8.4824
+MIRIFU_1BSLICE03                YIdlVert3                -0.327               -0.3141        0.012900     3.9450
+MIRIFU_1BSLICE03                YIdlVert4                0.1517                0.1527        0.001000     0.6549
+
+MIRIFU_1BSLICE04                XIdlVert1                 1.728                1.6184        0.109600     6.3426
+MIRIFU_1BSLICE04                XIdlVert2               -1.6979                -1.629        0.068900     4.0580
+MIRIFU_1BSLICE04                XIdlVert3                -1.673               -1.6041        0.068900     4.1184
+MIRIFU_1BSLICE04                XIdlVert4                1.7542                1.6446        0.109600     6.2479
+MIRIFU_1BSLICE04                YIdlVert1                0.3356                  0.32        0.015600     4.6484
+MIRIFU_1BSLICE04                YIdlVert2               -0.1524               -0.1426        0.009800     6.4304
+MIRIFU_1BSLICE04                YIdlVert3               -0.3286               -0.3187        0.009900     3.0128
+MIRIFU_1BSLICE04                YIdlVert4                0.1614                0.1458        0.015600     9.6654
+
+MIRIFU_1BSLICE05                XIdlVert1                1.7338                1.6622        0.071600     4.1297
+MIRIFU_1BSLICE05                XIdlVert2                -1.677               -1.5867        0.090300     5.3846
+MIRIFU_1BSLICE05                XIdlVert3               -1.6521               -1.5617        0.090400     5.4718
+MIRIFU_1BSLICE05                XIdlVert4                  1.76                1.6884        0.071600     4.0682
+MIRIFU_1BSLICE05                YIdlVert1                0.3373                 0.327        0.010300     3.0537
+MIRIFU_1BSLICE05                YIdlVert2               -0.1504               -0.1375        0.012900     8.5771
+MIRIFU_1BSLICE05                YIdlVert3               -0.3265               -0.3135        0.013000     3.9816
+MIRIFU_1BSLICE05                YIdlVert4                0.1631                0.1528        0.010300     6.3151
+
+MIRIFU_1BSLICE06                XIdlVert1                 1.703                 1.596        0.107000     6.2830
+MIRIFU_1BSLICE06                XIdlVert2               -1.7001               -1.6194        0.080700     4.7468
+MIRIFU_1BSLICE06                XIdlVert3               -1.6752               -1.5945        0.080700     4.8173
+MIRIFU_1BSLICE06                XIdlVert4                1.7293                1.6222        0.107100     6.1933
+MIRIFU_1BSLICE06                YIdlVert1                0.3338                0.3184        0.015400     4.6135
+MIRIFU_1BSLICE06                YIdlVert2               -0.1545               -0.1429        0.011600     7.5081
+MIRIFU_1BSLICE06                YIdlVert3               -0.3306                -0.319        0.011600     3.5088
+MIRIFU_1BSLICE06                YIdlVert4                0.1596                0.1442        0.015400     9.6491
+
+MIRIFU_1BSLICE07                XIdlVert1                1.7108                1.6131        0.097700     5.7108
+MIRIFU_1BSLICE07                XIdlVert2               -1.7038               -1.6366        0.067200     3.9441
+MIRIFU_1BSLICE07                XIdlVert3               -1.6789               -1.6117        0.067200     4.0026
+MIRIFU_1BSLICE07                XIdlVert4                 1.737                1.6393        0.097700     5.6246
+MIRIFU_1BSLICE07                YIdlVert1                0.3357                0.3217        0.014000     4.1704
+MIRIFU_1BSLICE07                YIdlVert2               -0.1559               -0.1463        0.009600     6.1578
+MIRIFU_1BSLICE07                YIdlVert3               -0.3321               -0.3223        0.009800     2.9509
+MIRIFU_1BSLICE07                YIdlVert4                0.1616                0.1474        0.014200     8.7871
+
+MIRIFU_1BSLICE08                XIdlVert1                1.6918                1.5795        0.112300     6.6379
+MIRIFU_1BSLICE08                XIdlVert2               -1.7077               -1.6309        0.076800     4.4973
+MIRIFU_1BSLICE08                XIdlVert3               -1.6828                -1.606        0.076800     4.5638
+MIRIFU_1BSLICE08                XIdlVert4                 1.718                1.6057        0.112300     6.5367
+MIRIFU_1BSLICE08                YIdlVert1                0.3339                0.3177        0.016200     4.8518
+MIRIFU_1BSLICE08                YIdlVert2               -0.1573               -0.1462        0.011100     7.0566
+MIRIFU_1BSLICE08                YIdlVert3               -0.3334               -0.3223        0.011100     3.3293
+MIRIFU_1BSLICE08                YIdlVert4                0.1597                0.1434        0.016300    10.2066
+
+MIRIFU_1BSLICE09                XIdlVert1                1.7041                1.5819        0.122200     7.1709
+MIRIFU_1BSLICE09                XIdlVert2               -1.7099               -1.6369        0.073000     4.2693
+MIRIFU_1BSLICE09                XIdlVert3                -1.685                -1.612        0.073000     4.3323
+MIRIFU_1BSLICE09                XIdlVert4                1.7303                 1.608        0.122300     7.0681
+MIRIFU_1BSLICE09                YIdlVert1                0.3365                0.3188        0.017700     5.2600
+MIRIFU_1BSLICE09                YIdlVert2               -0.1586                -0.148        0.010600     6.6835
+MIRIFU_1BSLICE09                YIdlVert3               -0.3347               -0.3241        0.010600     3.1670
+MIRIFU_1BSLICE09                YIdlVert4                0.1623                0.1445        0.017800    10.9673
+
+MIRIFU_1BSLICE10                XIdlVert1                1.7016                1.6017        0.099900     5.8709
+MIRIFU_1BSLICE10                XIdlVert2               -1.7669               -1.7179        0.049000     2.7732
+MIRIFU_1BSLICE10                XIdlVert3               -1.7421                -1.693        0.049100     2.8184
+MIRIFU_1BSLICE10                XIdlVert4                1.7278                1.6279        0.099900     5.7819
+MIRIFU_1BSLICE10                YIdlVert1                 0.337                0.3225        0.014500     4.3027
+MIRIFU_1BSLICE10                YIdlVert2               -0.1677               -0.1606        0.007100     4.2338
+MIRIFU_1BSLICE10                YIdlVert3               -0.3439               -0.3367        0.007200     2.0936
+MIRIFU_1BSLICE10                YIdlVert4                0.1628                0.1483        0.014500     8.9066
+
+MIRIFU_1BSLICE11                XIdlVert1                1.7171                1.6206        0.096500     5.6199
+MIRIFU_1BSLICE11                XIdlVert2               -1.7479               -1.7034        0.044500     2.5459
+MIRIFU_1BSLICE11                XIdlVert3                -1.723               -1.6785        0.044500     2.5827
+MIRIFU_1BSLICE11                XIdlVert4                1.7433                1.6467        0.096600     5.5412
+MIRIFU_1BSLICE11                YIdlVert1                0.3402                0.3261        0.014100     4.1446
+MIRIFU_1BSLICE11                YIdlVert2               -0.1658               -0.1593        0.006500     3.9204
+MIRIFU_1BSLICE11                YIdlVert3               -0.3419               -0.3354        0.006500     1.9011
+MIRIFU_1BSLICE11                YIdlVert4                 0.166                0.1519        0.014100     8.4940
+
+MIRIFU_1BSLICE12                XIdlVert1                1.7284                1.6228        0.105600     6.1097
+MIRIFU_1BSLICE12                XIdlVert2               -1.7099               -1.6357        0.074200     4.3394
+MIRIFU_1BSLICE12                XIdlVert3                -1.685               -1.6107        0.074300     4.4095
+MIRIFU_1BSLICE12                XIdlVert4                1.7546                1.6489        0.105700     6.0242
+MIRIFU_1BSLICE12                YIdlVert1                0.3427                0.3272        0.015500     4.5229
+MIRIFU_1BSLICE12                YIdlVert2               -0.1611               -0.1503        0.010800     6.7039
+MIRIFU_1BSLICE12                YIdlVert3               -0.3373               -0.3263        0.011000     3.2612
+MIRIFU_1BSLICE12                YIdlVert4                0.1685                 0.153        0.015500     9.1988
+
+MIRIFU_1BSLICE13                XIdlVert1                1.7291                1.6734        0.055700     3.2213
+MIRIFU_1BSLICE13                XIdlVert2               -1.7187               -1.6478        0.070900     4.1252
+MIRIFU_1BSLICE13                XIdlVert3               -1.6939               -1.6229        0.071000     4.1915
+MIRIFU_1BSLICE13                XIdlVert4                1.7553                1.6996        0.055700     3.1732
+MIRIFU_1BSLICE13                YIdlVert1                0.3437                0.3356        0.008100     2.3567
+MIRIFU_1BSLICE13                YIdlVert2               -0.1633               -0.1528        0.010500     6.4299
+MIRIFU_1BSLICE13                YIdlVert3               -0.3394               -0.3289        0.010500     3.0937
+MIRIFU_1BSLICE13                YIdlVert4                0.1696                0.1613        0.008300     4.8939
+
+MIRIFU_1BSLICE14                XIdlVert1                1.7135                1.6574        0.056100     3.2740
+MIRIFU_1BSLICE14                XIdlVert2               -1.7084               -1.6124        0.096000     5.6193
+MIRIFU_1BSLICE14                XIdlVert3               -1.6835               -1.5875        0.096000     5.7024
+MIRIFU_1BSLICE14                XIdlVert4                1.7397                1.6836        0.056100     3.2247
+MIRIFU_1BSLICE14                YIdlVert1                0.3423                 0.334        0.008300     2.4248
+MIRIFU_1BSLICE14                YIdlVert2               -0.1627               -0.1485        0.014200     8.7277
+MIRIFU_1BSLICE14                YIdlVert3               -0.3388               -0.3246        0.014200     4.1913
+MIRIFU_1BSLICE14                YIdlVert4                0.1681                0.1598        0.008300     4.9375
+
+MIRIFU_1BSLICE15                XIdlVert1                1.7145                1.6329        0.081600     4.7594
+MIRIFU_1BSLICE15                XIdlVert2               -1.7447               -1.6485        0.096200     5.5138
+MIRIFU_1BSLICE15                XIdlVert3               -1.7199               -1.6236        0.096300     5.5992
+MIRIFU_1BSLICE15                XIdlVert4                1.7407                1.6591        0.081600     4.6878
+MIRIFU_1BSLICE15                YIdlVert1                0.3433                0.3312        0.012100     3.5246
+MIRIFU_1BSLICE15                YIdlVert2               -0.1689               -0.1546        0.014300     8.4665
+MIRIFU_1BSLICE15                YIdlVert3                -0.345               -0.3307        0.014300     4.1449
+MIRIFU_1BSLICE15                YIdlVert4                0.1691                 0.157        0.012100     7.1555
+
+MIRIFU_1BSLICE16                XIdlVert1                 1.707                1.6048        0.102200     5.9871
+MIRIFU_1BSLICE16                XIdlVert2               -1.7248               -1.6861        0.038700     2.2437
+MIRIFU_1BSLICE16                XIdlVert3               -1.6999               -1.6612        0.038700     2.2766
+MIRIFU_1BSLICE16                XIdlVert4                1.7332                 1.631        0.102200     5.8966
+MIRIFU_1BSLICE16                YIdlVert1                0.3431                0.3279        0.015200     4.4302
+MIRIFU_1BSLICE16                YIdlVert2               -0.1667                -0.161        0.005700     3.4193
+MIRIFU_1BSLICE16                YIdlVert3               -0.3429               -0.3371        0.005800     1.6915
+MIRIFU_1BSLICE16                YIdlVert4                0.1689                0.1537        0.015200     8.9994
+
+MIRIFU_1BSLICE17                XIdlVert1                1.6951                1.5879        0.107200     6.3241
+MIRIFU_1BSLICE17                XIdlVert2               -1.7543               -1.6853        0.069000     3.9332
+MIRIFU_1BSLICE17                XIdlVert3               -1.7295               -1.6604        0.069100     3.9954
+MIRIFU_1BSLICE17                XIdlVert4                1.7213                1.6141        0.107200     6.2279
+MIRIFU_1BSLICE17                YIdlVert1                0.3421                0.3262        0.015900     4.6478
+MIRIFU_1BSLICE17                YIdlVert2               -0.1721               -0.1618        0.010300     5.9849
+MIRIFU_1BSLICE17                YIdlVert3               -0.3482               -0.3379        0.010300     2.9581
+MIRIFU_1BSLICE17                YIdlVert4                 0.168                0.1519        0.016100     9.5833
+
+MIRIFU_1BSLICE18                XIdlVert1                1.6982                1.6197        0.078500     4.6225
+MIRIFU_1BSLICE18                XIdlVert2               -1.7306               -1.6939        0.036700     2.1207
+MIRIFU_1BSLICE18                XIdlVert3               -1.7058                -1.669        0.036800     2.1573
+MIRIFU_1BSLICE18                XIdlVert4                1.7244                1.6459        0.078500     4.5523
+MIRIFU_1BSLICE18                YIdlVert1                0.3435                0.3318        0.011700     3.4061
+MIRIFU_1BSLICE18                YIdlVert2               -0.1693               -0.1638        0.005500     3.2487
+MIRIFU_1BSLICE18                YIdlVert3               -0.3455                 -0.34        0.005500     1.5919
+MIRIFU_1BSLICE18                YIdlVert4                0.1693                0.1575        0.011800     6.9699
+
+MIRIFU_1BSLICE19                XIdlVert1                1.7158                1.6316        0.084200     4.9073
+MIRIFU_1BSLICE19                XIdlVert2               -1.7425               -1.7056        0.036900     2.1176
+MIRIFU_1BSLICE19                XIdlVert3               -1.7176               -1.6807        0.036900     2.1483
+MIRIFU_1BSLICE19                XIdlVert4                 1.742                1.6577        0.084300     4.8393
+MIRIFU_1BSLICE19                YIdlVert1                 0.347                0.3343        0.012700     3.6599
+MIRIFU_1BSLICE19                YIdlVert2               -0.1721               -0.1665        0.005600     3.2539
+MIRIFU_1BSLICE19                YIdlVert3               -0.3482               -0.3426        0.005600     1.6083
+MIRIFU_1BSLICE19                YIdlVert4                0.1728                0.1601        0.012700     7.3495
+
+MIRIFU_1BSLICE20                XIdlVert1                1.6888                1.6205        0.068300     4.0443
+MIRIFU_1BSLICE20                XIdlVert2               -1.8011               -1.7431        0.058000     3.2203
+MIRIFU_1BSLICE20                XIdlVert3               -1.7763               -1.7183        0.058000     3.2652
+MIRIFU_1BSLICE20                XIdlVert4                 1.715                1.6466        0.068400     3.9883
+MIRIFU_1BSLICE20                YIdlVert1                0.3438                0.3335        0.010300     2.9959
+MIRIFU_1BSLICE20                YIdlVert2               -0.1817                -0.173        0.008700     4.7881
+MIRIFU_1BSLICE20                YIdlVert3               -0.3579               -0.3491        0.008800     2.4588
+MIRIFU_1BSLICE20                YIdlVert4                0.1696                0.1593        0.010300     6.0731
+
+MIRIFU_1BSLICE21                XIdlVert1                 1.685                1.6677        0.017300     1.0267
+MIRIFU_1BSLICE21                XIdlVert2               -1.7841               -1.6922        0.091900     5.1511
+MIRIFU_1BSLICE21                XIdlVert3               -1.7593               -1.6674        0.091900     5.2237
+MIRIFU_1BSLICE21                XIdlVert4                1.7112                1.6939        0.017300     1.0110
+MIRIFU_1BSLICE21                YIdlVert1                0.3441                0.3415        0.002600     0.7556
+MIRIFU_1BSLICE21                YIdlVert2                 -0.18               -0.1661        0.013900     7.7222
+MIRIFU_1BSLICE21                YIdlVert3               -0.3562               -0.3422        0.014000     3.9304
+MIRIFU_1BSLICE21                YIdlVert4                0.1699                0.1673        0.002600     1.5303
+
+MIRIFU_CHANNEL1C                XIdlVert1                1.3142                 1.293        0.021200     1.6131
+MIRIFU_CHANNEL1C                XIdlVert2               -1.9231               -1.8618        0.061300     3.1876
+MIRIFU_CHANNEL1C                XIdlVert3               -1.3844               -1.3228        0.061600     4.4496
+MIRIFU_CHANNEL1C                XIdlVert4                1.8712                1.8499        0.021300     1.1383
+MIRIFU_CHANNEL1C                YIdlVert1                2.0577                2.0548        0.002900     0.1409
+MIRIFU_CHANNEL1C                YIdlVert2                1.6117                1.6202        0.008500     0.5246
+MIRIFU_CHANNEL1C                YIdlVert3               -2.0878               -2.0786        0.009200     0.4407
+MIRIFU_CHANNEL1C                YIdlVert4               -1.5993               -1.6025        0.003200     0.1997
+
+MIRIFU_1CSLICE01                XIdlVert1                1.5752                 1.554        0.021200     1.3459
+MIRIFU_1CSLICE01                XIdlVert2               -1.7134               -1.6777        0.035700     2.0836
+MIRIFU_1CSLICE01                XIdlVert3               -1.6878                -1.652        0.035800     2.1211
+MIRIFU_1CSLICE01                XIdlVert4                1.6017                1.5805        0.021200     1.3236
+MIRIFU_1CSLICE01                YIdlVert1                0.3064                0.3035        0.002900     0.9465
+MIRIFU_1CSLICE01                YIdlVert2               -0.1466               -0.1417        0.004900     3.3424
+MIRIFU_1CSLICE01                YIdlVert3               -0.3228               -0.3179        0.004900     1.5180
+MIRIFU_1CSLICE01                YIdlVert4                0.1323                0.1293        0.003000     2.2676
+
+MIRIFU_1CSLICE02                XIdlVert1                1.6757                1.6036        0.072100     4.3027
+MIRIFU_1CSLICE02                XIdlVert2               -1.7205               -1.6885        0.032000     1.8599
+MIRIFU_1CSLICE02                XIdlVert3               -1.6949               -1.6629        0.032000     1.8880
+MIRIFU_1CSLICE02                XIdlVert4                1.7023                1.6301        0.072200     4.2413
+MIRIFU_1CSLICE02                YIdlVert1                0.3212                0.3112        0.010000     3.1133
+MIRIFU_1CSLICE02                YIdlVert2               -0.1487               -0.1442        0.004500     3.0262
+MIRIFU_1CSLICE02                YIdlVert3               -0.3249               -0.3204        0.004500     1.3850
+MIRIFU_1CSLICE02                YIdlVert4                0.1471                0.1371        0.010000     6.7981
+
+MIRIFU_1CSLICE03                XIdlVert1                1.7356                1.6749        0.060700     3.4973
+MIRIFU_1CSLICE03                XIdlVert2               -1.6749                -1.625        0.049900     2.9793
+MIRIFU_1CSLICE03                XIdlVert3               -1.6493               -1.5993        0.050000     3.0316
+MIRIFU_1CSLICE03                XIdlVert4                1.7621                1.7015        0.060600     3.4391
+MIRIFU_1CSLICE03                YIdlVert1                0.3305                0.3221        0.008400     2.5416
+MIRIFU_1CSLICE03                YIdlVert2               -0.1434               -0.1364        0.007000     4.8815
+MIRIFU_1CSLICE03                YIdlVert3               -0.3195               -0.3126        0.006900     2.1596
+MIRIFU_1CSLICE03                YIdlVert4                0.1564                 0.148        0.008400     5.3708
+
+MIRIFU_1CSLICE04                XIdlVert1                1.6595                1.6501        0.009400     0.5664
+MIRIFU_1CSLICE04                XIdlVert2               -1.6635                -1.606        0.057500     3.4566
+MIRIFU_1CSLICE04                XIdlVert3               -1.6378               -1.5804        0.057400     3.5047
+MIRIFU_1CSLICE04                XIdlVert4                 1.686                1.6767        0.009300     0.5516
+MIRIFU_1CSLICE04                YIdlVert1                 0.321                0.3197        0.001300     0.4050
+MIRIFU_1CSLICE04                YIdlVert2               -0.1427               -0.1347        0.008000     5.6062
+MIRIFU_1CSLICE04                YIdlVert3               -0.3189               -0.3108        0.008100     2.5400
+MIRIFU_1CSLICE04                YIdlVert4                0.1469                0.1456        0.001300     0.8850
+
+MIRIFU_1CSLICE05                XIdlVert1                1.6789                1.6335        0.045400     2.7042
+MIRIFU_1CSLICE05                XIdlVert2               -1.6719               -1.6026        0.069300     4.1450
+MIRIFU_1CSLICE05                XIdlVert3               -1.6462               -1.5769        0.069300     4.2097
+MIRIFU_1CSLICE05                XIdlVert4                1.7055                  1.66        0.045500     2.6678
+MIRIFU_1CSLICE05                YIdlVert1                0.3246                0.3183        0.006300     1.9409
+MIRIFU_1CSLICE05                YIdlVert2               -0.1449               -0.1352        0.009700     6.6943
+MIRIFU_1CSLICE05                YIdlVert3                -0.321               -0.3113        0.009700     3.0218
+MIRIFU_1CSLICE05                YIdlVert4                0.1506                0.1442        0.006400     4.2497
+
+MIRIFU_1CSLICE06                XIdlVert1                1.7087                1.6193        0.089400     5.2320
+MIRIFU_1CSLICE06                XIdlVert2               -1.6812               -1.6351        0.046100     2.7421
+MIRIFU_1CSLICE06                XIdlVert3               -1.6556               -1.6094        0.046200     2.7905
+MIRIFU_1CSLICE06                XIdlVert4                1.7352                1.6458        0.089400     5.1521
+MIRIFU_1CSLICE06                YIdlVert1                0.3298                0.3172        0.012600     3.8205
+MIRIFU_1CSLICE06                YIdlVert2               -0.1472               -0.1407        0.006500     4.4158
+MIRIFU_1CSLICE06                YIdlVert3               -0.3234               -0.3169        0.006500     2.0099
+MIRIFU_1CSLICE06                YIdlVert4                0.1557                0.1431        0.012600     8.0925
+
+MIRIFU_1CSLICE07                XIdlVert1                1.6957                1.6223        0.073400     4.3286
+MIRIFU_1CSLICE07                XIdlVert2               -1.6807               -1.6412        0.039500     2.3502
+MIRIFU_1CSLICE07                XIdlVert3               -1.6551               -1.6155        0.039600     2.3926
+MIRIFU_1CSLICE07                XIdlVert4                1.7223                1.6488        0.073500     4.2675
+MIRIFU_1CSLICE07                YIdlVert1                 0.329                0.3186        0.010400     3.1611
+MIRIFU_1CSLICE07                YIdlVert2                -0.148               -0.1425        0.005500     3.7162
+MIRIFU_1CSLICE07                YIdlVert3               -0.3242               -0.3186        0.005600     1.7273
+MIRIFU_1CSLICE07                YIdlVert4                 0.155                0.1445        0.010500     6.7742
+
+MIRIFU_1CSLICE08                XIdlVert1                 1.694                1.5844        0.109600     6.4699
+MIRIFU_1CSLICE08                XIdlVert2               -1.7043               -1.6501        0.054200     3.1802
+MIRIFU_1CSLICE08                XIdlVert3               -1.6787               -1.6245        0.054200     3.2287
+MIRIFU_1CSLICE08                XIdlVert4                1.7206                1.6109        0.109700     6.3757
+MIRIFU_1CSLICE08                YIdlVert1                0.3298                0.3142        0.015600     4.7301
+MIRIFU_1CSLICE08                YIdlVert2               -0.1524               -0.1447        0.007700     5.0525
+MIRIFU_1CSLICE08                YIdlVert3               -0.3286               -0.3209        0.007700     2.3433
+MIRIFU_1CSLICE08                YIdlVert4                0.1557                0.1401        0.015600    10.0193
+
+MIRIFU_1CSLICE09                XIdlVert1                1.7049                1.6235        0.081400     4.7745
+MIRIFU_1CSLICE09                XIdlVert2               -1.6934               -1.6396        0.053800     3.1770
+MIRIFU_1CSLICE09                XIdlVert3               -1.6677                -1.614        0.053700     3.2200
+MIRIFU_1CSLICE09                XIdlVert4                1.7314                1.6501        0.081300     4.6956
+MIRIFU_1CSLICE09                YIdlVert1                0.3323                0.3207        0.011600     3.4908
+MIRIFU_1CSLICE09                YIdlVert2               -0.1519               -0.1442        0.007700     5.0691
+MIRIFU_1CSLICE09                YIdlVert3               -0.3281               -0.3204        0.007700     2.3468
+MIRIFU_1CSLICE09                YIdlVert4                0.1582                0.1466        0.011600     7.3325
+
+MIRIFU_1CSLICE10                XIdlVert1                1.6648                1.6087        0.056100     3.3698
+MIRIFU_1CSLICE10                XIdlVert2               -1.7188               -1.6477        0.071100     4.1366
+MIRIFU_1CSLICE10                XIdlVert3               -1.6932               -1.6221        0.071100     4.1991
+MIRIFU_1CSLICE10                XIdlVert4                1.6913                1.6353        0.056000     3.3111
+MIRIFU_1CSLICE10                YIdlVert1                0.3276                0.3196        0.008000     2.4420
+MIRIFU_1CSLICE10                YIdlVert2               -0.1564               -0.1463        0.010100     6.4578
+MIRIFU_1CSLICE10                YIdlVert3               -0.3326               -0.3224        0.010200     3.0667
+MIRIFU_1CSLICE10                YIdlVert4                0.1535                0.1455        0.008000     5.2117
+
+MIRIFU_1CSLICE11                XIdlVert1                1.6729                1.6299        0.043000     2.5704
+MIRIFU_1CSLICE11                XIdlVert2               -1.7176               -1.6258        0.091800     5.3447
+MIRIFU_1CSLICE11                XIdlVert3               -1.6919               -1.6001        0.091800     5.4259
+MIRIFU_1CSLICE11                XIdlVert4                1.6994                1.6564        0.043000     2.5303
+MIRIFU_1CSLICE11                YIdlVert1                0.3297                0.3235        0.006200     1.8805
+MIRIFU_1CSLICE11                YIdlVert2               -0.1573               -0.1441        0.013200     8.3916
+MIRIFU_1CSLICE11                YIdlVert3               -0.3335               -0.3202        0.013300     3.9880
+MIRIFU_1CSLICE11                YIdlVert4                0.1556                0.1494        0.006200     3.9846
+
+MIRIFU_1CSLICE12                XIdlVert1                1.7205                1.6506        0.069900     4.0628
+MIRIFU_1CSLICE12                XIdlVert2               -1.7016               -1.6612        0.040400     2.3742
+MIRIFU_1CSLICE12                XIdlVert3               -1.6759               -1.6355        0.040400     2.4106
+MIRIFU_1CSLICE12                XIdlVert4                 1.747                1.6772        0.069800     3.9954
+MIRIFU_1CSLICE12                YIdlVert1                0.3376                0.3275        0.010100     2.9917
+MIRIFU_1CSLICE12                YIdlVert2               -0.1559               -0.1501        0.005800     3.7203
+MIRIFU_1CSLICE12                YIdlVert3               -0.3321               -0.3263        0.005800     1.7465
+MIRIFU_1CSLICE12                YIdlVert4                0.1636                0.1535        0.010100     6.1736
+
+MIRIFU_1CSLICE13                XIdlVert1                1.7313                1.6441        0.087200     5.0367
+MIRIFU_1CSLICE13                XIdlVert2               -1.7123               -1.6874        0.024900     1.4542
+MIRIFU_1CSLICE13                XIdlVert3               -1.6866               -1.6617        0.024900     1.4763
+MIRIFU_1CSLICE13                XIdlVert4                1.7579                1.6707        0.087200     4.9605
+MIRIFU_1CSLICE13                YIdlVert1                0.3402                0.3275        0.012700     3.7331
+MIRIFU_1CSLICE13                YIdlVert2               -0.1585               -0.1549        0.003600     2.2713
+MIRIFU_1CSLICE13                YIdlVert3               -0.3347               -0.3311        0.003600     1.0756
+MIRIFU_1CSLICE13                YIdlVert4                0.1661                0.1534        0.012700     7.6460
+
+MIRIFU_1CSLICE14                XIdlVert1                1.7234                1.6313        0.092100     5.3441
+MIRIFU_1CSLICE14                XIdlVert2               -1.6972               -1.6495        0.047700     2.8105
+MIRIFU_1CSLICE14                XIdlVert3               -1.6716               -1.6238        0.047800     2.8595
+MIRIFU_1CSLICE14                XIdlVert4                  1.75                1.6579        0.092100     5.2629
+MIRIFU_1CSLICE14                YIdlVert1                  0.34                0.3266        0.013400     3.9412
+MIRIFU_1CSLICE14                YIdlVert2               -0.1573               -0.1504        0.006900     4.3865
+MIRIFU_1CSLICE14                YIdlVert3               -0.3335               -0.3265        0.007000     2.0990
+MIRIFU_1CSLICE14                YIdlVert4                 0.166                0.1525        0.013500     8.1325
+
+MIRIFU_1CSLICE15                XIdlVert1                1.6458                1.5915        0.054300     3.2993
+MIRIFU_1CSLICE15                XIdlVert2               -1.7254               -1.6676        0.057800     3.3499
+MIRIFU_1CSLICE15                XIdlVert3               -1.6998               -1.6419        0.057900     3.4063
+MIRIFU_1CSLICE15                XIdlVert4                1.6723                 1.618        0.054300     3.2470
+MIRIFU_1CSLICE15                YIdlVert1                0.3298                0.3218        0.008000     2.4257
+MIRIFU_1CSLICE15                YIdlVert2               -0.1624               -0.1539        0.008500     5.2340
+MIRIFU_1CSLICE15                YIdlVert3               -0.3386               -0.3301        0.008500     2.5103
+MIRIFU_1CSLICE15                YIdlVert4                0.1557                0.1477        0.008000     5.1381
+
+MIRIFU_1CSLICE16                XIdlVert1                1.6784                1.6306        0.047800     2.8480
+MIRIFU_1CSLICE16                XIdlVert2               -1.6877               -1.6074        0.080300     4.7580
+MIRIFU_1CSLICE16                XIdlVert3                -1.662               -1.5818        0.080200     4.8255
+MIRIFU_1CSLICE16                XIdlVert4                 1.705                1.6572        0.047800     2.8035
+MIRIFU_1CSLICE16                YIdlVert1                0.3355                0.3285        0.007000     2.0864
+MIRIFU_1CSLICE16                YIdlVert2               -0.1579               -0.1461        0.011800     7.4731
+MIRIFU_1CSLICE16                YIdlVert3                -0.334               -0.3222        0.011800     3.5329
+MIRIFU_1CSLICE16                YIdlVert4                0.1614                0.1544        0.007000     4.3371
+
+MIRIFU_1CSLICE17                XIdlVert1                1.6957                1.6201        0.075600     4.4583
+MIRIFU_1CSLICE17                XIdlVert2               -1.7211               -1.6848        0.036300     2.1091
+MIRIFU_1CSLICE17                XIdlVert3               -1.6955               -1.6591        0.036400     2.1469
+MIRIFU_1CSLICE17                XIdlVert4                1.7223                1.6467        0.075600     4.3895
+MIRIFU_1CSLICE17                YIdlVert1                 0.339                0.3278        0.011200     3.3038
+MIRIFU_1CSLICE17                YIdlVert2               -0.1638               -0.1585        0.005300     3.2357
+MIRIFU_1CSLICE17                YIdlVert3                 -0.34               -0.3346        0.005400     1.5882
+MIRIFU_1CSLICE17                YIdlVert4                0.1649                0.1537        0.011200     6.7920
+
+MIRIFU_1CSLICE18                XIdlVert1                1.6838                1.5906        0.093200     5.5351
+MIRIFU_1CSLICE18                XIdlVert2                 -1.71               -1.6485        0.061500     3.5965
+MIRIFU_1CSLICE18                XIdlVert3               -1.6843               -1.6228        0.061500     3.6514
+MIRIFU_1CSLICE18                XIdlVert4                1.7103                1.6171        0.093200     5.4493
+MIRIFU_1CSLICE18                YIdlVert1                0.3383                0.3245        0.013800     4.0792
+MIRIFU_1CSLICE18                YIdlVert2               -0.1631                -0.154        0.009100     5.5794
+MIRIFU_1CSLICE18                YIdlVert3               -0.3393               -0.3302        0.009100     2.6820
+MIRIFU_1CSLICE18                YIdlVert4                0.1642                0.1504        0.013800     8.4044
+
+MIRIFU_1CSLICE19                XIdlVert1                1.6853                1.5996        0.085700     5.0851
+MIRIFU_1CSLICE19                XIdlVert2               -1.7115                -1.716        0.004500     0.2622
+MIRIFU_1CSLICE19                XIdlVert3               -1.6859               -1.6904        0.004500     0.2662
+MIRIFU_1CSLICE19                XIdlVert4                1.7119                1.6262        0.085700     5.0061
+MIRIFU_1CSLICE19                YIdlVert1                0.3395                0.3267        0.012800     3.7703
+MIRIFU_1CSLICE19                YIdlVert2               -0.1643                -0.165        0.000700     0.4242
+MIRIFU_1CSLICE19                YIdlVert3               -0.3405               -0.3412        0.000700     0.2052
+MIRIFU_1CSLICE19                YIdlVert4                0.1654                0.1526        0.012800     7.7388
+
+MIRIFU_1CSLICE20                XIdlVert1                1.6875                1.5852        0.102300     6.0622
+MIRIFU_1CSLICE20                XIdlVert2               -1.6985               -1.6683        0.030200     1.7780
+MIRIFU_1CSLICE20                XIdlVert3               -1.6729               -1.6426        0.030300     1.8112
+MIRIFU_1CSLICE20                XIdlVert4                1.7141                1.6117        0.102400     5.9740
+MIRIFU_1CSLICE20                YIdlVert1                0.3407                0.3255        0.015200     4.4614
+MIRIFU_1CSLICE20                YIdlVert2               -0.1634               -0.1589        0.004500     2.7540
+MIRIFU_1CSLICE20                YIdlVert3               -0.3396               -0.3351        0.004500     1.3251
+MIRIFU_1CSLICE20                YIdlVert4                0.1667                0.1514        0.015300     9.1782
+
+MIRIFU_1CSLICE21                XIdlVert1                1.5854                1.6167        0.031300     1.9360
+MIRIFU_1CSLICE21                XIdlVert2               -1.7448               -1.7252        0.019600     1.1233
+MIRIFU_1CSLICE21                XIdlVert3               -1.7191               -1.6995        0.019600     1.1401
+MIRIFU_1CSLICE21                XIdlVert4                1.6119                1.6433        0.031400     1.9108
+MIRIFU_1CSLICE21                YIdlVert1                0.3265                0.3312        0.004700     1.4191
+MIRIFU_1CSLICE21                YIdlVert2               -0.1713               -0.1683        0.003000     1.7513
+MIRIFU_1CSLICE21                YIdlVert3               -0.3475               -0.3445        0.003000     0.8633
+MIRIFU_1CSLICE21                YIdlVert4                0.1524                0.1571        0.004700     2.9917
+
+MIRIFU_CHANNEL2A                XIdlVert1                1.6831                1.6205        0.062600     3.7193
+MIRIFU_CHANNEL2A                XIdlVert2               -2.4424               -2.3738        0.068600     2.8087
+MIRIFU_CHANNEL2A                XIdlVert3               -1.7156               -1.6461        0.069500     4.0511
+MIRIFU_CHANNEL2A                XIdlVert4                2.4636                2.4001        0.063500     2.5775
+MIRIFU_CHANNEL2A                YIdlVert1                2.6535                2.6442        0.009300     0.3505
+MIRIFU_CHANNEL2A                YIdlVert2                2.0434                2.0536        0.010200     0.4967
+MIRIFU_CHANNEL2A                YIdlVert3               -2.6332               -2.6238        0.009400     0.3570
+MIRIFU_CHANNEL2A                YIdlVert4               -2.0655               -2.0741        0.008600     0.4146
+
+MIRIFU_2ASLICE01                XIdlVert1                2.0513                1.9752        0.076100     3.7098
+MIRIFU_2ASLICE01                XIdlVert2               -2.0899               -2.0525        0.037400     1.7896
+MIRIFU_2ASLICE01                XIdlVert3               -2.0472               -2.0097        0.037500     1.8318
+MIRIFU_2ASLICE01                XIdlVert4                2.0972                 2.021        0.076200     3.6334
+MIRIFU_2ASLICE01                YIdlVert1                0.4448                0.4335        0.011300     2.5405
+MIRIFU_2ASLICE01                YIdlVert2               -0.1676               -0.1621        0.005500     3.2816
+MIRIFU_2ASLICE01                YIdlVert3               -0.4427               -0.4372        0.005500     1.2424
+MIRIFU_2ASLICE01                YIdlVert4                0.1672                 0.156        0.011200     6.6986
+
+MIRIFU_2ASLICE02                XIdlVert1                2.1332                2.0601        0.073100     3.4268
+MIRIFU_2ASLICE02                XIdlVert2               -2.1543               -2.1078        0.046500     2.1585
+MIRIFU_2ASLICE02                XIdlVert3               -2.1115               -2.0651        0.046400     2.1975
+MIRIFU_2ASLICE02                XIdlVert4                2.1792                 2.106        0.073200     3.3590
+MIRIFU_2ASLICE02                YIdlVert1                0.4554                0.4446        0.010800     2.3715
+MIRIFU_2ASLICE02                YIdlVert2               -0.1755               -0.1687        0.006800     3.8746
+MIRIFU_2ASLICE02                YIdlVert3               -0.4506               -0.4438        0.006800     1.5091
+MIRIFU_2ASLICE02                YIdlVert4                0.1778                 0.167        0.010800     6.0742
+
+MIRIFU_2ASLICE03                XIdlVert1                2.1059                2.0248        0.081100     3.8511
+MIRIFU_2ASLICE03                XIdlVert2               -2.1791               -2.0918        0.087300     4.0062
+MIRIFU_2ASLICE03                XIdlVert3               -2.1364                -2.049        0.087400     4.0910
+MIRIFU_2ASLICE03                XIdlVert4                2.1518                2.0707        0.081100     3.7689
+MIRIFU_2ASLICE03                YIdlVert1                0.4498                0.4379        0.011900     2.6456
+MIRIFU_2ASLICE03                YIdlVert2               -0.1777               -0.1649        0.012800     7.2032
+MIRIFU_2ASLICE03                YIdlVert3               -0.4527                 -0.44        0.012700     2.8054
+MIRIFU_2ASLICE03                YIdlVert4                0.1722                0.1604        0.011800     6.8525
+
+MIRIFU_2ASLICE04                XIdlVert1                2.1216                2.0477        0.073900     3.4832
+MIRIFU_2ASLICE04                XIdlVert2               -2.1763               -2.1028        0.073500     3.3773
+MIRIFU_2ASLICE04                XIdlVert3               -2.1336               -2.0601        0.073500     3.4449
+MIRIFU_2ASLICE04                XIdlVert4                2.1676                2.0936        0.074000     3.4139
+MIRIFU_2ASLICE04                YIdlVert1                0.4505                0.4398        0.010700     2.3751
+MIRIFU_2ASLICE04                YIdlVert2               -0.1758               -0.1651        0.010700     6.0865
+MIRIFU_2ASLICE04                YIdlVert3               -0.4508               -0.4402        0.010600     2.3514
+MIRIFU_2ASLICE04                YIdlVert4                0.1729                0.1622        0.010700     6.1885
+
+MIRIFU_2ASLICE05                XIdlVert1                  2.09                2.0229        0.067100     3.2105
+MIRIFU_2ASLICE05                XIdlVert2               -2.1803               -2.1045        0.075800     3.4766
+MIRIFU_2ASLICE05                XIdlVert3               -2.1376               -2.0618        0.075800     3.5460
+MIRIFU_2ASLICE05                XIdlVert4                2.1359                2.0688        0.067100     3.1415
+MIRIFU_2ASLICE05                YIdlVert1                0.4445                0.4348        0.009700     2.1822
+MIRIFU_2ASLICE05                YIdlVert2               -0.1748               -0.1638        0.011000     6.2929
+MIRIFU_2ASLICE05                YIdlVert3               -0.4498               -0.4389        0.010900     2.4233
+MIRIFU_2ASLICE05                YIdlVert4                0.1669                0.1572        0.009700     5.8119
+
+MIRIFU_2ASLICE06                XIdlVert1                2.0876                 2.013        0.074600     3.5735
+MIRIFU_2ASLICE06                XIdlVert2                -2.157               -2.0772        0.079800     3.6996
+MIRIFU_2ASLICE06                XIdlVert3               -2.1143               -2.0344        0.079900     3.7790
+MIRIFU_2ASLICE06                XIdlVert4                2.1335                2.0589        0.074600     3.4966
+MIRIFU_2ASLICE06                YIdlVert1                0.4426                0.4318        0.010800     2.4401
+MIRIFU_2ASLICE06                YIdlVert2               -0.1699               -0.1584        0.011500     6.7687
+MIRIFU_2ASLICE06                YIdlVert3                -0.445               -0.4335        0.011500     2.5843
+MIRIFU_2ASLICE06                YIdlVert4                 0.165                0.1543        0.010700     6.4848
+
+MIRIFU_2ASLICE07                XIdlVert1                2.1074                2.0324        0.075000     3.5589
+MIRIFU_2ASLICE07                XIdlVert2               -2.1203               -2.0282        0.092100     4.3437
+MIRIFU_2ASLICE07                XIdlVert3               -2.0776               -1.9854        0.092200     4.4378
+MIRIFU_2ASLICE07                XIdlVert4                2.1534                2.0783        0.075100     3.4875
+MIRIFU_2ASLICE07                YIdlVert1                 0.444                0.4332        0.010800     2.4324
+MIRIFU_2ASLICE07                YIdlVert2               -0.1631               -0.1499        0.013200     8.0932
+MIRIFU_2ASLICE07                YIdlVert3               -0.4382                -0.425        0.013200     3.0123
+MIRIFU_2ASLICE07                YIdlVert4                0.1664                0.1557        0.010700     6.4303
+
+MIRIFU_2ASLICE08                XIdlVert1                2.0786                2.0058        0.072800     3.5024
+MIRIFU_2ASLICE08                XIdlVert2               -2.1143               -2.0326        0.081700     3.8642
+MIRIFU_2ASLICE08                XIdlVert3               -2.0715               -1.9898        0.081700     3.9440
+MIRIFU_2ASLICE08                XIdlVert4                2.1245                2.0517        0.072800     3.4267
+MIRIFU_2ASLICE08                YIdlVert1                0.4383                0.4279        0.010400     2.3728
+MIRIFU_2ASLICE08                YIdlVert2               -0.1608               -0.1491        0.011700     7.2761
+MIRIFU_2ASLICE08                YIdlVert3               -0.4358               -0.4242        0.011600     2.6618
+MIRIFU_2ASLICE08                YIdlVert4                0.1607                0.1504        0.010300     6.4095
+
+MIRIFU_2ASLICE09                XIdlVert1                2.0504                1.9907        0.059700     2.9116
+MIRIFU_2ASLICE09                XIdlVert2               -2.1476               -2.0635        0.084100     3.9160
+MIRIFU_2ASLICE09                XIdlVert3               -2.1049               -2.0208        0.084100     3.9954
+MIRIFU_2ASLICE09                XIdlVert4                2.0963                2.0366        0.059700     2.8479
+MIRIFU_2ASLICE09                YIdlVert1                0.4328                0.4243        0.008500     1.9640
+MIRIFU_2ASLICE09                YIdlVert2               -0.1641               -0.1521        0.012000     7.3126
+MIRIFU_2ASLICE09                YIdlVert3               -0.4391               -0.4272        0.011900     2.7101
+MIRIFU_2ASLICE09                YIdlVert4                0.1552                0.1468        0.008400     5.4124
+
+MIRIFU_2ASLICE10                XIdlVert1                2.1364                2.0578        0.078600     3.6791
+MIRIFU_2ASLICE10                XIdlVert2               -2.1694               -2.1004        0.069000     3.1806
+MIRIFU_2ASLICE10                XIdlVert3               -2.1267               -2.0577        0.069000     3.2445
+MIRIFU_2ASLICE10                XIdlVert4                2.1824                2.1037        0.078700     3.6061
+MIRIFU_2ASLICE10                YIdlVert1                0.4436                0.4324        0.011200     2.5248
+MIRIFU_2ASLICE10                YIdlVert2               -0.1656               -0.1558        0.009800     5.9179
+MIRIFU_2ASLICE10                YIdlVert3               -0.4406               -0.4309        0.009700     2.2015
+MIRIFU_2ASLICE10                YIdlVert4                0.1659                0.1548        0.011100     6.6908
+
+MIRIFU_2ASLICE11                XIdlVert1                2.1405                2.0752        0.065300     3.0507
+MIRIFU_2ASLICE11                XIdlVert2               -2.2043               -2.1385        0.065800     2.9851
+MIRIFU_2ASLICE11                XIdlVert3               -2.1617               -2.0958        0.065900     3.0485
+MIRIFU_2ASLICE11                XIdlVert4                2.1865                2.1211        0.065400     2.9911
+MIRIFU_2ASLICE11                YIdlVert1                0.4426                0.4334        0.009200     2.0786
+MIRIFU_2ASLICE11                YIdlVert2                -0.169               -0.1598        0.009200     5.4438
+MIRIFU_2ASLICE11                YIdlVert3               -0.4441               -0.4348        0.009300     2.0941
+MIRIFU_2ASLICE11                YIdlVert4                0.1649                0.1558        0.009100     5.5185
+
+MIRIFU_2ASLICE12                XIdlVert1                2.1305                2.0649        0.065600     3.0791
+MIRIFU_2ASLICE12                XIdlVert2               -2.2344               -2.1597        0.074700     3.3432
+MIRIFU_2ASLICE12                XIdlVert3               -2.1917                -2.117        0.074700     3.4083
+MIRIFU_2ASLICE12                XIdlVert4                2.1764                2.1108        0.065600     3.0142
+MIRIFU_2ASLICE12                YIdlVert1                0.4397                0.4305        0.009200     2.0923
+MIRIFU_2ASLICE12                YIdlVert2               -0.1716               -0.1612        0.010400     6.0606
+MIRIFU_2ASLICE12                YIdlVert3               -0.4467               -0.4362        0.010500     2.3506
+MIRIFU_2ASLICE12                YIdlVert4                0.1621                0.1529        0.009200     5.6755
+
+MIRIFU_2ASLICE13                XIdlVert1                2.1424                2.0616        0.080800     3.7715
+MIRIFU_2ASLICE13                XIdlVert2                -2.219               -2.1449        0.074100     3.3393
+MIRIFU_2ASLICE13                XIdlVert3               -2.1764               -2.1022        0.074200     3.4093
+MIRIFU_2ASLICE13                XIdlVert4                2.1884                2.1075        0.080900     3.6968
+MIRIFU_2ASLICE13                YIdlVert1                0.4398                0.4285        0.011300     2.5693
+MIRIFU_2ASLICE13                YIdlVert2                -0.168               -0.1577        0.010300     6.1310
+MIRIFU_2ASLICE13                YIdlVert3                -0.443               -0.4327        0.010300     2.3251
+MIRIFU_2ASLICE13                YIdlVert4                0.1622                 0.151        0.011200     6.9051
+
+MIRIFU_2ASLICE14                XIdlVert1                2.1173                2.0424        0.074900     3.5375
+MIRIFU_2ASLICE14                XIdlVert2                -2.193                -2.106        0.087000     3.9672
+MIRIFU_2ASLICE14                XIdlVert3               -2.1503               -2.0632        0.087100     4.0506
+MIRIFU_2ASLICE14                XIdlVert4                2.1633                2.0883        0.075000     3.4669
+MIRIFU_2ASLICE14                YIdlVert1                0.4349                0.4245        0.010400     2.3914
+MIRIFU_2ASLICE14                YIdlVert2               -0.1628               -0.1507        0.012100     7.4324
+MIRIFU_2ASLICE14                YIdlVert3               -0.4378               -0.4258        0.012000     2.7410
+MIRIFU_2ASLICE14                YIdlVert4                0.1573                0.1469        0.010400     6.6116
+
+MIRIFU_2ASLICE15                XIdlVert1                2.1051                 2.026        0.079100     3.7575
+MIRIFU_2ASLICE15                XIdlVert2               -2.1759               -2.0724        0.103500     4.7567
+MIRIFU_2ASLICE15                XIdlVert3               -2.1332               -2.0296        0.103600     4.8566
+MIRIFU_2ASLICE15                XIdlVert4                2.1511                2.0718        0.079300     3.6865
+MIRIFU_2ASLICE15                YIdlVert1                0.4316                0.4207        0.010900     2.5255
+MIRIFU_2ASLICE15                YIdlVert2               -0.1589               -0.1447        0.014200     8.9364
+MIRIFU_2ASLICE15                YIdlVert3                -0.434               -0.4198        0.014200     3.2719
+MIRIFU_2ASLICE15                YIdlVert4                 0.154                0.1432        0.010800     7.0130
+
+MIRIFU_2ASLICE16                XIdlVert1                2.1367                2.0762        0.060500     2.8315
+MIRIFU_2ASLICE16                XIdlVert2               -2.1448                -2.045        0.099800     4.6531
+MIRIFU_2ASLICE16                XIdlVert3                -2.102               -2.0022        0.099800     4.7479
+MIRIFU_2ASLICE16                XIdlVert4                2.1827                2.1222        0.060500     2.7718
+MIRIFU_2ASLICE16                YIdlVert1                0.4344                0.4261        0.008300     1.9107
+MIRIFU_2ASLICE16                YIdlVert2               -0.1532               -0.1395        0.013700     8.9426
+MIRIFU_2ASLICE16                YIdlVert3               -0.4283               -0.4146        0.013700     3.1987
+MIRIFU_2ASLICE16                YIdlVert4                0.1568                0.1486        0.008200     5.2296
+
+MIRIFU_2ASLICE17                XIdlVert1                2.1361                2.0592        0.076900     3.6000
+MIRIFU_2ASLICE17                XIdlVert2                -2.113               -2.0514        0.061600     2.9153
+MIRIFU_2ASLICE17                XIdlVert3               -2.0703               -2.0086        0.061700     2.9802
+MIRIFU_2ASLICE17                XIdlVert4                 2.182                2.1051        0.076900     3.5243
+MIRIFU_2ASLICE17                YIdlVert1                0.4329                0.4224        0.010500     2.4255
+MIRIFU_2ASLICE17                YIdlVert2               -0.1473               -0.1389        0.008400     5.7026
+MIRIFU_2ASLICE17                YIdlVert3               -0.4224                -0.414        0.008400     1.9886
+MIRIFU_2ASLICE17                YIdlVert4                0.1553                0.1448        0.010500     6.7611
+
+MIRIFU_CHANNEL2B                XIdlVert1                1.6764                 1.605        0.071400     4.2591
+MIRIFU_CHANNEL2B                XIdlVert2               -2.4467               -2.3579        0.088800     3.6294
+MIRIFU_CHANNEL2B                XIdlVert3               -1.7165               -1.6263        0.090200     5.2549
+MIRIFU_CHANNEL2B                XIdlVert4                2.4689                2.3965        0.072400     2.9325
+MIRIFU_CHANNEL2B                YIdlVert1                 2.656                2.6452        0.010800     0.4066
+MIRIFU_CHANNEL2B                YIdlVert2                2.0361                2.0495        0.013400     0.6538
+MIRIFU_CHANNEL2B                YIdlVert3                -2.625               -2.6131        0.011900     0.4533
+MIRIFU_CHANNEL2B                YIdlVert4               -2.0698               -2.0794        0.009600     0.4617
+
+MIRIFU_2BSLICE01                XIdlVert1                2.0493                1.9634        0.085900     4.1917
+MIRIFU_2BSLICE01                XIdlVert2               -2.0883               -2.0683        0.020000     0.9577
+MIRIFU_2BSLICE01                XIdlVert3               -2.0454               -2.0253        0.020100     0.9827
+MIRIFU_2BSLICE01                XIdlVert4                2.0959                  2.01        0.085900     4.0985
+MIRIFU_2BSLICE01                YIdlVert1                0.4495                0.4365        0.013000     2.8921
+MIRIFU_2BSLICE01                YIdlVert2               -0.1726               -0.1696        0.003000     1.7381
+MIRIFU_2BSLICE01                YIdlVert3               -0.4468               -0.4438        0.003000     0.6714
+MIRIFU_2BSLICE01                YIdlVert4                0.1715                0.1586        0.012900     7.5219
+
+MIRIFU_2BSLICE02                XIdlVert1                2.1298                2.0386        0.091200     4.2821
+MIRIFU_2BSLICE02                XIdlVert2               -2.1452               -2.0797        0.065500     3.0533
+MIRIFU_2BSLICE02                XIdlVert3               -2.1023               -2.0368        0.065500     3.1156
+MIRIFU_2BSLICE02                XIdlVert4                2.1765                2.0852        0.091300     4.1948
+MIRIFU_2BSLICE02                YIdlVert1                0.4593                0.4457        0.013600     2.9610
+MIRIFU_2BSLICE02                YIdlVert2               -0.1789               -0.1691        0.009800     5.4779
+MIRIFU_2BSLICE02                YIdlVert3                -0.453               -0.4433        0.009700     2.1413
+MIRIFU_2BSLICE02                YIdlVert4                0.1812                0.1677        0.013500     7.4503
+
+MIRIFU_2BSLICE03                XIdlVert1                2.1169                2.0363        0.080600     3.8075
+MIRIFU_2BSLICE03                XIdlVert2               -2.1741               -2.1004        0.073700     3.3899
+MIRIFU_2BSLICE03                XIdlVert3               -2.1313               -2.0574        0.073900     3.4674
+MIRIFU_2BSLICE03                XIdlVert4                2.1636                 2.083        0.080600     3.7253
+MIRIFU_2BSLICE03                YIdlVert1                0.4551                0.4432        0.011900     2.6148
+MIRIFU_2BSLICE03                YIdlVert2               -0.1809                 -0.17        0.010900     6.0254
+MIRIFU_2BSLICE03                YIdlVert3                -0.455               -0.4442        0.010800     2.3736
+MIRIFU_2BSLICE03                YIdlVert4                0.1771                0.1652        0.011900     6.7194
+
+MIRIFU_2BSLICE04                XIdlVert1                2.1151                2.0173        0.097800     4.6239
+MIRIFU_2BSLICE04                XIdlVert2               -2.1766               -2.1153        0.061300     2.8163
+MIRIFU_2BSLICE04                XIdlVert3               -2.1338               -2.0724        0.061400     2.8775
+MIRIFU_2BSLICE04                XIdlVert4                2.1618                2.0639        0.097900     4.5286
+MIRIFU_2BSLICE04                YIdlVert1                0.4526                0.4382        0.014400     3.1816
+MIRIFU_2BSLICE04                YIdlVert2                -0.179                 -0.17        0.009000     5.0279
+MIRIFU_2BSLICE04                YIdlVert3               -0.4531               -0.4442        0.008900     1.9642
+MIRIFU_2BSLICE04                YIdlVert4                0.1746                0.1603        0.014300     8.1901
+
+MIRIFU_2BSLICE05                XIdlVert1                 2.094                2.0184        0.075600     3.6103
+MIRIFU_2BSLICE05                XIdlVert2               -2.1739               -2.0998        0.074100     3.4086
+MIRIFU_2BSLICE05                XIdlVert3                -2.131               -2.0569        0.074100     3.4772
+MIRIFU_2BSLICE05                XIdlVert4                2.1407                 2.065        0.075700     3.5362
+MIRIFU_2BSLICE05                YIdlVert1                0.4473                0.4363        0.011000     2.4592
+MIRIFU_2BSLICE05                YIdlVert2               -0.1763               -0.1655        0.010800     6.1259
+MIRIFU_2BSLICE05                YIdlVert3               -0.4505               -0.4397        0.010800     2.3973
+MIRIFU_2BSLICE05                YIdlVert4                0.1693                0.1583        0.011000     6.4973
+
+MIRIFU_2BSLICE06                XIdlVert1                2.0966                2.0194        0.077200     3.6822
+MIRIFU_2BSLICE06                XIdlVert2               -2.1548               -2.0759        0.078900     3.6616
+MIRIFU_2BSLICE06                XIdlVert3               -2.1119               -2.0329        0.079000     3.7407
+MIRIFU_2BSLICE06                XIdlVert4                2.1433                 2.066        0.077300     3.6066
+MIRIFU_2BSLICE06                YIdlVert1                0.4455                0.4343        0.011200     2.5140
+MIRIFU_2BSLICE06                YIdlVert2               -0.1713               -0.1599        0.011400     6.6550
+MIRIFU_2BSLICE06                YIdlVert3               -0.4454               -0.4341        0.011300     2.5370
+MIRIFU_2BSLICE06                YIdlVert4                0.1675                0.1563        0.011200     6.6866
+
+MIRIFU_2BSLICE07                XIdlVert1                2.1075                2.0253        0.082200     3.9004
+MIRIFU_2BSLICE07                XIdlVert2               -2.1292               -2.0378        0.091400     4.2927
+MIRIFU_2BSLICE07                XIdlVert3               -2.0863               -1.9948        0.091500     4.3858
+MIRIFU_2BSLICE07                XIdlVert4                2.1542                2.0719        0.082300     3.8204
+MIRIFU_2BSLICE07                YIdlVert1                0.4449                 0.433        0.011900     2.6748
+MIRIFU_2BSLICE07                YIdlVert2               -0.1654               -0.1522        0.013200     7.9807
+MIRIFU_2BSLICE07                YIdlVert3               -0.4395               -0.4265        0.013000     2.9579
+MIRIFU_2BSLICE07                YIdlVert4                0.1668                0.1551        0.011700     7.0144
+
+MIRIFU_2BSLICE08                XIdlVert1                2.0736                1.9855        0.088100     4.2486
+MIRIFU_2BSLICE08                XIdlVert2               -2.1237                -2.028        0.095700     4.5063
+MIRIFU_2BSLICE08                XIdlVert3               -2.0807               -1.9849        0.095800     4.6042
+MIRIFU_2BSLICE08                XIdlVert4                2.1202                 2.032        0.088200     4.1600
+MIRIFU_2BSLICE08                YIdlVert1                0.4378                0.4252        0.012600     2.8780
+MIRIFU_2BSLICE08                YIdlVert2               -0.1624               -0.1487        0.013700     8.4360
+MIRIFU_2BSLICE08                YIdlVert3               -0.4365               -0.4229        0.013600     3.1157
+MIRIFU_2BSLICE08                YIdlVert4                0.1598                0.1473        0.012500     7.8223
+
+MIRIFU_2BSLICE09                XIdlVert1                2.0494                1.9987        0.050700     2.4739
+MIRIFU_2BSLICE09                XIdlVert2               -2.1376               -2.0821        0.055500     2.5964
+MIRIFU_2BSLICE09                XIdlVert3               -2.0946               -2.0391        0.055500     2.6497
+MIRIFU_2BSLICE09                XIdlVert4                 2.096                2.0453        0.050700     2.4189
+MIRIFU_2BSLICE09                YIdlVert1                0.4321                0.4249        0.007200     1.6663
+MIRIFU_2BSLICE09                YIdlVert2               -0.1622               -0.1544        0.007800     4.8089
+MIRIFU_2BSLICE09                YIdlVert3               -0.4364               -0.4286        0.007800     1.7874
+MIRIFU_2BSLICE09                YIdlVert4                0.1541                 0.147        0.007100     4.6074
+
+MIRIFU_2BSLICE10                XIdlVert1                2.1309                2.0661        0.064800     3.0410
+MIRIFU_2BSLICE10                XIdlVert2                -2.155               -2.0872        0.067800     3.1462
+MIRIFU_2BSLICE10                XIdlVert3                -2.112               -2.0443        0.067700     3.2055
+MIRIFU_2BSLICE10                XIdlVert4                2.1776                2.1127        0.064900     2.9803
+MIRIFU_2BSLICE10                YIdlVert1                0.4414                0.4323        0.009100     2.0616
+MIRIFU_2BSLICE10                YIdlVert2               -0.1625               -0.1529        0.009600     5.9077
+MIRIFU_2BSLICE10                YIdlVert3               -0.4366               -0.4271        0.009500     2.1759
+MIRIFU_2BSLICE10                YIdlVert4                0.1634                0.1543        0.009100     5.5692
+
+MIRIFU_2BSLICE11                XIdlVert1                2.1365                2.0332        0.103300     4.8350
+MIRIFU_2BSLICE11                XIdlVert2               -2.1904               -2.1112        0.079200     3.6158
+MIRIFU_2BSLICE11                XIdlVert3               -2.1475               -2.0683        0.079200     3.6880
+MIRIFU_2BSLICE11                XIdlVert4                2.1832                2.0798        0.103400     4.7362
+MIRIFU_2BSLICE11                YIdlVert1                  0.44                0.4255        0.014500     3.2955
+MIRIFU_2BSLICE11                YIdlVert2               -0.1652               -0.1542        0.011000     6.6586
+MIRIFU_2BSLICE11                YIdlVert3               -0.4393               -0.4283        0.011000     2.5040
+MIRIFU_2BSLICE11                YIdlVert4                0.1619                0.1476        0.014300     8.8326
+
+MIRIFU_2BSLICE12                XIdlVert1                2.1331                2.0438        0.089300     4.1864
+MIRIFU_2BSLICE12                XIdlVert2                -2.234               -2.1723        0.061700     2.7619
+MIRIFU_2BSLICE12                XIdlVert3               -2.1912               -2.1294        0.061800     2.8204
+MIRIFU_2BSLICE12                XIdlVert4                2.1797                2.0905        0.089200     4.0923
+MIRIFU_2BSLICE12                YIdlVert1                0.4373                0.4249        0.012400     2.8356
+MIRIFU_2BSLICE12                YIdlVert2                -0.169               -0.1605        0.008500     5.0296
+MIRIFU_2BSLICE12                YIdlVert3               -0.4431               -0.4346        0.008500     1.9183
+MIRIFU_2BSLICE12                YIdlVert4                0.1592                0.1469        0.012300     7.7261
+
+MIRIFU_2BSLICE13                XIdlVert1                 2.153                2.0779        0.075100     3.4882
+MIRIFU_2BSLICE13                XIdlVert2               -2.2122               -2.1376        0.074600     3.3722
+MIRIFU_2BSLICE13                XIdlVert3               -2.1694               -2.0946        0.074800     3.4480
+MIRIFU_2BSLICE13                XIdlVert4                2.1997                2.1245        0.075200     3.4186
+MIRIFU_2BSLICE13                YIdlVert1                0.4378                0.4275        0.010300     2.3527
+MIRIFU_2BSLICE13                YIdlVert2               -0.1637               -0.1534        0.010300     6.2920
+MIRIFU_2BSLICE13                YIdlVert3               -0.4378               -0.4276        0.010200     2.3298
+MIRIFU_2BSLICE13                YIdlVert4                0.1598                0.1495        0.010300     6.4456
+
+MIRIFU_2BSLICE14                XIdlVert1                 2.121                2.0488        0.072200     3.4041
+MIRIFU_2BSLICE14                XIdlVert2                -2.194               -2.1135        0.080500     3.6691
+MIRIFU_2BSLICE14                XIdlVert3               -2.1512               -2.0706        0.080600     3.7467
+MIRIFU_2BSLICE14                XIdlVert4                2.1677                2.0954        0.072300     3.3353
+MIRIFU_2BSLICE14                YIdlVert1                0.4312                0.4213        0.009900     2.2959
+MIRIFU_2BSLICE14                YIdlVert2                -0.159                -0.148        0.011000     6.9182
+MIRIFU_2BSLICE14                YIdlVert3               -0.4331               -0.4221        0.011000     2.5398
+MIRIFU_2BSLICE14                YIdlVert4                0.1532                0.1434        0.009800     6.3969
+
+MIRIFU_2BSLICE15                XIdlVert1                2.1111                2.0239        0.087200     4.1305
+MIRIFU_2BSLICE15                XIdlVert2               -2.1812               -2.0859        0.095300     4.3692
+MIRIFU_2BSLICE15                XIdlVert3               -2.1383                -2.043        0.095300     4.4568
+MIRIFU_2BSLICE15                XIdlVert4                2.1577                2.0704        0.087300     4.0460
+MIRIFU_2BSLICE15                YIdlVert1                0.4277                0.4158        0.011900     2.7823
+MIRIFU_2BSLICE15                YIdlVert2                -0.155                -0.142        0.013000     8.3871
+MIRIFU_2BSLICE15                YIdlVert3               -0.4291               -0.4163        0.012800     2.9830
+MIRIFU_2BSLICE15                YIdlVert4                0.1496                0.1379        0.011700     7.8209
+
+MIRIFU_2BSLICE16                XIdlVert1                2.1465                2.0716        0.074900     3.4894
+MIRIFU_2BSLICE16                XIdlVert2               -2.1382               -2.0394        0.098800     4.6207
+MIRIFU_2BSLICE16                XIdlVert3               -2.0953               -1.9964        0.098900     4.7201
+MIRIFU_2BSLICE16                XIdlVert4                2.1932                2.1182        0.075000     3.4197
+MIRIFU_2BSLICE16                YIdlVert1                0.4303                0.4202        0.010100     2.3472
+MIRIFU_2BSLICE16                YIdlVert2                -0.147               -0.1336        0.013400     9.1156
+MIRIFU_2BSLICE16                YIdlVert3               -0.4211               -0.4079        0.013200     3.1346
+MIRIFU_2BSLICE16                YIdlVert4                0.1522                0.1422        0.010000     6.5703
+
+MIRIFU_2BSLICE17                XIdlVert1                2.1407                2.0394        0.101300     4.7321
+MIRIFU_2BSLICE17                XIdlVert2               -2.1218               -2.0276        0.094200     4.4396
+MIRIFU_2BSLICE17                XIdlVert3               -2.0789               -1.9846        0.094300     4.5361
+MIRIFU_2BSLICE17                XIdlVert4                2.1874                 2.086        0.101400     4.6356
+MIRIFU_2BSLICE17                YIdlVert1                0.4273                0.4137        0.013600     3.1828
+MIRIFU_2BSLICE17                YIdlVert2               -0.1426                 -0.13        0.012600     8.8359
+MIRIFU_2BSLICE17                YIdlVert3               -0.4168               -0.4043        0.012500     2.9990
+MIRIFU_2BSLICE17                YIdlVert4                0.1492                0.1358        0.013400     8.9812
+
+MIRIFU_CHANNEL2C                XIdlVert1                1.6427                1.6064        0.036300     2.2098
+MIRIFU_CHANNEL2C                XIdlVert2               -2.4708               -2.3648        0.106000     4.2901
+MIRIFU_CHANNEL2C                XIdlVert3               -1.7189               -1.6126        0.106300     6.1842
+MIRIFU_CHANNEL2C                XIdlVert4                 2.411                2.3746        0.036400     1.5097
+MIRIFU_CHANNEL2C                YIdlVert1                2.6438                2.6385        0.005300     0.2005
+MIRIFU_CHANNEL2C                YIdlVert2                2.0373                 2.053        0.015700     0.7647
+MIRIFU_CHANNEL2C                YIdlVert3               -2.6272                -2.613        0.014200     0.5405
+MIRIFU_CHANNEL2C                YIdlVert4               -2.0732               -2.0781        0.004900     0.2358
+
+MIRIFU_2CSLICE01                XIdlVert1                2.0312                1.9701        0.061100     3.0081
+MIRIFU_2CSLICE01                XIdlVert2               -2.1131               -2.0713        0.041800     1.9781
+MIRIFU_2CSLICE01                XIdlVert3               -2.0688                -2.027        0.041800     2.0205
+MIRIFU_2CSLICE01                XIdlVert4                2.0764                2.0153        0.061100     2.9426
+MIRIFU_2CSLICE01                YIdlVert1                0.4408                0.4318        0.009000     2.0417
+MIRIFU_2CSLICE01                YIdlVert2               -0.1703               -0.1641        0.006200     3.6406
+MIRIFU_2CSLICE01                YIdlVert3               -0.4447               -0.4385        0.006200     1.3942
+MIRIFU_2CSLICE01                YIdlVert4                0.1633                0.1543        0.009000     5.5113
+
+MIRIFU_2CSLICE02                XIdlVert1                2.0889                2.0167        0.072200     3.4564
+MIRIFU_2CSLICE02                XIdlVert2                -2.169               -2.0804        0.088600     4.0848
+MIRIFU_2CSLICE02                XIdlVert3               -2.1248               -2.0361        0.088700     4.1745
+MIRIFU_2CSLICE02                XIdlVert4                2.1341                2.0619        0.072200     3.3832
+MIRIFU_2CSLICE02                YIdlVert1                0.4476                0.4371        0.010500     2.3458
+MIRIFU_2CSLICE02                YIdlVert2               -0.1768               -0.1638        0.013000     7.3529
+MIRIFU_2CSLICE02                YIdlVert3               -0.4511               -0.4382        0.012900     2.8597
+MIRIFU_2CSLICE02                YIdlVert4                0.1701                0.1596        0.010500     6.1728
+
+MIRIFU_2CSLICE03                XIdlVert1                2.1066                2.0462        0.060400     2.8672
+MIRIFU_2CSLICE03                XIdlVert2               -2.1914               -2.1262        0.065200     2.9753
+MIRIFU_2CSLICE03                XIdlVert3               -2.1472                -2.082        0.065200     3.0365
+MIRIFU_2CSLICE03                XIdlVert4                2.1518                2.0914        0.060400     2.8070
+MIRIFU_2CSLICE03                YIdlVert1                0.4485                0.4397        0.008800     1.9621
+MIRIFU_2CSLICE03                YIdlVert2               -0.1784               -0.1689        0.009500     5.3251
+MIRIFU_2CSLICE03                YIdlVert3               -0.4528               -0.4433        0.009500     2.0981
+MIRIFU_2CSLICE03                YIdlVert4                 0.171                0.1622        0.008800     5.1462
+
+MIRIFU_2CSLICE04                XIdlVert1                2.1036                2.0309        0.072700     3.4560
+MIRIFU_2CSLICE04                XIdlVert2               -2.1887                -2.099        0.089700     4.0983
+MIRIFU_2CSLICE04                XIdlVert3               -2.1445               -2.0548        0.089700     4.1828
+MIRIFU_2CSLICE04                XIdlVert4                2.1489                2.0761        0.072800     3.3878
+MIRIFU_2CSLICE04                YIdlVert1                0.4465                0.4359        0.010600     2.3740
+MIRIFU_2CSLICE04                YIdlVert2               -0.1763               -0.1633        0.013000     7.3738
+MIRIFU_2CSLICE04                YIdlVert3               -0.4506               -0.4377        0.012900     2.8628
+MIRIFU_2CSLICE04                YIdlVert4                0.1689                0.1584        0.010500     6.2167
+
+MIRIFU_2CSLICE05                XIdlVert1                2.0665                1.9984        0.068100     3.2954
+MIRIFU_2CSLICE05                XIdlVert2               -2.1767               -2.0746        0.102100     4.6906
+MIRIFU_2CSLICE05                XIdlVert3               -2.1325               -2.0303        0.102200     4.7925
+MIRIFU_2CSLICE05                XIdlVert4                2.1117                2.0436        0.068100     3.2249
+MIRIFU_2CSLICE05                YIdlVert1                0.4394                0.4296        0.009800     2.2303
+MIRIFU_2CSLICE05                YIdlVert2               -0.1729               -0.1582        0.014700     8.5020
+MIRIFU_2CSLICE05                YIdlVert3               -0.4473               -0.4326        0.014700     3.2864
+MIRIFU_2CSLICE05                YIdlVert4                0.1619                0.1521        0.009800     6.0531
+
+MIRIFU_2CSLICE06                XIdlVert1                2.0717                2.0014        0.070300     3.3933
+MIRIFU_2CSLICE06                XIdlVert2               -2.1547               -2.0486        0.106100     4.9241
+MIRIFU_2CSLICE06                XIdlVert3               -2.1105               -2.0044        0.106100     5.0272
+MIRIFU_2CSLICE06                XIdlVert4                2.1169                2.0466        0.070300     3.3209
+MIRIFU_2CSLICE06                YIdlVert1                0.4386                0.4285        0.010100     2.3028
+MIRIFU_2CSLICE06                YIdlVert2                -0.168               -0.1528        0.015200     9.0476
+MIRIFU_2CSLICE06                YIdlVert3               -0.4424               -0.4272        0.015200     3.4358
+MIRIFU_2CSLICE06                YIdlVert4                 0.161                 0.151        0.010000     6.2112
+
+MIRIFU_2CSLICE07                XIdlVert1                2.0925                2.0419        0.050600     2.4182
+MIRIFU_2CSLICE07                XIdlVert2               -2.1274               -2.0099        0.117500     5.5232
+MIRIFU_2CSLICE07                XIdlVert3               -2.0832               -1.9657        0.117500     5.6404
+MIRIFU_2CSLICE07                XIdlVert4                2.1377                2.0871        0.050600     2.3670
+MIRIFU_2CSLICE07                YIdlVert1                0.4398                0.4326        0.007200     1.6371
+MIRIFU_2CSLICE07                YIdlVert2               -0.1625               -0.1457        0.016800    10.3385
+MIRIFU_2CSLICE07                YIdlVert3               -0.4369               -0.4202        0.016700     3.8224
+MIRIFU_2CSLICE07                YIdlVert4                0.1623                0.1551        0.007200     4.4362
+
+MIRIFU_2CSLICE08                XIdlVert1                 2.046                1.9967        0.049300     2.4096
+MIRIFU_2CSLICE08                XIdlVert2                -2.133               -2.0167        0.116300     5.4524
+MIRIFU_2CSLICE08                XIdlVert3               -2.0888               -1.9724        0.116400     5.5726
+MIRIFU_2CSLICE08                XIdlVert4                2.0912                2.0419        0.049300     2.3575
+MIRIFU_2CSLICE08                YIdlVert1                0.4316                0.4246        0.007000     1.6219
+MIRIFU_2CSLICE08                YIdlVert2               -0.1616               -0.1451        0.016500    10.2104
+MIRIFU_2CSLICE08                YIdlVert3                -0.436               -0.4196        0.016400     3.7615
+MIRIFU_2CSLICE08                YIdlVert4                0.1541                0.1471        0.007000     4.5425
+
+MIRIFU_2CSLICE09                XIdlVert1                2.0042                1.9679        0.036300     1.8112
+MIRIFU_2CSLICE09                XIdlVert2               -2.1354               -2.0341        0.101300     4.7438
+MIRIFU_2CSLICE09                XIdlVert3               -2.0912               -1.9898        0.101400     4.8489
+MIRIFU_2CSLICE09                XIdlVert4                2.0494                2.0131        0.036300     1.7713
+MIRIFU_2CSLICE09                YIdlVert1                 0.424                0.4189        0.005100     1.2028
+MIRIFU_2CSLICE09                YIdlVert2               -0.1604               -0.1461        0.014300     8.9152
+MIRIFU_2CSLICE09                YIdlVert3               -0.4347               -0.4205        0.014200     3.2666
+MIRIFU_2CSLICE09                YIdlVert4                0.1466                0.1415        0.005100     3.4789
+
+MIRIFU_2CSLICE10                XIdlVert1                2.0912                2.0274        0.063800     3.0509
+MIRIFU_2CSLICE10                XIdlVert2               -2.1555                -2.064        0.091500     4.2450
+MIRIFU_2CSLICE10                XIdlVert3               -2.1113               -2.0198        0.091500     4.3338
+MIRIFU_2CSLICE10                XIdlVert4                2.1364                2.0726        0.063800     2.9863
+MIRIFU_2CSLICE10                YIdlVert1                0.4347                0.4257        0.009000     2.0704
+MIRIFU_2CSLICE10                YIdlVert2               -0.1615               -0.1487        0.012800     7.9257
+MIRIFU_2CSLICE10                YIdlVert3               -0.4359               -0.4231        0.012800     2.9365
+MIRIFU_2CSLICE10                YIdlVert4                0.1572                0.1483        0.008900     5.6616
+
+MIRIFU_2CSLICE11                XIdlVert1                2.0998                2.0297        0.070100     3.3384
+MIRIFU_2CSLICE11                XIdlVert2               -2.1959               -2.1053        0.090600     4.1259
+MIRIFU_2CSLICE11                XIdlVert3               -2.1517               -2.0611        0.090600     4.2106
+MIRIFU_2CSLICE11                XIdlVert4                 2.145                2.0749        0.070100     3.2681
+MIRIFU_2CSLICE11                YIdlVert1                0.4342                0.4244        0.009800     2.2570
+MIRIFU_2CSLICE11                YIdlVert2               -0.1655               -0.1529        0.012600     7.6133
+MIRIFU_2CSLICE11                YIdlVert3               -0.4398               -0.4273        0.012500     2.8422
+MIRIFU_2CSLICE11                YIdlVert4                0.1566                0.1469        0.009700     6.1941
+
+MIRIFU_2CSLICE12                XIdlVert1                2.0977                2.0239        0.073800     3.5181
+MIRIFU_2CSLICE12                XIdlVert2               -2.2359               -2.1492        0.086700     3.8776
+MIRIFU_2CSLICE12                XIdlVert3               -2.1917                -2.105        0.086700     3.9558
+MIRIFU_2CSLICE12                XIdlVert4                2.1429                2.0691        0.073800     3.4439
+MIRIFU_2CSLICE12                YIdlVert1                0.4323                0.4221        0.010200     2.3595
+MIRIFU_2CSLICE12                YIdlVert2               -0.1693               -0.1573        0.012000     7.0880
+MIRIFU_2CSLICE12                YIdlVert3               -0.4436               -0.4316        0.012000     2.7051
+MIRIFU_2CSLICE12                YIdlVert4                0.1548                0.1446        0.010200     6.5891
+
+MIRIFU_2CSLICE13                XIdlVert1                2.1051                2.0215        0.083600     3.9713
+MIRIFU_2CSLICE13                XIdlVert2               -2.2062               -2.0941        0.112100     5.0811
+MIRIFU_2CSLICE13                XIdlVert3                -2.162               -2.0499        0.112100     5.1850
+MIRIFU_2CSLICE13                XIdlVert4                2.1503                2.0667        0.083600     3.8878
+MIRIFU_2CSLICE13                YIdlVert1                0.4317                0.4202        0.011500     2.6639
+MIRIFU_2CSLICE13                YIdlVert2               -0.1635                -0.148        0.015500     9.4801
+MIRIFU_2CSLICE13                YIdlVert3               -0.4378               -0.4224        0.015400     3.5176
+MIRIFU_2CSLICE13                YIdlVert4                0.1542                0.1427        0.011500     7.4578
+
+MIRIFU_2CSLICE14                XIdlVert1                 2.075                1.9989        0.076100     3.6675
+MIRIFU_2CSLICE14                XIdlVert2               -2.2047               -2.1163        0.088400     4.0096
+MIRIFU_2CSLICE14                XIdlVert3               -2.1605               -2.0721        0.088400     4.0916
+MIRIFU_2CSLICE14                XIdlVert4                2.1202                2.0441        0.076100     3.5893
+MIRIFU_2CSLICE14                YIdlVert1                0.4259                0.4154        0.010500     2.4654
+MIRIFU_2CSLICE14                YIdlVert2               -0.1616               -0.1495        0.012100     7.4876
+MIRIFU_2CSLICE14                YIdlVert3               -0.4359               -0.4239        0.012000     2.7529
+MIRIFU_2CSLICE14                YIdlVert4                0.1483                 0.138        0.010300     6.9454
+
+MIRIFU_2CSLICE15                XIdlVert1                2.0752                2.0089        0.066300     3.1949
+MIRIFU_2CSLICE15                XIdlVert2               -2.1867               -2.1011        0.085600     3.9146
+MIRIFU_2CSLICE15                XIdlVert3               -2.1425               -2.0569        0.085600     3.9953
+MIRIFU_2CSLICE15                XIdlVert4                2.1205                2.0541        0.066400     3.1313
+MIRIFU_2CSLICE15                YIdlVert1                0.4243                0.4152        0.009100     2.1447
+MIRIFU_2CSLICE15                YIdlVert2               -0.1574               -0.1457        0.011700     7.4333
+MIRIFU_2CSLICE15                YIdlVert3               -0.4317               -0.4201        0.011600     2.6871
+MIRIFU_2CSLICE15                YIdlVert4                0.1468                0.1378        0.009000     6.1308
+
+MIRIFU_2CSLICE16                XIdlVert1                2.0759                1.9965        0.079400     3.8248
+MIRIFU_2CSLICE16                XIdlVert2               -2.1658               -2.0772        0.088600     4.0909
+MIRIFU_2CSLICE16                XIdlVert3               -2.1215               -2.0329        0.088600     4.1763
+MIRIFU_2CSLICE16                XIdlVert4                2.1211                2.0417        0.079400     3.7433
+MIRIFU_2CSLICE16                YIdlVert1                0.4227                0.4119        0.010800     2.5550
+MIRIFU_2CSLICE16                YIdlVert2               -0.1529               -0.1409        0.012000     7.8483
+MIRIFU_2CSLICE16                YIdlVert3               -0.4273               -0.4153        0.012000     2.8083
+MIRIFU_2CSLICE16                YIdlVert4                0.1452                0.1345        0.010700     7.3691
+
+MIRIFU_2CSLICE17                XIdlVert1                2.0946                2.0354        0.059200     2.8263
+MIRIFU_2CSLICE17                XIdlVert2               -2.1504               -2.0539        0.096500     4.4875
+MIRIFU_2CSLICE17                XIdlVert3               -2.1062               -2.0097        0.096500     4.5817
+MIRIFU_2CSLICE17                XIdlVert4                2.1398                2.0806        0.059200     2.7666
+MIRIFU_2CSLICE17                YIdlVert1                0.4236                0.4157        0.007900     1.8650
+MIRIFU_2CSLICE17                YIdlVert2               -0.1491               -0.1361        0.013000     8.7190
+MIRIFU_2CSLICE17                YIdlVert3               -0.4235               -0.4105        0.013000     3.0697
+MIRIFU_2CSLICE17                YIdlVert4                0.1461                0.1382        0.007900     5.4073
+
+MIRIFU_CHANNEL3A                XIdlVert1                2.3723                 2.422        0.049700     2.0520
+MIRIFU_CHANNEL3A                XIdlVert2               -3.2076               -2.9928        0.214800     6.6966
+MIRIFU_CHANNEL3A                XIdlVert3               -2.6508               -2.4333        0.217500     8.2051
+MIRIFU_CHANNEL3A                XIdlVert4                2.9984                3.0487        0.050300     1.6499
+MIRIFU_CHANNEL3A                YIdlVert1                3.4348                 3.441        0.006200     0.1802
+MIRIFU_CHANNEL3A                YIdlVert2                2.7369                2.7637        0.026800     0.9697
+MIRIFU_CHANNEL3A                YIdlVert3               -3.5304               -3.4987        0.031700     0.8979
+MIRIFU_CHANNEL3A                YIdlVert4               -2.7074                  -2.7        0.007400     0.2733
+
+MIRIFU_3ASLICE01                XIdlVert1                2.7954                2.8681        0.072700     2.5348
+MIRIFU_3ASLICE01                XIdlVert2               -3.1685               -2.9554        0.213100     6.7256
+MIRIFU_3ASLICE01                XIdlVert3               -3.1339               -2.9206        0.213300     6.8062
+MIRIFU_3ASLICE01                XIdlVert4                2.8346                2.9074        0.072800     2.5040
+MIRIFU_3ASLICE01                YIdlVert1                0.5457                0.5548        0.009100     1.6402
+MIRIFU_3ASLICE01                YIdlVert2               -0.2002               -0.1736        0.026600    13.2867
+MIRIFU_3ASLICE01                YIdlVert3               -0.5923               -0.5653        0.027000     4.5585
+MIRIFU_3ASLICE01                YIdlVert4                 0.162                0.1712        0.009200     5.3738
+
+MIRIFU_3ASLICE02                XIdlVert1                2.8179                2.8414        0.023500     0.8271
+MIRIFU_3ASLICE02                XIdlVert2               -3.1934               -3.0391        0.154300     4.8318
+MIRIFU_3ASLICE02                XIdlVert3               -3.1588               -3.0043        0.154500     4.8911
+MIRIFU_3ASLICE02                XIdlVert4                2.8572                2.8806        0.023400     0.8123
+MIRIFU_3ASLICE02                YIdlVert1                0.5523                0.5553        0.003000     0.5402
+MIRIFU_3ASLICE02                YIdlVert2               -0.2074               -0.1879        0.019500     9.4021
+MIRIFU_3ASLICE02                YIdlVert3               -0.5995               -0.5797        0.019800     3.3028
+MIRIFU_3ASLICE02                YIdlVert4                0.1687                0.1716        0.002900     1.6900
+
+MIRIFU_3ASLICE03                XIdlVert1                2.7549                2.7775        0.022600     0.8137
+MIRIFU_3ASLICE03                XIdlVert2               -3.0889               -2.8589        0.230000     7.4460
+MIRIFU_3ASLICE03                XIdlVert3               -3.0542                -2.824        0.230200     7.5372
+MIRIFU_3ASLICE03                XIdlVert4                2.7941                2.8167        0.022600     0.8024
+MIRIFU_3ASLICE03                YIdlVert1                0.5479                0.5508        0.002900     0.5265
+MIRIFU_3ASLICE03                YIdlVert2               -0.1982               -0.1688        0.029400    14.8335
+MIRIFU_3ASLICE03                YIdlVert3               -0.5901               -0.5604        0.029700     5.0330
+MIRIFU_3ASLICE03                YIdlVert4                0.1642                0.1671        0.002900     1.7355
+
+MIRIFU_3ASLICE04                XIdlVert1                2.7501                2.7978        0.047700     1.7049
+MIRIFU_3ASLICE04                XIdlVert2               -3.1578               -2.8945        0.263300     8.3381
+MIRIFU_3ASLICE04                XIdlVert3               -3.1232               -2.8597        0.263500     8.4369
+MIRIFU_3ASLICE04                XIdlVert4                2.7893                2.8371        0.047800     1.6848
+MIRIFU_3ASLICE04                YIdlVert1                0.5509                0.5571        0.006200     1.1129
+MIRIFU_3ASLICE04                YIdlVert2               -0.2111               -0.1771        0.034000    16.1061
+MIRIFU_3ASLICE04                YIdlVert3               -0.6031               -0.5688        0.034300     5.6873
+MIRIFU_3ASLICE04                YIdlVert4                0.1672                0.1734        0.006200     3.5755
+
+MIRIFU_3ASLICE05                XIdlVert1                2.7168                2.7468        0.030000     1.0922
+MIRIFU_3ASLICE05                XIdlVert2               -3.2207               -2.9671        0.253600     7.8741
+MIRIFU_3ASLICE05                XIdlVert3               -3.1861               -2.9323        0.253800     7.9659
+MIRIFU_3ASLICE05                XIdlVert4                 2.756                 2.786        0.030000     1.0768
+MIRIFU_3ASLICE05                YIdlVert1                0.5501                 0.554        0.003900     0.7040
+MIRIFU_3ASLICE05                YIdlVert2               -0.2234               -0.1904        0.033000    14.7717
+MIRIFU_3ASLICE05                YIdlVert3               -0.6155               -0.5821        0.033400     5.4265
+MIRIFU_3ASLICE05                YIdlVert4                0.1663                0.1703        0.004000     2.3488
+
+MIRIFU_3ASLICE06                XIdlVert1                2.6774                2.7281        0.050700     1.8584
+MIRIFU_3ASLICE06                XIdlVert2               -3.1737               -2.9118        0.261900     8.2522
+MIRIFU_3ASLICE06                XIdlVert3               -3.1391                -2.877        0.262100     8.3495
+MIRIFU_3ASLICE06                XIdlVert4                2.7165                2.7673        0.050800     1.8357
+MIRIFU_3ASLICE06                YIdlVert1                0.5486                0.5552        0.006600     1.1888
+MIRIFU_3ASLICE06                YIdlVert2               -0.2213               -0.1868        0.034500    15.5897
+MIRIFU_3ASLICE06                YIdlVert3               -0.6133               -0.5785        0.034800     5.6742
+MIRIFU_3ASLICE06                YIdlVert4                0.1647                0.1715        0.006800     3.9650
+
+MIRIFU_3ASLICE07                XIdlVert1                2.6627                2.7126        0.049900     1.8396
+MIRIFU_3ASLICE07                XIdlVert2               -3.2544                -3.017        0.237400     7.2947
+MIRIFU_3ASLICE07                XIdlVert3               -3.2198               -2.9822        0.237600     7.3793
+MIRIFU_3ASLICE07                XIdlVert4                2.7018                2.7518        0.050000     1.8170
+MIRIFU_3ASLICE07                YIdlVert1                0.5501                0.5567        0.006600     1.1856
+MIRIFU_3ASLICE07                YIdlVert2               -0.2361               -0.2046        0.031500    13.3418
+MIRIFU_3ASLICE07                YIdlVert3               -0.6283               -0.5964        0.031900     5.0772
+MIRIFU_3ASLICE07                YIdlVert4                0.1662                0.1729        0.006700     3.8751
+
+MIRIFU_3ASLICE08                XIdlVert1                2.7274                2.7838        0.056400     2.0260
+MIRIFU_3ASLICE08                XIdlVert2               -3.2614               -3.0322        0.229200     7.0277
+MIRIFU_3ASLICE08                XIdlVert3               -3.2268               -2.9975        0.229300     7.1061
+MIRIFU_3ASLICE08                XIdlVert4                2.7666                 2.823        0.056400     1.9979
+MIRIFU_3ASLICE08                YIdlVert1                0.5622                0.5698        0.007600     1.3338
+MIRIFU_3ASLICE08                YIdlVert2               -0.2413               -0.2105        0.030800    12.7642
+MIRIFU_3ASLICE08                YIdlVert3               -0.6334               -0.6023        0.031100     4.9100
+MIRIFU_3ASLICE08                YIdlVert4                0.1784                0.1861        0.007700     4.1376
+
+MIRIFU_3ASLICE09                XIdlVert1                  2.79                2.8509        0.060900     2.1362
+MIRIFU_3ASLICE09                XIdlVert2               -3.0431               -2.7583        0.284800     9.3589
+MIRIFU_3ASLICE09                XIdlVert3               -3.0083               -2.7234        0.284900     9.4705
+MIRIFU_3ASLICE09                XIdlVert4                2.8292                2.8902        0.061000     2.1106
+MIRIFU_3ASLICE09                YIdlVert1                0.5742                0.5824        0.008200     1.4080
+MIRIFU_3ASLICE09                YIdlVert2               -0.2159               -0.1773        0.038600    17.8786
+MIRIFU_3ASLICE09                YIdlVert3               -0.6077               -0.5688        0.038900     6.4012
+MIRIFU_3ASLICE09                YIdlVert4                0.1905                0.1988        0.008300     4.1751
+
+MIRIFU_3ASLICE10                XIdlVert1                 2.832                2.9055        0.073500     2.5297
+MIRIFU_3ASLICE10                XIdlVert2                -3.005               -2.7337        0.271300     9.0283
+MIRIFU_3ASLICE10                XIdlVert3               -2.9703               -2.6987        0.271600     9.1439
+MIRIFU_3ASLICE10                XIdlVert4                2.8713                2.9448        0.073500     2.4959
+MIRIFU_3ASLICE10                YIdlVert1                0.5836                0.5937        0.010100     1.7012
+MIRIFU_3ASLICE10                YIdlVert2               -0.2145               -0.1774        0.037100    17.2960
+MIRIFU_3ASLICE10                YIdlVert3               -0.6063               -0.5688        0.037500     6.1851
+MIRIFU_3ASLICE10                YIdlVert4                   0.2                0.2101        0.010100     4.8072
+
+MIRIFU_3ASLICE11                XIdlVert1                2.8161                2.8899        0.073800     2.5537
+MIRIFU_3ASLICE11                XIdlVert2               -3.0237               -2.7495        0.274200     9.0684
+MIRIFU_3ASLICE11                XIdlVert3                -2.989               -2.7145        0.274500     9.1837
+MIRIFU_3ASLICE11                XIdlVert4                2.8553                2.9292        0.073900     2.5229
+MIRIFU_3ASLICE11                YIdlVert1                0.5851                0.5953        0.010200     1.7134
+MIRIFU_3ASLICE11                YIdlVert2                -0.221               -0.1831        0.037900    17.1493
+MIRIFU_3ASLICE11                YIdlVert3               -0.6128               -0.5745        0.038300     6.2500
+MIRIFU_3ASLICE11                YIdlVert4                0.2014                0.2117        0.010300     4.8654
+
+MIRIFU_3ASLICE12                XIdlVert1                 2.826                2.8625        0.036500     1.2751
+MIRIFU_3ASLICE12                XIdlVert2               -3.1443               -2.8867        0.257600     8.1926
+MIRIFU_3ASLICE12                XIdlVert3               -3.1097               -2.8518        0.257900     8.2934
+MIRIFU_3ASLICE12                XIdlVert4                2.8652                2.9018        0.036600     1.2613
+MIRIFU_3ASLICE12                YIdlVert1                0.5901                0.5952        0.005100     0.8569
+MIRIFU_3ASLICE12                YIdlVert2               -0.2416               -0.2058        0.035800    14.8179
+MIRIFU_3ASLICE12                YIdlVert3               -0.6336               -0.5974        0.036200     5.7134
+MIRIFU_3ASLICE12                YIdlVert4                0.2064                0.2115        0.005100     2.4113
+
+MIRIFU_3ASLICE13                XIdlVert1                2.8026                2.8447        0.042100     1.4799
+MIRIFU_3ASLICE13                XIdlVert2               -3.1427                -2.868        0.274700     8.7409
+MIRIFU_3ASLICE13                XIdlVert3                -3.108               -2.8331        0.274900     8.8449
+MIRIFU_3ASLICE13                XIdlVert4                2.8418                 2.884        0.042200     1.4632
+MIRIFU_3ASLICE13                YIdlVert1                0.5904                0.5963        0.005900     0.9894
+MIRIFU_3ASLICE13                YIdlVert2               -0.2454               -0.2068        0.038600    15.7294
+MIRIFU_3ASLICE13                YIdlVert3               -0.6374               -0.5984        0.039000     6.1186
+MIRIFU_3ASLICE13                YIdlVert4                0.2067                0.2127        0.006000     2.8209
+
+MIRIFU_3ASLICE14                XIdlVert1                2.8055                2.8663        0.060800     2.1212
+MIRIFU_3ASLICE14                XIdlVert2               -3.1616               -2.8976        0.264000     8.3502
+MIRIFU_3ASLICE14                XIdlVert3               -3.1269               -2.8627        0.264200     8.4493
+MIRIFU_3ASLICE14                XIdlVert4                2.8447                2.9055        0.060800     2.0926
+MIRIFU_3ASLICE14                YIdlVert1                0.5945                0.6031        0.008600     1.4260
+MIRIFU_3ASLICE14                YIdlVert2               -0.2521               -0.2146        0.037500    14.8750
+MIRIFU_3ASLICE14                YIdlVert3                -0.644               -0.6062        0.037800     5.8696
+MIRIFU_3ASLICE14                YIdlVert4                0.2108                0.2195        0.008700     3.9636
+
+MIRIFU_3ASLICE15                XIdlVert1                2.8615                2.9435        0.082000     2.7858
+MIRIFU_3ASLICE15                XIdlVert2               -3.1682               -3.0089        0.159300     5.0281
+MIRIFU_3ASLICE15                XIdlVert3               -3.1336               -2.9742        0.159400     5.0868
+MIRIFU_3ASLICE15                XIdlVert4                2.9008                2.9828        0.082000     2.7491
+MIRIFU_3ASLICE15                YIdlVert1                0.6061                0.6178        0.011700     1.8938
+MIRIFU_3ASLICE15                YIdlVert2                -0.257               -0.2342        0.022800     8.8716
+MIRIFU_3ASLICE15                YIdlVert3                -0.649                -0.626        0.023000     3.5439
+MIRIFU_3ASLICE15                YIdlVert4                0.2225                0.2343        0.011800     5.0363
+
+MIRIFU_3ASLICE16                XIdlVert1                 2.972                3.0295        0.057500     1.8980
+MIRIFU_3ASLICE16                XIdlVert2               -2.9635               -2.8581        0.105400     3.5566
+MIRIFU_3ASLICE16                XIdlVert3               -2.9287               -2.8232        0.105500     3.6023
+MIRIFU_3ASLICE16                XIdlVert4                3.0114                3.0689        0.057500     1.8736
+MIRIFU_3ASLICE16                YIdlVert1                0.6257                 0.634        0.008300     1.3091
+MIRIFU_3ASLICE16                YIdlVert2               -0.2315               -0.2163        0.015200     6.5659
+MIRIFU_3ASLICE16                YIdlVert3               -0.6232               -0.6079        0.015300     2.4551
+MIRIFU_3ASLICE16                YIdlVert4                0.2422                0.2506        0.008400     3.3520
+
+MIRIFU_CHANNEL3B                XIdlVert1                2.6772                2.3788        0.298400    11.1460
+MIRIFU_CHANNEL3B                XIdlVert2               -2.8815               -3.0136        0.132100     4.3835
+MIRIFU_CHANNEL3B                XIdlVert3               -2.3016               -2.4367        0.135100     5.5444
+MIRIFU_CHANNEL3B                XIdlVert4                3.3831                 3.078        0.305100     9.0184
+MIRIFU_CHANNEL3B                YIdlVert1                3.4796                3.4422        0.037400     1.0748
+MIRIFU_CHANNEL3B                YIdlVert2                2.7838                2.7672        0.016600     0.5963
+MIRIFU_CHANNEL3B                YIdlVert3                -3.489               -3.5088        0.019800     0.5643
+MIRIFU_CHANNEL3B                YIdlVert4               -2.6548               -2.6996        0.044800     1.6595
+
+MIRIFU_3BSLICE01                XIdlVert1                3.1019                2.8823        0.219600     7.0795
+MIRIFU_3BSLICE01                XIdlVert2               -2.8934               -2.9409        0.047500     1.6152
+MIRIFU_3BSLICE01                XIdlVert3               -2.8576               -2.9052        0.047600     1.6384
+MIRIFU_3BSLICE01                XIdlVert4                3.1462                2.9263        0.219900     6.9894
+MIRIFU_3BSLICE01                YIdlVert1                0.5848                0.5573        0.027500     4.7025
+MIRIFU_3BSLICE01                YIdlVert2               -0.1657               -0.1716        0.005900     3.4382
+MIRIFU_3BSLICE01                YIdlVert3               -0.5582               -0.5642        0.006000     1.0635
+MIRIFU_3BSLICE01                YIdlVert4                0.2016                0.1738        0.027800    13.7897
+
+MIRIFU_3BSLICE02                XIdlVert1                3.1312                2.8418        0.289400     9.2425
+MIRIFU_3BSLICE02                XIdlVert2               -2.8306               -2.8998        0.069200     2.3864
+MIRIFU_3BSLICE02                XIdlVert3               -2.7947                -2.864        0.069300     2.4197
+MIRIFU_3BSLICE02                XIdlVert4                3.1755                2.8858        0.289700     9.1230
+MIRIFU_3BSLICE02                YIdlVert1                0.5928                0.5562        0.036600     6.1741
+MIRIFU_3BSLICE02                YIdlVert2               -0.1616               -0.1704        0.008800     5.1643
+MIRIFU_3BSLICE02                YIdlVert3               -0.5541               -0.5629        0.008800     1.5633
+MIRIFU_3BSLICE02                YIdlVert4                0.2097                0.1726        0.037100    17.6919
+
+MIRIFU_3BSLICE03                XIdlVert1                3.0732                2.7832        0.290000     9.4364
+MIRIFU_3BSLICE03                XIdlVert2               -2.7725               -2.8682        0.095700     3.3366
+MIRIFU_3BSLICE03                XIdlVert3               -2.7365               -2.8323        0.095800     3.3824
+MIRIFU_3BSLICE03                XIdlVert4                3.1174                 2.827        0.290400     9.3155
+MIRIFU_3BSLICE03                YIdlVert1                0.5897                0.5526        0.037100     6.2913
+MIRIFU_3BSLICE03                YIdlVert2               -0.1581               -0.1704        0.012300     7.2183
+MIRIFU_3BSLICE03                YIdlVert3               -0.5505               -0.5628        0.012300     2.1855
+MIRIFU_3BSLICE03                YIdlVert4                0.2064                0.1689        0.037500    18.1686
+
+MIRIFU_3BSLICE04                XIdlVert1                3.0721                2.7663        0.305800     9.9541
+MIRIFU_3BSLICE04                XIdlVert2               -2.8069               -2.8842        0.077300     2.6801
+MIRIFU_3BSLICE04                XIdlVert3               -2.7709               -2.8483        0.077400     2.7174
+MIRIFU_3BSLICE04                XIdlVert4                3.1163                2.8102        0.306100     9.8225
+MIRIFU_3BSLICE04                YIdlVert1                0.5938                0.5543        0.039500     6.6521
+MIRIFU_3BSLICE04                YIdlVert2               -0.1663               -0.1763        0.010000     5.6721
+MIRIFU_3BSLICE04                YIdlVert3               -0.5587               -0.5688        0.010100     1.7757
+MIRIFU_3BSLICE04                YIdlVert4                0.2105                0.1705        0.040000    19.0024
+
+MIRIFU_3BSLICE05                XIdlVert1                3.0505                2.7595        0.291000     9.5394
+MIRIFU_3BSLICE05                XIdlVert2               -2.8716               -2.9529        0.081300     2.7532
+MIRIFU_3BSLICE05                XIdlVert3               -2.8357               -2.9172        0.081500     2.7938
+MIRIFU_3BSLICE05                XIdlVert4                3.0947                2.8033        0.291400     9.4161
+MIRIFU_3BSLICE05                YIdlVert1                0.5953                0.5572        0.038100     6.4001
+MIRIFU_3BSLICE05                YIdlVert2               -0.1785               -0.1891        0.010600     5.6055
+MIRIFU_3BSLICE05                YIdlVert3                -0.571               -0.5817        0.010700     1.8394
+MIRIFU_3BSLICE05                YIdlVert4                0.2119                0.1735        0.038400    18.1218
+
+MIRIFU_3BSLICE06                XIdlVert1                3.0148                2.7117        0.303100    10.0537
+MIRIFU_3BSLICE06                XIdlVert2               -2.8201               -2.9043        0.084200     2.8991
+MIRIFU_3BSLICE06                XIdlVert3               -2.7842               -2.8685        0.084300     2.9388
+MIRIFU_3BSLICE06                XIdlVert4                3.0589                2.7554        0.303500     9.9219
+MIRIFU_3BSLICE06                YIdlVert1                0.5947                0.5546        0.040100     6.7429
+MIRIFU_3BSLICE06                YIdlVert2               -0.1757               -0.1868        0.011100     5.9422
+MIRIFU_3BSLICE06                YIdlVert3                -0.568               -0.5793        0.011300     1.9506
+MIRIFU_3BSLICE06                YIdlVert4                0.2113                0.1708        0.040500    19.1671
+
+MIRIFU_3BSLICE07                XIdlVert1                3.0018                2.7009        0.300900    10.0240
+MIRIFU_3BSLICE07                XIdlVert2               -2.9118                -3.009        0.097200     3.2303
+MIRIFU_3BSLICE07                XIdlVert3                -2.876               -2.9733        0.097300     3.2725
+MIRIFU_3BSLICE07                XIdlVert4                3.0459                2.7446        0.301300     9.8920
+MIRIFU_3BSLICE07                YIdlVert1                0.5971                0.5569        0.040200     6.7325
+MIRIFU_3BSLICE07                YIdlVert2               -0.1917               -0.2046        0.012900     6.3050
+MIRIFU_3BSLICE07                YIdlVert3               -0.5842               -0.5973        0.013100     2.1932
+MIRIFU_3BSLICE07                YIdlVert4                0.2137                0.1731        0.040600    18.9986
+
+MIRIFU_3BSLICE08                XIdlVert1                3.0686                2.7961        0.272500     8.8803
+MIRIFU_3BSLICE08                XIdlVert2               -2.9231               -3.0284        0.105300     3.4771
+MIRIFU_3BSLICE08                XIdlVert3               -2.8873               -2.9928        0.105500     3.5251
+MIRIFU_3BSLICE08                XIdlVert4                3.1128                2.8399        0.272900     8.7670
+MIRIFU_3BSLICE08                YIdlVert1                0.6101                0.5734        0.036700     6.0154
+MIRIFU_3BSLICE08                YIdlVert2               -0.1971               -0.2113        0.014200     6.7203
+MIRIFU_3BSLICE08                YIdlVert3               -0.5897                -0.604        0.014300     2.3675
+MIRIFU_3BSLICE08                YIdlVert4                0.2268                0.1897        0.037100    16.3580
+
+MIRIFU_3BSLICE09                XIdlVert1                3.1048                2.8313        0.273500     8.8089
+MIRIFU_3BSLICE09                XIdlVert2                -2.734               -2.8136        0.079600     2.8291
+MIRIFU_3BSLICE09                XIdlVert3               -2.6979               -2.7777        0.079800     2.8729
+MIRIFU_3BSLICE09                XIdlVert4                 3.149                2.8751        0.273900     8.6980
+MIRIFU_3BSLICE09                YIdlVert1                0.6192                 0.582        0.037200     6.0078
+MIRIFU_3BSLICE09                YIdlVert2               -0.1753               -0.1861        0.010800     5.8033
+MIRIFU_3BSLICE09                YIdlVert3               -0.5675               -0.5785        0.011000     1.9015
+MIRIFU_3BSLICE09                YIdlVert4                 0.236                0.1983        0.037700    15.9746
+
+MIRIFU_3BSLICE10                XIdlVert1                3.1461                 2.881        0.265100     8.4263
+MIRIFU_3BSLICE10                XIdlVert2               -2.6908               -2.7489        0.058100     2.1136
+MIRIFU_3BSLICE10                XIdlVert3               -2.6547               -2.7128        0.058100     2.1417
+MIRIFU_3BSLICE10                XIdlVert4                3.1904                2.9249        0.265500     8.3218
+MIRIFU_3BSLICE10                YIdlVert1                0.6292                0.5927        0.036500     5.8010
+MIRIFU_3BSLICE10                YIdlVert2                -0.173                -0.181        0.008000     4.4199
+MIRIFU_3BSLICE10                YIdlVert3               -0.5651               -0.5732        0.008100     1.4131
+MIRIFU_3BSLICE10                YIdlVert4                 0.246                0.2091        0.036900    15.0000
+
+MIRIFU_3BSLICE11                XIdlVert1                3.1217                2.8672        0.254500     8.1526
+MIRIFU_3BSLICE11                XIdlVert2                -2.712               -2.7916        0.079600     2.8514
+MIRIFU_3BSLICE11                XIdlVert3               -2.6759               -2.7556        0.079700     2.8923
+MIRIFU_3BSLICE11                XIdlVert4                3.1659                2.9111        0.254800     8.0483
+MIRIFU_3BSLICE11                YIdlVert1                0.6299                0.5946        0.035300     5.6041
+MIRIFU_3BSLICE11                YIdlVert2               -0.1796               -0.1906        0.011000     5.7712
+MIRIFU_3BSLICE11                YIdlVert3               -0.5718               -0.5829        0.011100     1.9043
+MIRIFU_3BSLICE11                YIdlVert4                0.2467                 0.211        0.035700    14.4710
+
+MIRIFU_3BSLICE12                XIdlVert1                3.1432                 2.871        0.272200     8.6600
+MIRIFU_3BSLICE12                XIdlVert2               -2.8343               -2.9073        0.073000     2.5109
+MIRIFU_3BSLICE12                XIdlVert3               -2.7984               -2.8715        0.073100     2.5457
+MIRIFU_3BSLICE12                XIdlVert4                3.1874                2.9149        0.272500     8.5493
+MIRIFU_3BSLICE12                YIdlVert1                0.6372                0.5991        0.038100     5.9793
+MIRIFU_3BSLICE12                YIdlVert2               -0.2003               -0.2105        0.010200     4.8456
+MIRIFU_3BSLICE12                YIdlVert3               -0.5926                -0.603        0.010400     1.7247
+MIRIFU_3BSLICE12                YIdlVert4                 0.254                0.2154        0.038600    15.1969
+
+MIRIFU_3BSLICE13                XIdlVert1                3.1332                2.8581        0.275100     8.7802
+MIRIFU_3BSLICE13                XIdlVert2               -2.8365               -2.8939        0.057400     1.9835
+MIRIFU_3BSLICE13                XIdlVert3               -2.8005                -2.858        0.057500     2.0119
+MIRIFU_3BSLICE13                XIdlVert4                3.1775                 2.902        0.275500     8.6703
+MIRIFU_3BSLICE13                YIdlVert1                  0.64                0.6011        0.038900     6.0781
+MIRIFU_3BSLICE13                YIdlVert2               -0.2044               -0.2125        0.008100     3.8118
+MIRIFU_3BSLICE13                YIdlVert3               -0.5968                -0.605        0.008200     1.3554
+MIRIFU_3BSLICE13                YIdlVert4                0.2567                0.2174        0.039300    15.3097
+
+MIRIFU_3BSLICE14                XIdlVert1                3.1313                2.8569        0.274400     8.7631
+MIRIFU_3BSLICE14                XIdlVert2               -2.8507               -2.9349        0.084200     2.8689
+MIRIFU_3BSLICE14                XIdlVert3               -2.8148               -2.8991        0.084300     2.9078
+MIRIFU_3BSLICE14                XIdlVert4                3.1755                2.9008        0.274700     8.6506
+MIRIFU_3BSLICE14                YIdlVert1                0.6439                0.6047        0.039200     6.0879
+MIRIFU_3BSLICE14                YIdlVert2               -0.2101               -0.2221        0.012000     5.4030
+MIRIFU_3BSLICE14                YIdlVert3               -0.6025               -0.6147        0.012200     1.9847
+MIRIFU_3BSLICE14                YIdlVert4                0.2607                0.2211        0.039600    15.1899
+
+MIRIFU_3BSLICE15                XIdlVert1                3.1989                2.8948        0.304100     9.5064
+MIRIFU_3BSLICE15                XIdlVert2                -2.857               -2.9776        0.120600     4.0502
+MIRIFU_3BSLICE15                XIdlVert3               -2.8211               -2.9418        0.120700     4.1029
+MIRIFU_3BSLICE15                XIdlVert4                3.2432                2.9387        0.304500     9.3889
+MIRIFU_3BSLICE15                YIdlVert1                0.6579                0.6141        0.043800     6.6575
+MIRIFU_3BSLICE15                YIdlVert2               -0.2148               -0.2321        0.017300     7.4537
+MIRIFU_3BSLICE15                YIdlVert3               -0.6072               -0.6247        0.017500     2.8013
+MIRIFU_3BSLICE15                YIdlVert4                0.2747                0.2304        0.044300    16.1267
+
+MIRIFU_3BSLICE16                XIdlVert1                3.2854                3.0127        0.272700     8.3004
+MIRIFU_3BSLICE16                XIdlVert2               -2.6369               -2.9068        0.269900     9.2851
+MIRIFU_3BSLICE16                XIdlVert3               -2.6006                -2.871        0.270400     9.4183
+MIRIFU_3BSLICE16                XIdlVert4                3.3299                3.0568        0.273100     8.2014
+MIRIFU_3BSLICE16                YIdlVert1                0.6747                 0.635        0.039700     5.8841
+MIRIFU_3BSLICE16                YIdlVert2               -0.1866               -0.2258        0.039200    17.3605
+MIRIFU_3BSLICE16                YIdlVert3               -0.5786               -0.6183        0.039700     6.4208
+MIRIFU_3BSLICE16                YIdlVert4                0.2916                0.2516        0.040000    13.7174
+
+MIRIFU_CHANNEL3C                XIdlVert1                2.4792                2.3712        0.108000     4.3562
+MIRIFU_CHANNEL3C                XIdlVert2                 -3.01                -2.957        0.053000     1.7608
+MIRIFU_CHANNEL3C                XIdlVert3               -2.4068                -2.353        0.053800     2.2353
+MIRIFU_CHANNEL3C                XIdlVert4                 3.159                3.0495        0.109500     3.4663
+MIRIFU_CHANNEL3C                YIdlVert1                3.4531                3.4395        0.013600     0.3938
+MIRIFU_CHANNEL3C                YIdlVert2                2.7594                2.7661        0.006700     0.2422
+MIRIFU_CHANNEL3C                YIdlVert3               -3.5058               -3.4978        0.008000     0.2282
+MIRIFU_CHANNEL3C                YIdlVert4               -2.6761               -2.6925        0.016400     0.6091
+
+MIRIFU_3CSLICE01                XIdlVert1                2.8804                 2.807        0.073400     2.5483
+MIRIFU_3CSLICE01                XIdlVert2                -3.063               -2.9258        0.137200     4.4793
+MIRIFU_3CSLICE01                XIdlVert3               -3.0256               -2.8883        0.137300     4.5379
+MIRIFU_3CSLICE01                XIdlVert4                 2.923                2.8496        0.073400     2.5111
+MIRIFU_3CSLICE01                YIdlVert1                0.5603                 0.551        0.009300     1.6598
+MIRIFU_3CSLICE01                YIdlVert2               -0.1909               -0.1736        0.017300     9.0623
+MIRIFU_3CSLICE01                YIdlVert3                -0.583               -0.5655        0.017500     3.0017
+MIRIFU_3CSLICE01                YIdlVert4                0.1773                 0.168        0.009300     5.2453
+
+MIRIFU_3CSLICE02                XIdlVert1                2.8963                2.7856        0.110700     3.8221
+MIRIFU_3CSLICE02                XIdlVert2               -2.9797               -2.8349        0.144800     4.8595
+MIRIFU_3CSLICE02                XIdlVert3               -2.9422               -2.7973        0.144900     4.9249
+MIRIFU_3CSLICE02                XIdlVert4                2.9389                2.8281        0.110800     3.7701
+MIRIFU_3CSLICE02                YIdlVert1                0.5665                0.5523        0.014200     2.5066
+MIRIFU_3CSLICE02                YIdlVert2               -0.1846               -0.1661        0.018500    10.0217
+MIRIFU_3CSLICE02                YIdlVert3               -0.5766               -0.5579        0.018700     3.2431
+MIRIFU_3CSLICE02                YIdlVert4                0.1836                0.1692        0.014400     7.8431
+
+MIRIFU_3CSLICE03                XIdlVert1                2.8711                  2.76        0.111100     3.8696
+MIRIFU_3CSLICE03                XIdlVert2               -2.9091               -2.7682        0.140900     4.8434
+MIRIFU_3CSLICE03                XIdlVert3               -2.8716               -2.7306        0.141000     4.9102
+MIRIFU_3CSLICE03                XIdlVert4                2.9137                2.8025        0.111200     3.8165
+MIRIFU_3CSLICE03                YIdlVert1                0.5674                 0.553        0.014400     2.5379
+MIRIFU_3CSLICE03                YIdlVert2               -0.1798               -0.1615        0.018300    10.1780
+MIRIFU_3CSLICE03                YIdlVert3               -0.5716               -0.5532        0.018400     3.2190
+MIRIFU_3CSLICE03                YIdlVert4                0.1844                0.1699        0.014500     7.8633
+
+MIRIFU_3CSLICE04                XIdlVert1                2.8628                2.7517        0.111100     3.8808
+MIRIFU_3CSLICE04                XIdlVert2               -2.9882               -2.8674        0.120800     4.0426
+MIRIFU_3CSLICE04                XIdlVert3               -2.9508               -2.8298        0.121000     4.1006
+MIRIFU_3CSLICE04                XIdlVert4                2.9053                2.7942        0.111100     3.8240
+MIRIFU_3CSLICE04                YIdlVert1                0.5704                0.5559        0.014500     2.5421
+MIRIFU_3CSLICE04                YIdlVert2               -0.1942               -0.1784        0.015800     8.1359
+MIRIFU_3CSLICE04                YIdlVert3               -0.5862               -0.5703        0.015900     2.7124
+MIRIFU_3CSLICE04                YIdlVert4                0.1875                0.1728        0.014700     7.8400
+
+MIRIFU_3CSLICE05                XIdlVert1                2.8424                2.7315        0.110900     3.9016
+MIRIFU_3CSLICE05                XIdlVert2               -3.0338               -2.9324        0.101400     3.3423
+MIRIFU_3CSLICE05                XIdlVert3               -2.9964               -2.8949        0.101500     3.3874
+MIRIFU_3CSLICE05                XIdlVert4                2.8849                 2.774        0.110900     3.8442
+MIRIFU_3CSLICE05                YIdlVert1                0.5719                0.5573        0.014600     2.5529
+MIRIFU_3CSLICE05                YIdlVert2               -0.2044                -0.191        0.013400     6.5558
+MIRIFU_3CSLICE05                YIdlVert3               -0.5965               -0.5829        0.013600     2.2800
+MIRIFU_3CSLICE05                YIdlVert4                0.1889                0.1741        0.014800     7.8348
+
+MIRIFU_3CSLICE06                XIdlVert1                2.8217                2.7134        0.108300     3.8381
+MIRIFU_3CSLICE06                XIdlVert2                -2.988               -2.8885        0.099500     3.3300
+MIRIFU_3CSLICE06                XIdlVert3               -2.9505               -2.8509        0.099600     3.3757
+MIRIFU_3CSLICE06                XIdlVert4                2.8642                2.7559        0.108300     3.7812
+MIRIFU_3CSLICE06                YIdlVert1                0.5732                0.5588        0.014400     2.5122
+MIRIFU_3CSLICE06                YIdlVert2               -0.2026               -0.1893        0.013300     6.5647
+MIRIFU_3CSLICE06                YIdlVert3               -0.5946               -0.5811        0.013500     2.2704
+MIRIFU_3CSLICE06                YIdlVert4                0.1902                0.1756        0.014600     7.6761
+
+MIRIFU_3CSLICE07                XIdlVert1                2.7942                2.6857        0.108500     3.8830
+MIRIFU_3CSLICE07                XIdlVert2               -3.0732               -2.9934        0.079800     2.5966
+MIRIFU_3CSLICE07                XIdlVert3               -3.0358               -2.9559        0.079900     2.6319
+MIRIFU_3CSLICE07                XIdlVert4                2.8367                2.7281        0.108600     3.8284
+MIRIFU_3CSLICE07                YIdlVert1                0.5736                0.5589        0.014700     2.5628
+MIRIFU_3CSLICE07                YIdlVert2               -0.2183               -0.2076        0.010700     4.9015
+MIRIFU_3CSLICE07                YIdlVert3               -0.6105               -0.5996        0.010900     1.7854
+MIRIFU_3CSLICE07                YIdlVert4                0.1905                0.1757        0.014800     7.7690
+
+MIRIFU_3CSLICE08                XIdlVert1                2.8664                2.7751        0.091300     3.1852
+MIRIFU_3CSLICE08                XIdlVert2               -3.0791               -2.9891        0.090000     2.9229
+MIRIFU_3CSLICE08                XIdlVert3               -3.0417               -2.9517        0.090000     2.9589
+MIRIFU_3CSLICE08                XIdlVert4                2.9089                2.8176        0.091300     3.1386
+MIRIFU_3CSLICE08                YIdlVert1                0.5874                0.5749        0.012500     2.1280
+MIRIFU_3CSLICE08                YIdlVert2               -0.2235               -0.2112        0.012300     5.5034
+MIRIFU_3CSLICE08                YIdlVert3               -0.6156               -0.6032        0.012400     2.0143
+MIRIFU_3CSLICE08                YIdlVert4                0.2044                0.1918        0.012600     6.1644
+
+MIRIFU_3CSLICE09                XIdlVert1                2.8753                2.8123        0.063000     2.1911
+MIRIFU_3CSLICE09                XIdlVert2               -2.8864                 -2.75        0.136400     4.7256
+MIRIFU_3CSLICE09                XIdlVert3               -2.8488               -2.7124        0.136400     4.7880
+MIRIFU_3CSLICE09                XIdlVert4                2.9179                2.8548        0.063100     2.1625
+MIRIFU_3CSLICE09                YIdlVert1                0.5927                 0.584        0.008700     1.4679
+MIRIFU_3CSLICE09                YIdlVert2               -0.2013               -0.1825        0.018800     9.3393
+MIRIFU_3CSLICE09                YIdlVert3               -0.5931               -0.5741        0.019000     3.2035
+MIRIFU_3CSLICE09                YIdlVert4                0.2097                 0.201        0.008700     4.1488
+
+MIRIFU_3CSLICE10                XIdlVert1                2.9298                2.8482        0.081600     2.7852
+MIRIFU_3CSLICE10                XIdlVert2               -2.8347               -2.6773        0.157400     5.5526
+MIRIFU_3CSLICE10                XIdlVert3               -2.7971               -2.6396        0.157500     5.6308
+MIRIFU_3CSLICE10                XIdlVert4                2.9724                2.8907        0.081700     2.7486
+MIRIFU_3CSLICE10                YIdlVert1                0.6044                 0.593        0.011400     1.8862
+MIRIFU_3CSLICE10                YIdlVert2               -0.1982               -0.1763        0.021900    11.0494
+MIRIFU_3CSLICE10                YIdlVert3               -0.5899               -0.5677        0.022200     3.7633
+MIRIFU_3CSLICE10                YIdlVert4                0.2215                  0.21        0.011500     5.1919
+
+MIRIFU_3CSLICE11                XIdlVert1                2.9188                2.8551        0.063700     2.1824
+MIRIFU_3CSLICE11                XIdlVert2               -2.8589               -2.7226        0.136300     4.7676
+MIRIFU_3CSLICE11                XIdlVert3               -2.8213               -2.6849        0.136400     4.8347
+MIRIFU_3CSLICE11                XIdlVert4                2.9614                2.8976        0.063800     2.1544
+MIRIFU_3CSLICE11                YIdlVert1                 0.607                 0.598        0.009000     1.4827
+MIRIFU_3CSLICE11                YIdlVert2               -0.2056               -0.1864        0.019200     9.3385
+MIRIFU_3CSLICE11                YIdlVert3               -0.5973                -0.578        0.019300     3.2312
+MIRIFU_3CSLICE11                YIdlVert4                0.2241                 0.215        0.009100     4.0607
+
+MIRIFU_3CSLICE12                XIdlVert1                2.9336                2.8161        0.117500     4.0053
+MIRIFU_3CSLICE12                XIdlVert2               -2.9683               -2.8203        0.148000     4.9860
+MIRIFU_3CSLICE12                XIdlVert3               -2.9308               -2.7826        0.148200     5.0566
+MIRIFU_3CSLICE12                XIdlVert4                2.9762                2.8586        0.117600     3.9513
+MIRIFU_3CSLICE12                YIdlVert1                0.6132                0.5965        0.016700     2.7234
+MIRIFU_3CSLICE12                YIdlVert2               -0.2251               -0.2041        0.021000     9.3292
+MIRIFU_3CSLICE12                YIdlVert3                -0.617               -0.5958        0.021200     3.4360
+MIRIFU_3CSLICE12                YIdlVert4                0.2303                0.2135        0.016800     7.2948
+
+MIRIFU_3CSLICE13                XIdlVert1                2.9187                2.8168        0.101900     3.4913
+MIRIFU_3CSLICE13                XIdlVert2               -2.9906               -2.8766        0.114000     3.8119
+MIRIFU_3CSLICE13                XIdlVert3               -2.9531                -2.839        0.114100     3.8637
+MIRIFU_3CSLICE13                XIdlVert4                2.9613                2.8593        0.102000     3.4444
+MIRIFU_3CSLICE13                YIdlVert1                0.6152                0.6006        0.014600     2.3732
+MIRIFU_3CSLICE13                YIdlVert2               -0.2325               -0.2161        0.016400     7.0538
+MIRIFU_3CSLICE13                YIdlVert3               -0.6244               -0.6079        0.016500     2.6425
+MIRIFU_3CSLICE13                YIdlVert4                0.2323                0.2176        0.014700     6.3280
+
+MIRIFU_3CSLICE14                XIdlVert1                2.9136                2.8307        0.082900     2.8453
+MIRIFU_3CSLICE14                XIdlVert2               -3.0095               -2.9069        0.102600     3.4092
+MIRIFU_3CSLICE14                XIdlVert3                -2.972               -2.8694        0.102600     3.4522
+MIRIFU_3CSLICE14                XIdlVert4                2.9561                2.8732        0.082900     2.8044
+MIRIFU_3CSLICE14                YIdlVert1                0.6187                0.6067        0.012000     1.9396
+MIRIFU_3CSLICE14                YIdlVert2               -0.2393               -0.2244        0.014900     6.2265
+MIRIFU_3CSLICE14                YIdlVert3               -0.6313               -0.6163        0.015000     2.3760
+MIRIFU_3CSLICE14                YIdlVert4                0.2358                0.2237        0.012100     5.1315
+
+MIRIFU_3CSLICE15                XIdlVert1                2.9702                2.8864        0.083800     2.8214
+MIRIFU_3CSLICE15                XIdlVert2               -2.9831               -2.9549        0.028200     0.9453
+MIRIFU_3CSLICE15                XIdlVert3               -2.9456               -2.9174        0.028200     0.9574
+MIRIFU_3CSLICE15                XIdlVert4                3.0128                 2.929        0.083800     2.7815
+MIRIFU_3CSLICE15                YIdlVert1                0.6311                0.6188        0.012300     1.9490
+MIRIFU_3CSLICE15                YIdlVert2               -0.2397               -0.2355        0.004200     1.7522
+MIRIFU_3CSLICE15                YIdlVert3               -0.6316               -0.6274        0.004200     0.6650
+MIRIFU_3CSLICE15                YIdlVert4                0.2483                0.2359        0.012400     4.9940
+
+MIRIFU_3CSLICE16                XIdlVert1                3.0503                2.9621        0.088200     2.8915
+MIRIFU_3CSLICE16                XIdlVert2               -2.7449               -2.8104        0.065500     2.3306
+MIRIFU_3CSLICE16                XIdlVert3               -2.7072               -2.7728        0.065600     2.3658
+MIRIFU_3CSLICE16                XIdlVert4                 3.093                3.0047        0.088300     2.8548
+MIRIFU_3CSLICE16                YIdlVert1                0.6471                0.6341        0.013000     2.0090
+MIRIFU_3CSLICE16                YIdlVert2               -0.2086               -0.2183        0.009700     4.4434
+MIRIFU_3CSLICE16                YIdlVert3               -0.6002                 -0.61        0.009800     1.6066
+MIRIFU_3CSLICE16                YIdlVert4                0.2644                0.2512        0.013200     4.9924
+
+MIRIFU_CHANNEL4A                XIdlVert1                2.8935                2.8746        0.018900     0.6532
+MIRIFU_CHANNEL4A                XIdlVert2               -4.1619               -3.8824        0.279500     6.7157
+MIRIFU_CHANNEL4A                XIdlVert3               -2.8027               -2.5142        0.288500    10.2936
+MIRIFU_CHANNEL4A                XIdlVert4                4.4782                4.4587        0.019500     0.4354
+MIRIFU_CHANNEL4A                YIdlVert1                4.4772                 4.474        0.003200     0.0715
+MIRIFU_CHANNEL4A                YIdlVert2                3.2928                3.3397        0.046900     1.4043
+MIRIFU_CHANNEL4A                YIdlVert3               -4.3123               -4.2761        0.036200     0.8395
+MIRIFU_CHANNEL4A                YIdlVert4               -3.3982               -3.4007        0.002500     0.0735
+
+MIRIFU_4ASLICE01                XIdlVert1                3.5822                3.5646        0.017600     0.4913
+MIRIFU_4ASLICE01                XIdlVert2               -3.6851               -3.4054        0.279700     7.5900
+MIRIFU_4ASLICE01                XIdlVert3               -3.5723               -3.2919        0.280400     7.8493
+MIRIFU_4ASLICE01                XIdlVert4                3.7143                3.6966        0.017700     0.4765
+MIRIFU_4ASLICE01                YIdlVert1                 0.934                 0.931        0.003000     0.3212
+MIRIFU_4ASLICE01                YIdlVert2                -0.286                -0.239        0.047000    16.4336
+MIRIFU_4ASLICE01                YIdlVert3               -0.9191               -0.8731        0.046000     5.0049
+MIRIFU_4ASLICE01                YIdlVert4                0.2776                0.2747        0.002900     1.0447
+
+MIRIFU_4ASLICE02                XIdlVert1                3.5763                3.5574        0.018900     0.5285
+MIRIFU_4ASLICE02                XIdlVert2               -3.6483               -3.3465        0.301800     8.2723
+MIRIFU_4ASLICE02                XIdlVert3               -3.5354               -3.2328        0.302600     8.5591
+MIRIFU_4ASLICE02                XIdlVert4                3.7084                3.6894        0.019000     0.5124
+MIRIFU_4ASLICE02                YIdlVert1                0.9198                0.9167        0.003100     0.3370
+MIRIFU_4ASLICE02                YIdlVert2               -0.2668               -0.2172        0.049600    18.5907
+MIRIFU_4ASLICE02                YIdlVert3               -0.9001               -0.8515        0.048600     5.3994
+MIRIFU_4ASLICE02                YIdlVert4                0.2635                0.2605        0.003000     1.1385
+
+MIRIFU_4ASLICE03                XIdlVert1                3.6369                3.6201        0.016800     0.4619
+MIRIFU_4ASLICE03                XIdlVert2               -3.6539               -3.3976        0.256300     7.0144
+MIRIFU_4ASLICE03                XIdlVert3                -3.541               -3.2841        0.256900     7.2550
+MIRIFU_4ASLICE03                XIdlVert4                3.7691                3.7523        0.016800     0.4457
+MIRIFU_4ASLICE03                YIdlVert1                0.9164                0.9137        0.002700     0.2946
+MIRIFU_4ASLICE03                YIdlVert2               -0.2547               -0.2136        0.041100    16.1366
+MIRIFU_4ASLICE03                YIdlVert3                -0.888               -0.8477        0.040300     4.5383
+MIRIFU_4ASLICE03                YIdlVert4                0.2599                0.2573        0.002600     1.0004
+
+MIRIFU_4ASLICE04                XIdlVert1                3.6674                 3.681        0.013600     0.3695
+MIRIFU_4ASLICE04                XIdlVert2               -3.6088               -3.3637        0.245100     6.7917
+MIRIFU_4ASLICE04                XIdlVert3               -3.4958               -3.2501        0.245700     7.0284
+MIRIFU_4ASLICE04                XIdlVert4                3.7997                3.8133        0.013600     0.3566
+MIRIFU_4ASLICE04                YIdlVert1                0.9079                  0.91        0.002100     0.2308
+MIRIFU_4ASLICE04                YIdlVert2               -0.2348               -0.1963        0.038500    16.3969
+MIRIFU_4ASLICE04                YIdlVert3               -0.8682               -0.8305        0.037700     4.3423
+MIRIFU_4ASLICE04                YIdlVert4                0.2514                0.2535        0.002100     0.8284
+
+MIRIFU_4ASLICE05                XIdlVert1                 3.791                3.7801        0.010900     0.2875
+MIRIFU_4ASLICE05                XIdlVert2               -3.5506               -3.3209        0.229700     6.4693
+MIRIFU_4ASLICE05                XIdlVert3               -3.4374               -3.2071        0.230300     6.6998
+MIRIFU_4ASLICE05                XIdlVert4                3.9235                3.9126        0.010900     0.2778
+MIRIFU_4ASLICE05                YIdlVert1                0.9135                0.9119        0.001600     0.1752
+MIRIFU_4ASLICE05                YIdlVert2               -0.2131               -0.1779        0.035200    16.5181
+MIRIFU_4ASLICE05                YIdlVert3               -0.8468               -0.8123        0.034500     4.0742
+MIRIFU_4ASLICE05                YIdlVert4                0.2567                 0.255        0.001700     0.6623
+
+MIRIFU_4ASLICE06                XIdlVert1                3.8264                 3.823        0.003400     0.0889
+MIRIFU_4ASLICE06                XIdlVert2               -3.6809               -3.3663        0.314600     8.5468
+MIRIFU_4ASLICE06                XIdlVert3                -3.568               -3.2526        0.315400     8.8397
+MIRIFU_4ASLICE06                XIdlVert4                 3.959                3.9556        0.003400     0.0859
+MIRIFU_4ASLICE06                YIdlVert1                0.9051                0.9046        0.000500     0.0552
+MIRIFU_4ASLICE06                YIdlVert2               -0.2203               -0.1731        0.047200    21.4253
+MIRIFU_4ASLICE06                YIdlVert3               -0.8536               -0.8074        0.046200     5.4124
+MIRIFU_4ASLICE06                YIdlVert4                0.2482                0.2477        0.000500     0.2015
+
+MIRIFU_4ASLICE07                XIdlVert1                3.8508                3.8258        0.025000     0.6492
+MIRIFU_4ASLICE07                XIdlVert2               -3.7147               -3.4043        0.310400     8.3560
+MIRIFU_4ASLICE07                XIdlVert3               -3.6019               -3.2906        0.311300     8.6427
+MIRIFU_4ASLICE07                XIdlVert4                3.9834                3.9584        0.025000     0.6276
+MIRIFU_4ASLICE07                YIdlVert1                 0.895                0.8913        0.003700     0.4134
+MIRIFU_4ASLICE07                YIdlVert2               -0.2124                -0.167        0.045400    21.3748
+MIRIFU_4ASLICE07                YIdlVert3               -0.8457               -0.8012        0.044500     5.2619
+MIRIFU_4ASLICE07                YIdlVert4                 0.238                0.2344        0.003600     1.5126
+
+MIRIFU_4ASLICE08                XIdlVert1                3.7321                3.7422        0.010100     0.2699
+MIRIFU_4ASLICE08                XIdlVert2               -3.6722               -3.3833        0.288900     7.8672
+MIRIFU_4ASLICE08                XIdlVert3               -3.5592               -3.2696        0.289600     8.1367
+MIRIFU_4ASLICE08                XIdlVert4                3.8644                3.8746        0.010200     0.2633
+MIRIFU_4ASLICE08                YIdlVert1                0.8643                0.8657        0.001400     0.1617
+MIRIFU_4ASLICE08                YIdlVert2               -0.1935               -0.1522        0.041300    21.3437
+MIRIFU_4ASLICE08                YIdlVert3               -0.8269               -0.7865        0.040400     4.8857
+MIRIFU_4ASLICE08                YIdlVert4                0.2077                0.2091        0.001400     0.6695
+
+MIRIFU_4ASLICE09                XIdlVert1                3.8031                3.8301        0.027000     0.7049
+MIRIFU_4ASLICE09                XIdlVert2               -3.6446               -3.3911        0.253500     6.9555
+MIRIFU_4ASLICE09                XIdlVert3               -3.5315               -3.2773        0.254200     7.1981
+MIRIFU_4ASLICE09                XIdlVert4                3.9356                3.9626        0.027000     0.6814
+MIRIFU_4ASLICE09                YIdlVert1                0.8609                0.8646        0.003700     0.4279
+MIRIFU_4ASLICE09                YIdlVert2                -0.177               -0.1417        0.035300    19.9435
+MIRIFU_4ASLICE09                YIdlVert3               -0.8105                -0.776        0.034500     4.2566
+MIRIFU_4ASLICE09                YIdlVert4                0.2041                0.2078        0.003700     1.7806
+
+MIRIFU_4ASLICE10                XIdlVert1                3.8845                 3.866        0.018500     0.4763
+MIRIFU_4ASLICE10                XIdlVert2               -3.5709               -3.2847        0.286200     8.0148
+MIRIFU_4ASLICE10                XIdlVert3               -3.4576               -3.1706        0.287000     8.3006
+MIRIFU_4ASLICE10                XIdlVert4                4.0172                3.9986        0.018600     0.4630
+MIRIFU_4ASLICE10                YIdlVert1                0.8585                 0.856        0.002500     0.2912
+MIRIFU_4ASLICE10                YIdlVert2               -0.1545               -0.1156        0.038900    25.1780
+MIRIFU_4ASLICE10                YIdlVert3               -0.7883               -0.7503        0.038000     4.8205
+MIRIFU_4ASLICE10                YIdlVert4                0.2015                 0.199        0.002500     1.2407
+
+MIRIFU_4ASLICE11                XIdlVert1                3.8852                3.8626        0.022600     0.5817
+MIRIFU_4ASLICE11                XIdlVert2               -3.6602               -3.4275        0.232700     6.3576
+MIRIFU_4ASLICE11                XIdlVert3               -3.5472               -3.3138        0.233400     6.5798
+MIRIFU_4ASLICE11                XIdlVert4                4.0178                3.9952        0.022600     0.5625
+MIRIFU_4ASLICE11                YIdlVert1                0.8449                0.8419        0.003000     0.3551
+MIRIFU_4ASLICE11                YIdlVert2               -0.1542               -0.1234        0.030800    19.9741
+MIRIFU_4ASLICE11                YIdlVert3               -0.7877               -0.7576        0.030100     3.8213
+MIRIFU_4ASLICE11                YIdlVert4                0.1879                 0.185        0.002900     1.5434
+
+MIRIFU_4ASLICE12                XIdlVert1                3.8854                3.8707        0.014700     0.3783
+MIRIFU_4ASLICE12                XIdlVert2               -3.6926               -3.4751        0.217500     5.8902
+MIRIFU_4ASLICE12                XIdlVert3               -3.5796               -3.3615        0.218100     6.0929
+MIRIFU_4ASLICE12                XIdlVert4                 4.018                4.0032        0.014800     0.3683
+MIRIFU_4ASLICE12                YIdlVert1                0.8314                0.8295        0.001900     0.2285
+MIRIFU_4ASLICE12                YIdlVert2                -0.146               -0.1179        0.028100    19.2466
+MIRIFU_4ASLICE12                YIdlVert3               -0.7794               -0.7521        0.027300     3.5027
+MIRIFU_4ASLICE12                YIdlVert4                0.1744                0.1726        0.001800     1.0321
+
+MIRIFU_CHANNEL4B                XIdlVert1                 2.725                2.7323        0.007300     0.2672
+MIRIFU_CHANNEL4B                XIdlVert2               -4.3101                -4.058        0.252100     5.8491
+MIRIFU_CHANNEL4B                XIdlVert3               -2.8618               -2.6015        0.260300     9.0957
+MIRIFU_CHANNEL4B                XIdlVert4                4.4003                4.4078        0.007500     0.1702
+MIRIFU_CHANNEL4B                YIdlVert1                 4.446                4.4472        0.001200     0.0270
+MIRIFU_CHANNEL4B                YIdlVert2                3.2883                3.3298        0.041500     1.2463
+MIRIFU_CHANNEL4B                YIdlVert3               -4.3142               -4.2824        0.031800     0.7371
+MIRIFU_CHANNEL4B                YIdlVert4               -3.4268               -3.4259        0.000900     0.0263
+
+MIRIFU_4BSLICE01                XIdlVert1                3.4981                3.5141        0.016000     0.4553
+MIRIFU_4BSLICE01                XIdlVert2               -3.7114               -3.4328        0.278600     7.5066
+MIRIFU_4BSLICE01                XIdlVert3                -3.591               -3.3116        0.279400     7.7806
+MIRIFU_4BSLICE01                XIdlVert4                3.6379                3.6539        0.016000     0.4379
+MIRIFU_4BSLICE01                YIdlVert1                0.9088                0.9115        0.002700     0.2962
+MIRIFU_4BSLICE01                YIdlVert2               -0.2776               -0.2318        0.045800    16.4986
+MIRIFU_4BSLICE01                YIdlVert3               -0.9108               -0.8658        0.045000     4.9407
+MIRIFU_4BSLICE01                YIdlVert4                0.2526                0.2552        0.002600     1.0188
+
+MIRIFU_4BSLICE02                XIdlVert1                3.4504                3.4577        0.007300     0.2111
+MIRIFU_4BSLICE02                XIdlVert2               -3.7061                 -3.41        0.296100     7.9895
+MIRIFU_4BSLICE02                XIdlVert3               -3.5857               -3.2888        0.296900     8.2801
+MIRIFU_4BSLICE02                XIdlVert4                  3.59                3.5973        0.007300     0.2029
+MIRIFU_4BSLICE02                YIdlVert1                0.8882                0.8893        0.001100     0.1237
+MIRIFU_4BSLICE02                YIdlVert2               -0.2636               -0.2159        0.047700    18.0956
+MIRIFU_4BSLICE02                YIdlVert3               -0.8968               -0.8501        0.046700     5.2074
+MIRIFU_4BSLICE02                YIdlVert4                0.2321                0.2332        0.001100     0.4717
+
+MIRIFU_4BSLICE03                XIdlVert1                3.4883                3.4735        0.014800     0.4243
+MIRIFU_4BSLICE03                XIdlVert2               -3.7061                -3.445        0.261100     7.0451
+MIRIFU_4BSLICE03                XIdlVert3               -3.5856               -3.3239        0.261700     7.2986
+MIRIFU_4BSLICE03                XIdlVert4                 3.628                3.6132        0.014800     0.4079
+MIRIFU_4BSLICE03                YIdlVert1                0.8815                0.8792        0.002300     0.2609
+MIRIFU_4BSLICE03                YIdlVert2               -0.2503               -0.2093        0.041000    16.3803
+MIRIFU_4BSLICE03                YIdlVert3               -0.8836               -0.8433        0.040300     4.5609
+MIRIFU_4BSLICE03                YIdlVert4                0.2253                 0.223        0.002300     1.0209
+
+MIRIFU_4BSLICE04                XIdlVert1                3.6213                3.6493        0.028000     0.7673
+MIRIFU_4BSLICE04                XIdlVert2               -3.6226               -3.3846        0.238000     6.5699
+MIRIFU_4BSLICE04                XIdlVert3               -3.5019               -3.2633        0.238600     6.8134
+MIRIFU_4BSLICE04                XIdlVert4                3.7613                3.7894        0.028100     0.7415
+MIRIFU_4BSLICE04                YIdlVert1                0.8891                0.8934        0.004300     0.4813
+MIRIFU_4BSLICE04                YIdlVert2               -0.2245               -0.1879        0.036600    16.3029
+MIRIFU_4BSLICE04                YIdlVert3                -0.858               -0.8222        0.035800     4.1725
+MIRIFU_4BSLICE04                YIdlVert4                0.2326                0.2368        0.004200     1.7736
+
+MIRIFU_4BSLICE05                XIdlVert1                3.6319                3.6112        0.020700     0.5699
+MIRIFU_4BSLICE05                XIdlVert2               -3.6828               -3.4359        0.246900     6.7041
+MIRIFU_4BSLICE05                XIdlVert3               -3.5622               -3.3146        0.247600     6.9508
+MIRIFU_4BSLICE05                XIdlVert4                3.7719                3.7512        0.020700     0.5488
+MIRIFU_4BSLICE05                YIdlVert1                0.8775                0.8744        0.003100     0.3533
+MIRIFU_4BSLICE05                YIdlVert2               -0.2208               -0.1837        0.037100    16.8025
+MIRIFU_4BSLICE05                YIdlVert3               -0.8542               -0.8179        0.036300     4.2496
+MIRIFU_4BSLICE05                YIdlVert4                0.2209                0.2179        0.003000     1.3581
+
+MIRIFU_4BSLICE06                XIdlVert1                3.6732                3.6939        0.020700     0.5604
+MIRIFU_4BSLICE06                XIdlVert2               -3.7607               -3.4582        0.302500     8.0437
+MIRIFU_4BSLICE06                XIdlVert3               -3.6403                -3.337        0.303300     8.3317
+MIRIFU_4BSLICE06                XIdlVert4                3.8133                 3.834        0.020700     0.5399
+MIRIFU_4BSLICE06                YIdlVert1                0.8704                0.8735        0.003100     0.3549
+MIRIFU_4BSLICE06                YIdlVert2               -0.2193               -0.1749        0.044400    20.2462
+MIRIFU_4BSLICE06                YIdlVert3               -0.8524               -0.8091        0.043300     5.0798
+MIRIFU_4BSLICE06                YIdlVert4                0.2138                0.2167        0.002900     1.3383
+
+MIRIFU_4BSLICE07                XIdlVert1                3.6877                3.6723        0.015400     0.4176
+MIRIFU_4BSLICE07                XIdlVert2                -3.799               -3.4882        0.310800     8.1811
+MIRIFU_4BSLICE07                XIdlVert3               -3.6787               -3.3671        0.311600     8.4704
+MIRIFU_4BSLICE07                XIdlVert4                3.8278                3.8124        0.015400     0.4023
+MIRIFU_4BSLICE07                YIdlVert1                0.8592                 0.857        0.002200     0.2561
+MIRIFU_4BSLICE07                YIdlVert2               -0.2117               -0.1673        0.044400    20.9731
+MIRIFU_4BSLICE07                YIdlVert3               -0.8448               -0.8013        0.043500     5.1491
+MIRIFU_4BSLICE07                YIdlVert4                0.2026                0.2004        0.002200     1.0859
+
+MIRIFU_4BSLICE08                XIdlVert1                3.6239                3.6168        0.007100     0.1959
+MIRIFU_4BSLICE08                XIdlVert2               -3.7549               -3.4599        0.295000     7.8564
+MIRIFU_4BSLICE08                XIdlVert3               -3.6344               -3.3387        0.295700     8.1361
+MIRIFU_4BSLICE08                XIdlVert4                3.7638                3.7567        0.007100     0.1886
+MIRIFU_4BSLICE08                YIdlVert1                0.8372                0.8362        0.001000     0.1194
+MIRIFU_4BSLICE08                YIdlVert2               -0.1924               -0.1512        0.041200    21.4137
+MIRIFU_4BSLICE08                YIdlVert3               -0.8256               -0.7854        0.040200     4.8692
+MIRIFU_4BSLICE08                YIdlVert4                0.1807                0.1798        0.000900     0.4981
+
+MIRIFU_4BSLICE09                XIdlVert1                3.6574                3.6137        0.043700     1.1948
+MIRIFU_4BSLICE09                XIdlVert2               -3.7667               -3.5074        0.259300     6.8840
+MIRIFU_4BSLICE09                XIdlVert3               -3.6463               -3.3863        0.260000     7.1305
+MIRIFU_4BSLICE09                XIdlVert4                3.7973                3.7536        0.043700     1.1508
+MIRIFU_4BSLICE09                YIdlVert1                0.8288                0.8228        0.006000     0.7239
+MIRIFU_4BSLICE09                YIdlVert2               -0.1811               -0.1458        0.035300    19.4920
+MIRIFU_4BSLICE09                YIdlVert3               -0.8143               -0.7799        0.034400     4.2245
+MIRIFU_4BSLICE09                YIdlVert4                0.1722                0.1664        0.005800     3.3682
+
+MIRIFU_4BSLICE10                XIdlVert1                 3.671                3.6411        0.029900     0.8145
+MIRIFU_4BSLICE10                XIdlVert2               -3.7223               -3.4213        0.301000     8.0864
+MIRIFU_4BSLICE10                XIdlVert3               -3.6018                  -3.3        0.301800     8.3791
+MIRIFU_4BSLICE10                XIdlVert4                 3.811                 3.781        0.030000     0.7872
+MIRIFU_4BSLICE10                YIdlVert1                0.8176                0.8136        0.004000     0.4892
+MIRIFU_4BSLICE10                YIdlVert2               -0.1624               -0.1225        0.039900    24.5690
+MIRIFU_4BSLICE10                YIdlVert3               -0.7958               -0.7568        0.039000     4.9007
+MIRIFU_4BSLICE10                YIdlVert4                 0.161                0.1572        0.003800     2.3602
+
+MIRIFU_4BSLICE11                XIdlVert1                3.6955                3.6741        0.021400     0.5791
+MIRIFU_4BSLICE11                XIdlVert2               -3.7787               -3.5557        0.223000     5.9015
+MIRIFU_4BSLICE11                XIdlVert3               -3.6583               -3.4347        0.223600     6.1121
+MIRIFU_4BSLICE11                XIdlVert4                3.8355                 3.814        0.021500     0.5606
+MIRIFU_4BSLICE11                YIdlVert1                0.8078                0.8051        0.002700     0.3342
+MIRIFU_4BSLICE11                YIdlVert2               -0.1569               -0.1281        0.028800    18.3556
+MIRIFU_4BSLICE11                YIdlVert3               -0.7902               -0.7621        0.028100     3.5561
+MIRIFU_4BSLICE11                YIdlVert4                0.1513                0.1486        0.002700     1.7845
+
+MIRIFU_4BSLICE12                XIdlVert1                3.6915                3.6873        0.004200     0.1138
+MIRIFU_4BSLICE12                XIdlVert2                -3.827               -3.5972        0.229800     6.0047
+MIRIFU_4BSLICE12                XIdlVert3               -3.7067               -3.4762        0.230500     6.2185
+MIRIFU_4BSLICE12                XIdlVert4                3.8315                3.8273        0.004200     0.1096
+MIRIFU_4BSLICE12                YIdlVert1                0.7943                0.7938        0.000500     0.0629
+MIRIFU_4BSLICE12                YIdlVert2               -0.1502               -0.1213        0.028900    19.2410
+MIRIFU_4BSLICE12                YIdlVert3               -0.7833               -0.7552        0.028100     3.5874
+MIRIFU_4BSLICE12                YIdlVert4                0.1378                0.1373        0.000500     0.3628
+
+MIRIFU_CHANNEL4C                XIdlVert1                2.7451                2.7054        0.039700     1.4462
+MIRIFU_CHANNEL4C                XIdlVert2               -4.2798               -4.0034        0.276400     6.4582
+MIRIFU_CHANNEL4C                XIdlVert3               -2.8477               -2.5684        0.279300     9.8079
+MIRIFU_CHANNEL4C                XIdlVert4                 4.252                4.2119        0.040100     0.9431
+MIRIFU_CHANNEL4C                YIdlVert1                4.4337                4.4271        0.006600     0.1489
+MIRIFU_CHANNEL4C                YIdlVert2                3.2601                3.3062        0.046100     1.3944
+MIRIFU_CHANNEL4C                YIdlVert3                -4.336               -4.2983        0.037700     0.8695
+MIRIFU_CHANNEL4C                YIdlVert4               -3.3773               -3.3828        0.005500     0.1626
+
+MIRIFU_4CSLICE01                XIdlVert1                3.4931                3.4471        0.046000     1.3169
+MIRIFU_4CSLICE01                XIdlVert2               -3.6945                -3.467        0.227500     6.1578
+MIRIFU_4CSLICE01                XIdlVert3               -3.5753               -3.3475        0.227800     6.3715
+MIRIFU_4CSLICE01                XIdlVert4                3.6188                3.5727        0.046100     1.2739
+MIRIFU_4CSLICE01                YIdlVert1                0.9149                0.9072        0.007700     0.8416
+MIRIFU_4CSLICE01                YIdlVert2                -0.286                -0.248        0.038000    13.2867
+MIRIFU_4CSLICE01                YIdlVert3               -0.9188               -0.8814        0.037400     4.0705
+MIRIFU_4CSLICE01                YIdlVert4                0.2637                0.2562        0.007500     2.8441
+
+MIRIFU_4CSLICE02                XIdlVert1                3.4396                3.4172        0.022400     0.6512
+MIRIFU_4CSLICE02                XIdlVert2               -3.6911               -3.4159        0.275200     7.4558
+MIRIFU_4CSLICE02                XIdlVert3               -3.5719               -3.2964        0.275500     7.7130
+MIRIFU_4CSLICE02                XIdlVert4                3.5652                3.5428        0.022400     0.6283
+MIRIFU_4CSLICE02                YIdlVert1                0.8965                0.8928        0.003700     0.4127
+MIRIFU_4CSLICE02                YIdlVert2               -0.2756               -0.2304        0.045200    16.4006
+MIRIFU_4CSLICE02                YIdlVert3               -0.9084               -0.8639        0.044500     4.8987
+MIRIFU_4CSLICE02                YIdlVert4                0.2456                0.2419        0.003700     1.5065
+
+MIRIFU_4CSLICE03                XIdlVert1                 3.425                3.3852        0.039800     1.1620
+MIRIFU_4CSLICE03                XIdlVert2               -3.7031               -3.4693        0.233800     6.3136
+MIRIFU_4CSLICE03                XIdlVert3               -3.5838               -3.3498        0.234000     6.5294
+MIRIFU_4CSLICE03                XIdlVert4                3.5505                3.5107        0.039800     1.1210
+MIRIFU_4CSLICE03                YIdlVert1                0.8847                0.8783        0.006400     0.7234
+MIRIFU_4CSLICE03                YIdlVert2               -0.2678                 -0.23        0.037800    14.1150
+MIRIFU_4CSLICE03                YIdlVert3               -0.9006               -0.8634        0.037200     4.1306
+MIRIFU_4CSLICE03                YIdlVert4                0.2338                0.2274        0.006400     2.7374
+
+MIRIFU_4CSLICE04                XIdlVert1                3.5044                3.4405        0.063900     1.8234
+MIRIFU_4CSLICE04                XIdlVert2               -3.6821               -3.4704        0.211700     5.7494
+MIRIFU_4CSLICE04                XIdlVert3               -3.5628                -3.351        0.211800     5.9448
+MIRIFU_4CSLICE04                XIdlVert4                  3.63                3.5661        0.063900     1.7603
+MIRIFU_4CSLICE04                YIdlVert1                 0.888                0.8779        0.010100     1.1374
+MIRIFU_4CSLICE04                YIdlVert2               -0.2546                -0.221        0.033600    13.1972
+MIRIFU_4CSLICE04                YIdlVert3               -0.8875               -0.8544        0.033100     3.7296
+MIRIFU_4CSLICE04                YIdlVert4                0.2369                0.2269        0.010000     4.2212
+
+MIRIFU_4CSLICE05                XIdlVert1                 3.582                3.5418        0.040200     1.1223
+MIRIFU_4CSLICE05                XIdlVert2               -3.6287                -3.415        0.213700     5.8892
+MIRIFU_4CSLICE05                XIdlVert3               -3.5094               -3.2955        0.213900     6.0951
+MIRIFU_4CSLICE05                XIdlVert4                3.7077                3.6674        0.040300     1.0869
+MIRIFU_4CSLICE05                YIdlVert1                0.8905                0.8842        0.006300     0.7075
+MIRIFU_4CSLICE05                YIdlVert2               -0.2367               -0.2032        0.033500    14.1529
+MIRIFU_4CSLICE05                YIdlVert3               -0.8696               -0.8368        0.032800     3.7718
+MIRIFU_4CSLICE05                YIdlVert4                0.2392                 0.233        0.006200     2.5920
+
+MIRIFU_4CSLICE06                XIdlVert1                3.6372                3.6453        0.008100     0.2222
+MIRIFU_4CSLICE06                XIdlVert2               -3.7387               -3.4615        0.277200     7.4143
+MIRIFU_4CSLICE06                XIdlVert3               -3.6195                -3.342        0.277500     7.6668
+MIRIFU_4CSLICE06                XIdlVert4                 3.763                3.7711        0.008100     0.2148
+MIRIFU_4CSLICE06                YIdlVert1                0.8893                0.8905        0.001200     0.1348
+MIRIFU_4CSLICE06                YIdlVert2               -0.2439               -0.2014        0.042500    17.4252
+MIRIFU_4CSLICE06                YIdlVert3               -0.8767               -0.8348        0.041900     4.7793
+MIRIFU_4CSLICE06                YIdlVert4                0.2379                0.2391        0.001200     0.5019
+
+MIRIFU_4CSLICE07                XIdlVert1                3.6769                3.6492        0.027700     0.7534
+MIRIFU_4CSLICE07                XIdlVert2               -3.7165               -3.4263        0.290200     7.8084
+MIRIFU_4CSLICE07                XIdlVert3               -3.5973               -3.3068        0.290500     8.0755
+MIRIFU_4CSLICE07                XIdlVert4                3.8027                 3.775        0.027700     0.7284
+MIRIFU_4CSLICE07                YIdlVert1                0.8854                0.8812        0.004200     0.4744
+MIRIFU_4CSLICE07                YIdlVert2               -0.2308                -0.187        0.043800    18.9775
+MIRIFU_4CSLICE07                YIdlVert3               -0.8636               -0.8205        0.043100     4.9907
+MIRIFU_4CSLICE07                YIdlVert4                0.2338                0.2297        0.004100     1.7536
+
+MIRIFU_4CSLICE08                XIdlVert1                3.5559                3.4688        0.087100     2.4495
+MIRIFU_4CSLICE08                XIdlVert2               -3.7102               -3.4403        0.269900     7.2745
+MIRIFU_4CSLICE08                XIdlVert3               -3.5909               -3.3208        0.270100     7.5218
+MIRIFU_4CSLICE08                XIdlVert4                3.6816                3.5944        0.087200     2.3685
+MIRIFU_4CSLICE08                YIdlVert1                0.8575                0.8446        0.012900     1.5044
+MIRIFU_4CSLICE08                YIdlVert2               -0.2201               -0.1801        0.040000    18.1736
+MIRIFU_4CSLICE08                YIdlVert3               -0.8529               -0.8135        0.039400     4.6195
+MIRIFU_4CSLICE08                YIdlVert4                0.2063                0.1936        0.012700     6.1561
+
+MIRIFU_4CSLICE09                XIdlVert1                3.5811                3.5072        0.073900     2.0636
+MIRIFU_4CSLICE09                XIdlVert2               -3.6762               -3.4547        0.221500     6.0252
+MIRIFU_4CSLICE09                XIdlVert3               -3.5569               -3.3352        0.221700     6.2330
+MIRIFU_4CSLICE09                XIdlVert4                3.7068                3.6328        0.074000     1.9963
+MIRIFU_4CSLICE09                YIdlVert1                0.8515                0.8407        0.010800     1.2683
+MIRIFU_4CSLICE09                YIdlVert2               -0.2055               -0.1732        0.032300    15.7178
+MIRIFU_4CSLICE09                YIdlVert3               -0.8383               -0.8067        0.031600     3.7695
+MIRIFU_4CSLICE09                YIdlVert4                0.2002                0.1896        0.010600     5.2947
+
+MIRIFU_4CSLICE10                XIdlVert1                3.6135                3.5776        0.035900     0.9935
+MIRIFU_4CSLICE10                XIdlVert2               -3.6344               -3.3558        0.278600     7.6656
+MIRIFU_4CSLICE10                XIdlVert3               -3.5151               -3.2363        0.278800     7.9315
+MIRIFU_4CSLICE10                XIdlVert4                3.7392                3.7033        0.035900     0.9601
+MIRIFU_4CSLICE10                YIdlVert1                0.8465                0.8414        0.005100     0.6025
+MIRIFU_4CSLICE10                YIdlVert2               -0.1898                 -0.15        0.039800    20.9694
+MIRIFU_4CSLICE10                YIdlVert3               -0.8228               -0.7837        0.039100     4.7521
+MIRIFU_4CSLICE10                YIdlVert4                0.1951                0.1901        0.005000     2.5628
+
+MIRIFU_4CSLICE11                XIdlVert1                3.6418                3.6179        0.023900     0.6563
+MIRIFU_4CSLICE11                XIdlVert2               -3.6695               -3.4696        0.199900     5.4476
+MIRIFU_4CSLICE11                XIdlVert3               -3.5502               -3.3501        0.200100     5.6363
+MIRIFU_4CSLICE11                XIdlVert4                3.7675                3.7436        0.023900     0.6344
+MIRIFU_4CSLICE11                YIdlVert1                0.8407                0.8373        0.003400     0.4044
+MIRIFU_4CSLICE11                YIdlVert2               -0.1853               -0.1573        0.028000    15.1106
+MIRIFU_4CSLICE11                YIdlVert3               -0.8182               -0.7907        0.027500     3.3610
+MIRIFU_4CSLICE11                YIdlVert4                0.1892                 0.186        0.003200     1.6913
+
+MIRIFU_4CSLICE12                XIdlVert1                3.5732                3.5816        0.008400     0.2345
+MIRIFU_4CSLICE12                XIdlVert2               -3.7318               -3.5886        0.143200     3.8373
+MIRIFU_4CSLICE12                XIdlVert3               -3.6125               -3.4692        0.143300     3.9668
+MIRIFU_4CSLICE12                XIdlVert4                3.6989                3.7073        0.008400     0.2266
+MIRIFU_4CSLICE12                YIdlVert1                0.8215                0.8226        0.001100     0.1337
+MIRIFU_4CSLICE12                YIdlVert2               -0.1843               -0.1646        0.019700    10.6891
+MIRIFU_4CSLICE12                YIdlVert3               -0.8171               -0.7977        0.019400     2.3743
+MIRIFU_4CSLICE12                YIdlVert4                0.1702                0.1714        0.001200     0.7001
+
