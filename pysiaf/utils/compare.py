@@ -1,15 +1,12 @@
 """Functions to support comparisons between SIAF files.
-
 Authors
 -------
     Johannes Sahlmann
-
 References
 ----------
     The format of the difference files was adapted from Colin Cox' matchcsv.py
     dict_compare was adapted from
     https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
-
 """
 from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
@@ -48,9 +45,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
                  selected_aperture_name=None, ignore_attributes=None, tags=None):
     """Compare two SIAF files and write a difference file.
-
     Generate comparison figures showing the apertures if specified.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -64,7 +59,6 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     verbose
     make_figures
     selected_aperture_name
-
     """
     if verbose:
         print(comparison_siaf_input)
@@ -211,9 +205,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                      verbose=True, make_figures=False, selected_aperture_name=None,
                                      instrument=None, make_plot=False, tags=None):
     """Compare the forward-backward roundtrip transformations of two SIAF files.
-
     and write a difference file.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -230,12 +222,10 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     selected_aperture_name
     instrument
     make_plot
-
     Returns
     -------
     roundtrip_table : astropy.table.Table object
         table containing roundtrip data
-
     """
     if verbose:
         print(comparison_siaf_input)
@@ -344,7 +334,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                               '_mean' in c]) + '}'
     roundtrip_table['AperName siaf0_dx_mean siaf0_dy_mean siaf1_dx_mean siaf1_dy_mean '
                     'difference_dx_mean difference_dy_mean'.split()].\
-        write(print_file, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', 
+        write(print_file, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ',
               bookend=False, overwrite=True, formats=eval(fstring))
 
     print('Apertures with significant roundtrip error differences:')
@@ -387,21 +377,17 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
 
 def dict_compare(dictionary_1, dictionary_2):
     """Compare two dictionaries and return keys of the differing items.
-
     From https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
-
     Parameters
     ----------
     dictionary_1 : dict
         first dictionary
     dictionary_2 : dict
         second dictionary
-
     Returns
     -------
     added, removed, modified, same : set
         Sets of dictionary keys that were added, removed, modified, or are the same
-
     """
     d1_keys = set(dictionary_1.keys())
     d2_keys = set(dictionary_2.keys())
@@ -418,7 +404,6 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
                                selected_aperture_name=None, tags=None, mark_ref=False,
                                xlimits=None, ylimits=None, filename_appendix='', label=False):
     """Visualize aperture of two SIAF files.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -433,7 +418,6 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
 
     Returns
     -------
-
     """
     comparison_siaf = get_siaf(comparison_siaf_input)
     instrument = comparison_siaf.instrument
