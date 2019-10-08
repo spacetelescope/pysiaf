@@ -400,9 +400,9 @@ def dict_compare(dictionary_1, dictionary_2):
     return added, removed, modified, same
 
 
-def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, report_dir=None,
+def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None, report_dir=None,
                                selected_aperture_name=None, tags=None, mark_ref=False,
-                               xlimits=None, filename_appendix='', label=False):
+                               xlimits=None, ylimits=None, filename_appendix='', label=False):
     """Visualize aperture of two SIAF files.
     Parameters
     ----------
@@ -413,6 +413,9 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
     report_dir
     selected_aperture_name
     tags
+    xlimits : tuple of limits of output plots
+    ylimits : tuple of limits of output plots
+
     Returns
     -------
     """
@@ -446,7 +449,9 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
             aperture.plot(mark_ref=mark_ref, label=label)
         pl.title(tag_list[j])
         if xlimits is not None:
-            pl.xlim(xlimits)
+            pl.xlim(*xlimits)
+        if ylimits is not None:
+            pl.ylim(*ylimits)
 
         outdir = show_save_plot(report_dir=report_dir)
 

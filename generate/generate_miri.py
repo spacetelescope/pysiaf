@@ -376,7 +376,6 @@ def get_mirim_coefficients(distortion_file, verbose=False):
     AR = AF * np.cos(a) - BF * np.sin(a)
     BR = AF * np.sin(a) + BF * np.cos(a)
 
-
     CR = polynomial.prepend_rotation_to_polynomial(CS, yanglec)
     DR = polynomial.prepend_rotation_to_polynomial(DS, yanglec)
 
@@ -671,8 +670,7 @@ if emulate_delivery:
     print('\nRunning regression test of pre_delivery_siaf against test_data:')
     test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
 
-
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'cdp7b']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
         if compare_to == 'cdp7b':
             ref_siaf = pysiaf.Siaf(instrument,
                                    filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
@@ -687,10 +685,11 @@ if emulate_delivery:
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf,
                                                  reference_siaf_input=ref_siaf, tags=tags,
-                                                 report_dir=pre_delivery_dir, )
+                                                 report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags)
+                                           report_dir=pre_delivery_dir, tags=tags,
+                                           xlimits=(-360, -520), ylimits=(-440, -300))
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture

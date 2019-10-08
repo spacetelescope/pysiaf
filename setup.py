@@ -121,7 +121,7 @@ setup(
         'matplotlib>=1.4.3',
         'lxml>=3.6.4',
         'scipy>=0.17',
-        'openpyxl>=2.4'
+        'openpyxl==2.5.0'
     ],
     tests_require=['pytest'],
     packages=find_packages(),
