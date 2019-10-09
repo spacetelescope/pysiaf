@@ -8,6 +8,7 @@ References
     dict_compare was adapted from
     https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
 """
+
 from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import os
@@ -60,6 +61,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     make_figures
     selected_aperture_name
     """
+
     if verbose:
         print(comparison_siaf_input)
     comparison_siaf = get_siaf(comparison_siaf_input)
@@ -227,6 +229,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     roundtrip_table : astropy.table.Table object
         table containing roundtrip data
     """
+
     if verbose:
         print(comparison_siaf_input)
     comparison_siaf = get_siaf(comparison_siaf_input)
@@ -389,6 +392,7 @@ def dict_compare(dictionary_1, dictionary_2):
     added, removed, modified, same : set
         Sets of dictionary keys that were added, removed, modified, or are the same
     """
+
     d1_keys = set(dictionary_1.keys())
     d2_keys = set(dictionary_2.keys())
     intersect_keys = d1_keys.intersection(d2_keys)
@@ -419,6 +423,7 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
     Returns
     -------
     """
+
     comparison_siaf = get_siaf(comparison_siaf_input)
     instrument = comparison_siaf.instrument
 
