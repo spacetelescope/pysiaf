@@ -20,6 +20,7 @@ import os
 
 import numpy as np
 from astropy.table import Table
+import pylab as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare
@@ -368,36 +369,39 @@ if emulate_delivery:
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        # make figures for JWSTSIAF-129 Jira ticket
-        # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
-        #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
-        #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
-        #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
-        #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
-        #                            ]
+        create_jira_plots = False
+        if create_jira_plots:
+            # make figures for JWSTSIAF-129 Jira ticket
+            # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
+            #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
+            #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
+            #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
+            #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
+            #                            ]
 
-        # make figures for JWSTSIAF-61 Jira ticket
-        selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
-                                   ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
-                                   ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
-                                   ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
-                                   ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
-                                   ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
-                                   ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+            # make figures for JWSTSIAF-61 Jira ticket
+            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
 
-                                   ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
-                                   ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
-                                   ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
-                                   ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
-                                   ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
-                                   ]
+                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+                                       ]
 
-        for selected_aperture_name in selected_aperture_names:
-            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                               report_dir=pre_delivery_dir, tags=tags,
-                                               selected_aperture_name=selected_aperture_name,
-                                               mark_ref=True, filename_appendix=selected_aperture_name[0],
-                                               label=True)
+            for selected_aperture_name in selected_aperture_names:
+                compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                                   report_dir=pre_delivery_dir, tags=tags,
+                                                   selected_aperture_name=selected_aperture_name,
+                                                   mark_ref=True, filename_appendix=selected_aperture_name[0],
+                                                   label=True)
+                pl.close('all')  # stops system from being overwhelmed with too may plots
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
