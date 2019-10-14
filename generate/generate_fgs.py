@@ -16,11 +16,6 @@ References
     Created by Colin Cox on 2016-11-23.
     Fit using data from Julia Zhou's worksheeet
 
-    For a detailed description of the MIRI SIAF, the underlying reference files, and the
-    transformations,
-    see Proffitt et al., 2017: The Pre-Flight SI Aperture File, Part 4: NIRSpec
-    (JWST-STScI-005921).
-
 
 """
 
@@ -45,6 +40,7 @@ importlib.reload(generate_reference_files)
 
 username = os.getlogin()
 timestamp = Time.now()
+
 
 #############################
 instrument = 'FGS'
