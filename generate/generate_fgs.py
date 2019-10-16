@@ -166,10 +166,10 @@ for AperName in aperture_name_list:
     aperture_dict[AperName] = aperture
 
 
-#sort SIAF entries in the order of the aperture definition file
+# sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
 
-#third pass to set DDCNames apertures, which depend on other apertures
+# third pass to set DDCNames apertures, which depend on other apertures
 ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
 ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
 ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
@@ -188,16 +188,30 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx']) #, label='update'
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
+                                                   file_format=['xml', 'xlsx']) #, label='update'
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     compare_against_prd = True
 
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-M-024', 'FGS_SIAF_2018-04-17']:
 
-    if compare_against_prd:
-        tags = {'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}
-        ref_siaf = pysiaf.Siaf(instrument)
+        if compare_to == 'PRDOPSSOC-M-024':
+            prd_data_dir = pysiaf.constants.JWST_PRD_DATA_ROOT.rsplit('PRD', 1)[0]
+            ref_siaf = pysiaf.Siaf(instrument,
+                                   filename=os.path.join(prd_data_dir,
+                                                         'PRDOPSSOC-M-024/SIAFXML/SIAFXML/FGS_SIAF.xml'))
+        elif compare_to == 'FGS_SIAF_2018-04-17':
+            prd_data_dir = pysiaf.constants.JWST_DELIVERY_DATA_ROOT.rsplit('pre', 1)[0]
+            ref_siaf = pysiaf.Siaf(instrument,
+                                   filename=os.path.join(prd_data_dir,
+                                                         'temporary_data/FGS/FGS_SIAF_2018-04-17.xml'))
+        else:
+            # compare new SIAF with PRD version
+            ref_siaf = pysiaf.Siaf(instrument)
+
+        tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir,
@@ -205,11 +219,10 @@ if emulate_delivery:
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                                  tags=tags,
-                                                 report_dir=pre_delivery_dir,)
+                                                 report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                   report_dir=pre_delivery_dir, tags=tags)
-
+                                           report_dir=pre_delivery_dir, tags=tags)
 
     # run some tests on the new SIAF
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
