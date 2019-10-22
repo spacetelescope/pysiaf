@@ -1,7 +1,7 @@
 <SiafEntries>
-  <!--Generated 2019-04-05T02:01:30.331 utc-->
+  <!--Generated 2019-10-22T00:44:31.607 utc-->
   <!--by jsahlmann-->
-  <!--pysiaf version 0.2.4.dev3+g96f0c582-->
+  <!--pysiaf version 0.5.0.dev11+g24f3fe12-->
   <SiafEntry>
     <InstrName>FGS</InstrName>
     <AperName>FGS1_FULL_OSS</AperName>
@@ -39,7 +39,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.850142322844019e-02</Sci2IdlX10>
-    <Sci2IdlX11>1.929879867024198e-17</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>4.724065965216520e-07</Sci2IdlX20>
     <Sci2IdlX21>6.821876392826733e-07</Sci2IdlX21>
     <Sci2IdlX22>1.641824601199867e-07</Sci2IdlX22>
@@ -159,7 +159,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.850142322844019e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.336808689942018e-19</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>-4.724065965216520e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.821876392826732e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.641824601199865e-07</Sci2IdlX22>
@@ -279,7 +279,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.799153890897432e-02</Sci2IdlX10>
-    <Sci2IdlX11>-2.710505431213761e-20</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>-2.706376124838634e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.558868336078503e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.052678201286174e-07</Sci2IdlX22>
@@ -399,7 +399,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.799153890897432e-02</Sci2IdlX10>
-    <Sci2IdlX11>2.710505431213761e-20</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>2.706376124838634e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.558868336078503e-07</Sci2IdlX21>
     <Sci2IdlX22>1.052678201286174e-07</Sci2IdlX22>
@@ -504,8 +504,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-90.11986053</V3SciXAngle>
+    <V3SciYAngle>-0.62591236</V3SciYAngle>
     <XIdlVert1>-4.2648</XIdlVert1>
     <XIdlVert2>4.3580</XIdlVert2>
     <XIdlVert3>4.2589</XIdlVert3>
@@ -519,7 +519,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.733488559192913e-02</Sci2IdlX10>
-    <Sci2IdlX11>-7.445087152685052e-04</Sci2IdlX11>
+    <Sci2IdlX11>-7.445087152685048e-04</Sci2IdlX11>
     <Sci2IdlX20>-1.936857350184408e-07</Sci2IdlX20>
     <Sci2IdlX21>-4.619392729395393e-07</Sci2IdlX21>
     <Sci2IdlX22>-5.804912354672498e-08</Sci2IdlX22>
@@ -624,8 +624,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-89.88292140</V3SciXAngle>
+    <V3SciYAngle>-0.89887189</V3SciYAngle>
     <XIdlVert1>-4.3177</XIdlVert1>
     <XIdlVert2>4.3685</XIdlVert2>
     <XIdlVert3>4.3097</XIdlVert3>
@@ -639,7 +639,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.782483159946270e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.241561623730116e-04</Sci2IdlX11>
+    <Sci2IdlX11>-4.241561623730112e-04</Sci2IdlX11>
     <Sci2IdlX20>-3.226164376885263e-07</Sci2IdlX20>
     <Sci2IdlX21>-5.584042878458879e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.038715299361209e-07</Sci2IdlX22>
@@ -759,7 +759,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.850142322844019e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.336808689942018e-19</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>-4.724065965216520e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.821876392826732e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.641824601199865e-07</Sci2IdlX22>
@@ -864,8 +864,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-90.11986053</V3SciXAngle>
+    <V3SciYAngle>-0.62591236</V3SciYAngle>
     <XIdlVert1>-1.0656</XIdlVert1>
     <XIdlVert2>1.0893</XIdlVert2>
     <XIdlVert3>1.0653</XIdlVert3>
@@ -879,7 +879,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.733488559192913e-02</Sci2IdlX10>
-    <Sci2IdlX11>-7.445087152685052e-04</Sci2IdlX11>
+    <Sci2IdlX11>-7.445087152685048e-04</Sci2IdlX11>
     <Sci2IdlX20>-1.936857350184408e-07</Sci2IdlX20>
     <Sci2IdlX21>-4.619392729395393e-07</Sci2IdlX21>
     <Sci2IdlX22>-5.804912354672498e-08</Sci2IdlX22>
@@ -984,8 +984,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-89.88292140</V3SciXAngle>
+    <V3SciYAngle>-0.89887189</V3SciYAngle>
     <XIdlVert1>-1.0787</XIdlVert1>
     <XIdlVert2>1.0920</XIdlVert2>
     <XIdlVert3>1.0782</XIdlVert3>
@@ -999,7 +999,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.782483159946270e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.241561623730116e-04</Sci2IdlX11>
+    <Sci2IdlX11>-4.241561623730112e-04</Sci2IdlX11>
     <Sci2IdlX20>-3.226164376885263e-07</Sci2IdlX20>
     <Sci2IdlX21>-5.584042878458879e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.038715299361209e-07</Sci2IdlX22>
@@ -1119,7 +1119,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.850142322844019e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.336808689942018e-19</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>-4.724065965216520e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.821876392826732e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.641824601199865e-07</Sci2IdlX22>
@@ -1224,8 +1224,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-90.11986053</V3SciXAngle>
+    <V3SciYAngle>-0.62591236</V3SciYAngle>
     <XIdlVert1>-0.2664</XIdlVert1>
     <XIdlVert2>0.2723</XIdlVert2>
     <XIdlVert3>0.2664</XIdlVert3>
@@ -1239,7 +1239,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.733488559192913e-02</Sci2IdlX10>
-    <Sci2IdlX11>-7.445087152685052e-04</Sci2IdlX11>
+    <Sci2IdlX11>-7.445087152685048e-04</Sci2IdlX11>
     <Sci2IdlX20>-1.936857350184408e-07</Sci2IdlX20>
     <Sci2IdlX21>-4.619392729395393e-07</Sci2IdlX21>
     <Sci2IdlX22>-5.804912354672498e-08</Sci2IdlX22>
@@ -1344,8 +1344,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
     <DetSciParity>1</DetSciParity>
-    <V3SciXAngle>-89.56298058</V3SciXAngle>
-    <V3SciYAngle>-1.25081713</V3SciYAngle>
+    <V3SciXAngle>-89.88292140</V3SciXAngle>
+    <V3SciYAngle>-0.89887189</V3SciYAngle>
     <XIdlVert1>-0.2696</XIdlVert1>
     <XIdlVert2>0.2730</XIdlVert2>
     <XIdlVert3>0.2696</XIdlVert3>
@@ -1359,7 +1359,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.782483159946270e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.241561623730116e-04</Sci2IdlX11>
+    <Sci2IdlX11>-4.241561623730112e-04</Sci2IdlX11>
     <Sci2IdlX20>-3.226164376885263e-07</Sci2IdlX20>
     <Sci2IdlX21>-5.584042878458879e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.038715299361209e-07</Sci2IdlX22>
@@ -1479,7 +1479,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.850142322844019e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.336808689942018e-19</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>-4.724065965216520e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.821876392826732e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.641824601199865e-07</Sci2IdlX22>
@@ -1584,8 +1584,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.55024883</V3SciXAngle>
+    <V3SciYAngle>1.05554924</V3SciYAngle>
     <XIdlVert1>-4.3828</XIdlVert1>
     <XIdlVert2>4.5297</XIdlVert2>
     <XIdlVert3>4.3819</XIdlVert3>
@@ -1704,8 +1704,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.10127546</V3SciXAngle>
+    <V3SciYAngle>0.57597870</V3SciYAngle>
     <XIdlVert1>-4.3651</XIdlVert1>
     <XIdlVert2>4.4311</XIdlVert2>
     <XIdlVert3>4.3635</XIdlVert3>
@@ -1839,7 +1839,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.799153890897432e-02</Sci2IdlX10>
-    <Sci2IdlX11>2.710505431213761e-20</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>2.706376124838634e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.558868336078503e-07</Sci2IdlX21>
     <Sci2IdlX22>1.052678201286174e-07</Sci2IdlX22>
@@ -1944,8 +1944,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.55024883</V3SciXAngle>
+    <V3SciYAngle>1.05554924</V3SciYAngle>
     <XIdlVert1>-1.0956</XIdlVert1>
     <XIdlVert2>1.1310</XIdlVert2>
     <XIdlVert3>1.0955</XIdlVert3>
@@ -2064,8 +2064,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.10127546</V3SciXAngle>
+    <V3SciYAngle>0.57597870</V3SciYAngle>
     <XIdlVert1>-1.0911</XIdlVert1>
     <XIdlVert2>1.1067</XIdlVert2>
     <XIdlVert3>1.0910</XIdlVert3>
@@ -2199,7 +2199,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.799153890897432e-02</Sci2IdlX10>
-    <Sci2IdlX11>2.710505431213761e-20</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>2.706376124838634e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.558868336078503e-07</Sci2IdlX21>
     <Sci2IdlX22>1.052678201286174e-07</Sci2IdlX22>
@@ -2304,8 +2304,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.55024883</V3SciXAngle>
+    <V3SciYAngle>1.05554924</V3SciYAngle>
     <XIdlVert1>-0.2739</XIdlVert1>
     <XIdlVert2>0.2827</XIdlVert2>
     <XIdlVert3>0.2739</XIdlVert3>
@@ -2424,8 +2424,8 @@
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
     <DetSciParity>-1</DetSciParity>
-    <V3SciXAngle>-90.75703022</V3SciXAngle>
-    <V3SciYAngle>0.19027904</V3SciYAngle>
+    <V3SciXAngle>-91.10127546</V3SciXAngle>
+    <V3SciYAngle>0.57597870</V3SciYAngle>
     <XIdlVert1>-0.2728</XIdlVert1>
     <XIdlVert2>0.2766</XIdlVert2>
     <XIdlVert3>0.2728</XIdlVert3>
@@ -2559,7 +2559,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.799153890897432e-02</Sci2IdlX10>
-    <Sci2IdlX11>2.710505431213761e-20</Sci2IdlX11>
+    <Sci2IdlX11>0.000000000000000e+00</Sci2IdlX11>
     <Sci2IdlX20>2.706376124838634e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.558868336078503e-07</Sci2IdlX21>
     <Sci2IdlX22>1.052678201286174e-07</Sci2IdlX22>
@@ -2679,7 +2679,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.853257374014760e-02</Sci2IdlX10>
-    <Sci2IdlX11>1.763578851626246e-05</Sci2IdlX11>
+    <Sci2IdlX11>1.763578851626290e-05</Sci2IdlX11>
     <Sci2IdlX20>-4.767300250404664e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.897190591087148e-07</Sci2IdlX21>
     <Sci2IdlX22>-1.662414451639921e-07</Sci2IdlX22>
@@ -2799,7 +2799,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.857595997935356e-02</Sci2IdlX10>
-    <Sci2IdlX11>-4.926925672441828e-04</Sci2IdlX11>
+    <Sci2IdlX11>-4.926925672441824e-04</Sci2IdlX11>
     <Sci2IdlX20>-2.191835768228638e-07</Sci2IdlX20>
     <Sci2IdlX21>-8.639054266575355e-07</Sci2IdlX21>
     <Sci2IdlX22>-7.181795264824755e-08</Sci2IdlX22>
@@ -2919,7 +2919,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.986314817218066e-02</Sci2IdlX10>
-    <Sci2IdlX11>8.419904507472543e-04</Sci2IdlX11>
+    <Sci2IdlX11>8.419904507472548e-04</Sci2IdlX11>
     <Sci2IdlX20>-7.425631404878995e-07</Sci2IdlX20>
     <Sci2IdlX21>-8.826071396912121e-07</Sci2IdlX21>
     <Sci2IdlX22>-2.801622188074795e-07</Sci2IdlX22>
@@ -3039,7 +3039,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.907343645498672e-02</Sci2IdlX10>
-    <Sci2IdlX11>1.787724555480154e-04</Sci2IdlX11>
+    <Sci2IdlX11>1.787724555480159e-04</Sci2IdlX11>
     <Sci2IdlX20>-7.429058763088414e-07</Sci2IdlX20>
     <Sci2IdlX21>-5.268185920129204e-07</Sci2IdlX21>
     <Sci2IdlX22>-2.451824837729974e-07</Sci2IdlX22>
@@ -3159,7 +3159,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.736424528924920e-02</Sci2IdlX10>
-    <Sci2IdlX11>-7.277376898369113e-04</Sci2IdlX11>
+    <Sci2IdlX11>-7.277376898369109e-04</Sci2IdlX11>
     <Sci2IdlX20>-1.999931302970506e-07</Sci2IdlX20>
     <Sci2IdlX21>-4.692279498429244e-07</Sci2IdlX21>
     <Sci2IdlX22>-6.000930030913737e-08</Sci2IdlX22>
@@ -3279,7 +3279,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.797937391415383e-02</Sci2IdlX10>
-    <Sci2IdlX11>1.040729467258345e-05</Sci2IdlX11>
+    <Sci2IdlX11>1.040729467258342e-05</Sci2IdlX11>
     <Sci2IdlX20>2.666725152608732e-07</Sci2IdlX20>
     <Sci2IdlX21>-6.538017637251053e-07</Sci2IdlX21>
     <Sci2IdlX22>1.036541929272775e-07</Sci2IdlX22>
@@ -3399,7 +3399,7 @@
     <Sci2IdlDeg>4</Sci2IdlDeg>
     <Sci2IdlX00>0.000000000000000e+00</Sci2IdlX00>
     <Sci2IdlX10>6.900455578001960e-02</Sci2IdlX10>
-    <Sci2IdlX11>-7.180579064009257e-04</Sci2IdlX11>
+    <Sci2IdlX11>-7.180579064009258e-04</Sci2IdlX11>
     <Sci2IdlX20>4.939614155462543e-07</Sci2IdlX20>
     <Sci2IdlX21>-8.431704246251628e-07</Sci2IdlX21>
     <Sci2IdlX22>2.038583880552687e-07</Sci2IdlX22>
