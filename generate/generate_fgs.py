@@ -150,18 +150,30 @@ for AperName in aperture_name_list:
         aperture._parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
         parent_aperture = aperture_dict[aperture._parent_apertures]
 
-        for attribute in 'V3SciYAngle V3SciXAngle DetSciYAngle Sci2IdlDeg DetSciParity ' \
-                         'VIdlParity'.split():
+        for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity ' \
+                         'VIdlParity V3IdlYAngle'.split(): # V3SciYAngle V3SciXAngle
             setattr(aperture, attribute, getattr(parent_aperture, attribute))
 
-        aperture.V3IdlYAngle = tools.v3sciyangle_to_v3idlyangle(aperture.V3SciYAngle)
-
         aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
+
+        # see Excel spreadsheet -> Calc -> N85
+        phi_y = np.rad2deg(np.arctan2(aperture.Sci2IdlX11*aperture.VIdlParity, aperture.Sci2IdlY11))
+        aperture.V3SciYAngle = aperture.V3IdlYAngle + phi_y
+
+        phi_x = np.rad2deg(np.arctan2(aperture.Sci2IdlX10*aperture.VIdlParity, aperture.Sci2IdlY10))
+        aperture.V3SciXAngle = aperture.V3IdlYAngle + phi_x
+
         if 'MIMF' in AperName:
             for attribute in 'V3SciYAngle V3SciXAngle'.split():
                 setattr(aperture, attribute, 0.)
 
     aperture.complement()
+
+
+    # set Sci2IdlX11 to zero if it is very small
+    coefficient_threshold = 1e-15
+    if np.abs(aperture.Sci2IdlX11) < coefficient_threshold:
+        aperture.Sci2IdlX11 = 0.
 
     aperture_dict[AperName] = aperture
 
@@ -193,20 +205,18 @@ if emulate_delivery:
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
-    compare_against_prd = True
-
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-M-024', 'FGS_SIAF_2018-04-17']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-M-024', 'FGS_SIAF_2019-04-15']:
 
         if compare_to == 'PRDOPSSOC-M-024':
             prd_data_dir = pysiaf.constants.JWST_PRD_DATA_ROOT.rsplit('PRD', 1)[0]
             ref_siaf = pysiaf.Siaf(instrument,
                                    filename=os.path.join(prd_data_dir,
                                                          'PRDOPSSOC-M-024/SIAFXML/SIAFXML/FGS_SIAF.xml'))
-        elif compare_to == 'FGS_SIAF_2018-04-17':
+        elif compare_to == 'FGS_SIAF_2019-04-15':
             prd_data_dir = pysiaf.constants.JWST_DELIVERY_DATA_ROOT.rsplit('pre', 1)[0]
             ref_siaf = pysiaf.Siaf(instrument,
                                    filename=os.path.join(prd_data_dir,
-                                                         'temporary_data/FGS/FGS_SIAF_2018-04-17.xml'))
+                                                         'temporary_data/FGS/FGS_SIAF_2019-04-15.xml'))
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
