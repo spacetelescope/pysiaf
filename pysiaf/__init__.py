@@ -31,4 +31,6 @@ try:
               "consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf".format(
               JWST_PRD_VERSION, newest_prd))
 except requests.exceptions.ConnectionError:
+    print("**WARNING**: NO INTERNET CONNECTION\nLOCAL JWST PRD VERSION {} CANNOT BE CHECKED AGAINST "
+          "ONLINE VERSION".format(JWST_PRD_VERSION))
     pass
