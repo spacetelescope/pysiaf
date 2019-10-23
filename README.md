@@ -3,6 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/spacetelescope/pysiaf/badge.svg?branch=master)](https://coveralls.io/github/spacetelescope/pysiaf?branch=master)
 [![PyPI version](https://badge.fury.io/py/pysiaf.svg)](https://badge.fury.io/py/pysiaf)
 [![PyPI - License](https://img.shields.io/pypi/l/Django.svg)](https://github.com/spacetelescope/pysiaf/blob/master/LICENSE.md)
+[![DOI](https://zenodo.org/badge/122391513.svg)](https://zenodo.org/badge/latestdoi/122391513)
+
 
 # pysiaf
 Handling of Science Instrument Aperture Files (SIAF) for space telescopes. SIAF files contain detailed geometric focal plane descriptions and relationships for the science instruments. They are maintained in the JWST/HST PRD (Project Reference Database).  
@@ -90,6 +92,16 @@ Plotting (only a small subset of options is illustrated):
     pl.show()
 
 ````
+
+### Documentation
+The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*, available at https://jwst.stsci.edu/documentation/technical-documents. 
+
+pysiaf is documented at https://pysiaf.readthedocs.io/  
+    
+### Citation
+If you find this package useful, please consider citing the Zenodo record using the DOI badge above.
+Please find additional citation instructions in [CITATION](CITATION). 
+    
     
 ### Disclaimer
 
@@ -99,13 +111,8 @@ Distortion and other transformations in pysiaf are of sufficient accuracy for op
 For science-grade transformations, please consult the science pipelines and their reference files (see https://jwst-docs.stsci.edu/display/JDAT/JWST+Data+Reduction+Pipeline)     
 
 For science observation planning, the focal plane geometry implemented in the latest APT (http://www.stsci.edu/hst/proposing/apt) takes precedence.  
-
 The STScI Telescopes Branch provides full support of pysiaf for S&OC operational systems only.
 
-### Documentation
-The primary reference for a description of JWST SIAF is Cox & Lallo, 2017, JWST-STScI-001550: *Description and Use of the JWST Science Instrument Aperture File*, available at https://jwst.stsci.edu/documentation/technical-documents. 
-
-pysiaf is documented at https://pysiaf.readthedocs.io/  
 
 ### Contributing
 Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
@@ -124,14 +131,6 @@ The following describes the typical work flow for contributing to the pysiaf pro
 9. Assign a reviewer from the team for the pull request.
 10. Iterate with the reviewer over any needed changes until the reviewer accepts and merges your branch.
 11. Delete your local copy of your branch.
-
-
-
-### References
-The pysiaf prototype was developed on gitlab (STScI internal access only) and is kept there for reference: https://grit.stsci.edu/ins-tel/jwst_siaf_prototype
-
-pysiaf partially recycles code from https://github.com/mperrin/jwxml
-
 
 ### Installation  
 This package was developed in a python 3.5 environment.   
