@@ -205,7 +205,7 @@ if emulate_delivery:
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-M-024', 'FGS_SIAF_2019-04-15']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'FGS_SIAF_2019-04-15']:
 
         if compare_to == 'PRDOPSSOC-M-024':
             prd_data_dir = pysiaf.constants.JWST_PRD_DATA_ROOT.rsplit('PRD', 1)[0]
