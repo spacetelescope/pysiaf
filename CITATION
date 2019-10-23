@@ -1,6 +1,8 @@
-If you use `pysiaf` for work/research presented in a publication (whether directly, or as a dependency to another package), we recommend and encourage the following acknowledgment:
+If you use `pysiaf` for work/research presented in a publication (whether directly,
+or as a dependency to another package), we recommend and encourage the following acknowledgment:
 
-  This research made use of pysiaf, an open source Python package for Handling of Science Instrument Aperture Files (SIAF) for space telescopes (Sahlmann et al, 2019).
+  This research made use of pysiaf, an open source Python package for Handling of
+  Science Instrument Aperture Files (SIAF) for space telescopes (Sahlmann et al, 2019).
 
 where (Sahlmann et al, 2019) is a citation of the Zenodo record, e.g.:
 
