@@ -1,8 +1,24 @@
-See http://journals.aas.org/authors/references.html#Software on how to
-cite software.
+If you use `pysiaf` for work/research presented in a publication (whether directly, or as a dependency to another package), we recommend and encourage the following acknowledgment:
 
-GitHub has Zenodo DOI integration:
-https://guides.github.com/activities/citable-code/
+  This research made use of pysiaf, an open source Python package for Handling of Science Instrument Aperture Files (SIAF) for space telescopes (Sahlmann et al, 2019).
 
-Also see https://swcarpentry.github.io/git-novice/12-citation/
-for further reading.
+where (Sahlmann et al, 2019) is a citation of the Zenodo record, e.g.:
+
+@software{johannes_sahlmann_2019_3516964,
+  author       = {Johannes Sahlmann and
+                  Shannon Osborne and
+                  Colin Cox and
+                  charlesrp and
+                  David Law and
+                  Marshall Perrin and
+                  marthaboyer and
+                  Joseph Hunkeler},
+  title        = {{spacetelescope/pysiaf: Introduce check against
+                   online version}},
+  month        = oct,
+  year         = 2019,
+  publisher    = {Zenodo},
+  version      = {v0.5.1},
+  doi          = {10.5281/zenodo.3516964},
+  url          = {https://doi.org/10.5281/zenodo.3516964}
+}
