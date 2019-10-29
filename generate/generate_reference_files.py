@@ -46,8 +46,25 @@ from pysiaf import iando
 username = os.getlogin()
 timestamp = Time.now()
 
-def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
+def generate_fgs_fsw_coefficients(siaf=None, verbose=False, scale=0.06738281367):
+    """Write the FGS distortion coefficients for the flight software to file.
 
+    The FGS flight software (FSW) necessitates the distortion coefficients in a format that differs
+    from the SIAF. In particular, the FSW coefficients are scale-corrected, i.e. they transform
+    between ideal and distorted pixel coordinates. Second, the origin of the coordinate system
+    used for transformation is at an aperture corner and not at the center like for the SIAF
+    transformation.
+
+    Parameters
+    ----------
+    siaf : pysiaf.Siaf instance
+        The Siaf object to extract the coefficients from.
+    verbose : bool
+        verbosity
+    scale : float
+        Global pixel scale in arcsec/pixel
+
+    """
     if siaf is None:
         siaf = pysiaf.Siaf('fgs')
 
@@ -65,7 +82,6 @@ def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
         # center_offset_y = 1023.5
         center_offset_x = aperture.XSciRef - 1.
         center_offset_y = aperture.YSciRef - 1.
-        scale = 0.06738281367  # arcsec/pixel
 
         if verbose:
             print('External scale {}'.format(scale))
@@ -107,7 +123,6 @@ def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
         if verbose:
             fsw_coefficients.pprint()
 
-
         table = Table(names=('parameter_name', 'value'), dtype=(object, float))
         table.add_row(['XOFFSET', center_offset_x])
         table.add_row(['YOFFSET', center_offset_y])
@@ -116,7 +131,6 @@ def generate_fgs_fsw_coefficients(siaf=None, verbose=False):
             for i in range(len(fsw_coefficients[colname])):
                 table.add_row(['{}_{}'.format(colname, i), fsw_coefficients[colname][i]])
         table['parameter_name'] = np.array(table['parameter_name']).astype(str)
-
 
         # write to file
         fsw_distortion_file = os.path.join(pre_delivery_dir, 'ifgs{}_distortion_tbl.txt'.format(aperture_name[3]))
@@ -1083,7 +1097,20 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
 
 # FGS reference files
 def generate_siaf_pre_flight_reference_files_fgs(verbose=False, mode='siaf'):
+    """Write the FGS alignment and distortion source data files to file.
 
+    The inputs are hardcoded reference positions and distortion coefficients obtained from
+    Honeywell.
+
+    Parameters
+    ----------
+    verbose : bool
+        verbosity
+    mode : str
+        Either `siaf` or `fsw`. This specifies in which convention/format the distortion
+        coefficients are written.
+
+    """
     instrument = 'FGS'
 
     center_offset_x = 1023.5
@@ -1226,7 +1253,6 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False, mode='siaf'):
                 CS0 = copy.deepcopy(CS[0])
                 DS0 = copy.deepcopy(DS[0])
 
-                # print('Sci Ref', xsref,ysref)
                 CS[0] = 0.0
                 DS[0] = 0.0
                 CR = polynomial.prepend_rotation_to_polynomial(CS, np.degrees(betaY))
