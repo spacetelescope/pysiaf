@@ -217,7 +217,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     report_dir
     verbose
     make_figures
-    selected_aperture_name str or list
+    selected_aperture_name : str or list
         aperture name(s) to include in plot
     skipped_aperture_type : str or list
         aperture type(s) not to include in plot
