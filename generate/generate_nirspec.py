@@ -270,7 +270,6 @@ def read_pcf_gtp(file_name):
         EOF = False  # end of file
         while EOF is False:
             line = f.readline()
-            # print('reading line: {}'.format(line))
             if line.strip() == '':
                 EOF = True
             elif line[0] == '#':
@@ -280,7 +279,6 @@ def read_pcf_gtp(file_name):
                 EOS = False # end of section
                 key = line[1:].strip().split()[0]
                 data[key] = []
-                # while (section_line.strip() != ''):
                 empty_line_counter = 0
                 while EOS is False:
                     last_pos = f.tell()
@@ -359,7 +357,6 @@ def rearrange(X):
 def reorder(pcfName, verbose=False):
     """Use pcf files"""
 
-    # order = 5
     print('\n  =============================================%\n')
     print(pcfName)
     xForward = []
@@ -703,7 +700,7 @@ for field in pcf_file_mapping.keys():
 # reference file delivered by IDT
 nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertures.fits')
 nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
-nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].tolist()
+nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].data.astype(str).tolist()
 
 # dictionary that maps NIRSpec nomenclature to SIAF nomenclature
 nirspec_slit_apertures_data_mapping = {}
@@ -867,7 +864,6 @@ for AperName in aperture_name_list:
         aperture.DDCName = 'None'
 
     aperture_dict[AperName] = aperture
-
 
 # second pass to set parameters for apertures that depend on other apertures
 for AperName in aperture_name_list:
