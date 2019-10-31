@@ -88,7 +88,7 @@ def process_nirspec_aperture(aperture, verbose=False):
             # therefore the polynomial coefficients are redefined so the net transformation from
             # the DET to GWA plane is the same as is obtained when the NRS2_FULL_OSS row is used.
             # see JWST-STScI-005921.)
-            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.FlipXY(
+            pcf_data[pcf_name]['{}_modified'.format(axis)] = polynomial.flip_xy(
                 pcf_data[pcf_name]['{}_modified'.format(axis)])
 
     if 'MIMF' not in AperName:
@@ -182,7 +182,6 @@ def process_nirspec_aperture(aperture, verbose=False):
     aperture.V3SciYAngle = betaY
     aperture.V3IdlYAngle = aperture.V3SciYAngle
 
-
     # The usual SIAF ideal plane is completely bypassed in the target acquisition calculations.
     # In the OSS and FULLSCA rows, an ideal plane is nevertheless defined by choosing a reference
     # point near the center of each detector and using the combined TA transformations to project
@@ -223,7 +222,7 @@ def process_nirspec_aperture(aperture, verbose=False):
                                                    -gwa_corners_y[j], order=aperture.Sci2IdlDeg)
         tel_corners_y[j] = -3600 * (
             polynomial.poly(gwa_to_ote_coefficients_y, -gwa_corners_x[j], -gwa_corners_y[j],
-                        order=aperture.Sci2IdlDeg) + V3_TO_YAN_OFFSET_DEG)
+                            order=aperture.Sci2IdlDeg) + V3_TO_YAN_OFFSET_DEG)
 
     # Ideal corners
     idl_corners_x = np.zeros(len(sci_corners_x))
@@ -231,7 +230,7 @@ def process_nirspec_aperture(aperture, verbose=False):
     for j in range(len(gwa_corners_x)):
         idl_corners_x[j] = aperture.VIdlParity * (tel_corners_x[j] - aperture.V2Ref) * np.cos(
             np.deg2rad(aperture.V3IdlYAngle)) - aperture.VIdlParity * (
-        tel_corners_y[j] - aperture.V3Ref) * np.sin(np.deg2rad(aperture.V3IdlYAngle))
+            tel_corners_y[j] - aperture.V3Ref) * np.sin(np.deg2rad(aperture.V3IdlYAngle))
         idl_corners_y[j] = (tel_corners_x[j] - aperture.V2Ref) * np.sin(
             np.deg2rad(aperture.V3IdlYAngle)) + (tel_corners_y[j] - aperture.V3Ref) * np.cos(
             np.deg2rad(aperture.V3IdlYAngle))
@@ -268,20 +267,18 @@ def read_pcf_gtp(file_name):
     data = OrderedDict()
     data['Filename'] = file_name
     with open(file_name) as f:
-        EOF = False # end of file
+        EOF = False  # end of file
         while EOF is False:
             line = f.readline()
-            # print('reading line: {}'.format(line))
             if line.strip() == '':
                 EOF = True
             elif line[0] == '#':
-                #skip comments
+                # skip comments
                 line = f.readline()
             elif line[0] == '*':
                 EOS = False # end of section
                 key = line[1:].strip().split()[0]
                 data[key] = []
-                # while (section_line.strip() != ''):
                 empty_line_counter = 0
                 while EOS is False:
                     last_pos = f.tell()
@@ -333,7 +330,6 @@ def rearrange(X):
     print ()
     # Now put in conventiomal layout
 
-
     k1 = 0
     for i in range(order + 1):
         for j in range(i + 1):
@@ -355,16 +351,14 @@ def rearrange(X):
             XL1[k1] = square[i - j, j]
             k1 += 1
 
-    return (XL0, XL1)
+    return XL0, XL1
 
 
 def reorder(pcfName, verbose=False):
-    '''Use pcf files
-       '''
+    """Use pcf files"""
 
-    # order = 5
-    print ('\n  =============================================%\n')
-    print (pcfName)
+    print('\n  =============================================%\n')
+    print(pcfName)
     xForward = []
     yForward = []
     xBackward = []
@@ -440,34 +434,34 @@ def reorder(pcfName, verbose=False):
     if verbose:
         print('\n', pcfName)
         print('A')
-        polynomial.print_triangle(A2, order=5)
+        polynomial.print_triangle(A2)
         print('\nB')
-        polynomial.print_triangle(B2, order=5)
+        polynomial.print_triangle(B2)
         print('\nC')
-        polynomial.print_triangle(C2, order=5)
+        polynomial.print_triangle(C2)
         print('\nD')
-        polynomial.print_triangle(D2, order=5)
+        polynomial.print_triangle(D2)
 
     # Convert V2V3 output polynomials to XAN,YAN type
     # print (year, pcfName)
     # print (pcfName)
-    year='2017'
+    year = '2017'
     if year == '2016' and 'GWA2OTE' in pcfName:
 
         B2 = -B2
         B2[0] = B2[0] - 0.13
         (C2, D2) = polynomial.TwoStep(C2, D2, [0.0, 1.0, 0.0], [-0.13, 0.0, -1.0], 5)
-        print ('\nAdjusted Polynomials')
+        print('\nAdjusted Polynomials')
         print('A')
-        polynomial.print_triangle(A2, order=5)
+        polynomial.print_triangle(A2)
         print('\nB')
-        polynomial.print_triangle(B2, order=5)
+        polynomial.print_triangle(B2)
         print('\nC')
-        polynomial.print_triangle(C2, order=5)
+        polynomial.print_triangle(C2)
         print('\nD')
-        polynomial.print_triangle(D2, order=5)
+        polynomial.print_triangle(D2)
 
-    return (A2, B2, C2, D2)
+    return A2, B2, C2, D2
 
 
 def rows(pcfName, new_pcf_format=False):
@@ -479,7 +473,7 @@ def rows(pcfName, new_pcf_format=False):
 
     pcf = open(pcfName)
     text = pcf.readline()
-    print ('First Line\n', text)
+    print('First Line\n', text)
     while text != '':
         text = pcf.readline()
         if 'Factor' in text:
@@ -487,31 +481,31 @@ def rows(pcfName, new_pcf_format=False):
             [xfactor, yfactor] = text.split()
             xfactor = float(xfactor)
             yfactor = float(yfactor)
-            print ('xfactor', xfactor)
-            print ('yfactor', yfactor)
+            print('xfactor', xfactor)
+            print('yfactor', yfactor)
 
         if '*FitOrder' in text:
             text = pcf.readline()
             order = int(text.split()[0])
-            print ('order', order)
+            print('order', order)
 
         if '*Rotation' in text:
             rotation = float(pcf.readline())
-            print ('rotation', rotation)
+            print('rotation', rotation)
 
         if '*InputRotation' in text:
             text = pcf.readline()
             [xCenterIn, yCenterIn] = text.split()
             xCenterIn = float(xCenterIn)
             yCenterIn = float(yCenterIn)
-            print ('CenterIn', xCenterIn, yCenterIn)
+            print('CenterIn', xCenterIn, yCenterIn)
 
         if '*OutputRotation' in text:
             text = pcf.readline()
             [xCenterOut, yCenterOut] = text.split()
             xCenterOut = float(xCenterOut)
             yCenterOut = float(yCenterOut)
-            print ('CenterOut', xCenterOut, yCenterOut)
+            print('CenterOut', xCenterOut, yCenterOut)
 
         # if ('OTE' in pcfName) or ('Fore_' in pcfName) or (new_pcf_format is True):  # Different layout
         if ('OTE' in pcfName) or (new_pcf_format is True):  # Different layout
@@ -599,12 +593,12 @@ def rows(pcfName, new_pcf_format=False):
                     yBackward.append(f)
                 yBackward = np.array(yBackward)
 
-    print ('Finished reading PCF file')
+    print('Finished reading PCF file')
 
     # Now generate two SIAF rows First half of each coefficient set gets reorderd and goes in first L0 row
     # Second half goes in second L1 row
     # Design AperName using name of pcf file
-    print ('pcfName', pcfName)
+    print('pcfName', pcfName)
 
     if 'OTE' in pcfName:
         ApName1 = 'NRS_SKY_OTEIP'
@@ -618,28 +612,27 @@ def rows(pcfName, new_pcf_format=False):
 
     # print ('\nAL0, AL1')
     (AL0, AL1) = rearrange(xForward)
-    # polynomial.print_triangle(AL0,5)
+    # polynomial.print_triangle(AL0)
     # print ()
-    # polynomial.print_triangle(AL1,5)
+    # polynomial.print_triangle(AL1)
 
     # print ('\nBL0, BL1')
     (BL0, BL1) = rearrange(yForward)
-    # polynomial.print_triangle(BL0,5)
+    # polynomial.print_triangle(BL0)
     # print ()
-    # polynomial.print_triangle(BL1,5)
+    # polynomial.print_triangle(BL1)
 
     # print ('\nCL0, CL1')
     (CL0, CL1) = rearrange(xBackward)
-    # polynomial.print_triangle(CL0,5)
+    # polynomial.print_triangle(CL0)
     # print ()
-    # polynomial.print_triangle(CL1,5)
+    # polynomial.print_triangle(CL1)
 
     # print ('\nDL0, DL1')
     (DL0, DL1) = rearrange(yBackward)
-    # polynomial.print_triangle(DL0,5)
+    # polynomial.print_triangle(DL0)
     # print ()
-    # polynomial.print_triangle(DL1,5)
-
+    # polynomial.print_triangle(DL1)
 
     data = {}
     data['L0'] = {}
@@ -707,7 +700,7 @@ for field in pcf_file_mapping.keys():
 # reference file delivered by IDT
 nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertures.fits')
 nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
-nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].tolist()
+nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].data.astype(str).tolist()
 
 # dictionary that maps NIRSpec nomenclature to SIAF nomenclature
 nirspec_slit_apertures_data_mapping = {}
@@ -740,8 +733,6 @@ fore_pcf_file_mapping['NRS_F110W_OTEIP_MSA_L1'] = 'Fore_F110W.pcf'
 fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L0'] = 'Fore_F140X.pcf'
 fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L1'] = 'Fore_F140X.pcf'
 
-
-
 aperture_dict = OrderedDict()
 aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
 
@@ -754,7 +745,6 @@ for AperName in aperture_name_list:
     # index in the aperture definition table
     aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
 
-
     # Retrieve basic aperture parameters from definition files
     for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
         # setattr(aperture, attribute, getattr(parent_aperture, attribute))
@@ -762,7 +752,6 @@ for AperName in aperture_name_list:
         if np.ma.is_masked(value):
             value = None
         setattr(aperture, attribute, value)
-
 
     aperture.DDCName = 'not set'
     aperture.Comment = None
@@ -774,7 +763,7 @@ for AperName in aperture_name_list:
     if aperture.AperType == 'OSS':
         aperture.VIdlParity = 1
         aperture.DetSciParity = 1
-        aperture.DetSciYAngle = 0.
+        aperture.DetSciYAngle = 0
 
     if AperName in ['NRS_FULL_MSA', 'NRS_VIGNETTED_MSA']:
         aperture.VIdlParity = -1
@@ -804,8 +793,8 @@ for AperName in aperture_name_list:
         for attribute in [name for name in nirspec_slit_apertures_data.colnames if 'IdlVert' in name]:
             setattr(aperture, attribute, nirspec_slit_apertures_data[attribute][index])
 
-
-    # Target Acquisition Transforms: Transformation coefficients from .pcf files ['491_GWA', '492_GWA', 'F140X_GWA_OTE', 'F110W_GWA_OTE', 'CLEAR_GWA_OTE']
+    # Target Acquisition Transforms: Transformation coefficients from .pcf files ['491_GWA', '492_GWA',
+    # 'F140X_GWA_OTE', 'F110W_GWA_OTE', 'CLEAR_GWA_OTE']
     elif AperName in pcf_file_mapping.keys():
         number_of_coefficients = len(pcf_data[AperName]['A'])
         polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
@@ -866,18 +855,17 @@ for AperName in aperture_name_list:
         #  IDT parametric model convention “forward” direction maps to Sci2IdlX
         for i in range(polynomial_degree + 1):
             for j in np.arange(i + 1):
-                setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), data[sequence_string]['A'][k]) # *xForward
-                setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), data[sequence_string]['B'][k]) # *yForward
-                setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), data[sequence_string]['C'][k]) # *xBackward
-                setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), data[sequence_string]['D'][k]) # *yBackward
+                setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), data[sequence_string]['A'][k])  # *xForward
+                setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), data[sequence_string]['B'][k])  # *yForward
+                setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), data[sequence_string]['C'][k])  # *xBackward
+                setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), data[sequence_string]['D'][k])  # *yBackward
                 k += 1
 
         aperture.DDCName = 'None'
 
     aperture_dict[AperName] = aperture
 
-
-#second pass to set parameters for apertures that depend on other apertures
+# second pass to set parameters for apertures that depend on other apertures
 for AperName in aperture_name_list:
     index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
     aperture = aperture_dict[AperName]
@@ -900,10 +888,10 @@ for AperName in aperture_name_list:
     aperture_dict[AperName] = aperture
 
 
-#sort SIAF entries in the order of the aperture definition file
+# sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
 
-#third pass to set DDCNames apertures, which depend on other apertures
+# third pass to set DDCNames apertures, which depend on other apertures
 ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
 ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
 ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
@@ -912,13 +900,13 @@ for AperName in aperture_name_list:
         separation_tel_from_ddc_aperture = np.sqrt((aperture_dict[AperName].V2Ref - ddc_v2)**2 + (aperture_dict[AperName].V3Ref - ddc_v3)**2)
         aperture_dict[AperName].DDCName = ddc_apername_mapping[ddc_siaf_aperture_names[np.argmin(separation_tel_from_ddc_aperture)]]
 
+######################################
+# SIAF content generation finished
+######################################
+
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
-# write the SIAFXML to disk
-
-
 emulate_delivery = True
-# emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -926,14 +914,30 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
+                                                   file_format=['xml', 'xlsx'])
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     # compare new SIAF with PRD version
-    ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
+
+        if compare_to == pysiaf.JWST_PRD_VERSION:
+            ref_siaf = pysiaf.Siaf(instrument)
+
+        tags = {'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}
+
+        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+
+        compare.compare_transformation_roundtrip(pre_delivery_siaf,
+                                                 reference_siaf_input=ref_siaf, tags=tags,
+                                                 report_dir=pre_delivery_dir,
+                                                 skipped_aperture_type=['TRANSFORM'])
+
+        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                           report_dir=pre_delivery_dir, tags=tags,
+                                           skipped_aperture_type=['TRANSFORM'])
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_nirspec
@@ -948,9 +952,8 @@ if emulate_delivery:
     test_nirspec.test_nirspec_slit_transformations(siaf=pre_delivery_siaf, verbose=False)
 
     new_siaf = pre_delivery_siaf
+
 else:
-
-
     # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
     [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'])
     print('SIAFXML written in {}'.format(filename))
@@ -964,24 +967,26 @@ else:
 
     report_dir = os.path.join(REPORTS_ROOT, instrument)
     comparison_aperture_names = [AperName for AperName in aperture_name_list if 'MIMF' in AperName]
-    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType == 'SLIT']
-    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if aperture.AperType in ['FULLSCA', 'OSS']]
+    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
+    #                              aperture.AperType == 'SLIT']
+    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
+    #                              aperture.AperType in ['FULLSCA', 'OSS']]
     # comparison_aperture_names = pcf_file_mapping.keys()
 
     # comparison_aperture_names = ['NRS_SKY_OTEIP']
     # comparison_aperture_names = ['NRS_SKY_OTEIP']
     comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS']
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=['NRS_SKY_OTEIP'])
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+    #                      selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+    #                      selected_aperture_name=['NRS_SKY_OTEIP'])
+    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+    #                      selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
     compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
     # tools.compare_siaf_xml(ref_siaf, new_siaf)
 
-selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and ('MSA' not in AperName) and ('SKY' not in AperName)]
+selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
+                          ('MSA' not in AperName) and ('SKY' not in AperName)]
 # run roundtrip test on all apertures
-compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=selected_aperture_name)
-
-
-
-
-
+compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
+                                         selected_aperture_name=selected_aperture_name)
