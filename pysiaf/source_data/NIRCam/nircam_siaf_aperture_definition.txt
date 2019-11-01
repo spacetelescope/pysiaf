@@ -144,25 +144,35 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
         NRCALL_GRISMR_WFSS , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None ,                                    NRCALL_FULL ,      grism_wfss
          NRCB5_GRISMC_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
          NRCB5_GRISMR_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
-            NRCA2_MASK210R , SUBARRAY ,   743.5 ,   571.0 ,      640 ,      640 ,   320.5 ,   321.0 ,                                     NRCA2_FULL ,           wedge
-            NRCA5_MASK335R , SUBARRAY ,  1403.0 ,  1667.0 ,      320 ,      320 ,   161.0 ,   160.0 ,                                     NRCA5_FULL ,           wedge
-            NRCA5_MASK430R , SUBARRAY ,  1078.0 ,  1673.0 ,      320 ,      320 ,   161.0 ,   160.0 ,                                     NRCA5_FULL ,           wedge
-             NRCA4_MASKSWB , SUBARRAY ,   479.0 ,   541.0 ,      640 ,      640 ,   320.0 ,   321.0 ,                                     NRCA4_FULL ,           wedge
-             NRCA5_MASKLWB , SUBARRAY ,   437.0 ,  1667.0 ,      320 ,      320 ,   161.0 ,   160.0 ,                                     NRCA5_FULL ,           wedge
-          NRCA2_TAMASK210R , SUBARRAY ,   493.5 ,   821.0 ,      128 ,      128 ,    64.5 ,    65.0 ,                                     NRCA2_FULL ,           wedge
-          NRCA5_TAMASK335R , SUBARRAY ,  1563.0 ,  1552.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-          NRCA5_TAMASK430R , SUBARRAY ,  1239.0 ,  1552.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-           NRCA4_TAMASKSWB , SUBARRAY ,   158.0 ,   791.0 ,      128 ,      128 ,    65.0 ,    64.0 ,                                     NRCA4_FULL ,           wedge
-           NRCA5_TAMASKLWB , SUBARRAY ,   314.0 ,  1558.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-          NRCA5_TAMASKLWBL , SUBARRAY ,   596.0 ,  1559.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-          NRCA4_TAMASKSWBS , SUBARRAY ,   814.0 ,   791.0 ,      128 ,      128 ,    64.0 ,    65.0 ,                                     NRCA4_FULL ,           wedge
-     NRCA2_FULL_TAMASK210R , SUBARRAY ,   493.5 ,   821.0 ,     2048 ,     2048 ,   493.5 ,  1229.0 ,                                     NRCA2_FULL ,           wedge
-     NRCA5_FULL_TAMASK335R , SUBARRAY ,  1563.0 ,  1552.0 ,     2048 ,     2048 ,   487.0 ,  1552.0 ,                                     NRCA5_FULL ,           wedge
-     NRCA5_FULL_TAMASK430R , SUBARRAY ,  1239.0 ,  1552.0 ,     2048 ,     2048 ,   811.0 ,  1552.0 ,                                     NRCA5_FULL ,           wedge
-      NRCA4_FULL_TAMASKSWB , SUBARRAY ,   158.0 ,   791.0 ,     2048 ,     2048 ,   158.0 ,  1259.0 ,                                     NRCA4_FULL ,           wedge
-      NRCA5_FULL_TAMASKLWB , SUBARRAY ,   314.0 ,  1558.0 ,     2048 ,     2048 ,  1736.0 ,  1558.0 ,                                     NRCA5_FULL ,           wedge
-     NRCA5_FULL_TAMASKLWBL , SUBARRAY ,   596.0 ,  1559.0 ,     2048 ,     2048 ,  1454.0 ,  1559.0 ,                                     NRCA5_FULL ,           wedge
-     NRCA4_FULL_TAMASKSWBS , SUBARRAY ,   814.0 ,   791.0 ,     2048 ,     2048 ,   814.0 ,  1259.0 ,                                     NRCA4_FULL ,           wedge
+             NRCA2_MASK210R, SUBARRAY ,   712.0 ,   528.0 ,      640 ,      640 ,   321.0 ,   336.0 ,                                     NRCA2_FULL ,           wedge
+             NRCA5_MASK335R, SUBARRAY ,  1398.0 ,  1673.5 ,      320 ,      320 ,   160.0 ,   172.5 ,                                     NRCA5_FULL ,           wedge
+             NRCA5_MASK430R, SUBARRAY ,  1075.5 ,  1673.5 ,      320 ,      320 ,   160.5 ,   172.5 ,                                     NRCA5_FULL ,           wedge
+              NRCA4_MASKSWB, SUBARRAY ,   490.5 ,   535.5 ,      640 ,      640 ,   320.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
+              NRCA5_MASKLWB, SUBARRAY ,   435.0 ,  1682.5 ,      320 ,      320 ,   160.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
+           NRCA2_TAMASK210R, SUBARRAY ,   468.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
+         NRCA2_FSTAMASK210R, SUBARRAY ,   627.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
+           NRCA5_TAMASK335R, SUBARRAY ,  1558.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+         NRCA5_FSTAMASK335R, SUBARRAY ,  1429.5 ,  1551.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+           NRCA5_TAMASK430R, SUBARRAY ,  1235.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+         NRCA5_FSTAMASK430R, SUBARRAY ,  1113.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+            NRCA4_TAMASKSWB, SUBARRAY ,   821.5 ,   787.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
+           NRCA4_TAMASKSWBS, SUBARRAY ,   166.5 ,   786.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
+          NRCA4_FSTAMASKSWB, SUBARRAY ,   392.5 ,   774.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
+            NRCA5_TAMASKLWB, SUBARRAY ,   312.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+           NRCA5_TAMASKLWBL, SUBARRAY ,   593.5 ,  1558.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+          NRCA5_FSTAMASKLWB, SUBARRAY ,   391.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
+      NRCA2_FULL_TAMASK210R, SUBARRAY ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
+    NRCA2_FULL_FSTAMASK210R, SUBARRAY ,   627.5 ,   773.5 ,     2048 ,     2048 ,   627.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
+      NRCA5_FULL_TAMASK335R, SUBARRAY ,  1558.5 ,  1550.5 ,     2048 ,     2048 ,   490.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
+    NRCA5_FULL_FSTAMASK335R, SUBARRAY ,  1429.5 ,  1551.5 ,     2048 ,     2048 ,   619.5 ,  1551.5 ,                                     NRCA5_FULL ,           wedge
+      NRCA5_FULL_TAMASK430R, SUBARRAY ,  1235.5 ,  1550.5 ,     2048 ,     2048 ,   813.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
+    NRCA5_FULL_FSTAMASK430R, SUBARRAY ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,  1935.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+       NRCA4_FULL_TAMASKSWB, SUBARRAY ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,                                     NRCA4_FULL ,           wedge
+      NRCA4_FULL_TAMASKSWBS, SUBARRAY ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,                                     NRCA4_FULL ,           wedge
+     NRCA4_FULL_FSTAMASKSWB, SUBARRAY ,   392.5 ,   774.5 ,     2048 ,     2048 ,   392.5 ,  1274.5 ,                                     NRCA4_FULL ,           wedge
+       NRCA5_FULL_TAMASKLWB, SUBARRAY ,   312.5 ,  1557.5 ,     2048 ,     2048 ,  1736.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+      NRCA5_FULL_TAMASKLWBL, SUBARRAY ,   593.5 ,  1558.5 ,     2048 ,     2048 ,  1455.5 ,  1558.5 ,                                     NRCA5_FULL ,           wedge
+     NRCA5_FULL_FSTAMASKLWB, SUBARRAY ,   391.5 ,  1557.5 ,     2048 ,     2048 ,  1657.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
             NRCB1_MASK210R , SUBARRAY ,  1287.0 ,   511.0 ,      640 ,      640 ,   320.0 ,   321.0 ,                                     NRCB1_FULL ,           wedge
             NRCB5_MASK335R , SUBARRAY ,  1345.0 ,   359.0 ,      320 ,      320 ,   160.0 ,   161.0 ,                                     NRCB5_FULL ,           wedge
             NRCB5_MASK430R , SUBARRAY ,  1021.0 ,   361.0 ,      320 ,      320 ,   160.0 ,   161.0 ,                                     NRCB5_FULL ,           wedge
@@ -175,16 +185,6 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
            NRCB5_TAMASKLWB , SUBARRAY ,   862.0 ,   481.0 ,       64 ,       64 ,    32.0 ,    33.0 ,                                     NRCB5_FULL ,           wedge
           NRCB5_TAMASKLWBL , SUBARRAY ,   540.0 ,   483.0 ,       64 ,       64 ,    32.0 ,    33.0 ,                                     NRCB5_FULL ,           wedge
           NRCB3_TAMASKSWBS , SUBARRAY ,  1209.0 ,   759.0 ,      128 ,      128 ,    64.0 ,    65.0 ,                                     NRCB3_FULL ,           wedge
-        NRCA2_FSTAMASK210R , SUBARRAY ,   637.5 ,   821.0 ,      128 ,      128 ,    64.5 ,    65.0 ,                                     NRCA2_FULL ,           wedge
-         NRCA4_FSTAMASKSWB , SUBARRAY ,   486.0 ,   791.0 ,      128 ,      128 ,    64.0 ,    65.0 ,                                     NRCA4_FULL ,           wedge
-         NRCA5_FSTAMASKLWB , SUBARRAY ,   455.0 ,  1558.5 ,       64 ,       64 ,    33.0 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-        NRCA5_FSTAMASK335R , SUBARRAY ,  1491.0 ,  1552.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-        NRCA5_FSTAMASK430R , SUBARRAY ,  1167.0 ,  1552.0 ,       64 ,       64 ,    33.0 ,    32.0 ,                                     NRCA5_FULL ,           wedge
-   NRCA2_FULL_FSTAMASK210R , SUBARRAY ,   637.5 ,   821.0 ,     2048 ,     2048 ,   637.5 ,  1229.0 ,                                     NRCA2_FULL ,           wedge
-    NRCA4_FULL_FSTAMASKSWB , SUBARRAY ,   486.0 ,   791.0 ,     2048 ,     2048 ,   486.0 ,  1259.0 ,                                     NRCA4_FULL ,           wedge
-    NRCA5_FULL_FSTAMASKLWB , SUBARRAY ,   455.0 ,  1558.5 ,     2048 ,     2048 ,  1595.0 ,  1585.5 ,                                     NRCA5_FULL ,           wedge
-   NRCA5_FULL_FSTAMASK335R , SUBARRAY ,  1491.0 ,  1552.0 ,     2048 ,     2048 ,   559.0 ,  1552.0 ,                                     NRCA5_FULL ,           wedge
-   NRCA5_FULL_FSTAMASK430R , SUBARRAY ,  1167.0 ,  1552.0 ,     2048 ,     2048 ,   883.0 ,  1552.0 ,                                     NRCA5_FULL ,           wedge
        NRCA4_MASKSWB_F182M , SUBARRAY ,   422.0 ,   542.0 ,      640 ,      640 ,   263.0 ,   321.0 ,                                     NRCA4_FULL ,           wedge
        NRCA4_MASKSWB_F187N , SUBARRAY ,   430.9 ,   542.0 ,      640 ,      640 ,   271.9 ,   321.0 ,                                     NRCA4_FULL ,           wedge
        NRCA4_MASKSWB_F210M , SUBARRAY ,   477.7 ,   542.0 ,      640 ,      640 ,   318.7 ,   321.0 ,                                     NRCA4_FULL ,           wedge
