@@ -680,8 +680,8 @@ source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print ('Loading reference files from directory: {}'.format(source_data_dir))
 
 # XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
-tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX.gtp')
-tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY.gtp')
+tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX_TA.gtp')
+tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY_TA.gtp')
 disperser_mirror_tiltx = read_pcf_gtp(tiltx_gtp_file)
 disperser_mirror_tilty = read_pcf_gtp(tilty_gtp_file)
 
