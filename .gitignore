@@ -9,7 +9,6 @@ dist/
 *.egg-info
 *.swp
 .pytest_cache
-pysiaf/temporary_data
 docs/_build
 ~$*_SIAF.xlsx
 wedge_offsets.txt
@@ -17,3 +16,4 @@ miri_siaf_ifu_slice_table.fits
 *.pdf
 examples/.ipynb_checkpoints
 *.zip
+pysiaf/temporary_data

@@ -1,0 +1,97 @@
+Reference:  32 apertures in FGS_SIAF_2019-04-15
+Comparison: 32 apertures in pre_delivery
+
+Number of modified apertures 32. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+FGS1_FULL_OSS                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_FULL_OSS                  Sci2IdlX11    1.929879867024e-17                   0.0        0.000000   100.0000
+
+FGS1_FULL                     V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_FULL                     V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_FULL_OSS                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_FULL_OSS                 V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FULL                     V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_FULL                     V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS1_SUB128LL                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128LL                 V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB128DIAG               V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128DIAG               V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB128CNTR               V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128CNTR               V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_SUB32LL                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32LL                  V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB32DIAG                V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32DIAG                V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB32CNTR                V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32CNTR                V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_SUB8LL                   V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8LL                   V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB8DIAG                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8DIAG                 V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB8CNTR                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8CNTR                 V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_SUB128LL                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128LL                 V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB128DIAG                     V2Ref             -8.583815             -8.583802        0.000013     0.0002
+FGS2_SUB128DIAG               V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128DIAG               V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB128CNTR               V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128CNTR               V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_SUB32LL                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32LL                  V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB32DIAG                      V2Ref             -8.583815             -8.583802        0.000013     0.0002
+FGS2_SUB32DIAG                V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32DIAG                V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB32CNTR                V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32CNTR                V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_SUB8LL                   V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8LL                   V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB8DIAG                       V2Ref             -8.583815             -8.583802        0.000013     0.0002
+FGS2_SUB8DIAG                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8DIAG                 V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB8CNTR                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8CNTR                 V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS1_FP1MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP2MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP3MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP4MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP5MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_FP1MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP2MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP3MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP4MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP5MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+

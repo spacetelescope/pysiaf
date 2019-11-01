@@ -1,0 +1,10 @@
+# FGS DDC mapping definition file for SIAF
+# 
+# This file contains the DDC aperture mapping.
+# 
+# Generated 2018-04-19T16:44:22.903 utc
+# jsahlmann@nereus.stsci.edu
+# 
+SIAF_NAME ,     DDC_NAME
+FGS2_FULL , GUIDER2_CNTR
+FGS1_FULL , GUIDER1_CNTR
