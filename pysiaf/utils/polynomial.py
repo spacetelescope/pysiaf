@@ -8,6 +8,9 @@ Authors
 """
 
 from __future__ import absolute_import, print_function, division
+
+from collections import OrderedDict
+
 import numpy as np
 from scipy import linalg
 
@@ -652,6 +655,68 @@ def rescale(A, B, C, D, scale):
             k += 1
 
     return A_scaled, B_scaled, C_scaled, D_scaled
+
+def scale_from_derivatives(pc1, pc2):
+    """Return scale estimate."""
+    return np.sqrt(pc1 ** 2 + pc2 ** 2)
+
+
+def rotation_from_derivatives(pc1, pc2):
+    """Return rotation estimate."""
+    return np.rad2deg(np.arctan2(pc1, pc2))
+
+
+def rotation_scale_skew_from_derivatives(b, c, e, f):
+    """Compute rotations, scales, and skews from polynomial derivatives.
+
+    The four partial derivatives of coefficients that transform between two
+    frames E and R are:
+
+    Parameters
+    ----------
+    b : float
+        (dx_E)/(dx_R )
+    c : float
+        (dx_E)/(dy_R )
+    e : float
+        (dy_E)/(dx_R )
+    f : float
+        (dy_E)/(dy_R )
+
+    Returns
+    -------
+
+    """
+    # compute scales
+    scale_x = scale_from_derivatives(b, e)
+    scale_y = scale_from_derivatives(c, f)
+    scale_global = np.sqrt(b * f - c * e)
+
+    # compute rotations
+    rotation_x = rotation_from_derivatives(-e, b)
+    rotation_y = rotation_from_derivatives(c, f)
+    rotation_global = (rotation_x + rotation_y) / 2.
+    rotation_global_2 = np.rad2deg(np.arctan2(c - e, b + f))
+
+    # compute skews
+    skew = rotation_y - rotation_x
+    skew_onaxis = (b - f) / 2.  # difference in x/y scale
+    skew_offaxis = (c + e) / 2.  # non-perpendicularity between the axes
+
+    results = OrderedDict()
+    results['scale_x'] = scale_x
+    results['scale_y'] = scale_y
+    results['scale_global'] = scale_global
+    results['rotation_x'] = rotation_x
+    results['rotation_y'] = rotation_y
+    results['rotation_global'] = rotation_global
+    results['rotation_global_2'] = rotation_global_2
+    results['skew'] = skew
+    results['skew_onaxis'] = skew_onaxis
+    results['skew_offaxis'] = skew_offaxis
+
+    return results
+
 
 
 def shift_coefficients(a, xshift, yshift, verbose=False):
