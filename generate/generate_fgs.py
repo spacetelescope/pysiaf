@@ -205,7 +205,7 @@ if emulate_delivery:
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'FGS_SIAF_2019-04-15']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'FGS_SIAF_bugfix-only']:  # 'FGS_SIAF_2019-04-15']:
 
         if compare_to == 'PRDOPSSOC-M-024':
             prd_data_dir = pysiaf.constants.JWST_PRD_DATA_ROOT.rsplit('PRD', 1)[0]
@@ -217,6 +217,10 @@ if emulate_delivery:
             ref_siaf = pysiaf.Siaf(instrument,
                                    filename=os.path.join(prd_data_dir,
                                                          'temporary_data/FGS/FGS_SIAF_2019-04-15.xml'))
+        elif compare_to == 'FGS_SIAF_bugfix-only':
+            ref_siaf = pysiaf.Siaf(instrument,
+                                   filename=os.path.join(pre_delivery_dir,
+                                                         'FGS_SIAF_bugfix-only.xml'))
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
