@@ -269,6 +269,34 @@ class Aperture(object):
         """Representation of instance."""
         return "<pysiaf.Aperture object AperName={0} >".format(self.AperName)
 
+    def set_distortion_coefficients_from_file(self, file_name):
+        """Set polynomial from standardized file.
+
+        Parameters
+        ----------
+        file_name : str
+            Reference file containing coefficients
+
+        Returns
+        -------
+
+        """
+
+        polynomial_coefficients = read.read_siaf_distortion_coefficients(file_name=file_name)
+
+        number_of_coefficients = len(polynomial_coefficients)
+        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        self.Sci2IdlDeg = polynomial_degree
+
+        # set polynomial coefficients
+        siaf_indices = ['{:02d}'.format(d) for d in polynomial_coefficients['siaf_index'].tolist()]
+        for i in range(polynomial_degree + 1):
+            for j in np.arange(i + 1):
+                row_index = siaf_indices.index('{:d}{:d}'.format(i, j))
+                for colname in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
+                    setattr(self, '{}{:d}{:d}'.format(colname, i, j),
+                            polynomial_coefficients[colname][row_index])
+
     def closed_polygon_points(self, to_frame, rederive=True):
         """Compute closed polygon points of aperture outline. Used for plotting and path generation.
 
@@ -405,6 +433,8 @@ class Aperture(object):
     def corners(self, to_frame, rederive=True):
         """Return coordinates of the aperture vertices in the specified frame.
 
+        The positions refer to the `outside` corners of the corner pixels, not the pixel centers.
+
         Parameters
         ----------
         to_frame : str
@@ -448,6 +478,82 @@ class Aperture(object):
             cdict[seed] = np.array([getattr(self, s) for s in DISTORTION_ATTRIBUTES if
                                    seed in s])[0:number_of_coefficients]
         return cdict
+
+
+    def get_polynomial_derivatives(self, location='fiducial', coefficient_seed='Sci2Idl'):
+        """Return derivative values for scale and rotation derivation.
+
+        The four partial derivatives of coefficients that transform between two
+        frames E and R are:
+
+        b=(dx_E)/(dx_R )
+        c=(dx_E)/(dy_R )
+        e=(dy_E)/(dx_R )
+        f=(dy_E)/(dy_R )
+
+        Parameters
+        ----------
+        location : str or dict
+            if dict, has to have 'x' and 'y' elements
+        coefficient_seed
+
+        Returns
+        -------
+        dict
+
+        """
+
+        if location=='fiducial':
+            # partial derivatives in first-order approximation or at fiducial position
+            # where polynomial x,y arguments are 0,0
+            b = getattr(self, '{}{}{}0'.format(coefficient_seed, 'X', 1))
+            c = getattr(self, '{}{}{}1'.format(coefficient_seed, 'X', 1))
+            e = getattr(self, '{}{}{}0'.format(coefficient_seed, 'Y', 1))
+            f = getattr(self, '{}{}{}1'.format(coefficient_seed, 'Y', 1))
+
+        else:
+            # compute partial derivatives at reference point
+            reference_point_x = getattr(self, 'XSciRef')
+            reference_point_y = getattr(self, 'YSciRef')
+
+            evaluation_point_x = location['x'] - reference_point_x
+            evaluation_point_y = location['y'] - reference_point_y
+
+            coefficients = self.get_polynomial_coefficients()
+            b = polynomial.dpdx(coefficients['{}X'.format(coefficient_seed)], evaluation_point_x,
+                                evaluation_point_y)
+            c = polynomial.dpdy(coefficients['{}X'.format(coefficient_seed)], evaluation_point_x,
+                                evaluation_point_y)
+            e = polynomial.dpdx(coefficients['{}Y'.format(coefficient_seed)], evaluation_point_x,
+                                evaluation_point_y)
+            f = polynomial.dpdy(coefficients['{}Y'.format(coefficient_seed)], evaluation_point_x,
+                                evaluation_point_y)
+
+        return {'b': b, 'c': c, 'e': e, 'f': f}
+
+    def get_polynomial_linear_parameters(self, location='fiducial', coefficient_seed='Sci2Idl'):
+        """Return linear polynomial parameters.
+
+        Parameters
+        ----------
+        location
+        coefficient_seed
+
+        Returns
+        -------
+
+        """
+        if self.Sci2IdlDeg is None:
+            raise RuntimeError('No distortion coefficients available.')
+
+        derivatives = self.get_polynomial_derivatives(location=location,
+                                                      coefficient_seed=coefficient_seed)
+
+        results = polynomial.rotation_scale_skew_from_derivatives(derivatives['b'],
+                                                                  derivatives['c'],
+                                                                  derivatives['e'],
+                                                                  derivatives['f'])
+        return results
 
     def set_polynomial_coefficients(self, sci2idlx, sci2idly, idl2scix, idl2sciy):
         """Set the values of polynomial coefficients.
