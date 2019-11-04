@@ -373,31 +373,35 @@ def reorder(pcfName, verbose=False):
             print ('Order', order, terms, ' terms')
 
         if '*xForward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                xForward.append(float(f[k]))
+                text = pcf.readline()
+                xForward.append(float(text))  # f[k]
             xForward = np.array(xForward)
 
         if '*xBackward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                xBackward.append(float(f[k]))
+                text = pcf.readline()
+                xBackward.append(float(text))  # f[k]
             xBackward = np.array(xBackward)
 
         if '*yForward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                yForward.append(float(f[k]))
+                text = pcf.readline()
+                yForward.append(float(text))  # f[k]
             yForward = np.array(yForward)
 
         if '*yBackward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                yBackward.append(float(f[k]))
+                text = pcf.readline()
+                yBackward.append(float(text))  # f[k]
             yBackward = np.array(yBackward)
     pcf.close()
 
@@ -917,9 +921,11 @@ if emulate_delivery:
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     # compare new SIAF with PRD version
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
-
-        if compare_to == pysiaf.JWST_PRD_VERSION:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'NIRSpec_SIAF_bugfix-only']:
+        if compare_to == 'NIRSpec_SIAF_bugfix-only':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                     'NIRSpec_SIAF_bugfix-only.xml'))
+        else:
             ref_siaf = pysiaf.Siaf(instrument)
 
         tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
