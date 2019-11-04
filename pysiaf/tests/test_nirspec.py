@@ -114,12 +114,10 @@ def test_against_test_data(siaf=None):
                             elif key_seed == 'rms':
                                 difference_metrics[key_name].append(np.std(test_data['difference_{}'.format(parameter_name)]))
 
-
-
                         print('{} {} SCA_to_OTE transform comparison to {:>10}  tilt={} {:>10} MEAN={:+1.3e} RMS={:1.3e}'.format(sca_name, filter_name, AperName, include_tilt, parameter_name, difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index], difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index]))
 
-                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index] < 1e-9
-                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] < 5e-9
+                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index] < 5e-4, "Failed for {}".format(AperName)
+                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] < 5e-7, "Failed for {}".format(AperName)
 
                         if 0:
                             threshold = 1e-6
