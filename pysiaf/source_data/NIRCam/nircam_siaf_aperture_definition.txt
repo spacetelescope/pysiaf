@@ -166,7 +166,7 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
       NRCA5_FULL_TAMASK335R, SUBARRAY ,  1558.5 ,  1550.5 ,     2048 ,     2048 ,   490.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
     NRCA5_FULL_FSTAMASK335R, SUBARRAY ,  1429.5 ,  1551.5 ,     2048 ,     2048 ,   619.5 ,  1551.5 ,                                     NRCA5_FULL ,           wedge
       NRCA5_FULL_TAMASK430R, SUBARRAY ,  1235.5 ,  1550.5 ,     2048 ,     2048 ,   813.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
-    NRCA5_FULL_FSTAMASK430R, SUBARRAY ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,  1935.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+    NRCA5_FULL_FSTAMASK430R, SUBARRAY ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,   935.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
        NRCA4_FULL_TAMASKSWB, SUBARRAY ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,                                     NRCA4_FULL ,           wedge
       NRCA4_FULL_TAMASKSWBS, SUBARRAY ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,                                     NRCA4_FULL ,           wedge
      NRCA4_FULL_FSTAMASKSWB, SUBARRAY ,   392.5 ,   774.5 ,     2048 ,     2048 ,   392.5 ,  1274.5 ,                                     NRCA4_FULL ,           wedge
