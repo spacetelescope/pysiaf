@@ -3,9 +3,9 @@
 # This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary information (DDC mapping, wedge offsets, ...)
 # This file also defines the order in which the apertures are presented.
 # 
-# Originally based on PRDOPSSOC-H-014.
+# Originally based on PRDOPSSOC-H-015.
 # 
-# Generated 2018-04-19T16:44:22.903 utc
+# Generated 2019-04-04T19:00:42.581 utc
 # jsahlmann
 # 
        AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef , parent_apertures , dependency_type
