@@ -8,19 +8,18 @@ Authors
 
 """
 
+import copy
 import os
 
 from astropy.io import fits
 from astropy.table import Table
-import copy
 import numpy as np
 import matplotlib.pyplot as pl
 # import pytest
-
+from numpy.testing import assert_allclose
 
 from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT, JWST_SOURCE_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 from ..siaf import Siaf
-
 
 instrument = 'NIRSpec'
 
@@ -292,3 +291,26 @@ def test_nirspec_slit_transformations(verbose=False, siaf=None):
                             siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                     assert error < pixel_threshold
 
+
+def test_sci_det_consistency(siaf=None):
+    """Test that SCI and DET coordinates are consistent, see JWSTSIAF-112."""
+
+    if siaf is None:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        pre_delivery_siaf = os.path.join(pre_delivery_dir, 'NIRSpec_SIAF.xml')
+        if os.path.isfile(pre_delivery_siaf):
+            print('\nUsing pre-delivery SIAF from {}'.format(pre_delivery_dir))
+            siaf = Siaf(instrument, basepath=pre_delivery_dir)
+        else:
+            siaf = Siaf(instrument)
+    else:
+        siaf = copy.deepcopy(siaf)
+
+    nrs2_full = siaf['NRS2_FULL']
+    nrs2_fp4mimf = siaf['NRS2_FP4MIMF']
+
+    absolute_tolerance = 1e-9
+    assert_allclose(nrs2_fp4mimf.det_to_sci(2048, 2048), (1, 1), atol=absolute_tolerance)
+    assert_allclose(nrs2_full.det_to_sci(2048, 2048), (1, 1), atol=absolute_tolerance)
+    # assert nrs2_fp4mimf.det_to_sci(2048, 2048) == (1, 1)
+    # assert nrs2_full.det_to_sci(2048, 2048) == (1, 1)
