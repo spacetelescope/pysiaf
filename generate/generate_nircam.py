@@ -20,28 +20,44 @@ import os
 
 import numpy as np
 from astropy.table import Table
+import pylab as pl
 
-from pysiaf import iando
+import pysiaf
 from pysiaf.utils import tools, compare
-import generate_reference_files
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
-import pysiaf.aperture
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
+    JWST_DELIVERY_DATA_ROOT
+from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
+import generate_reference_files
 
+#############################
 instrument = 'NIRCam'
 
-generate_basic_reference_files = False
-if generate_basic_reference_files:
-    generate_reference_files.generate_siaf_detector_reference_file(instrument)
-    generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
-
-_ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
-
-siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file()
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
+
+# regenerate SIAF reference files if needed
+regenerate_basic_reference_files = False
+if regenerate_basic_reference_files:
+    generate_reference_files.generate_siaf_detector_reference_file(instrument)
+    generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
+
+siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file()
+
+# DDC name mapping
+_ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
+
+# NIRCam detector parameters, e.g. XDetSize
+siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
+
+detector_layout = iando.read.read_siaf_detector_layout()
+siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
+
+# Fundamental aperture definitions: names, types, reference positions, dependencies
+siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
+
 
 wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
 wedge_offsets = Table.read(wedge_file, format='ascii.basic', delimiter=',')
@@ -49,22 +65,15 @@ wedge_offsets = Table.read(wedge_file, format='ascii.basic', delimiter=',')
 grism_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_grism_parameters.txt'.format(instrument.lower()))
 grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',')
 
-
-siaf_detector_layout = iando.read.read_siaf_detector_layout()
-siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
-siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
-siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
-
 aperture_dict = OrderedDict()
 aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
 
-master_aperture_names = siaf_detector_layout['AperName'].data
+master_aperture_names = detector_layout['AperName'].data
 
 # First pass:
 for AperName in aperture_name_list:
     # child aperture to be constructed
     aperture = pysiaf.JwstAperture()
-
     aperture.AperName = AperName
     aperture.InstrName = siaf_detector_parameters['InstrName'][
         0].upper()  # all capitals to conform with SIAFXML convention
@@ -86,9 +95,9 @@ for AperName in aperture_name_list:
     # process the 10 master apertures of NIRCam
     if AperName in master_aperture_names:
 
-        detector_layout_index = siaf_detector_layout['AperName'].tolist().index(AperName)
+        detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
         for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
-            setattr(aperture, attribute, siaf_detector_layout[attribute][detector_layout_index])
+            setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
 
         index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
         for attribute_name in 'V2Ref V3Ref V3SciYAngle V3SciXAngle V3IdlYAngle'.split():
@@ -109,14 +118,13 @@ for AperName in aperture_name_list:
                     setattr(aperture, '{}{:d}{:d}'.format(colname, i, j), polynomial_coefficients[colname][row_index])
 
         aperture.complement()
-
     aperture.DDCName = 'NOT_SET'
     aperture.UseAfterDate = '2014-01-01'
 
 
     aperture_dict[AperName] = aperture
 
-#second pass to set parameters for apertures that depend on other apertures
+# second pass to set parameters for apertures that depend on other apertures
 # calculations emulate the Cox' Excel worksheets as described in JWST-
 for AperName in aperture_name_list:
     index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
@@ -125,10 +133,9 @@ for AperName in aperture_name_list:
     parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
     dependency_type = siaf_aperture_definitions['dependency_type'][index]
 
+    if parent_apertures is not None:
 
-    if (parent_apertures is not None):
-
-        if (dependency_type in ['default', 'wedge', 'dhspil_wedge']):
+        if dependency_type in ['default', 'wedge', 'dhspil_wedge']:
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -304,7 +311,7 @@ ddc_siaf_aperture_names = np.array([key for key in _ddc_apername_mapping.keys()]
 ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
 ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
 for AperName in aperture_name_list:
-    # if AperName not in siaf_detector_layout['AperName']:
+    # if AperName not in detector_layout['AperName']:
     #     continue
     aperture = aperture_dict[AperName]
     separation_tel_from_ddc_aperture = np.sqrt((aperture.V2Ref - ddc_v2)**2 + (aperture.V3Ref - ddc_v3)**2)
@@ -335,10 +342,14 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
+                                                   file_format=['xml', 'xlsx'])
 
-    # pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-    pre_delivery_siaf = pysiaf.Siaf(instrument, filename=filenames[0])
+    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    # pre_delivery_siaf = pysiaf.Siaf(instrument, filename=filenames[0])
+
+    compare_against_prd = True
+    compare_against_cdp7b = True
 
     for compare_to in [pysiaf.JWST_PRD_VERSION, 'outdated pre-delivery']:
         if compare_to == 'outdated pre-delivery':
@@ -346,35 +357,57 @@ if emulate_delivery:
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
-        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
 
+        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                              tags=tags, report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags, mark_ref=True,)
+                                           report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        # make figures for JWSTSIAF-129 Jira ticket
-        selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
-                                   ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
-                                   ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
-                                   ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
-                                   ['NRCA5_TAGRISMTS_SCI_F444W'],
-                                   ]
+        create_jira_plots = False
+        if create_jira_plots:
+            # make figures for JWSTSIAF-129 Jira ticket
+            # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
+            #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
+            #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
+            #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
+            #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
+            #                            ]
 
-        for selected_aperture_name in selected_aperture_names:
-            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                               report_dir=pre_delivery_dir, tags=tags,
-                                               selected_aperture_name=selected_aperture_name,
-                                               mark_ref=True, filename_appendix=selected_aperture_name[0],
-                                               label=True)
+            # make figures for JWSTSIAF-61 Jira ticket
+            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+
+                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+                                       ]
+
+            for selected_aperture_name in selected_aperture_names:
+                compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                                   report_dir=pre_delivery_dir, tags=tags,
+                                                   selected_aperture_name=selected_aperture_name,
+                                                   mark_ref=True, filename_appendix=selected_aperture_name[0],
+                                                   label=True)
+                pl.close('all')  # stops system from being overwhelmed with too may plots
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
+    print('\nRunning aperture_transforms test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
+    print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
 else:

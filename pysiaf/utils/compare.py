@@ -1,16 +1,14 @@
 """Functions to support comparisons between SIAF files.
-
 Authors
 -------
     Johannes Sahlmann
-
 References
 ----------
     The format of the difference files was adapted from Colin Cox' matchcsv.py
     dict_compare was adapted from
     https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
-
 """
+
 from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import os
@@ -28,13 +26,27 @@ from ..utils import tools
 from ..aperture import compare_apertures
 
 
+# Show plot only if in ipython session, if not in ipython always save plot
+# Either in the specified location, or in the current directory
+def show_save_plot(report_dir):
+    ipython = tools.is_ipython()
+    if ipython:
+        pl.show()
+        outdir = report_dir
+    else:
+        if report_dir is not None:
+            outdir = report_dir
+        else:
+            outdir = os.environ['HOME']
+
+    return outdir
+
+
 def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_siaf_input=None,
                  report_file=None, report_dir=None, verbose=True, make_figures=False,
                  selected_aperture_name=None, ignore_attributes=None, tags=None):
     """Compare two SIAF files and write a difference file.
-
     Generate comparison figures showing the apertures if specified.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -48,7 +60,6 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     verbose
     make_figures
     selected_aperture_name
-
     """
     if verbose:
         print(comparison_siaf_input)
@@ -117,10 +128,6 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
             print('\tRemoved {}'.format(aperture_name), file=print_file)
         print()
 
-    if selected_aperture_name is not None:
-        if type(selected_aperture_name) == str:
-            selected_aperture_name = [selected_aperture_name]
-
     print('Number of modified apertures {}. Significant modifications are listed below.'.format(
         len(modified_apertures)), file=print_file)
     print('Differences are reported for any text change', file=print_file)
@@ -143,7 +150,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
         sorted(modified_apertures.items(), key=lambda t: aperture_name_list.index(t[0])))
 
     for aperture_name in modified_apertures.keys():
-        if (selected_aperture_name is not None) and (aperture_name not in selected_aperture_name):
+        if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
             continue
         comparison_table = compare_apertures(reference_siaf[aperture_name],
                                              comparison_siaf[aperture_name],
@@ -178,9 +185,12 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                 comparison_aperture.plot(line_label='Comparison')
                 pl.legend(loc=1)
                 pl.title(aperture_name)
-                # pl.show()
-                if report_dir is not None:
-                    figure_name = os.path.join(report_dir, '{}_{}_diff_{}_{}.pdf'.format(
+
+                # outdir = show_save_plot(report_dir=report_dir) don't want pl.show() to run for now
+                outdir = report_dir
+
+                if outdir is not None:
+                    figure_name = os.path.join(outdir, '{}_{}_diff_{}_{}.pdf'.format(
                         instrument, aperture_name, reference_siaf_description,
                         comparison_siaf.description.replace('.', '_'))).replace(' ', '_')
                     pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0,
@@ -190,11 +200,10 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance=1e-4,
                                      reference_siaf_input=None, report_file=None, report_dir=None,
                                      verbose=True, make_figures=False, selected_aperture_name=None,
+                                     skipped_aperture_type=None,
                                      instrument=None, make_plot=False, tags=None):
     """Compare the forward-backward roundtrip transformations of two SIAF files.
-
     and write a difference file.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -208,15 +217,16 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     report_dir
     verbose
     make_figures
-    selected_aperture_name
+    selected_aperture_name : str or list
+        aperture name(s) to include in plot
+    skipped_aperture_type : str or list
+        aperture type(s) not to include in plot
     instrument
     make_plot
-
     Returns
     -------
     roundtrip_table : astropy.table.Table object
         table containing roundtrip data
-
     """
     if verbose:
         print(comparison_siaf_input)
@@ -237,8 +247,6 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     if tags is not None:
         reference_tag = '{}'.format(tags['reference'])
         comparison_tag = '{}'.format(tags['comparison'])
-
-
 
     if report_file is None:
         print_file = sys.stdout
@@ -271,8 +279,11 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     # index 0 is for reference SIAF (defaults to PRD)
     # index 1 is for comparison SIAF
     for AperName, aperture in reference_siaf.apertures.items():
+        pl.ion()
         pl.close('all')
         if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
+            continue
+        if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
             continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]
@@ -306,13 +317,14 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                               axis=0))), horizontalalignment='center',
                             transform=ax.transAxes)
                     pl.title('siaf{}: {} Roundtrip error sci->idl->sci'.format(j, AperName))
-                    pl.show()
-                    if report_dir is not None:
-                        figure_name = os.path.join(report_dir, '{}_{}_siaf{}_roundtrip_error.pdf'.
+
+                    outdir = show_save_plot(report_dir=report_dir)
+
+                    if outdir is not None:
+                        figure_name = os.path.join(outdir, '{}_{}_siaf{}_roundtrip_error.pdf'.
                                                    format(instrument, AperName, j)).replace(' ', '_')
                         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
-    # 1/0
     roundtrip_table = Table(roundtrip_dict)
     for k, tag in enumerate(round_trip_tags):
         roundtrip_table['difference_{}'.format(tag)] = roundtrip_table['siaf{}_{}'.format(1, tag)] \
@@ -325,7 +337,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                               '_mean' in c]) + '}'
     roundtrip_table['AperName siaf0_dx_mean siaf0_dy_mean siaf1_dx_mean siaf1_dy_mean '
                     'difference_dx_mean difference_dy_mean'.split()].\
-        write(print_file, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', 
+        write(print_file, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ',
               bookend=False, overwrite=True, formats=eval(fstring))
 
     print('Apertures with significant roundtrip error differences:')
@@ -356,9 +368,10 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                   fontsize=8)
         # pl.margins(0.2)
         pl.subplots_adjust(bottom=0.15)
-        pl.show()
 
-        figure_name = os.path.join(report_dir, '{}_{}_{}_sci_idl_roundtrip_error.pdf'.format(
+        outdir = show_save_plot(report_dir=report_dir)
+
+        figure_name = os.path.join(outdir, '{}_{}_{}_sci_idl_roundtrip_error.pdf'.format(
             instrument, tags['reference'], tags['comparison'])).replace(' ', '_')
         pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
 
@@ -367,21 +380,17 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
 
 def dict_compare(dictionary_1, dictionary_2):
     """Compare two dictionaries and return keys of the differing items.
-
     From https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
-
     Parameters
     ----------
     dictionary_1 : dict
         first dictionary
     dictionary_2 : dict
         second dictionary
-
     Returns
     -------
     added, removed, modified, same : set
         Sets of dictionary keys that were added, removed, modified, or are the same
-
     """
     d1_keys = set(dictionary_1.keys())
     d2_keys = set(dictionary_2.keys())
@@ -394,11 +403,10 @@ def dict_compare(dictionary_1, dictionary_2):
     return added, removed, modified, same
 
 
-def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, report_dir=None,
-                               selected_aperture_name=None, tags=None, save_plot=True, mark_ref=False,
-                               xlimits=None, filename_appendix='', label=False):
+def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None, report_dir=None,
+                               selected_aperture_name=None, skipped_aperture_type=None, tags=None, mark_ref=False,
+                               xlimits=None, ylimits=None, filename_appendix='', label=False):
     """Visualize aperture of two SIAF files.
-
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -406,12 +414,16 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
     reference_siaf_input : str (absolute file name) or pysiaf.Siaf object
         The reference SIAF. Defaults to the current PRD content.
     report_dir
-    selected_aperture_name
+    selected_aperture_name str or list
+        aperture name(s) to include in plot
+    skipped_aperture_type : str or list
+        aperture type(s) not to include in plot
     tags
+    xlimits : tuple of limits of output plots
+    ylimits : tuple of limits of output plots
 
     Returns
     -------
-
     """
     comparison_siaf = get_siaf(comparison_siaf_input)
     instrument = comparison_siaf.instrument
@@ -429,12 +441,8 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
         reference_tag = '{}'.format(tags['reference'])
         comparison_tag = '{}'.format(tags['comparison'])
 
-    if report_dir is None:
-        report_dir = os.environ['HOME']
-
     siaf_list = [reference_siaf, comparison_siaf]
     tag_list = [reference_tag, comparison_tag]
-
 
     # index 0 is for reference SIAF (defaults to PRD)
     # index 1 is for comparison SIAF
@@ -444,11 +452,18 @@ def compare_inspection_figures(comparison_siaf_input,reference_siaf_input=None, 
         for aperture_name, aperture in siaf.apertures.items():
             if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
                 continue
+            if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
+                continue
             aperture.plot(mark_ref=mark_ref, label=label)
         pl.title(tag_list[j])
         if xlimits is not None:
-            pl.xlim(xlimits)
-        pl.show()
-        if save_plot:
-            figure_name = os.path.join(report_dir, '{}_{}_apertures_{}.pdf'.format(instrument, tag_list[j], filename_appendix).replace(' ','_'))
+            pl.xlim(*xlimits)
+        if ylimits is not None:
+            pl.ylim(*ylimits)
+
+        outdir = show_save_plot(report_dir=report_dir)
+
+        if outdir is not None:
+            figure_name = os.path.join(outdir, '{}_{}_apertures_{}.pdf'.format(instrument, tag_list[j],
+                                                                               filename_appendix).replace(' ', '_'))
             pl.savefig(figure_name, transparent=True, bbox_inches='tight', pad_inches=0)
