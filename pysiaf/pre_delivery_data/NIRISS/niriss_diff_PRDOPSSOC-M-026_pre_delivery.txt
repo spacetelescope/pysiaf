@@ -6,8 +6,8 @@ Differences are reported for any text change
 and fractional differences greater than 1e-06
 
 Aperture                        Attribute             Reference            Comparison      Difference    Percent
-NIS_CEN_OSS                         V2Ref                -290.1              -291.267        1.167000     0.4007
-NIS_CEN_OSS                         V3Ref                -697.5              -698.138        0.638000     0.0914
+NIS_CEN_OSS                         V2Ref                -290.1              -291.219        1.119000     0.3842
+NIS_CEN_OSS                         V3Ref                -697.5              -698.181        0.681000     0.0975
 
 NIS_CEN                             V2Ref                -290.1              -291.219        1.119000     0.3842
 NIS_CEN                             V3Ref                -697.5              -698.181        0.681000     0.0975
