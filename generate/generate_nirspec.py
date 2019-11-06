@@ -882,15 +882,13 @@ for AperName in aperture_name_list:
         if aperture.AperType in ['FULLSCA', 'OSS']:
             aperture = process_nirspec_aperture(aperture, verbose=False)
 
-        if siaf_aperture_definitions['dependency_type'][index] == 'default':
+        if siaf_aperture_definitions['dependency_type'][index] in ['default', 'MIMF']:
             aperture.VIdlParity = parent_aperture.VIdlParity
+
+        # first MIMF field point inherits properties from parent SLIT aperture
         elif siaf_aperture_definitions['dependency_type'][index] == 'FP1MIMF':
             idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
             for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes:
-                setattr(aperture, attribute, getattr(parent_aperture, attribute))
-        elif siaf_aperture_definitions['dependency_type'][index] == 'MIMF':
-            # idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
-            for attribute in 'V3IdlYAngle VIdlParity'.split():
                 setattr(aperture, attribute, getattr(parent_aperture, attribute))
 
     aperture_dict[AperName] = aperture
@@ -928,10 +926,13 @@ if emulate_delivery:
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     # compare new SIAF with PRD version
-    for compare_to in ['NIRSpec_SIAF_fullsca']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'NIRSpec_SIAF_bugfix-only', 'NIRSpec_SIAF_fullsca']:
         if compare_to == 'NIRSpec_SIAF_fullsca':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
                                                                      'NIRSpec_SIAF_fullsca.xml'))
+        elif compare_to == 'NIRSpec_SIAF_bugfix-only':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                     'NIRSpec_SIAF_bugfix-only.xml'))
         else:
             ref_siaf = pysiaf.Siaf(instrument)
 
