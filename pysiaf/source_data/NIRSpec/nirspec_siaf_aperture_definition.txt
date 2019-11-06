@@ -62,10 +62,10 @@
         NRS_FIELD1_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
         NRS_FIELD2_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
            NRS1_FP1MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None , NRS_S1600A1_SLIT ,         FP1MIMF
-           NRS1_FP2MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,            MIMF
-           NRS1_FP3MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,            MIMF
-           NRS2_FP4MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,            MIMF
-           NRS2_FP5MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,            MIMF
+           NRS1_FP2MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS1_FP3MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS2_FP4MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+           NRS2_FP5MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
           CLEAR_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
           F110W_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
           F140X_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
