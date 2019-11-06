@@ -882,7 +882,7 @@ for AperName in aperture_name_list:
         if aperture.AperType in ['FULLSCA', 'OSS']:
             aperture = process_nirspec_aperture(aperture, verbose=False)
 
-        if siaf_aperture_definitions['dependency_type'][index] in ['default', 'MIMF']:
+        if siaf_aperture_definitions['dependency_type'][index] == 'default':
             aperture.VIdlParity = parent_aperture.VIdlParity
 
         # first MIMF field point inherits properties from parent SLIT aperture
