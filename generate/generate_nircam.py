@@ -380,26 +380,39 @@ if emulate_delivery:
             #                            ]
 
             # make figures for JWSTSIAF-61 Jira ticket
-            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
-                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
-                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
-                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
-                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
-                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
-                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+            #selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+            #                           ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+            #                           ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+            #                           ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+            #                           ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+            #                           ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+            #                           ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+#
+            #                           ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+            #                           ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+            #                           ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+            #                           ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+            #                           ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+            #                           
+#           #                            ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB'],
+#
+            #                           ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB',
+            #                           'NRCA2_TAMASK210R','NRCA5_TAMASK335R','NRCA5_TAMASK430R','NRCA4_TAMASKSWB','NRCA5_TAMASKLWB', 'NRCA5_TAMASKLWBL','NRCA4_TAMASKSWBS',
+            #                           'NRCA2_FSTAMASK210R','NRCA4_FSTAMASKSWB','NRCA5_FSTAMASKLWB','NRCA5_FSTAMASK335R','NRCA5_FSTAMASK430R'],
+#
+            #                           ['NRCA5_MASKLWB_F277W','NRCA5_MASKLWB_F356W','NRCA5_MASKLWB_F444W','NRCA5_MASKLWB_NARROW']  
+ #
+#
+            #                          ]
+            
+            selected_aperture_names = [['NRCB1_SUB64P', 'NRCB1_SUB160P', 'NRCB1_SUB400P',
+                                        'NRCB5_SUB64P', 'NRCB5_SUB160P', 'NRCB5_SUB400P',
+                                        'NRCB5_TAPSIMG32','NRCB1_FULLP','NRCB5_FULLP'
+                                      ],
+                                      ['NRCA5_TAGRISMTS32','NRCA5_TAGRISMTS32_F405N']
 
-                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
-                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
-                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
-                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
-                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
-                                       
-#                                       ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB'],
-
-                                       ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB',
-                                       'NRCA2_TAMASK210R','NRCA5_TAMASK335R','NRCA5_TAMASK430R','NRCA4_TAMASKSWB','NRCA5_TAMASKLWB', 'NRCA5_TAMASKLWBL','NRCA4_TAMASKSWBS',
-                                       'NRCA2_FSTAMASK210R','NRCA4_FSTAMASKSWB','NRCA5_FSTAMASKLWB','NRCA5_FSTAMASK335R','NRCA5_FSTAMASK430R']
                                       ]
+
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
