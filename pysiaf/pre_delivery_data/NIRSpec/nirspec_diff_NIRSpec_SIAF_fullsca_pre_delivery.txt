@@ -19,7 +19,7 @@ NRS1_FP2MIMF                    XSciScale            0.10354845                 
 NRS1_FP2MIMF                    YSciScale            0.10648245                  None             N/A        N/A
 NRS1_FP2MIMF                        V2Ref            245.109395            243.398682        1.710713     0.6979
 NRS1_FP2MIMF                        V3Ref           -429.269497           -432.253143        2.983646     0.6903
-NRS1_FP2MIMF                  V3IdlYAngle          139.24589007          139.15589448        0.089996     0.0646
+NRS1_FP2MIMF                  V3IdlYAngle          139.24589007          138.80963135        0.436259     0.3133
 NRS1_FP2MIMF                 DetSciYAngle                     0                  None             N/A        N/A
 NRS1_FP2MIMF                 DetSciParity                     1                  None             N/A        N/A
 NRS1_FP2MIMF                  V3SciXAngle           48.06696928                  None             N/A        N/A
@@ -131,7 +131,7 @@ NRS1_FP3MIMF                    XSciScale            0.10286831                 
 NRS1_FP3MIMF                    YSciScale            0.10393412                  None             N/A        N/A
 NRS1_FP3MIMF                        V2Ref            375.288504            374.970612        0.317892     0.0847
 NRS1_FP3MIMF                        V3Ref           -564.978546           -565.327515        0.348969     0.0617
-NRS1_FP3MIMF                  V3IdlYAngle          139.08204413          139.15589448        0.073850     0.0531
+NRS1_FP3MIMF                  V3IdlYAngle          139.08204413          138.89077759        0.191267     0.1375
 NRS1_FP3MIMF                 DetSciYAngle                     0                  None             N/A        N/A
 NRS1_FP3MIMF                 DetSciParity                     1                  None             N/A        N/A
 NRS1_FP3MIMF                  V3SciXAngle           48.13995936                  None             N/A        N/A
@@ -243,7 +243,7 @@ NRS2_FP4MIMF                    XSciScale            0.10298334                 
 NRS2_FP4MIMF                    YSciScale            0.10422223                  None             N/A        N/A
 NRS2_FP4MIMF                        V2Ref            499.920269             499.39032        0.529949     0.1060
 NRS2_FP4MIMF                        V3Ref           -432.496528            -432.95813        0.461602     0.1066
-NRS2_FP4MIMF                  V3IdlYAngle          137.65575177           137.7173469        0.061595     0.0447
+NRS2_FP4MIMF                  V3IdlYAngle          137.65575177          138.12223816        0.466486     0.3377
 NRS2_FP4MIMF                 DetSciYAngle                   180                  None             N/A        N/A
 NRS2_FP4MIMF                 DetSciParity                     1                  None             N/A        N/A
 NRS2_FP4MIMF                  V3SciXAngle           48.87661592                  None             N/A        N/A
@@ -355,7 +355,7 @@ NRS2_FP5MIMF                    XSciScale            0.10359812                 
 NRS2_FP5MIMF                    YSciScale            0.10647034                  None             N/A        N/A
 NRS2_FP5MIMF                        V2Ref            388.929596            387.364105        1.565491     0.4025
 NRS2_FP5MIMF                        V3Ref           -305.329862            -306.15683        0.826968     0.2701
-NRS2_FP5MIMF                  V3IdlYAngle          137.68665271           137.7173469        0.030694     0.0223
+NRS2_FP5MIMF                  V3IdlYAngle          137.68665271          138.22549438        0.538842     0.3898
 NRS2_FP5MIMF                 DetSciYAngle                   180                  None             N/A        N/A
 NRS2_FP5MIMF                 DetSciParity                     1                  None             N/A        N/A
 NRS2_FP5MIMF                  V3SciXAngle           48.92274175                  None             N/A        N/A
