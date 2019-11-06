@@ -50,8 +50,20 @@
 #   so no changes were made to those, either.
 #   See jira.stsci.edu JWSTSIAF-124, JWSTSIAF-162
 # Also re-ordered the entries to group apertures by template and module, added comment lines between groups.
+# Changed reference positions are for:
+#        NRCA5_TAGRISMTS32  ## moved to center 4-corner   
+#  NRCA5_TAGRISMTS32_F405N  ## added tweak for filter...  
+#                NRCA3_FP1  ## moved to center 4-corner   
+#           NRCA3_FP1_SUB8  ## moved to center 4-corner   
+#          NRCA3_FP1_SUB64  ## moved to center 4-corner   
+#                NRCB4_FP1  ## moved to center 4-corner   
+#           NRCB4_FP1_SUB8  ## moved to center 4-corner   
+#          NRCB4_FP1_SUB64  ## moved to center 4-corner   
+#             NRCB5_SUB64P  ## updated to match B1_64P    
+#            NRCB5_SUB160P  ## updated to match B1_160P   
+#            NRCB5_SUB400P  ## updated to match B1_400P   
+#              NRCB5_FULLP  ## updated to match B1_FULLP
 #
->>>>>>> b09937e... Completed the list of revised coronographic apertures by adding the filter dependent ones for the bar occulters and the full-frame ones that were missed in the previous commit
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
 #        -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OSS apertures, for on-board computation of small angle maneuvers
@@ -137,7 +149,7 @@
           NRCA3_GRISMTS128 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,      128 ,  1046.0 ,    65.0 ,                                     NRCA3_FULL ,         default
            NRCA3_GRISMTS64 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,       64 ,  1046.0 ,    33.0 ,                                     NRCA3_FULL ,         default
          NRCA5_TAGRISMTS32 , SUBARRAY ,   820.5 ,   110.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
-   NRCA5_TAGRISMTS32_F405N , SUBARRAY ,   820.5 ,   110.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
+   NRCA5_TAGRISMTS32_F405N , SUBARRAY , 820.595 , 110.693 ,       32 ,       32 ,  16.405 ,  16.693 ,                                     NRCA5_FULL ,         default
 NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
  NRCA5_TAGRISMTS_SCI_F444W ,      ROI ,  1097.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
 # WFSC / MIMF Field Points (Module-A)
