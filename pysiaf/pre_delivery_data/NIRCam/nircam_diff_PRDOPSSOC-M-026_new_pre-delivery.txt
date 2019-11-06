@@ -2165,7 +2165,7 @@ NRCA5_FULL_TAMASK430R          Idl2SciY55 -5.583236120459366e-11 -5.583218531584
 
 NRCA5_FULL_FSTAMASK430R           XDetRef                1167.0                1113.5       53.500000     4.5844
 NRCA5_FULL_FSTAMASK430R           YDetRef                1552.0                1557.5        5.500000     0.3531
-NRCA5_FULL_FSTAMASK430R           XSciRef                 883.0                1935.5     1052.500000    54.3787
+NRCA5_FULL_FSTAMASK430R           XSciRef                 883.0                 935.5       52.500000     5.6120
 NRCA5_FULL_FSTAMASK430R           YSciRef                1552.0                1557.5        5.500000     0.3531
 NRCA5_FULL_FSTAMASK430R         XSciScale             0.0623937            0.06239934        0.000006     0.0090
 NRCA5_FULL_FSTAMASK430R         YSciScale            0.06268112            0.06268898        0.000008     0.0125
@@ -2174,14 +2174,14 @@ NRCA5_FULL_FSTAMASK430R             V3Ref            -412.49137           -412.1
 NRCA5_FULL_FSTAMASK430R       V3IdlYAngle           -0.06072228           -0.02928669        0.031436    51.7694
 NRCA5_FULL_FSTAMASK430R       V3SciXAngle           -90.1413578          -90.10529615        0.036062     0.0400
 NRCA5_FULL_FSTAMASK430R       V3SciYAngle           -0.06072228           -0.02928669        0.031436    51.7694
-NRCA5_FULL_FSTAMASK430R         XIdlVert1              -56.4091             -123.8855       67.476400    54.4667
-NRCA5_FULL_FSTAMASK430R         XIdlVert2               74.1354                6.9303       67.205100    90.6518
-NRCA5_FULL_FSTAMASK430R         XIdlVert3               72.6233                6.9948       65.628500    90.3684
-NRCA5_FULL_FSTAMASK430R         XIdlVert4              -54.8557             -120.7454       65.889700    54.5691
-NRCA5_FULL_FSTAMASK430R         YIdlVert1              -97.7497              -97.0985        0.651200     0.6662
-NRCA5_FULL_FSTAMASK430R         YIdlVert2              -98.4641              -98.6742        0.210100     0.2129
-NRCA5_FULL_FSTAMASK430R         YIdlVert3               31.6413                30.737        0.904300     2.8580
-NRCA5_FULL_FSTAMASK430R         YIdlVert4               31.3868               32.3279        0.941100     2.9111
+NRCA5_FULL_FSTAMASK430R         XIdlVert1              -56.4091              -59.7373        3.328200     5.5714
+NRCA5_FULL_FSTAMASK430R         XIdlVert2               74.1354               70.8073        3.328100     4.4892
+NRCA5_FULL_FSTAMASK430R         XIdlVert3               72.6233               69.3651        3.258200     4.4864
+NRCA5_FULL_FSTAMASK430R         XIdlVert4              -54.8557              -58.1146        3.258900     5.6077
+NRCA5_FULL_FSTAMASK430R         YIdlVert1              -97.7497              -98.0589        0.309200     0.3153
+NRCA5_FULL_FSTAMASK430R         YIdlVert2              -98.4641              -98.8441        0.380000     0.3844
+NRCA5_FULL_FSTAMASK430R         YIdlVert3               31.6413               31.2632        0.378100     1.1950
+NRCA5_FULL_FSTAMASK430R         YIdlVert4               31.3868               31.0769        0.309900     0.9874
 NRCA5_FULL_FSTAMASK430R        Sci2IdlX10   0.06239363819712035   0.06239928713754847        0.000006     0.0091
 NRCA5_FULL_FSTAMASK430R        Sci2IdlX20 7.762774850793305e-08 9.259380230158237e-08        0.000000    16.1631
 NRCA5_FULL_FSTAMASK430R        Sci2IdlX21 -6.204740312888329e-07 -6.200717844768749e-07        0.000000     0.0648

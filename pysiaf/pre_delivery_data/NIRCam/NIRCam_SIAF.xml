@@ -1,7 +1,7 @@
 <SiafEntries>
-  <!--Generated 2019-10-31T19:55:29.966 utc-->
-  <!--by gennaro-->
-  <!--pysiaf version 0.5.1.dev31+ga40abc68-->
+  <!--Generated 2019-11-04T15:36:22.527 utc-->
+  <!--by sosborne-->
+  <!--pysiaf version 0.5.0-->
   <SiafEntry>
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA1_FULL_OSS</AperName>
@@ -17294,7 +17294,7 @@
     <YDetRef>1557.50</YDetRef>
     <XSciSize>2048</XSciSize>
     <YSciSize>2048</YSciSize>
-    <XSciRef>1935.50</XSciRef>
+    <XSciRef>935.50</XSciRef>
     <YSciRef>1557.50</YSciRef>
     <XSciScale>0.06239934</XSciScale>
     <YSciScale>0.06268898</YSciScale>
@@ -17306,14 +17306,14 @@
     <DetSciParity>-1</DetSciParity>
     <V3SciXAngle>-90.10529615</V3SciXAngle>
     <V3SciYAngle>-0.02928669</V3SciYAngle>
-    <XIdlVert1>-123.8855</XIdlVert1>
-    <XIdlVert2>6.9303</XIdlVert2>
-    <XIdlVert3>6.9948</XIdlVert3>
-    <XIdlVert4>-120.7454</XIdlVert4>
-    <YIdlVert1>-97.0985</YIdlVert1>
-    <YIdlVert2>-98.6742</YIdlVert2>
-    <YIdlVert3>30.7370</YIdlVert3>
-    <YIdlVert4>32.3279</YIdlVert4>
+    <XIdlVert1>-59.7373</XIdlVert1>
+    <XIdlVert2>70.8073</XIdlVert2>
+    <XIdlVert3>69.3651</XIdlVert3>
+    <XIdlVert4>-58.1146</XIdlVert4>
+    <YIdlVert1>-98.0589</YIdlVert1>
+    <YIdlVert2>-98.8441</YIdlVert2>
+    <YIdlVert3>31.2632</YIdlVert3>
+    <YIdlVert4>31.0769</YIdlVert4>
     <UseAfterDate>2014-01-01</UseAfterDate>
     <Comment/>
     <Sci2IdlDeg>5</Sci2IdlDeg>
