@@ -326,8 +326,8 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' % X[k], end = '')
             k += 1
-        print ()
-    print ()
+    #     print ()
+    # print ()
     # Now put in conventiomal layout
 
     k1 = 0
@@ -342,8 +342,8 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' %X[k], end = '')
             k += 1
-        print ()
-    print ()
+    #     print ()
+    # print ()
 
     k1 = 0
     for i in range(order + 1):
@@ -886,7 +886,11 @@ for AperName in aperture_name_list:
             aperture.VIdlParity = parent_aperture.VIdlParity
         elif siaf_aperture_definitions['dependency_type'][index] == 'FP1MIMF':
             idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
-            for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes: #''DetSciYAngle Sci2IdlDeg DetSciParity VIdlParity'.split():
+            for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes:
+                setattr(aperture, attribute, getattr(parent_aperture, attribute))
+        elif siaf_aperture_definitions['dependency_type'][index] == 'MIMF':
+            # idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
+            for attribute in 'V3IdlYAngle VIdlParity'.split():
                 setattr(aperture, attribute, getattr(parent_aperture, attribute))
 
     aperture_dict[AperName] = aperture
@@ -924,10 +928,10 @@ if emulate_delivery:
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     # compare new SIAF with PRD version
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'NIRSpec_SIAF_bugfix-only']:
-        if compare_to == 'NIRSpec_SIAF_bugfix-only':
+    for compare_to in ['NIRSpec_SIAF_fullsca']:
+        if compare_to == 'NIRSpec_SIAF_fullsca':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
-                                                                     'NIRSpec_SIAF_bugfix-only.xml'))
+                                                                     'NIRSpec_SIAF_fullsca.xml'))
         else:
             ref_siaf = pysiaf.Siaf(instrument)
 
@@ -936,10 +940,19 @@ if emulate_delivery:
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
 
+        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                           report_dir=pre_delivery_dir, tags=tags,
+                                           skipped_aperture_type=['TRANSFORM'],
+                                           selected_aperture_name=['NRS1_FP1MIMF', 'NRS1_FP2MIMF', 'NRS1_FP3MIMF', 'NRS2_FP4MIMF', 'NRS2_FP5MIMF'],
+                                           mark_ref=True, xlimits=(100, 700), ylimits=(-700, -100),
+                                           filename_appendix='MIMF_apertures')
+
         compare.compare_transformation_roundtrip(pre_delivery_siaf,
                                                  reference_siaf_input=ref_siaf, tags=tags,
                                                  report_dir=pre_delivery_dir,
-                                                 skipped_aperture_type=['TRANSFORM'])
+                                                 skipped_aperture_type=['TRANSFORM', 'SLIT'],
+                                                 selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags,
@@ -991,8 +1004,8 @@ else:
     compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
     # tools.compare_siaf_xml(ref_siaf, new_siaf)
 
-selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
-                          ('MSA' not in AperName) and ('SKY' not in AperName)]
-# run roundtrip test on all apertures
-compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
-                                         selected_aperture_name=selected_aperture_name)
+# selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
+#                           ('MSA' not in AperName) and ('SKY' not in AperName)]
+# # run roundtrip test on all apertures
+# compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
+#                                          selected_aperture_name=selected_aperture_name)
