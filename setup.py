@@ -121,7 +121,7 @@ setup(
         'matplotlib>=1.4.3',
         'lxml>=3.6.4',
         'scipy>=0.17',
-        'openpyxl==2.5.0',
+        'openpyxl>=2.5.0',
         'requests>=2.21.0'
     ],
     tests_require=['pytest'],
