@@ -351,7 +351,7 @@ if emulate_delivery:
     compare_against_prd = True
     compare_against_cdp7b = True
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'outdated pre-delivery']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
         if compare_to == 'outdated pre-delivery':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
         else:
@@ -364,35 +364,52 @@ if emulate_delivery:
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                             tags=tags, report_dir=pre_delivery_dir)
+                                                 tags=tags, report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        create_jira_plots = False
+        create_jira_plots = True
         if create_jira_plots:
-            # make figures for JWSTSIAF-129 Jira ticket
+            # # make figures for JWSTSIAF-129 Jira ticket
             # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
             #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
             #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
             #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
             #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
             #                            ]
+            #
+            # # make figures for JWSTSIAF-61 Jira ticket
+            # selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+            #                           ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+            #                           ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+            #                           ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+            #                           ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+            #                           ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+            #                           ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+            #
+            #                           ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+            #                           ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+            #                           ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+            #                           ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+            #                           ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+            #
+            #                          ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB'],
+            #
+            #                           ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB',
+            #                           'NRCA2_TAMASK210R','NRCA5_TAMASK335R','NRCA5_TAMASK430R','NRCA4_TAMASKSWB','NRCA5_TAMASKLWB', 'NRCA5_TAMASKLWBL','NRCA4_TAMASKSWBS',
+            #                           'NRCA2_FSTAMASK210R','NRCA4_FSTAMASKSWB','NRCA5_FSTAMASKLWB','NRCA5_FSTAMASK335R','NRCA5_FSTAMASK430R'],
+            #
+            #                           ['NRCA5_MASKLWB_F277W','NRCA5_MASKLWB_F356W','NRCA5_MASKLWB_F444W','NRCA5_MASKLWB_NARROW']
+            #
+            #                          ]
 
-            # make figures for JWSTSIAF-61 Jira ticket
-            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
-                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
-                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
-                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
-                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
-                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
-                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
-
-                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
-                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
-                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
-                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
-                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+            # make figures for JWSTSIAF-124 + 162 Jira ticket
+            selected_aperture_names = [['NRCB1_SUB64P', 'NRCB1_SUB160P', 'NRCB1_SUB400P',
+                                        'NRCB5_SUB64P', 'NRCB5_SUB160P', 'NRCB5_SUB400P',
+                                        'NRCB5_TAPSIMG32','NRCB1_FULLP','NRCB5_FULLP'
+                                        ],
+                                       ['NRCA5_TAGRISMTS32','NRCA5_TAGRISMTS32_F405N']
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
