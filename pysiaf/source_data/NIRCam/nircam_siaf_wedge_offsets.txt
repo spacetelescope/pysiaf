@@ -5,6 +5,7 @@
 # Generated 2018-07-26T13:35:21.437 utc
 # by jsahlmann
 # 
+
          name ,  v2_offset ,  v3_offset
         NRCA5 , -2.0946264 , 47.0885551
 NRCA5335R430R ,  -2.121191 , 47.7105149

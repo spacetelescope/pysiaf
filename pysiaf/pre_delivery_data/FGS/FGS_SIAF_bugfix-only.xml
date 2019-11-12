@@ -1,7 +1,7 @@
 <SiafEntries>
-  <!--Generated 2019-11-05T17:52:20.472 utc-->
+  <!--Generated 2019-10-23T18:52:59.219 utc-->
   <!--by jsahlmann-->
-  <!--pysiaf version 0.6.1-->
+  <!--pysiaf version 0.5.0.dev3+g1620ce50-->
   <SiafEntry>
     <InstrName>FGS</InstrName>
     <AperName>FGS1_FULL_OSS</AperName>
@@ -18,8 +18,8 @@
     <YSciRef>1024.50</YSciRef>
     <XSciScale>0.06853116</XSciScale>
     <YSciScale>0.07005886</YSciScale>
-    <V2Ref>206.464000</V2Ref>
-    <V3Ref>-697.970000</V3Ref>
+    <V2Ref>207.190000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -138,8 +138,8 @@
     <YSciRef>1024.50</YSciRef>
     <XSciScale>0.06853116</XSciScale>
     <YSciScale>0.07005886</YSciScale>
-    <V2Ref>206.464000</V2Ref>
-    <V3Ref>-697.970000</V3Ref>
+    <V2Ref>207.190000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -258,8 +258,8 @@
     <YSciRef>1024.50</YSciRef>
     <XSciScale>0.06800083</XSciScale>
     <YSciScale>0.06982050</YSciScale>
-    <V2Ref>22.845000</V2Ref>
-    <V3Ref>-699.489000</V3Ref>
+    <V2Ref>24.430000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -378,8 +378,8 @@
     <YSciRef>1024.50</YSciRef>
     <XSciScale>0.06800083</XSciScale>
     <YSciScale>0.06982050</YSciScale>
-    <V2Ref>22.845000</V2Ref>
-    <V3Ref>-699.489000</V3Ref>
+    <V2Ref>24.430000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -498,8 +498,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06734801</XSciScale>
     <YSciScale>0.06826329</YSciScale>
-    <V2Ref>140.246208</V2Ref>
-    <V3Ref>-631.504142</V3Ref>
+    <V2Ref>140.972208</V2Ref>
+    <V3Ref>-631.034142</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -618,8 +618,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06784417</XSciScale>
     <YSciScale>0.06905197</YSciScale>
-    <V2Ref>173.120550</V2Ref>
-    <V3Ref>-664.444986</V3Ref>
+    <V2Ref>173.846550</V2Ref>
+    <V3Ref>-663.974986</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -738,8 +738,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06853116</XSciScale>
     <YSciScale>0.07005886</YSciScale>
-    <V2Ref>206.464000</V2Ref>
-    <V3Ref>-697.970000</V3Ref>
+    <V2Ref>207.190000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -858,8 +858,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06734801</XSciScale>
     <YSciScale>0.06826329</YSciScale>
-    <V2Ref>140.246208</V2Ref>
-    <V3Ref>-631.504142</V3Ref>
+    <V2Ref>140.972208</V2Ref>
+    <V3Ref>-631.034142</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -978,8 +978,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06784417</XSciScale>
     <YSciScale>0.06905197</YSciScale>
-    <V2Ref>173.120550</V2Ref>
-    <V3Ref>-664.444986</V3Ref>
+    <V2Ref>173.846550</V2Ref>
+    <V3Ref>-663.974986</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -1098,8 +1098,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06853116</XSciScale>
     <YSciScale>0.07005886</YSciScale>
-    <V2Ref>206.464000</V2Ref>
-    <V3Ref>-697.970000</V3Ref>
+    <V2Ref>207.190000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -1218,8 +1218,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06734801</XSciScale>
     <YSciScale>0.06826329</YSciScale>
-    <V2Ref>140.246208</V2Ref>
-    <V3Ref>-631.504142</V3Ref>
+    <V2Ref>140.972208</V2Ref>
+    <V3Ref>-631.034142</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -1338,8 +1338,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06784417</XSciScale>
     <YSciScale>0.06905197</YSciScale>
-    <V2Ref>173.120550</V2Ref>
-    <V3Ref>-664.444986</V3Ref>
+    <V2Ref>173.846550</V2Ref>
+    <V3Ref>-663.974986</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -1458,8 +1458,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06853116</XSciScale>
     <YSciScale>0.07005886</YSciScale>
-    <V2Ref>206.464000</V2Ref>
-    <V3Ref>-697.970000</V3Ref>
+    <V2Ref>207.190000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -1578,8 +1578,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06959937</XSciScale>
     <YSciScale>0.07243013</YSciScale>
-    <V2Ref>-43.824314</V2Ref>
-    <V3Ref>-768.962079</V3Ref>
+    <V2Ref>-42.239314</V2Ref>
+    <V3Ref>-766.973079</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -1698,8 +1698,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06868622</XSciScale>
     <YSciScale>0.07098032</YSciScale>
-    <V2Ref>-10.168802</V2Ref>
-    <V3Ref>-733.796938</V3Ref>
+    <V2Ref>-8.583802</V2Ref>
+    <V3Ref>-731.807938</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -1818,8 +1818,8 @@
     <YSciRef>64.50</YSciRef>
     <XSciScale>0.06800083</XSciScale>
     <YSciScale>0.06982050</YSciScale>
-    <V2Ref>22.845000</V2Ref>
-    <V3Ref>-699.489000</V3Ref>
+    <V2Ref>24.430000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -1938,8 +1938,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06959937</XSciScale>
     <YSciScale>0.07243013</YSciScale>
-    <V2Ref>-43.824314</V2Ref>
-    <V3Ref>-768.962079</V3Ref>
+    <V2Ref>-42.239314</V2Ref>
+    <V3Ref>-766.973079</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2058,8 +2058,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06868622</XSciScale>
     <YSciScale>0.07098032</YSciScale>
-    <V2Ref>-10.168802</V2Ref>
-    <V3Ref>-733.796938</V3Ref>
+    <V2Ref>-8.583802</V2Ref>
+    <V3Ref>-731.807938</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2178,8 +2178,8 @@
     <YSciRef>16.50</YSciRef>
     <XSciScale>0.06800083</XSciScale>
     <YSciScale>0.06982050</YSciScale>
-    <V2Ref>22.845000</V2Ref>
-    <V3Ref>-699.489000</V3Ref>
+    <V2Ref>24.430000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2298,8 +2298,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06959937</XSciScale>
     <YSciScale>0.07243013</YSciScale>
-    <V2Ref>-43.824314</V2Ref>
-    <V3Ref>-768.962079</V3Ref>
+    <V2Ref>-42.239314</V2Ref>
+    <V3Ref>-766.973079</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2418,8 +2418,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06868622</XSciScale>
     <YSciScale>0.07098032</YSciScale>
-    <V2Ref>-10.168802</V2Ref>
-    <V3Ref>-733.796938</V3Ref>
+    <V2Ref>-8.583802</V2Ref>
+    <V3Ref>-731.807938</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2538,8 +2538,8 @@
     <YSciRef>4.50</YSciRef>
     <XSciScale>0.06800083</XSciScale>
     <YSciScale>0.06982050</YSciScale>
-    <V2Ref>22.845000</V2Ref>
-    <V3Ref>-699.489000</V3Ref>
+    <V2Ref>24.430000</V2Ref>
+    <V3Ref>-697.500000</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -2658,8 +2658,8 @@
     <YSciRef>995.00</YSciRef>
     <XSciScale>0.06856283</XSciScale>
     <YSciScale>0.07012187</YSciScale>
-    <V2Ref>207.297661</V2Ref>
-    <V3Ref>-700.043277</V3Ref>
+    <V2Ref>208.023661</V2Ref>
+    <V3Ref>-699.573277</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -2778,8 +2778,8 @@
     <YSciRef>101.00</YSciRef>
     <XSciScale>0.06859674</XSciScale>
     <YSciScale>0.07193043</YSciScale>
-    <V2Ref>144.354503</V2Ref>
-    <V3Ref>-763.101536</V3Ref>
+    <V2Ref>145.080503</V2Ref>
+    <V3Ref>-762.631536</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -2898,8 +2898,8 @@
     <YSciRef>450.00</YSciRef>
     <XSciScale>0.06992015</XSciScale>
     <YSciScale>0.07173235</YSciScale>
-    <V2Ref>259.980302</V2Ref>
-    <V3Ref>-739.330261</V3Ref>
+    <V2Ref>260.706302</V2Ref>
+    <V3Ref>-738.860261</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -3018,8 +3018,8 @@
     <YSciRef>1959.00</YSciRef>
     <XSciScale>0.06910404</XSciScale>
     <YSciScale>0.06894015</YSciScale>
-    <V2Ref>269.267443</V2Ref>
-    <V3Ref>-633.618001</V3Ref>
+    <V2Ref>269.993443</V2Ref>
+    <V3Ref>-633.148001</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -3138,8 +3138,8 @@
     <YSciRef>1943.00</YSciRef>
     <XSciScale>0.06737767</XSciScale>
     <YSciScale>0.06832148</YSciScale>
-    <V2Ref>141.995276</V2Ref>
-    <V3Ref>-634.334699</V3Ref>
+    <V2Ref>142.721276</V2Ref>
+    <V3Ref>-633.864699</V3Ref>
     <V3IdlYAngle>-1.25081713</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>180</DetSciYAngle>
@@ -3258,8 +3258,8 @@
     <YSciRef>1032.00</YSciRef>
     <XSciScale>0.06798852</XSciScale>
     <YSciScale>0.06980318</YSciScale>
-    <V2Ref>23.764548</V2Ref>
-    <V3Ref>-698.953344</V3Ref>
+    <V2Ref>25.349548</V2Ref>
+    <V3Ref>-696.964344</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -3378,8 +3378,8 @@
     <YSciRef>377.00</YSciRef>
     <XSciScale>0.06902712</XSciScale>
     <YSciScale>0.07147199</YSciScale>
-    <V2Ref>-25.280613</V2Ref>
-    <V3Ref>-746.036035</V3Ref>
+    <V2Ref>-23.695613</V2Ref>
+    <V3Ref>-744.047035</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -3498,8 +3498,8 @@
     <YSciRef>100.00</YSciRef>
     <XSciScale>0.06842001</XSciScale>
     <YSciScale>0.07183088</YSciScale>
-    <V2Ref>85.810586</V2Ref>
-    <V3Ref>-764.259614</V3Ref>
+    <V2Ref>87.395586</V2Ref>
+    <V3Ref>-762.270614</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -3618,8 +3618,8 @@
     <YSciRef>1948.00</YSciRef>
     <XSciScale>0.06722511</XSciScale>
     <YSciScale>0.06824841</YSciScale>
-    <V2Ref>85.135337</V2Ref>
-    <V3Ref>-635.222970</V3Ref>
+    <V2Ref>86.720337</V2Ref>
+    <V3Ref>-633.233970</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -3738,8 +3738,8 @@
     <YSciRef>1948.00</YSciRef>
     <XSciScale>0.06820382</XSciScale>
     <YSciScale>0.06859605</YSciScale>
-    <V2Ref>-39.708127</V2Ref>
-    <V3Ref>-636.551815</V3Ref>
+    <V2Ref>-38.123127</V2Ref>
+    <V3Ref>-634.562815</V3Ref>
     <V3IdlYAngle>0.19027904</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
