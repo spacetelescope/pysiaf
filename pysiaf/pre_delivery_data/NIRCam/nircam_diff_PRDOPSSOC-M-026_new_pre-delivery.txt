@@ -1,6 +1,9 @@
 Reference:  202 apertures in PRDOPSSOC-M-026
-Comparison: 202 apertures in new pre-delivery
+Comparison: 203 apertures in new pre-delivery
 
+Number of added apertures 1:
+	          AperName      XDetRef      YDetRef     XSciSize     YSciSize      XSciRef      YSciRef        V2Ref        V3Ref
+	Added NRCB5_TAPSIMG32_F405N      2024.82       216.09           32           32        16.82        16.91  -152.022768  -440.313875
 Number of modified apertures 202. Significant modifications are listed below.
 Differences are reported for any text change
 and fractional differences greater than 1e-06
