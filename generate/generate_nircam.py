@@ -405,12 +405,13 @@ if emulate_delivery:
             #                          ]
 
             # make figures for JWSTSIAF-124 + 162 Jira ticket
-            selected_aperture_names = [['NRCB1_SUB64P', 'NRCB1_SUB160P', 'NRCB1_SUB400P',
-                                        'NRCB5_SUB64P', 'NRCB5_SUB160P', 'NRCB5_SUB400P',
-                                        'NRCB5_TAPSIMG32','NRCB1_FULLP','NRCB5_FULLP'
-                                        ],
-                                       ['NRCA5_TAGRISMTS32','NRCA5_TAGRISMTS32_F405N']
-                                       ]
+            #selected_aperture_names = [['NRCB1_SUB64P', 'NRCB1_SUB160P', 'NRCB1_SUB400P',
+            #                            'NRCB5_SUB64P', 'NRCB5_SUB160P', 'NRCB5_SUB400P',
+            #                            'NRCB5_TAPSIMG32','NRCB1_FULLP','NRCB5_FULLP'
+            #                            ],
+            #                           ['NRCA5_TAGRISMTS32','NRCA5_TAGRISMTS32_F405N']
+            #                           ]
+            selected_aperture_names = [['NRCB5_TAPSIMG32', 'NRCB5_TAPSIMG32_F405N']]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
