@@ -353,7 +353,7 @@ class Siaf(ApertureCollection):
             Clear plot before plotting (set to false to overplot)
         show_frame_origin : str or list
             Plot frame origin (goes to plot_frame_origin()): None, 'all', 'det',
-            'sci', 'raw', or a list of these.
+            'sci', 'raw', 'idl', or a list of these.
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
@@ -408,7 +408,7 @@ class Siaf(ApertureCollection):
             Optional if you have already called plot() to specify a
             coordinate frame.
         which : str or list
-            Which origin to plot: 'all', 'det', 'sci', 'raw', or a list
+            Which origin to plot: 'all', 'det', 'sci', 'raw', 'idl', or a list
         units : str
             one of 'arcsec', 'arcmin', 'deg'
         ax : matplotlib.Axes
