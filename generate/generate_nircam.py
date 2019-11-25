@@ -334,7 +334,7 @@ for AperName in aperture_name_list:
 
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
-emulate_delivery = True
+emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -371,14 +371,11 @@ if emulate_delivery:
 
         create_jira_plots = False
         if create_jira_plots:
-
-            # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
-                                        'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
-                                        'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
-                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR','NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
+            # # make figures for JWSTSIAF-129 Jira ticket
+            selected_aperture_names = [['NRCA5_GRISMC_WFSS', 'NRCA5_GRISMR_WFSS','NRCALL_GRISMC_WFSS','NRCALL_GRISMR_WFSS',
+                                        'NRCB5_GRISMC_WFSS','NRCB5_GRISMR_WFSS',
+                                        'NRCA2_FULL_MASK210R','NRCA4_FULL_MASKSWB','NRCA5_FULL_MASKLWB']
                                         ]
-                                       ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
@@ -408,3 +405,77 @@ else:
     ignore_attributes = 'XIdlVert1 XIdlVert2 XIdlVert3 XIdlVert4 YIdlVert1 YIdlVert2 YIdlVert3 YIdlVert4'.split()
     ignore_attributes += ([s for s in DISTORTION_ATTRIBUTES if 'Idl2Sci' in s])
     compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, ignore_attributes=ignore_attributes)
+
+
+######################################
+# Print corners
+######################################
+
+goodlist  = ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB',
+             'NRCA2_TAMASK210R','NRCA2_FSTAMASK210R','NRCA5_TAMASK335R','NRCA2_FSTAMASK210R','NRCA5_TAMASK430R',
+             'NRCA5_FSTAMASK430R','NRCA4_TAMASKSWB','NRCA4_TAMASKSWBS','NRCA4_FSTAMASKSWB','NRCA5_TAMASKLWB','NRCA5_TAMASKLWBL','NRCA5_FSTAMASKLWB']
+
+in_file = os.path.join(JWST_SOURCE_DATA_ROOT,instrument,'nircam_siaf_aperture_definition.txt')
+
+print('Writing SIAF aperture definition file including subarrays')
+with open(in_file) as fp:
+    lines = fp.readlines()
+
+
+with open('/Users/gennaro/Desktop/Pseudo_siaf.txt', 'w') as the_file:
+    
+    for line in lines:
+        
+        newline = line[:]
+
+        # If the original siaf file line starts with a comment or with a newline command (i.e. empty line), do not change it
+        if (line[0] in ['#','\n']) == False:
+            llist = line.split(',')
+            AperName = llist[0].strip()
+
+            # The header line does not start with "#" neither it is empty. Yet we must add two header columns. 
+            # The try statement fails because the first element oin the header row is not a valid aperture name, the exception is captured,
+            # the header modified an the continue statment breaks this iteration of the for loop on the lines
+            
+            try:
+                ap = aperture_dict[AperName]
+                
+            except:
+                llist.insert(8,' {:>11} '.format('ColCorner'))
+                llist.insert(9,' {:>11} '.format('RowCorner'))
+                newline = ','.join(llist)
+                the_file.write(newline)
+                continue
+            
+            else:
+                # If instead the try statement does not fail, execute this block
+                # This second try/except statement is necessary to capture the exception thrown by calling the corner method on apertures that do not have detector corners,      
+                # like the compoud and  grism_wfss ones. If the try fails, we add "None" for the OSS corner, otherwise we use the new DMS_corner method of the aperture object
+                try:
+                    ColCorner, RowCorner = ap.DMS_corner()
+                       
+                except:
+                    llist.insert(8,' {:>11} '.format('None'))
+                    llist.insert(9,' {:>11} '.format('None'))
+                else:            
+                    llist.insert(8,' {:>11} '.format(ColCorner))
+                    llist.insert(9,' {:>11} '.format(RowCorner))
+       
+
+            newline = ','.join(llist)
+
+
+        the_file.write(newline)
+
+
+
+
+
+
+
+
+
+
+
+
+

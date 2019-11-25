@@ -1335,8 +1335,17 @@ class Aperture(object):
                 print('Verification WARNING: {} has non-integer sum between YDetRef {} and '
                       'YSciRef {} DetSciYAngle {}'.format(self.AperName, self.YDetRef, self.YSciRef,
                                                           self.DetSciYAngle))
-
-
+    def DMS_corner(self):
+        """Compute the pixel value of the lower left corner of an aperture.
+        
+        This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
+        The notation for OSS is 1-based, i.e. the lower left corner of a FULL subarray is (1,1)
+        """
+        ColCorner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
+        RowCorner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
+        
+        return ColCorner, RowCorner
+        
 def get_hst_to_jwst_coefficient_order(polynomial_degree):
     """Return array of indices that convert an aeeay of HST coefficients to JWST ordering.
 
