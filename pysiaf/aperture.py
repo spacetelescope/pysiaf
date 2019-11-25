@@ -32,7 +32,7 @@ import subprocess
 import sys
 
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 from astropy.modeling import models
 from astropy.table import Table
 import astropy.units as u
@@ -504,7 +504,7 @@ class Aperture(object):
             Add text label. If True, text will be the default aperture name.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
-            axes are inferred from pylab)
+            axes are inferred)
         title : str
             Figure title. If set, add a label to the plot indicating which frame was plotted.
         units : str

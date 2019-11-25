@@ -12,7 +12,7 @@ import os
 
 import matplotlib
 matplotlib.use('agg')
-import pylab as pl
+import matplotlib.pyplot as pl
 import pytest
 
 from ..constants import JWST_TEMPORARY_DATA_ROOT

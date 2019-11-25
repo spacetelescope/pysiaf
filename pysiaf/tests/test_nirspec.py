@@ -14,7 +14,7 @@ from astropy.io import fits
 from astropy.table import Table
 import copy
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 # import pytest
 
 
