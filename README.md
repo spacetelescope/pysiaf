@@ -143,7 +143,9 @@ Install pysiaf:
 `cd pysiaf`  
 `python setup.py install` or  
 `pip install .`
-### Known installation issue
+Note: If you are using MacOS Mojave, use `pip install .` due to an issue with the operating system. See the known issues section for more information.
+
+### Known installation issues
 
 If you get an error upon  
 `import pysiaf`  
@@ -156,4 +158,13 @@ and states
 this can probably be fixed by downgrading the version of lxml, e.g.      
     `pip uninstall lxml`  
     `pip install lxml==3.6.4`
-         
+     
+If you get an error upon    
+`import pysiaf`  
+that states     
+`ImportError: Failed to import any qt binding`      
+and your computer runs on MacOS Mojave and you installed the tool with `python setup.py install`,
+this can probably be fixed by un-installing and re-installing PyQt5, e.g.            
+`pip uninstall pyqt5`       
+`pip uninstall pyqt5-sip`       
+`pip install pyqt5`     
