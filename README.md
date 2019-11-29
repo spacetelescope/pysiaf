@@ -142,8 +142,8 @@ Clone the repository:
 Install pysiaf:  
 `cd pysiaf`  
 `python setup.py install` or  
-`pip install .`
-Note: If you are using MacOS Mojave, use `pip install .` due to an issue with the operating system. See the known issues section for more information.
+`pip install .`     
+_Note: If you are using MacOS Mojave, use `pip install .` due to an issue with the operating system. See the known issues section for more information._
 
 ### Known installation issues
 
