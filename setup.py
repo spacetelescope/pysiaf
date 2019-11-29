@@ -124,6 +124,12 @@ setup(
         'openpyxl>=2.6.0',
         'requests>=2.21.0'
     ],
+    extras_require={
+        'docs': ['stsci_rtd_theme',
+                 'sphinx_automodapi',
+                 'numpy',
+                 'matplotlib']
+    },
     tests_require=['pytest'],
     packages=find_packages(),
     package_data={PACKAGENAME: ['prd_data/HST/*',

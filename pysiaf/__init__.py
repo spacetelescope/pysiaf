@@ -7,7 +7,10 @@ from __future__ import absolute_import, print_function, division
 import re
 import requests
 
-from .version import *
+try:
+    from .version import *
+except ImportError:
+    pass
 
 from .aperture import Aperture, HstAperture, JwstAperture
 from .constants import JWST_PRD_VERSION, JWST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT_EXCEL, HST_PRD_VERSION, \
