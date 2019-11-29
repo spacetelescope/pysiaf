@@ -128,7 +128,8 @@ setup(
         'docs': ['stsci_rtd_theme',
                  'sphinx_automodapi',
                  'numpy',
-                 'matplotlib']
+                 'matplotlib',
+                 'scipy']
     },
     tests_require=['pytest'],
     packages=find_packages(),
