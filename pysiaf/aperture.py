@@ -596,7 +596,7 @@ class Aperture(object):
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
 
-    def plot_frame_origin(self, frame, which='both', units='arcsec', ax=None):
+    def plot_frame_origin(self, frame, which='sci', units='arcsec', ax=None):
         """Indicate the origins of the detector and science frames.
 
         Red and blue squares indicate the detector and science frame origin, respectively.

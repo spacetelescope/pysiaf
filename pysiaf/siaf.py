@@ -398,7 +398,7 @@ class Siaf(ApertureCollection):
 
         self._last_plot_frame = frame
 
-    def plot_frame_origin(self, frame=None, which='both', units='arcsec', ax=None):
+    def plot_frame_origin(self, frame=None, which='sci', units='arcsec', ax=None):
         """Mark on the plot the frame's origin in Det and Sci coordinates.
 
         Parameters
