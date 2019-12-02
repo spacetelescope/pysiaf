@@ -334,7 +334,7 @@ for AperName in aperture_name_list:
 
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
-emulate_delivery = False
+emulate_delivery = True
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -422,7 +422,6 @@ print('Writing SIAF aperture definition file including subarrays and V2/V3 of re
 with open(in_file) as fp:
     lines = fp.readlines()
 
-
 with open(out_file, 'w') as the_file:
     
     for line in lines:
@@ -477,22 +476,8 @@ with open(out_file, 'w') as the_file:
                     llist.insert(10,' {:20.14f} '.format(V2_ref))
                     llist.insert(11,' {:20.14f} '.format(V3_ref))
 
-       
-
             newline = ','.join(llist)
             print(newline)
 
         the_file.write(newline)
-
-
-
-
-
-
-
-
-
-
-
-
 

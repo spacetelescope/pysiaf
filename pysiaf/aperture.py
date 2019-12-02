@@ -1335,7 +1335,7 @@ class Aperture(object):
                 print('Verification WARNING: {} has non-integer sum between YDetRef {} and '
                       'YSciRef {} DetSciYAngle {}'.format(self.AperName, self.YDetRef, self.YSciRef,
                                                           self.DetSciYAngle))
-    def DMS_corner(self):
+    def dms_corner(self):
         """Compute the pixel value of the lower left corner of an aperture.
         
         This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
