@@ -411,10 +411,6 @@ else:
 # Print corners
 ######################################
 
-goodlist  = ['NRCA2_MASK210R','NRCA5_MASK335R','NRCA5_MASK430R','NRCA4_MASKSWB','NRCA5_MASKLWB',
-             'NRCA2_TAMASK210R','NRCA2_FSTAMASK210R','NRCA5_TAMASK335R','NRCA2_FSTAMASK210R','NRCA5_TAMASK430R',
-             'NRCA5_FSTAMASK430R','NRCA4_TAMASKSWB','NRCA4_TAMASKSWBS','NRCA4_FSTAMASKSWB','NRCA5_TAMASKLWB','NRCA5_TAMASKLWBL','NRCA5_FSTAMASKLWB']
-
 in_file = os.path.join(JWST_SOURCE_DATA_ROOT,instrument,'nircam_siaf_aperture_definition.txt')
 out_file = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument,'nircam_enhanced_siaf_aperture_definition.txt')
 
