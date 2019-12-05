@@ -1,5 +1,6 @@
-"""Tools to support the creation of an enhanced nircam siaf aperture definition file
-that can be used to verify subarray corners as well as reference point V2/V3 values.
+"""
+
+Tools to support the creation of an enhanced nircam siaf aperture definition file that can be used to verify subarray corners as well as reference point V2/V3 values.
 
 Authors
 -------
@@ -12,16 +13,19 @@ import os
 from ..constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 
 def create_enhanced_aperture_file(aperture_dict,verbose=False):
-
-    '''
-    Function that reads the 'nircam_siaf_aperture_definition.txt' file and adds extra columns to
-    it (corner positions and V2/V3 of the reference point).
+    """
+    Read the 'nircam_siaf_aperture_definition.txt' file and add extra columns to it (corner positions and V2/V3 of the reference point).
     
-    INPUT:
-        aperture_dict: dictionary of apertures created by generate_nircam starting from
-        the 'nircam_siaf_aperture_definition.txt' file
-    '''
+    Parameters
+    ----------
+    aperture_dict: dictionary of apertures created by generate_nircam starting from the 'nircam_siaf_aperture_definition.txt' file
+    verbose: optional, boolean (default = False) to allow more diagnostic messages to be printed on the standard output
     
+    Returns
+    ------- 
+    Nothing 
+    
+    """
     instrument = 'NIRCam'
     
     in_file = os.path.join(JWST_SOURCE_DATA_ROOT,instrument,'nircam_siaf_aperture_definition.txt')
