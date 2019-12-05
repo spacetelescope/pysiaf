@@ -15,38 +15,49 @@ References
 """
 
 from collections import OrderedDict
+import copy
 import os
 
 import numpy as np
 from astropy.table import Table
+import pylab as pl
 
-from pysiaf import iando
+import pysiaf
 from pysiaf.utils import tools, compare
-import generate_reference_files
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
-import pysiaf.aperture
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
+    JWST_DELIVERY_DATA_ROOT
+from pysiaf import iando
+from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
+import generate_reference_files
+
+#############################
 instrument = 'NIRCam'
 
-# generate_reference_files.generate_siaf_xml_field_format_reference_files()
-
-if 0:
-    generate_reference_files.generate_siaf_detector_reference_file(instrument)
-    generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
-
-_ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
-
-siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file(instrument)
 test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
 if not os.path.isdir(test_dir):
     os.makedirs(test_dir)
 
-if 0:
-    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
-    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
-    1/0
-if 0:
-    generate_reference_files.generate_siaf_pre_flight_reference_files_nircam()
+# regenerate SIAF reference files if needed
+regenerate_basic_reference_files = False
+if regenerate_basic_reference_files:
+    generate_reference_files.generate_siaf_detector_reference_file(instrument)
+    generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
+
+siaf_xml_field_format = iando.read.read_siaf_xml_field_format_reference_file()
+
+# DDC name mapping
+_ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
+
+# NIRCam detector parameters, e.g. XDetSize
+siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
+
+detector_layout = iando.read.read_siaf_detector_layout()
+siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
+
+# Fundamental aperture definitions: names, types, reference positions, dependencies
+siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
+
 
 wedge_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_wedge_offsets.txt'.format(instrument.lower()))
 wedge_offsets = Table.read(wedge_file, format='ascii.basic', delimiter=',')
@@ -54,24 +65,15 @@ wedge_offsets = Table.read(wedge_file, format='ascii.basic', delimiter=',')
 grism_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_grism_parameters.txt'.format(instrument.lower()))
 grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',')
 
-
-
-siaf_detector_layout = iando.read.read_siaf_detector_layout()
-siaf_alignment_parameters = iando.read.read_siaf_alignment_parameters(instrument)
-siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
-# print(siaf_aperture_definitions)
-siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
-
 aperture_dict = OrderedDict()
 aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
 
-master_aperture_names = siaf_detector_layout['AperName'].data
+master_aperture_names = detector_layout['AperName'].data
 
 # First pass:
 for AperName in aperture_name_list:
     # child aperture to be constructed
     aperture = pysiaf.JwstAperture()
-
     aperture.AperName = AperName
     aperture.InstrName = siaf_detector_parameters['InstrName'][
         0].upper()  # all capitals to conform with SIAFXML convention
@@ -93,9 +95,9 @@ for AperName in aperture_name_list:
     # process the 10 master apertures of NIRCam
     if AperName in master_aperture_names:
 
-        detector_layout_index = siaf_detector_layout['AperName'].tolist().index(AperName)
+        detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
         for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
-            setattr(aperture, attribute, siaf_detector_layout[attribute][detector_layout_index])
+            setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
 
         index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
         for attribute_name in 'V2Ref V3Ref V3SciYAngle V3SciXAngle V3IdlYAngle'.split():
@@ -116,14 +118,13 @@ for AperName in aperture_name_list:
                     setattr(aperture, '{}{:d}{:d}'.format(colname, i, j), polynomial_coefficients[colname][row_index])
 
         aperture.complement()
-
     aperture.DDCName = 'NOT_SET'
     aperture.UseAfterDate = '2014-01-01'
 
 
     aperture_dict[AperName] = aperture
 
-#second pass to set parameters for apertures that depend on other apertures
+# second pass to set parameters for apertures that depend on other apertures
 # calculations emulate the Cox' Excel worksheets as described in JWST-
 for AperName in aperture_name_list:
     index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
@@ -132,10 +133,9 @@ for AperName in aperture_name_list:
     parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
     dependency_type = siaf_aperture_definitions['dependency_type'][index]
 
+    if parent_apertures is not None:
 
-    if (parent_apertures is not None):
-
-        if (dependency_type in ['default', 'wedge', 'dhspil_wedge']):
+        if dependency_type in ['default', 'wedge', 'dhspil_wedge']:
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -147,7 +147,7 @@ for AperName in aperture_name_list:
             if aperture.AperType == 'OSS':
                 aperture.VIdlParity = 1
                 aperture.DetSciParity = 1
-                aperture.DetSciYAngle = 0.
+                aperture.DetSciYAngle = 0
                 # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
                 aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
             else:
@@ -281,6 +281,26 @@ for AperName in aperture_name_list:
                 setattr(aperture, 'XIdlVert{:d}'.format(j + 1), corners_Idl_x[j])
                 setattr(aperture, 'YIdlVert{:d}'.format(j + 1), corners_Idl_y[j])
 
+        elif dependency_type == 'grism_f444w':
+            aperture._parent_apertures = [s.strip() for s in parent_apertures.split(';')]
+
+            # the SCA on which this aperture is located
+            master_aperture = aperture_dict[aperture._parent_apertures[0]]
+            for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity VIdlParity'.split():
+                setattr(aperture, attribute, getattr(master_aperture, attribute))
+
+            # the aperture on A5 whose V2Ref, V3Ref should be matched
+            a5_aperture = aperture_dict[aperture._parent_apertures[1]]
+
+            # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
+            aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
+
+            # modify aperture so that V2Ref, V3Ref match the a5_aperture
+            aperture = tools.match_v2v3(copy.deepcopy(a5_aperture), copy.deepcopy(aperture),
+                                        verbose=False, match_v2_only=True)
+
+            aperture.complement()
+
     aperture_dict[AperName] = aperture
 
 #sort SIAF entries in the order of the aperture definition file
@@ -291,7 +311,7 @@ ddc_siaf_aperture_names = np.array([key for key in _ddc_apername_mapping.keys()]
 ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
 ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
 for AperName in aperture_name_list:
-    # if AperName not in siaf_detector_layout['AperName']:
+    # if AperName not in detector_layout['AperName']:
     #     continue
     aperture = aperture_dict[AperName]
     separation_tel_from_ddc_aperture = np.sqrt((aperture.V2Ref - ddc_v2)**2 + (aperture.V3Ref - ddc_v3)**2)
@@ -302,13 +322,10 @@ for AperName in aperture_name_list:
     if (aperture.Sci2IdlX11 is not None) and (aperture.Sci2IdlX11 < Sci2IdlX11_treshold):
         aperture_dict[AperName].Sci2IdlX11 = 0.0
 
-
-
 # fourth pass: internal verification
 for AperName in aperture_name_list:
     aperture = aperture_dict[AperName]
     aperture.verify()
-
 
 
 ######################################
@@ -318,7 +335,6 @@ for AperName in aperture_name_list:
 aperture_collection = pysiaf.ApertureCollection(aperture_dict)
 
 emulate_delivery = True
-emulate_delivery = False
 
 if emulate_delivery:
     pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
@@ -326,92 +342,84 @@ if emulate_delivery:
         os.makedirs(pre_delivery_dir)
 
     # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
+                                                   file_format=['xml', 'xlsx'])
 
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    # pre_delivery_siaf = pysiaf.Siaf(instrument, filename=filenames[0])
 
-    # compare new SIAF with PRD version
-    ref_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags={'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'})
+    compare_against_prd = True
+    compare_against_cdp7b = True
 
-    1/0
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'outdated pre-delivery']:
+        if compare_to == 'outdated pre-delivery':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
+        else:
+            # compare new SIAF with PRD version
+            ref_siaf = pysiaf.Siaf(instrument)
+
+        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
+
+        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+
+        compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                             tags=tags, report_dir=pre_delivery_dir)
+
+        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                           report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
+
+        create_jira_plots = False
+        if create_jira_plots:
+            # make figures for JWSTSIAF-129 Jira ticket
+            # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
+            #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
+            #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
+            #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
+            #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
+            #                            ]
+
+            # make figures for JWSTSIAF-61 Jira ticket
+            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+
+                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+                                       ]
+
+            for selected_aperture_name in selected_aperture_names:
+                compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                                   report_dir=pre_delivery_dir, tags=tags,
+                                                   selected_aperture_name=selected_aperture_name,
+                                                   mark_ref=True, filename_appendix=selected_aperture_name[0],
+                                                   label=True)
+                pl.close('all')  # stops system from being overwhelmed with too may plots
+
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
+    print('\nRunning aperture_transforms test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
+    print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
+else:
+    # write the SIAFXML to disk
+    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'], label='pysiaf')
+    print('SIAFXML written in {}'.format(filenames[0]))
 
+    # compare to SIAFXML produced the old way
+    ref_siaf = pysiaf.Siaf(instrument)
 
-    1/0
+    new_siaf = pysiaf.Siaf(instrument, filenames[0])
 
-
-# write the SIAFXML to disk
-filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'], label='pysiaf')
-print('SIAFXML written in {}'.format(filenames[0]))
-
-# compare to SIAFXML produced the old way
-# ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRCam_SIAF_2017-12-01.xml')))
-ref_siaf = pysiaf.Siaf(instrument)
-
-if 0:
-    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
-    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-    ref_siaf = pre_delivery_siaf
-
-new_siaf = pysiaf.Siaf(instrument, filenames[0])
-
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=master_aperture_names)#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-1, selected_aperture_name=[s+'_OSS' for s in master_aperture_names])#['NRCA3_FULL_OSS', 'NRCA1_FULL_OSS']) # 'NRCA4_SUB160', 'NRCA4_FULL', 'NRCA3_SUB160', 'NRCA3_FULL', 'NRCA5_SUB400P', 'NRCB5_SUB400P',
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCAS_FULL NRCBS_FULL NRCALL_FULL'.split())
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, selected_aperture_name='NRCA5_FULL'.split())
-ignore_attributes = 'XIdlVert1 XIdlVert2 XIdlVert3 XIdlVert4 YIdlVert1 YIdlVert2 YIdlVert3 YIdlVert4'.split()
-from pysiaf.aperture import DISTORTION_ATTRIBUTES
-ignore_attributes += ([s for s in DISTORTION_ATTRIBUTES if 'Idl2Sci' in s])
-compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, ignore_attributes=ignore_attributes)
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-4, ignore_attributes=ignore_attributes, report_dir=test_dir)
-# compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-
-
-roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, report_dir=test_dir)
-# roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name='NRCA5_FULL'.split(), report_dir=test_dir, make_plot=True)
-# roundtrip_table = compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf, selected_aperture_name=[s for s in aperture_name_list if 'FULL' in s], report_dir=test_dir, make_plot=False)
-
-1/0
-
-# illustrate fix of inverse NIRCam coefficients
-if 0:
-    import pylab as pl
-
-    pl.close('all')
-
-    fig = pl.figure(figsize=(12, 6), facecolor='w', edgecolor='k')
-    pl.clf()
-    # pl.subplot(2,1,1)
-    pl.plot(roundtrip_table['siaf0_dx_mean'], 'b-', label='PRD dx_mean')
-    pl.plot(roundtrip_table['siaf0_dy_mean'], 'r-', label='PRD dy_mean')
-    pl.plot(roundtrip_table['siaf1_dx_mean'], 'ko--', label='fixed dx_mean')
-    pl.plot(roundtrip_table['siaf1_dy_mean'], 'go--', label='fixed dy_mean')
-    pl.title('Mean absolute difference')
-    pl.legend()
-    # pl.subplot(2,1,2)
-    # pl.plot(roundtrip_table['siaf0_dx_rms'], 'b-', label='PRD dx_mean')
-    # pl.plot(roundtrip_table['siaf0_dy_rms'], 'r-', label='PRD dy_mean')
-    # pl.plot(roundtrip_table['siaf1_dx_rms'], 'ko--', label='fixed dx_mean')
-    # pl.plot(roundtrip_table['siaf1_dy_rms'], 'go--', label='fixed dy_mean')
-    # pl.title('RMS absolute difference')
-
-    pl.xticks(np.arange(len(roundtrip_table)), roundtrip_table['AperName'], rotation='vertical')
-    pl.margins(0.2)
-    pl.subplots_adjust(bottom=0.15)
-    pl.show()
-
-    roundtrip_table[roundtrip_table['AperName']=='NRCA5_FULL'].pprint()
-
-
-
-if 0:
-    ref_siaf = pysiaf.Siaf(instrument, basepath=os.path.join(pysiaf.constants._DATA_ROOT, 'JWST','PRDOPSSOC-G-012','SIAFXML/SIAFXML'))
-    new_siaf = pysiaf.Siaf(instrument)
-    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-
-
+    ignore_attributes = 'XIdlVert1 XIdlVert2 XIdlVert3 XIdlVert4 YIdlVert1 YIdlVert2 YIdlVert3 YIdlVert4'.split()
+    ignore_attributes += ([s for s in DISTORTION_ATTRIBUTES if 'Idl2Sci' in s])
+    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6, ignore_attributes=ignore_attributes)

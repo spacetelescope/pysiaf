@@ -121,7 +121,8 @@ setup(
         'matplotlib>=1.4.3',
         'lxml>=3.6.4',
         'scipy>=0.17',
-        'openpyxl>=2.4'
+        'openpyxl>=2.6.0',
+        'requests>=2.21.0'
     ],
     tests_require=['pytest'],
     packages=find_packages(),
@@ -129,6 +130,7 @@ setup(
                                 'prd_data/JWST/*/*/*/*.xlsx',
                                 'prd_data/JWST/*/*/*/*.xml',
                                 'pre_delivery_data/*/*.*',
+                                'source_data/*/*/*.txt',
                                 'source_data/*/*.txt',
                                 'source_data/*.txt',
                                 'tests/test_data/*/*/*/*.fits',

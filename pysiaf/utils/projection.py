@@ -6,8 +6,10 @@ Authors
 
 """
 
+import numpy as np
 from astropy.modeling import models as astmodels
 from astropy.modeling import rotations as astrotations
+import astropy.units as u
 
 
 def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
@@ -42,7 +44,10 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
 
     """
     # for zenithal projections, i.e. gnomonic, i.e. TAN:
-    lonpole = 180.
+    if isinstance(ra_ref, u.Quantity):
+        lonpole = 180. * u.deg
+    else:
+        lonpole = 180.
 
     # tangent plane projection from phi/theta to x,y
     tan = astmodels.Sky2Pix_TAN()
@@ -61,7 +66,7 @@ def project_to_tangent_plane(ra, dec, ra_ref, dec_ref, scale=1.):
     return x, y
 
 
-def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
+def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1., unwrap=True):
     """Convert pixel coordinates into ra/dec coordinates using a tangent plane de-projection.
 
     The projection's reference point has to be specified.
@@ -69,10 +74,10 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
 
     Parameters
     ----------
-    x : float
+    x : float or array of floats
         Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
         x/scale has to be degrees.
-    y : float
+    y : float or array of floats
         Pixel coordinate (default is in decimal degrees, but depends on value of scale parameter)
         x/scale has to be degrees.
     ra_ref : float
@@ -91,7 +96,10 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
 
     """
     # for zenithal projections, i.e. gnomonic, i.e. TAN
-    lonpole = 180.
+    if isinstance(ra_ref, u.Quantity):
+        lonpole = 180. * u.deg
+    else:
+        lonpole = 180.
 
     x = x / scale
     y = y / scale
@@ -106,5 +114,12 @@ def deproject_from_tangent_plane(x, y, ra_ref, dec_ref, scale=1.):
 
     # ra and dec
     ra, dec = rot_for_tan(phi, theta)
+
+    if unwrap:
+        if (np.ndim(ra) == 0):
+            if (ra > 180.):
+                ra -= 360.
+        else:
+            ra[ra > 180.] -= 360.
 
     return ra, dec

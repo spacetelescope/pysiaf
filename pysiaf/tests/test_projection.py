@@ -31,7 +31,8 @@ def grid_coordinates():
 
 def test_tangent_plane_projection_roundtrip(grid_coordinates):
     """Transform from RA/Dec to tangent plane and back. Check that input is recovered."""
-    centre_deg = (80., -70.)   # setting this to 0,0 fails because of 0,360 deg wrapping
+    # centre_deg = (80., -70.)
+    centre_deg = (0., 0.)
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
 
     # project to detector pixel coordinates
@@ -47,7 +48,8 @@ def test_tangent_plane_projection_roundtrip(grid_coordinates):
 
 def test_project_to_tangent_plane(grid_coordinates):
     """Compare projection code built with astropy functions with independent implementation."""
-    centre_deg = (80., -70.)  # setting this to 0,0 fails because of 0,360 deg wrapping
+    # centre_deg = (80., -70.)
+    centre_deg = (0., 0.)
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
 
     x_1, y_1 = projection.project_to_tangent_plane(ra_deg, dec_deg, centre_deg[0], centre_deg[1])
@@ -60,7 +62,8 @@ def test_project_to_tangent_plane(grid_coordinates):
 
 def test_deproject_from_tangent_plane(grid_coordinates):
     """Compare projection code built with astropy functions with independent implementation."""
-    centre_deg = (80., -70.)  # setting this to 0,0 fails because of 0,360 deg wrapping
+    # centre_deg = (80., -70.)
+    centre_deg = (0., 0.)
     ra_deg, dec_deg = grid_coordinates(centre_deg=centre_deg)
 
     x, y = projection.project_to_tangent_plane(ra_deg, dec_deg, centre_deg[0], centre_deg[1])
@@ -144,9 +147,9 @@ def tangent_plane_deprojection(e, n, alpha_ref, delta_ref):
                         - np.sin(rho)*np.sin(d0)*np.cos(B))
     alpha = alpha_ref + np.rad2deg(dalpha)
 
-    if np.any(alpha < 0.0):
-        index = np.where(alpha < 0.0)
-        alpha[index] += 360.0    # set to range 0 to 360 deg
+    # if np.any(alpha < 0.0):
+    #     index = np.where(alpha < 0.0)
+    #     alpha[index] += 360.0    # set to range 0 to 360 deg
 
     delta_rad = np.arcsin(np.sin(d0)*np.cos(rho) + np.cos(d0)*np.sin(rho)*np.cos(B))
     delta = np.rad2deg(delta_rad)
