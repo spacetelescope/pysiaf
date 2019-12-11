@@ -1443,10 +1443,10 @@ class Aperture(object):
         This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
         The notation for OSS is 1-based, i.e. the lower left corner of a FULL subarray is (1,1)
         """
-        ColCorner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
-        RowCorner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
+        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
+        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
         
-        return ColCorner, RowCorner
+        return col_corner, row_corner
         
 def get_hst_to_jwst_coefficient_order(polynomial_degree):
     """Return array of indices that convert an aeeay of HST coefficients to JWST ordering.
