@@ -21,9 +21,13 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Color
 from openpyxl.styles import Alignment
 
-from ..version import __version__
 from ..constants import _JWST_TEMPORARY_ROOT
 from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED, SIAF_XML_FIELD_FORMAT, FLOAT_ATTRIBUTES
+
+try:
+    from ..version import __version__
+except ImportError:
+    __version__ = ''
 
 # dictionary used to set field precision in SIAF.XML
 xml_decimal_precision = {}
