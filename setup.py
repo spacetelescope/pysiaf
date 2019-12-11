@@ -135,6 +135,13 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=install_requires,
+    extras_require={
+        'docs': ['stsci_rtd_theme',
+                 'sphinx_automodapi',
+                 'numpy',
+                 'matplotlib',
+                 'scipy']
+    },
     tests_require=['pytest'],
     packages=find_packages(),
     package_data={PACKAGENAME: ['prd_data/HST/*',

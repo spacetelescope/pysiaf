@@ -46,7 +46,7 @@ matrix:
         - os: linux
           env: SETUP_CMD='build_sphinx'
                CONDA_DEPENDENCIES=$CONDA_DEPENDENCIES
-               PIP_DEPENDENCIES='sphinx_rtd_theme stsci_rtd_theme sphinx-automodapi'
+               PIP_DEPENDENCIES='sphinx_rtd_theme stsci_rtd_theme sphinx-automodapi scipy lxml openpyxl matplotlib numpydoc numpy astropy'
 
         # PEP8 check with flake8 (only once, i.e. "os: linux")
         - os: linux
