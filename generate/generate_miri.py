@@ -22,7 +22,7 @@ import os
 
 from astropy.io import fits
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 
 import pysiaf
 from pysiaf import iando

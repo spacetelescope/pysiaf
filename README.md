@@ -59,7 +59,7 @@ Plotting (only a small subset of options is illustrated):
 </p>
 
 ````
-    import pylab as pl
+    import matplotlib.pyplot as pl
     
     pl.figure(figsize=(4, 4), facecolor='w', edgecolor='k'); pl.clf()
 

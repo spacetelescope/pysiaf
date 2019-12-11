@@ -20,7 +20,7 @@ import os
 
 import numpy as np
 from astropy.table import Table
-import pylab as pl
+import matplotlib.pyplot as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare

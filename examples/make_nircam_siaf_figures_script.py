@@ -1,6 +1,6 @@
 """Script adaptation of make_nircam_siaf_figures.ipynb that also includes saving figures to PDF. """
 import os
-import pylab as pl
+import matplotlib.pyplot as pl
 import pysiaf
 
 show_plot = True
