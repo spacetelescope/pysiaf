@@ -49,6 +49,32 @@
 #            NRCB5_SUB400P  ## updated to match B1_400P   
 #              NRCB5_FULLP  ## updated to match B1_FULLP
 #
+#
+# gennaro 2019-12-12
+#  Added 96 WFSS filter-dependent SLIT type apertures for visualization. Apertures for both LW detectors, and for
+#	both GRISMR and GRISMC for each filter are present. In addition, they come in two flavors:
+#	Complete Spectrum : 
+#		apertures ending in '_CS', e.g. NRCA5_GRISMR_WFSS_F250M_CS
+#		These are defined by the half-max throughput values of the grism+filter
+#	Partial Spectrum  : 
+#		apertures ending in '_PS', e.g. NRCB5_GRISMC_WFSS_F480M_PS
+#		These are defined by the 1% throughput values of the grism+filter
+#   See jira.stsci.edu JWSTSIAF-67
+#
+# jstans 2019-12-13
+# 	Added FULL apertures corresponding to the MASKxWBAR apertures:
+#		NRCA5_FULL_MASKLWB_NARROW 
+#		NRCA4_FULL_MASKSWB_NARROW
+#   See jira.stsci.edu JWSTSIAF-160 
+#	
+#	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
+#		NRCA1_FULL_WEDGE
+#		NRCA2_FULL_WEDGE
+#		NRCA3_FULL_WEDGE
+#		NRCA4_FULL_WEDGE
+#		NRCA5_FULL_WEDGE
+#	See jira.stsci.edu JWSTSIAF-164
+
 
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
 #        -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -185,6 +211,104 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
         NRCALL_GRISMR_WFSS , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None ,                                    NRCALL_FULL ,      grism_wfss
          NRCB5_GRISMC_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
          NRCB5_GRISMR_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+# Wide Field Slitless Spectroscopy - filter-dependent complete-spectra apertures
+ NRCA5_GRISMR_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMR_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMR_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMC_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMC_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+# Wide Field Slitless Spectroscopy - filter-dependent partial-spectra apertures
+ NRCA5_GRISMR_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMR_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMR_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,                                     NRCB5_FULL ,      grism_wfss
 # Coronagraphic science and astrometric confirmation-image apertures -- Round occulters(Module-A)
             NRCA2_MASK210R , SUBARRAY ,   712.0 ,   528.0 ,      640 ,      640 ,   321.0 ,   336.0 ,                                     NRCA2_FULL ,           wedge
        NRCA2_FULL_MASK210R ,  FULLSCA ,   712.0 ,   528.0 ,     2048 ,     2048 ,   712.0 ,  1521.0 ,                                     NRCA2_FULL ,           wedge
@@ -206,6 +330,7 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA4_MASKSWB_F200W , SUBARRAY ,   496.9 ,   535.5 ,      640 ,      640 ,   326.9 ,   340.5 ,                                     NRCA4_FULL ,           wedge
   NRCA4_FULL_MASKSWB_F200W ,  FULLSCA ,   496.9 ,   535.5 ,     2048 ,     2048 ,   496.9 ,  1513.5 ,                                     NRCA4_FULL ,           wedge
       NRCA4_MASKSWB_NARROW , SUBARRAY ,   227.5 ,   535.5 ,      640 ,      640 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
+ NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,   227.5 ,   535.5 ,     2048 ,     2048 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
 # Coronagraphic science and astrometric confirmation-image apertures - LW Bar occulter (Module-A)
              NRCA5_MASKLWB , SUBARRAY ,   435.0 ,  1682.5 ,      320 ,      320 ,   160.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
         NRCA5_FULL_MASKLWB ,  FULLSCA ,   435.0 ,  1682.5 ,     2048 ,     2048 ,  1614.0 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
@@ -232,6 +357,18 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA5_MASKLWB_F444W , SUBARRAY ,   446.6 ,  1682.5 ,      320 ,      320 ,   148.4 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F444W ,  FULLSCA ,   446.6 ,  1682.5 ,     2048 ,     2048 ,  1602.4 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
       NRCA5_MASKLWB_NARROW , SUBARRAY ,   302.0 ,  1682.5 ,      320 ,      320 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
+ NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   302.0 ,  1682.5 ,     2048 ,     2048 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
+# Coronagraphic master apertures for hosting TBD unique distortion solutions when the Lyot wedges are in use
+          NRCA1_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCA2_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCA3_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCA4_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCA5_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCB1_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCB2_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCB3_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCB4_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
+          NRCB5_FULL_WEDGE ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
 # Coronagraphic TA and associated astrometric confirmation-image apertures - Round occulters (Module-A)
           NRCA2_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
      NRCA2_FULL_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
