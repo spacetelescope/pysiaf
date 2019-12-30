@@ -66,12 +66,13 @@
 #		NRCA4_FULL_MASKSWB_NARROW
 #   See jira.stsci.edu JWSTSIAF-160 
 #	
+# gennaro 2019-12-30
 #	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
-#		NRCA1_FULL_WEDGE
-#		NRCA2_FULL_WEDGE
-#		NRCA3_FULL_WEDGE
-#		NRCA4_FULL_WEDGE
-#		NRCA5_FULL_WEDGE
+#		
+#    NRCA2_FULL_WEDGE_RND
+#    NRCA4_FULL_WEDGE_BAR
+#    NRCA5_FULL_WEDGE_RND
+#    NRCA5_FULL_WEDGE_BAR
 #	See jira.stsci.edu JWSTSIAF-164
 
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
