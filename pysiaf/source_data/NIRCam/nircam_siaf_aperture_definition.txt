@@ -49,16 +49,6 @@
 #              NRCB5_FULLP  ## updated to match B1_FULLP
 #
 #
-# gennaro 2019-12-12
-#  Added 96 WFSS filter-dependent SLIT type apertures for visualization. Apertures for both LW detectors, and for
-#	both GRISMR and GRISMC for each filter are present. In addition, they come in two flavors:
-#	Complete Spectrum : 
-#		apertures ending in '_CS', e.g. NRCA5_GRISMR_WFSS_F250M_CS
-#		These are defined by the half-max throughput values of the grism+filter
-#	Partial Spectrum  : 
-#		apertures ending in '_PS', e.g. NRCB5_GRISMC_WFSS_F480M_PS
-#		These are defined by the 1% throughput values of the grism+filter
-#   See jira.stsci.edu JWSTSIAF-67
 #
 # jstans 2019-12-13
 # 	Added FULL apertures corresponding to the MASKxWBAR apertures:
