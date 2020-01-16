@@ -48,14 +48,6 @@
 #            NRCB5_SUB160P  ## updated to match B1_160P   
 #            NRCB5_SUB400P  ## updated to match B1_400P   
 #              NRCB5_FULLP  ## updated to match B1_FULLP
-#
-#
-#
-# jstans 2019-12-13
-# 	Added FULL apertures corresponding to the MASKxWBAR apertures:
-#		NRCA5_FULL_MASKLWB_NARROW 
-#		NRCA4_FULL_MASKSWB_NARROW
-#   See jira.stsci.edu JWSTSIAF-160 
 #	
 # gennaro 2019-12-30
 #	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
@@ -223,7 +215,6 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA4_MASKSWB_F200W , SUBARRAY ,   496.9 ,   535.5 ,      640 ,      640 ,   326.9 ,   340.5 ,                                     NRCA4_FULL ,           wedge
   NRCA4_FULL_MASKSWB_F200W ,  FULLSCA ,   496.9 ,   535.5 ,     2048 ,     2048 ,   496.9 ,  1513.5 ,                                     NRCA4_FULL ,           wedge
       NRCA4_MASKSWB_NARROW , SUBARRAY ,   227.5 ,   535.5 ,      640 ,      640 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
- NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,   227.5 ,   535.5 ,     2048 ,     2048 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
 # Coronagraphic science and astrometric confirmation-image apertures - LW Bar occulter (Module-A)
              NRCA5_MASKLWB , SUBARRAY ,   435.0 ,  1682.5 ,      320 ,      320 ,   160.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
         NRCA5_FULL_MASKLWB ,  FULLSCA ,   435.0 ,  1682.5 ,     2048 ,     2048 ,  1614.0 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
@@ -250,7 +241,6 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA5_MASKLWB_F444W , SUBARRAY ,   446.6 ,  1682.5 ,      320 ,      320 ,   148.4 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F444W ,  FULLSCA ,   446.6 ,  1682.5 ,     2048 ,     2048 ,  1602.4 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
       NRCA5_MASKLWB_NARROW , SUBARRAY ,   302.0 ,  1682.5 ,      320 ,      320 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
- NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   302.0 ,  1682.5 ,     2048 ,     2048 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
 # Coronagraphic master apertures for hosting TBD unique distortion solutions when the Lyot wedges are in use
       NRCA2_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
       NRCA4_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
