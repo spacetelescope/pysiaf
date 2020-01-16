@@ -24,6 +24,8 @@ import pylab as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare
+from pysiaf.utils.enhanced_aperture_file import create_enhanced_aperture_file
+
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
     JWST_DELIVERY_DATA_ROOT
 from pysiaf import iando
@@ -371,7 +373,6 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-
             # make figures for JWSTSIAF-124 + 162 Jira ticket
             #selected_aperture_names = [['NRCB1_SUB64P', 'NRCB1_SUB160P', 'NRCB1_SUB400P',
             #                            'NRCB5_SUB64P', 'NRCB5_SUB160P', 'NRCB5_SUB400P',
@@ -430,6 +431,7 @@ if emulate_delivery:
                                        
                                        ]
  
+
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                                    report_dir=pre_delivery_dir, tags=tags,
@@ -437,6 +439,12 @@ if emulate_delivery:
                                                    mark_ref=True, filename_appendix=selected_aperture_name[0],
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
+
+    #If desired, create the enhanced aperture file containing OSS corners as well as V2/V3 positions of the reference point
+    enhanced_aperture_file =  True
+    
+    if enhanced_aperture_file:
+        create_enhanced_aperture_file(aperture_dict)    
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
