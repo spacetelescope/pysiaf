@@ -119,7 +119,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
             print('\tAdded {}'.format(' '.join(['{:12}'.format(
 #                getattr(comparison_siaf[aperture_name], a)) 
                 
-                getattr(comparison_siaf[aperture_name], a) if getattr(comparison_siaf[aperture_name], a) is not None else 'None')ex
+                getattr(comparison_siaf[aperture_name], a) if getattr(comparison_siaf[aperture_name], a) is not None else 'None')
                 
                 for a in attributes_to_show])),
                   file=print_file)

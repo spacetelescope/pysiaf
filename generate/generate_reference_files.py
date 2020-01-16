@@ -392,7 +392,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
     if (not os.path.isfile(wedge_file) or (overwrite_grism_file)):
         # grism parameters,     see WFSS worksheet in EXCEL SIAF
-        grism_parameters = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'nircam_siaf_grism_parameters.txt'), format='ascii.basic', delimiter=',', guess=False)
+        grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',', guess=False)
 
         # Save a backup copy of the grism file
         cmd = 'cp {} {}'.format(grism_file,os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'nircam_siaf_grism_parameters_backup.txt'))
