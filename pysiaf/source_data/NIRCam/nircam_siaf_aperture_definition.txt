@@ -212,7 +212,7 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA4_MASKSWB_F200W , SUBARRAY ,   496.9 ,   535.5 ,      640 ,      640 ,   326.9 ,   340.5 ,                                     NRCA4_FULL ,           wedge
   NRCA4_FULL_MASKSWB_F200W ,  FULLSCA ,   496.9 ,   535.5 ,     2048 ,     2048 ,   496.9 ,  1513.5 ,                                     NRCA4_FULL ,           wedge
       NRCA4_MASKSWB_NARROW , SUBARRAY ,   227.5 ,   535.5 ,      640 ,      640 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
- NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,   227.5 ,   535.5 ,     2048 ,     2048 ,    57.5 ,   340.5 ,                                     NRCA4_FULL ,           wedge
+ NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,   227.5 ,   535.5 ,     2048 ,     2048 ,   227.5 ,  1513.5 ,                                     NRCA4_FULL ,           wedge
 ## Coronagraphic science and astrometric confirmation-image apertures - LW Bar occulter (Module-A)
              NRCA5_MASKLWB , SUBARRAY ,   435.0 ,  1682.5 ,      320 ,      320 ,   160.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
         NRCA5_FULL_MASKLWB ,  FULLSCA ,   435.0 ,  1682.5 ,     2048 ,     2048 ,  1614.0 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
@@ -239,7 +239,7 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
        NRCA5_MASKLWB_F444W , SUBARRAY ,   446.6 ,  1682.5 ,      320 ,      320 ,   148.4 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F444W ,  FULLSCA ,   446.6 ,  1682.5 ,     2048 ,     2048 ,  1602.4 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
       NRCA5_MASKLWB_NARROW , SUBARRAY ,   302.0 ,  1682.5 ,      320 ,      320 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
- NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   302.0 ,  1682.5 ,     2048 ,     2048 ,   293.0 ,   175.5 ,                                     NRCA5_FULL ,           wedge
+ NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   302.0 ,  1682.5 ,     2048 ,     2048 ,  1747.0 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
 # Coronagraphic TA and associated astrometric confirmation-image apertures - Round occulters (Module-A)
           NRCA2_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
      NRCA2_FULL_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge

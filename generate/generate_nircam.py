@@ -373,10 +373,9 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-129 Jira ticket
-            selected_aperture_names = [['NRCA5_GRISMC_WFSS', 'NRCA5_GRISMR_WFSS','NRCALL_GRISMC_WFSS','NRCALL_GRISMR_WFSS',
-                                        'NRCB5_GRISMC_WFSS','NRCB5_GRISMR_WFSS',
-                                        'NRCA2_FULL_MASK210R','NRCA4_FULL_MASKSWB','NRCA5_FULL_MASKLWB']
+            # # make figures for JWSTSIAF-160 Jira ticket
+            selected_aperture_names = [['NRCA5_FULL_MASKLWB_NARROW', 'NRCA5_MASKLWB_NARROW', 'NRCA5_MASKLWB_F250M','NRCA5_FULL_MASKLWB_F250M', 'NRCA5_MASKLWB_F444W','NRCA5_FULL_MASKLWB_F444W'],
+                                       ['NRCA4_FULL_MASKSWB_NARROW', 'NRCA4_MASKSWB_NARROW', 'NRCA4_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F182M', 'NRCA4_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F210M' ]
                                         ]
 
             for selected_aperture_name in selected_aperture_names:
