@@ -39,7 +39,7 @@ from astropy.time import Time
 import lxml.etree as ET
 
 import pysiaf
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION, JWST_DELIVERY_DATA_ROOT
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION, JWST_DELIVERY_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
 from pysiaf.utils import polynomial, tools
 from pysiaf import iando
 
@@ -466,7 +466,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
     """
 
     instrument = 'NIRCam'
-    overwrite_wedge_file = True
+    overwrite_wedge_file = False
     overwrite_grism_file = False
 
 
@@ -496,8 +496,11 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
     if (not os.path.isfile(wedge_file) or (overwrite_grism_file)):
         # grism parameters,     see WFSS worksheet in EXCEL SIAF
-        grism_parameters = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'grism_parameters.txt'), format='ascii.basic', delimiter='\t', guess=False)
+        grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',', guess=False)
 
+        # Save a backup copy of the grism file
+        cmd = 'cp {} {}'.format(grism_file,os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'nircam_siaf_grism_parameters_backup.txt'))
+        os.system(cmd)
 
         # different sign in Y for NRCB apertures
         factor = np.array(
@@ -505,10 +508,11 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
         for col in grism_parameters.colnames[1:]:
             # these are Sci coordinates
-            if 'X' in col:
-                grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
-            elif 'Y' in col:
-                grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
+            if col[0] != 'D':
+                if 'X' in col:
+                    grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
+                elif 'Y' in col:
+                    grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
 
 
 
