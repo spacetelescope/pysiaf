@@ -17,3 +17,4 @@ miri_siaf_ifu_slice_table.fits
 examples/.ipynb_checkpoints
 *.zip
 pysiaf/temporary_data
+**/.idea/*
