@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import pkgutil
+import platform
 import sys
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.test import test as TestCommand
@@ -85,6 +86,7 @@ except ImportError:
             raise RuntimeError('!\n! Sphinx is not installed!\n!')
             exit(1)
 
+
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
@@ -97,6 +99,24 @@ class PyTest(TestCommand):
         errno = pytest.main(self.test_args)
         sys.exit(errno)
 
+install_requires = [
+        'astropy>=1.2',
+        'numpy>=1.9',
+        'numpydoc',
+        'matplotlib>=1.4.3',
+        'lxml>=3.6.4',
+        'scipy>=0.17',
+        'openpyxl>=2.6.0',
+        'requests>=2.21.0',
+    ]
+
+# Patch because MacOS Mojave causes matplotlib to fail without pyqt5 - will remove line if this bug is patched
+# Also noted as a known installation issue in the project's README
+if platform.system().lower() == 'darwin' and platform.mac_ver()[0].split('.')[0:2] == ['10', '14']:
+    try:
+        import PyQt5
+    except ModuleNotFoundError:
+        install_requires.append('PyQt5')
 
 setup(
     name=PACKAGENAME,
@@ -114,15 +134,14 @@ setup(
         'Topic :: Scientific/Engineering :: Astronomy',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=[
-        'astropy>=1.2',
-        'numpy>=1.9',
-        'numpydoc',
-        'matplotlib>=1.4.3',
-        'lxml>=3.6.4',
-        'scipy>=0.17',
-        'openpyxl==2.5.0'
-    ],
+    install_requires=install_requires,
+    extras_require={
+        'docs': ['stsci_rtd_theme',
+                 'sphinx_automodapi',
+                 'numpy',
+                 'matplotlib',
+                 'scipy']
+    },
     tests_require=['pytest'],
     packages=find_packages(),
     package_data={PACKAGENAME: ['prd_data/HST/*',

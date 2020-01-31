@@ -21,9 +21,13 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, Color
 from openpyxl.styles import Alignment
 
-from ..version import __version__
 from ..constants import _JWST_TEMPORARY_ROOT
 from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED, SIAF_XML_FIELD_FORMAT, FLOAT_ATTRIBUTES
+
+try:
+    from ..version import __version__
+except ImportError:
+    __version__ = ''
 
 # dictionary used to set field precision in SIAF.XML
 xml_decimal_precision = {}
@@ -41,15 +45,20 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
     ----------
     aperture_collection : ApertureCollection
         dictionary of apertures
-    filename
-    basepath
-    label
+    filename : str
+        The file name and path if you do not wish to use the default naming
+    basepath : str
+        If you wish to use the default naming, basepath allows you to set the path where the file will be saved
+    label : str
+        Append default file name ("INSTR_SIAF") with this string
     file_format : str list
         one of ['xml', 'xlsx', 'csv', and formats supported by astropy Table.write]
     verbose
 
     Returns
     -------
+    filenames : list
+        list of the filenames written out
 
     TODO
     ----
@@ -204,7 +213,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
             # adjust column width
             for column_cells in ws1.columns:
                 length = max(len(cell.value or '') for cell in column_cells[1:])
-                ws1.column_dimensions[column_cells[0].column].width = length * 1.5
+                ws1.column_dimensions[column_cells[0].column_letter].width = length * 1.5
             siaf_workbook.save(filename=out_filename)
             if verbose:
                 print('Wrote Siaf to xlsx file {}'.format(out_filename))
