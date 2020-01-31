@@ -4,6 +4,7 @@ from __future__ import absolute_import, print_function, division
 
 import glob
 import os
+import re
 
 __all__ = ['JWST_PRD_VERSION', 'JWST_PRD_DATA_ROOT', 'HST_PRD_VERSION', 'HST_PRD_DATA_ROOT']
 
@@ -28,6 +29,11 @@ REPORTS_ROOT = os.path.join(_THIS_DIRECTORY, 'reports')
 AVAILABLE_PRD_JWST_VERSIONS = [os.path.basename(dir_name) for dir_name in
                                glob.glob(os.path.join(_DATA_ROOT, 'JWST', '*'))]
 AVAILABLE_PRD_JWST_VERSIONS.sort()
+
+# Remove all PRD with old formatting (PRDOPSSOC-LETTER-###) since they cannot be newest
+AVAILABLE_PRD_JWST_VERSIONS = [prd for i, prd in enumerate(AVAILABLE_PRD_JWST_VERSIONS) if
+                               bool(re.match(r"^[A-Z]-\d+", AVAILABLE_PRD_JWST_VERSIONS[i].split("PRDOPSSOC-")[1]))
+                               is False]
 
 # current version of the JWST PRD containing the SIAF
 # by default the used version is the latest one
