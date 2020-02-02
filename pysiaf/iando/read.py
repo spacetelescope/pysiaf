@@ -386,7 +386,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         if basepath is None:
             basepath = JWST_PRD_DATA_ROOT
         if not os.path.isdir(basepath):
-            raise RuntimeError("Could not find SIAF data "
+            raise OSError("Could not find SIAF data "
                                "in {}".format(basepath))
         filename = os.path.join(basepath, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()]
                                 + '_SIAF.xml')
