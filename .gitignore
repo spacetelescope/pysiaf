@@ -8,6 +8,7 @@ dist/
 *.so
 *.egg-info
 *.swp
+*._
 .pytest_cache
 docs/_build
 ~$*_SIAF.xlsx
@@ -17,3 +18,4 @@ miri_siaf_ifu_slice_table.fits
 examples/.ipynb_checkpoints
 *.zip
 pysiaf/temporary_data
+**/.idea/*

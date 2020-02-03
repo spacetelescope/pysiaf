@@ -17,7 +17,7 @@ import sys
 
 from astropy.table import vstack, Table
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 
 from ..constants import JWST_PRD_VERSION
 from ..iando.read import get_siaf, read_siaf_aperture_definitions

@@ -14,8 +14,9 @@ import os
 from astropy.io import fits
 from astropy.table import Table
 import numpy as np
-import pylab as pl
 from numpy.testing import assert_allclose
+import matplotlib.pyplot as pl
+# import pytest
 
 from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT, JWST_SOURCE_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 from ..siaf import Siaf

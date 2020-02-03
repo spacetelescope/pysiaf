@@ -32,7 +32,7 @@ import subprocess
 import sys
 
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 from astropy.modeling import models
 from astropy.table import Table
 import astropy.units as u
@@ -610,14 +610,14 @@ class Aperture(object):
             Add text label. If True, text will be the default aperture name.
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
-            axes are inferred from pylab)
+            axes are inferred)
         title : str
             Figure title. If set, add a label to the plot indicating which frame was plotted.
         units : str
             one of 'arcsec', 'arcmin', 'deg'
         show_frame_origin : str or list
             Plot frame origin (goes to plot_frame_origin()): None, 'all', 'det',
-            'sci', 'raw', or a list of these.
+            'sci', 'raw', 'idl', or a list of these.
         mark_ref : bool
             Add marker for the (V2Ref, V3Ref) reference point defining this aperture.
         fill : bool
@@ -702,7 +702,7 @@ class Aperture(object):
             if xlim[0] < xlim[1]:
                 ax.invert_xaxis()
 
-    def plot_frame_origin(self, frame, which='both', units='arcsec', ax=None):
+    def plot_frame_origin(self, frame, which='sci', units='arcsec', ax=None):
         """Indicate the origins of the detector and science frames.
 
         Red and blue squares indicate the detector and science frame origin, respectively.
@@ -712,7 +712,7 @@ class Aperture(object):
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         which : str of list
-            Which origin to plot: 'all', 'det', 'sci', 'raw', or a list
+            Which origin to plot: 'all', 'det', 'sci', 'raw', 'idl', or a list
         units : str
             one of 'arcsec', 'arcmin', 'deg'
         ax : matplotlib.Axes
@@ -750,6 +750,10 @@ class Aperture(object):
         if 'raw' in which or 'all' in which:
             c1, c2 = self.convert(0, 0, 'raw', frame)
             ax.plot(c1 * scale, c2 * scale, color='black', marker='s', markersize=5)
+
+        if 'idl' in which or 'all' in which:
+            c1, c2 = self.convert(0, 0, 'idl', frame)
+            ax.plot(c1 * scale, c2 * scale, color='green', marker='s', markersize=3)
 
     def plot_detector_channels(self, frame, color='0.5', alpha=0.3, evenoddratio=0.5, ax=None):
         """Outline the detector readout channels.

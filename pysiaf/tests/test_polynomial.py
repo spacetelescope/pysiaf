@@ -1,7 +1,7 @@
 
 import numpy as np
 from pysiaf.utils import polynomial
-import pylab as pl
+import matplotlib.pyplot as pl
 
 
 def makeup_polynomial(order = 5):

@@ -25,7 +25,7 @@ import re
 
 from astropy.table import Table
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as pl
 
 from .iando import read
 
@@ -353,7 +353,7 @@ class Siaf(ApertureCollection):
             Clear plot before plotting (set to false to overplot)
         show_frame_origin : str or list
             Plot frame origin (goes to plot_frame_origin()): None, 'all', 'det',
-            'sci', 'raw', or a list of these.
+            'sci', 'raw', 'idl', or a list of these.
         mark_ref : bool
             Add markers for the reference (V2Ref, V3Ref) point in each apertyre
         frame : str
@@ -398,7 +398,7 @@ class Siaf(ApertureCollection):
 
         self._last_plot_frame = frame
 
-    def plot_frame_origin(self, frame=None, which='both', units='arcsec', ax=None):
+    def plot_frame_origin(self, frame=None, which='sci', units='arcsec', ax=None):
         """Mark on the plot the frame's origin in Det and Sci coordinates.
 
         Parameters
@@ -408,7 +408,7 @@ class Siaf(ApertureCollection):
             Optional if you have already called plot() to specify a
             coordinate frame.
         which : str or list
-            Which origin to plot: 'all', 'det', 'sci', 'raw', or a list
+            Which origin to plot: 'all', 'det', 'sci', 'raw', 'idl', or a list
         units : str
             one of 'arcsec', 'arcmin', 'deg'
         ax : matplotlib.Axes
