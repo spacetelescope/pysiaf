@@ -27,7 +27,10 @@ try:
     req = requests.get('https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST').text
     p = re.compile("/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST/(.*?)/SIAFXML")
     prd_list = p.findall(req)
-    newest_prd = [x for x in sorted(prd_list, reverse=True)][0]
+    prd_list.sort()
+    newest_prd = [prd for i, prd in enumerate(prd_list) if
+                  bool(re.match(r"^[A-Z]-\d+", prd_list[i].split("PRDOPSSOC-")[1]))
+                  is False][-1]  # choose largest number from PRDs matching format: PRODOSSOC-###
 
     if JWST_PRD_VERSION != newest_prd:
         print("**WARNING**: LOCAL JWST PRD VERSION {} IS BEHIND THE CURRENT ONLINE VERSION {}\nPlease "
