@@ -20,7 +20,7 @@ from astropy.table import Table
 from numpy.testing import assert_allclose
 import pytest
 
-from ..constants import JWST_SOURCE_DATA_ROOT
+from ..constants import JWST_SOURCE_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 from ..siaf import Siaf
 
 instrument = 'MIRI'
@@ -31,7 +31,6 @@ test_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 sys.path.append(test_data_dir)
 import mirim_siaf_testdata
 
-@pytest.mark.xfail
 def test_against_test_data(siaf=None, verbose=False):
     """MIRI test data comparison.
 
@@ -41,7 +40,13 @@ def test_against_test_data(siaf=None, verbose=False):
 
     """
     if siaf is None:
-        siaf = Siaf(instrument)
+        # Try to use pre-delivery-data since this should best match the source-data. If no data there, use PRD data
+        try:
+            pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+            siaf = Siaf(instrument, basepath=pre_delivery_dir)
+        except OSError:
+            siaf = Siaf(instrument)
+
     else:
         # safeguard against side-effects when running several tests on
         #  a provided siaf, e.g. setting tilt to non-zero value

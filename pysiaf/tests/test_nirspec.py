@@ -8,22 +8,21 @@ Authors
 
 """
 
+import copy
 import os
 
 from astropy.io import fits
 from astropy.table import Table
-import copy
 import numpy as np
+from numpy.testing import assert_allclose
 import matplotlib.pyplot as pl
 # import pytest
 
-
-
-from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT, JWST_SOURCE_DATA_ROOT
+from ..constants import JWST_TEMPORARY_DATA_ROOT, TEST_DATA_ROOT, JWST_SOURCE_DATA_ROOT, JWST_DELIVERY_DATA_ROOT
 from ..siaf import Siaf
 
-
 instrument = 'NIRSpec'
+
 
 def test_against_test_data(siaf=None):
     """NIRSpec test data comparison.
@@ -33,7 +32,12 @@ def test_against_test_data(siaf=None):
 
     """
     if siaf is None:
-        siaf = Siaf(instrument)
+        # Try to use pre-delivery-data since this should best match the source-data. If no data there, use PRD data
+        try:
+            pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+            siaf = Siaf(instrument, basepath=pre_delivery_dir)
+        except OSError:
+            siaf = Siaf(instrument)
     else:
         # safeguard against side-effects when running several tests on a provided siaf, e.g.
         # setting tilt to non-zero value
@@ -88,8 +92,7 @@ def test_against_test_data(siaf=None):
 
                     1/0
 
-
-                # SCI to GWA detector side (Step 1. in Sections 2.3.3, 5.5.2 of JWST-STScI-005921 , see also Table 4.7.1)
+                # SCI to GWA detector side (Step 1. in Sections 2.3.3, 5.5.2 of JWST-STScI-005921, see also Table 4.7.1)
                 test_data['pysiaf_GWAout_X'], test_data['pysiaf_GWAout_Y'] = aperture.sci_to_gwa(test_data['SCA_X'], test_data['SCA_Y'])
 
                 # effect of mirror, transform from GWA detector side to GWA skyward side
@@ -114,16 +117,14 @@ def test_against_test_data(siaf=None):
                             elif key_seed == 'rms':
                                 difference_metrics[key_name].append(np.std(test_data['difference_{}'.format(parameter_name)]))
 
-
-
                         print('{} {} SCA_to_OTE transform comparison to {:>10}  tilt={} {:>10} MEAN={:+1.3e} RMS={:1.3e}'.format(sca_name, filter_name, AperName, include_tilt, parameter_name, difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index], difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index]))
 
-                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index] < 1e-9
-                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] < 5e-9
+                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'mean')][index] < 1e-9, "Failed for {}".format(AperName)
+                        assert difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] < 5e-9, "Failed for {}".format(AperName)
 
                         if 0:
                             threshold = 1e-6
-                            if (difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] > threshold):
+                            if difference_metrics['diff_{}_{}'.format(parameter_name, 'rms')][index] > threshold:
                                 pl.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); pl.clf()
                                 pl.quiver(test_data['SCA_X'], test_data['SCA_Y'], test_data['difference_XAN'], test_data['difference_YAN'], angles='xy')
                                 pl.title('Difference IDT and pysiaf')
@@ -290,3 +291,26 @@ def test_nirspec_slit_transformations(verbose=False, siaf=None):
                             siaf.instrument, aper_name, from_frame, to_frame, labels[i], error))
                     assert error < pixel_threshold
 
+
+def test_sci_det_consistency(siaf=None):
+    """Test that SCI and DET coordinates are consistent, see JWSTSIAF-112."""
+
+    if siaf is None:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        pre_delivery_siaf = os.path.join(pre_delivery_dir, 'NIRSpec_SIAF.xml')
+        if os.path.isfile(pre_delivery_siaf):
+            print('\nUsing pre-delivery SIAF from {}'.format(pre_delivery_dir))
+            siaf = Siaf(instrument, basepath=pre_delivery_dir)
+        else:
+            siaf = Siaf(instrument)
+    else:
+        siaf = copy.deepcopy(siaf)
+
+    nrs2_full = siaf['NRS2_FULL']
+    nrs2_fp4mimf = siaf['NRS2_FP4MIMF']
+
+    absolute_tolerance = 1e-9
+    assert_allclose(nrs2_fp4mimf.det_to_sci(2048, 2048), (1, 1), atol=absolute_tolerance)
+    assert_allclose(nrs2_full.det_to_sci(2048, 2048), (1, 1), atol=absolute_tolerance)
+    # assert nrs2_fp4mimf.det_to_sci(2048, 2048) == (1, 1)
+    # assert nrs2_full.det_to_sci(2048, 2048) == (1, 1)
