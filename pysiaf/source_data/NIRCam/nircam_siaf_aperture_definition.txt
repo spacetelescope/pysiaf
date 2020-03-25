@@ -55,6 +55,8 @@
 #		NRCA4_FULL_MASKSWB_NARROW
 #   See jira.stsci.edu JWSTSIAF-160 
 #	
+# gennaro 2020-03-25
+#    Edited typo in XSciRef for NRCA5_MASKLWB_F277W from 239.8 to 238.8 (see JWSTSIAF-171)
 
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
 #        -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -318,7 +320,7 @@ NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None
   NRCA5_FULL_MASKLWB_F250M ,  FULLSCA ,   329.8 ,  1682.5 ,     2048 ,     2048 ,  1719.2 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
        NRCA5_MASKLWB_F300M , SUBARRAY ,   354.2 ,  1682.5 ,      320 ,      320 ,   240.8 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F300M ,  FULLSCA ,   354.2 ,  1682.5 ,     2048 ,     2048 ,  1694.8 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
-       NRCA5_MASKLWB_F277W , SUBARRAY ,   356.2 ,  1682.5 ,      320 ,      320 ,   239.8 ,   175.5 ,                                     NRCA5_FULL ,           wedge
+       NRCA5_MASKLWB_F277W , SUBARRAY ,   356.2 ,  1682.5 ,      320 ,      320 ,   238.8 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F277W ,  FULLSCA ,   356.2 ,  1682.5 ,     2048 ,     2048 ,  1692.8 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
        NRCA5_MASKLWB_F335M , SUBARRAY ,   372.9 ,  1682.5 ,      320 ,      320 ,   222.1 ,   175.5 ,                                     NRCA5_FULL ,           wedge
   NRCA5_FULL_MASKLWB_F335M ,  FULLSCA ,   372.9 ,  1682.5 ,     2048 ,     2048 ,  1676.1 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
