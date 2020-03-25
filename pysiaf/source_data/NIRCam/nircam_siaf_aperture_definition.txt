@@ -55,6 +55,8 @@
 #		NRCA4_FULL_MASKSWB_NARROW
 #   See jira.stsci.edu JWSTSIAF-160 
 #	
+# gennaro 2020-03-25
+# Edited AperType for the 12 apertures introduced in JWSTSIAF-61, which were erroneously set to SUBARRAY. Now they are corrected to FULLSCA (see JWSTSIAF-170)
 
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
 #        -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -340,31 +342,31 @@ NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None
  NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   302.0 ,  1682.5 ,     2048 ,     2048 ,  1747.0 ,  1682.5 ,                                     NRCA5_FULL ,           wedge
 # Coronagraphic TA and associated astrometric confirmation-image apertures - Round occulters (Module-A)
           NRCA2_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
-     NRCA2_FULL_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
+     NRCA2_FULL_TAMASK210R ,  FULLSCA ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
         NRCA2_FSTAMASK210R , SUBARRAY ,   627.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA2_FULL ,           wedge
-   NRCA2_FULL_FSTAMASK210R , SUBARRAY ,   627.5 ,   773.5 ,     2048 ,     2048 ,   627.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
+   NRCA2_FULL_FSTAMASK210R ,  FULLSCA ,   627.5 ,   773.5 ,     2048 ,     2048 ,   627.5 ,  1275.5 ,                                     NRCA2_FULL ,           wedge
           NRCA5_TAMASK335R , SUBARRAY ,  1558.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-     NRCA5_FULL_TAMASK335R , SUBARRAY ,  1558.5 ,  1550.5 ,     2048 ,     2048 ,   490.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
+     NRCA5_FULL_TAMASK335R ,  FULLSCA ,  1558.5 ,  1550.5 ,     2048 ,     2048 ,   490.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
         NRCA5_FSTAMASK335R , SUBARRAY ,  1429.5 ,  1551.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-   NRCA5_FULL_FSTAMASK335R , SUBARRAY ,  1429.5 ,  1551.5 ,     2048 ,     2048 ,   619.5 ,  1551.5 ,                                     NRCA5_FULL ,           wedge
+   NRCA5_FULL_FSTAMASK335R ,  FULLSCA ,  1429.5 ,  1551.5 ,     2048 ,     2048 ,   619.5 ,  1551.5 ,                                     NRCA5_FULL ,           wedge
           NRCA5_TAMASK430R , SUBARRAY ,  1235.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-     NRCA5_FULL_TAMASK430R , SUBARRAY ,  1235.5 ,  1550.5 ,     2048 ,     2048 ,   813.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
+     NRCA5_FULL_TAMASK430R ,  FULLSCA ,  1235.5 ,  1550.5 ,     2048 ,     2048 ,   813.5 ,  1550.5 ,                                     NRCA5_FULL ,           wedge
         NRCA5_FSTAMASK430R , SUBARRAY ,  1113.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-   NRCA5_FULL_FSTAMASK430R , SUBARRAY ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,   935.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+   NRCA5_FULL_FSTAMASK430R ,  FULLSCA ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,   935.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
 # Coronagraphic TA and associated astrometric confirmation-image apertures - SW Bar occulters (Module-A)
            NRCA4_TAMASKSWB , SUBARRAY ,   821.5 ,   787.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
-      NRCA4_FULL_TAMASKSWB , SUBARRAY ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,                                     NRCA4_FULL ,           wedge
+      NRCA4_FULL_TAMASKSWB ,  FULLSCA ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,                                     NRCA4_FULL ,           wedge
           NRCA4_TAMASKSWBS , SUBARRAY ,   166.5 ,   786.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
-     NRCA4_FULL_TAMASKSWBS , SUBARRAY ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,                                     NRCA4_FULL ,           wedge
+     NRCA4_FULL_TAMASKSWBS ,  FULLSCA ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,                                     NRCA4_FULL ,           wedge
          NRCA4_FSTAMASKSWB , SUBARRAY ,   392.5 ,   774.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                                     NRCA4_FULL ,           wedge
-    NRCA4_FULL_FSTAMASKSWB , SUBARRAY ,   392.5 ,   774.5 ,     2048 ,     2048 ,   392.5 ,  1274.5 ,                                     NRCA4_FULL ,           wedge
+    NRCA4_FULL_FSTAMASKSWB ,  FULLSCA ,   392.5 ,   774.5 ,     2048 ,     2048 ,   392.5 ,  1274.5 ,                                     NRCA4_FULL ,           wedge
 # Coronagraphic TA and associated astrometric confirmation-image apertures - LW Bar occulters (Module-A)
            NRCA5_TAMASKLWB , SUBARRAY ,   312.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-      NRCA5_FULL_TAMASKLWB , SUBARRAY ,   312.5 ,  1557.5 ,     2048 ,     2048 ,  1736.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+      NRCA5_FULL_TAMASKLWB ,  FULLSCA ,   312.5 ,  1557.5 ,     2048 ,     2048 ,  1736.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
           NRCA5_TAMASKLWBL , SUBARRAY ,   593.5 ,  1558.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-     NRCA5_FULL_TAMASKLWBL , SUBARRAY ,   593.5 ,  1558.5 ,     2048 ,     2048 ,  1455.5 ,  1558.5 ,                                     NRCA5_FULL ,           wedge
+     NRCA5_FULL_TAMASKLWBL ,  FULLSCA ,   593.5 ,  1558.5 ,     2048 ,     2048 ,  1455.5 ,  1558.5 ,                                     NRCA5_FULL ,           wedge
          NRCA5_FSTAMASKLWB , SUBARRAY ,   391.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,           wedge
-    NRCA5_FULL_FSTAMASKLWB , SUBARRAY ,   391.5 ,  1557.5 ,     2048 ,     2048 ,  1657.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
+    NRCA5_FULL_FSTAMASKLWB ,  FULLSCA ,   391.5 ,  1557.5 ,     2048 ,     2048 ,  1657.5 ,  1557.5 ,                                     NRCA5_FULL ,           wedge
 # Coronagraphic science apertures (Module-B, backup)
             NRCB1_MASK210R , SUBARRAY ,  1287.0 ,   511.0 ,      640 ,      640 ,   320.0 ,   321.0 ,                                     NRCB1_FULL ,           wedge
             NRCB5_MASK335R , SUBARRAY ,  1345.0 ,   359.0 ,      320 ,      320 ,   160.0 ,   161.0 ,                                     NRCB5_FULL ,           wedge
