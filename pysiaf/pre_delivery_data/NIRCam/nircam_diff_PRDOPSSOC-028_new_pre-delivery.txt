@@ -1,0 +1,32 @@
+Reference:  202 apertures in PRDOPSSOC-028
+Comparison: 202 apertures in new pre-delivery
+
+Number of modified apertures 202. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+NRCA2_FULL_TAMASK210R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASK335R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASK430R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_TAMASKSWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASKLWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASKLWBL            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_TAMASKSWBS            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA2_FULL_FSTAMASK210R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_FSTAMASKSWB           AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASKLWB           AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASK335R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASK430R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
