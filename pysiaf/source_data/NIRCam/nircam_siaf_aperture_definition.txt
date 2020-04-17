@@ -20,33 +20,6 @@
 #	Note that the XDetRef and YDetRef value has NOT been corrected for filter-dependent wander. See JWSTSIAF-159.
 # Added 12 FULL apertures corresponding to the Coronagraphic TA apertures. These support calibration of the astrometric confirmation
 #	images that PRECEDE the SAM from the TA aperture to the coronagraphic mask. See JWSTSIAF-61.
-#
-# gennaro, jstans 2019-11-1
-# Corrected Module-A coronagraphy apertures per analysis of CV3 data using correct lyot wedge for each set of features.
-#   No update of the wedge offsets was implemented.
-#   See jira.stsci.edu JWSTSIAF-118, JWSTSIAF-77.
-#
-# jstans, gennaro 2019-11-6
-# Updated reference positions for numerous apertures to be at central 4-corner position. Mostly done to provide uniformity
-#   across all the apertures where some external factor doesn't dictate the reference position. Update to the 8x8 subarray
-#   reference positions is arguably more important than that, just because of the small size of that aperture.
-#   Reference positions for the other WFS field points (NRC[A/B]*_FP[1-5]*) were baselined at pixel centers in CV3 testing,
-#   so no changes were made to those, either.
-#   See jira.stsci.edu JWSTSIAF-124, JWSTSIAF-162
-# Also re-ordered the entries to group apertures by template and module, added comment lines between groups.
-# Changed reference positions are for:
-#        NRCA5_TAGRISMTS32  ## moved to center 4-corner   
-#  NRCA5_TAGRISMTS32_F405N  ## added tweak for filter...  
-#                NRCA3_FP1  ## moved to center 4-corner   
-#           NRCA3_FP1_SUB8  ## moved to center 4-corner   
-#          NRCA3_FP1_SUB64  ## moved to center 4-corner   
-#                NRCB4_FP1  ## moved to center 4-corner   
-#           NRCB4_FP1_SUB8  ## moved to center 4-corner   
-#          NRCB4_FP1_SUB64  ## moved to center 4-corner   
-#             NRCB5_SUB64P  ## updated to match B1_64P    
-#            NRCB5_SUB160P  ## updated to match B1_160P   
-#            NRCB5_SUB400P  ## updated to match B1_400P   
-#              NRCB5_FULLP  ## updated to match B1_FULLP
 #	
 # gennaro 2019-12-30
 #	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
