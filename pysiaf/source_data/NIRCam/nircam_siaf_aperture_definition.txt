@@ -20,7 +20,7 @@
 #	Note that the XDetRef and YDetRef value has NOT been corrected for filter-dependent wander. See JWSTSIAF-159.
 # Added 12 FULL apertures corresponding to the Coronagraphic TA apertures. These support calibration of the astrometric confirmation
 #	images that PRECEDE the SAM from the TA aperture to the coronagraphic mask. See JWSTSIAF-61.
-
+#
 # gennaro 2019-12-30
 #	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
 #		
@@ -31,7 +31,8 @@
 #	See jira.stsci.edu JWSTSIAF-164
 #
 # gennaro 2020-03-25
-# Edited AperType for the 12 apertures introduced in JWSTSIAF-61, which were erroneously set to SUBARRAY. Now they are corrected to FULLSCA (see JWSTSIAF-170)
+#    Edited AperType for the 12 apertures introduced in JWSTSIAF-61, which were erroneously set to SUBARRAY. Now they are corrected to FULLSCA (see JWSTSIAF-170)
+#    Edited typo in XSciRef for NRCA5_MASKLWB_F277W from 239.8 to 238.8 (see JWSTSIAF-171)
 
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
             NRCA1_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                     NRCA1_FULL ,         default
@@ -209,7 +210,7 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
       NRCA4_MASKSWB_NARROW , SUBARRAY ,   227.5 ,   542.0 ,      640 ,      640 ,    68.5 ,   321.0 ,                           NRCA4_FULL_WEDGE_BAR ,         default
        NRCA5_MASKLWB_F250M , SUBARRAY ,   331.6 ,  1667.0 ,      320 ,      320 ,   266.4 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
        NRCA5_MASKLWB_F300M , SUBARRAY ,   356.3 ,  1667.0 ,      320 ,      320 ,   241.7 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-       NRCA5_MASKLWB_F277W , SUBARRAY ,   356.4 ,  1667.0 ,      320 ,      320 ,   241.6 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F277W , SUBARRAY ,   356.4 ,  1667.0 ,      320 ,      320 ,   238.8 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
        NRCA5_MASKLWB_F335M , SUBARRAY ,   364.3 ,  1667.0 ,      320 ,      320 ,   233.7 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
        NRCA5_MASKLWB_F360M , SUBARRAY ,   387.8 ,  1667.0 ,      320 ,      320 ,   210.2 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
        NRCA5_MASKLWB_F356W , SUBARRAY ,   396.7 ,  1667.0 ,      320 ,      320 ,   201.3 ,   160.0 ,                           NRCA5_FULL_WEDGE_BAR ,         default
