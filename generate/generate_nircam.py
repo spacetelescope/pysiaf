@@ -24,8 +24,6 @@ import matplotlib.pyplot as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare
-from pysiaf.utils.enhanced_aperture_file import create_enhanced_aperture_file
-
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
     JWST_DELIVERY_DATA_ROOT
 from pysiaf import iando
@@ -366,17 +364,36 @@ if emulate_delivery:
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
 
         compare.compare_transformation_roundtrip(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                                 tags=tags, report_dir=pre_delivery_dir)
+                                             tags=tags, report_dir=pre_delivery_dir)
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        create_jira_plots = True
+        create_jira_plots = False
         if create_jira_plots:
-            # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA5_FULL_MASKLWB_NARROW', 'NRCA5_MASKLWB_NARROW', 'NRCA5_MASKLWB_F250M','NRCA5_FULL_MASKLWB_F250M', 'NRCA5_MASKLWB_F444W','NRCA5_FULL_MASKLWB_F444W'],
-                                       ['NRCA4_FULL_MASKSWB_NARROW', 'NRCA4_MASKSWB_NARROW', 'NRCA4_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F182M', 'NRCA4_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F210M' ]
-                                        ]
+            # make figures for JWSTSIAF-129 Jira ticket
+            # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
+            #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
+            #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
+            #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
+            #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
+            #                            ]
+
+            # make figures for JWSTSIAF-61 Jira ticket
+            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
+                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
+                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
+                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
+                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
+                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
+                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
+
+                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
+                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
+                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
+                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
+                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+                                       ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
@@ -385,12 +402,6 @@ if emulate_delivery:
                                                    mark_ref=True, filename_appendix=selected_aperture_name[0],
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
-
-    #If desired, create the enhanced aperture file containing OSS corners as well as V2/V3 positions of the reference point
-    enhanced_aperture_file =  True
-    
-    if enhanced_aperture_file:
-        create_enhanced_aperture_file(aperture_dict)    
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture

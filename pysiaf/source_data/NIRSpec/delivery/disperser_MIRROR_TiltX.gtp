@@ -1,0 +1,37 @@
+*REFERENCE
+ESA-JWST-SCI-NRS-RP-2016-003, nIDs [30036]
+
+*AUTHOR
+p_FM2_44_GWA_tiltpolys.py v.2.0
+
+*DATE
+2016-12-21T19:52:25.114723
+
+*VERSION
+1.1.1
+
+*TYPE
+GTP
+
+*DESCRIPTION
+GWA Y tilt sensor fit for MIRROR with zero point for NIRS_FM2_05_CV3_FIT1/
+
+*CoeffsTemperature00 2
+4260.83
+-837.764
+
+*N_Temperatures
+1
+
+*Temperatures 1
+37.15
+
+*Zeroreadings 1
+0.196614012122
+
+*Order
+1
+
+*Unit
+arcsec
+
