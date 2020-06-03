@@ -1,0 +1,48 @@
+Reference:  202 apertures in PRDOPSSOC-028
+Comparison: 206 apertures in new pre-delivery
+
+Number of added apertures 4:
+	          AperName      XDetRef      YDetRef     XSciSize     YSciSize      XSciRef      YSciRef        V2Ref        V3Ref
+	Added NRCA4_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    50.806655  -419.619926
+	Added NRCA5_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    83.944385  -446.297149
+	Added NRCA2_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5   118.604826  -419.240929
+	Added NRCA5_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5     83.91782  -445.675189
+Number of modified apertures 202. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+NRCA2_FULL_TAMASK210R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASK335R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASK430R            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_TAMASKSWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASKLWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_TAMASKLWBL            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_TAMASKSWBS            AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA2_FULL_FSTAMASK210R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA4_FULL_FSTAMASKSWB           AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASKLWB           AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASK335R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_FULL_FSTAMASK430R          AperType              SUBARRAY               FULLSCA             N/A        N/A
+
+NRCA5_MASKLWB_F277W               XSciRef                 241.6                 238.8        2.800000     1.1589
+NRCA5_MASKLWB_F277W             XIdlVert1              -15.1094              -14.9341        0.175300     1.1602
+NRCA5_MASKLWB_F277W             XIdlVert2                4.9512                 5.127        0.175800     3.4289
+NRCA5_MASKLWB_F277W             XIdlVert3                4.9364                5.1117        0.175300     3.4294
+NRCA5_MASKLWB_F277W             XIdlVert4              -15.0637              -14.8889        0.174800     1.1604
+NRCA5_MASKLWB_F277W             YIdlVert1              -10.0025               -10.003        0.000500     0.0050
+NRCA5_MASKLWB_F277W             YIdlVert2               -10.031              -10.0309        0.000100     0.0010
+NRCA5_MASKLWB_F277W             YIdlVert3               10.0916                10.092        0.000400     0.0040
+NRCA5_MASKLWB_F277W             YIdlVert4               10.0842               10.0839        0.000300     0.0030
+
