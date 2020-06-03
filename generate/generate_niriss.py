@@ -197,8 +197,7 @@ if emulate_delivery:
                                                  report_dir=pre_delivery_dir, )
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags,
-                                           xlimits=(-210, -370), ylimits=(-780, -615))
+                                           report_dir=pre_delivery_dir, tags=tags)
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture

@@ -462,8 +462,6 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
         ysci_offset = (aperture.YDetRef - parent_aperture.YDetRef) * \
                       np.cos(np.deg2rad(aperture.DetSciYAngle))
 
-        xsci_offset *= aperture.DetSciParity
-
         # shift polynomial coefficients of the parent aperture
         sci2idlx_coefficients_shifted = shift_coefficients(sci2idlx_coefficients, xsci_offset,
                                                            ysci_offset, verbose=False)

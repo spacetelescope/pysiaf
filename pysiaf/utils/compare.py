@@ -117,11 +117,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                                                   attributes_to_show])), file=print_file)
         for aperture_name in added_aperture_names:
             print('\tAdded {}'.format(' '.join(['{:12}'.format(
-#                getattr(comparison_siaf[aperture_name], a)) 
-                
-                getattr(comparison_siaf[aperture_name], a) if getattr(comparison_siaf[aperture_name], a) is not None else 'None')
-                
-                for a in attributes_to_show])),
+                getattr(comparison_siaf[aperture_name], a)) for a in attributes_to_show])),
                   file=print_file)
         print()
 
@@ -131,6 +127,10 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
         for aperture_name in removed_aperture_names:
             print('\tRemoved {}'.format(aperture_name), file=print_file)
         print()
+
+    if selected_aperture_name is not None:
+        if type(selected_aperture_name) == str:
+            selected_aperture_name = [selected_aperture_name]
 
     print('Number of modified apertures {}. Significant modifications are listed below.'.format(
         len(modified_apertures)), file=print_file)
@@ -154,7 +154,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
         sorted(modified_apertures.items(), key=lambda t: aperture_name_list.index(t[0])))
 
     for aperture_name in modified_apertures.keys():
-        if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
+        if (selected_aperture_name is not None) and (aperture_name not in selected_aperture_name):
             continue
         comparison_table = compare_apertures(reference_siaf[aperture_name],
                                              comparison_siaf[aperture_name],
@@ -204,7 +204,6 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
 def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance=1e-4,
                                      reference_siaf_input=None, report_file=None, report_dir=None,
                                      verbose=True, make_figures=False, selected_aperture_name=None,
-                                     skipped_aperture_type=None,
                                      instrument=None, make_plot=False, tags=None):
     """Compare the forward-backward roundtrip transformations of two SIAF files.
     and write a difference file.
@@ -221,10 +220,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
     report_dir
     verbose
     make_figures
-    selected_aperture_name : str or list
-        aperture name(s) to include in plot
-    skipped_aperture_type : str or list
-        aperture type(s) not to include in plot
+    selected_aperture_name
     instrument
     make_plot
     Returns
@@ -286,8 +282,6 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         pl.ion()
         pl.close('all')
         if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
-            continue
-        if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
             continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]
@@ -408,7 +402,7 @@ def dict_compare(dictionary_1, dictionary_2):
 
 
 def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None, report_dir=None,
-                               selected_aperture_name=None, skipped_aperture_type=None, tags=None, mark_ref=False,
+                               selected_aperture_name=None, tags=None, mark_ref=False,
                                xlimits=None, ylimits=None, filename_appendix='', label=False):
     """Visualize aperture of two SIAF files.
     Parameters
@@ -418,10 +412,7 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
     reference_siaf_input : str (absolute file name) or pysiaf.Siaf object
         The reference SIAF. Defaults to the current PRD content.
     report_dir
-    selected_aperture_name str or list
-        aperture name(s) to include in plot
-    skipped_aperture_type : str or list
-        aperture type(s) not to include in plot
+    selected_aperture_name
     tags
     xlimits : tuple of limits of output plots
     ylimits : tuple of limits of output plots
@@ -455,8 +446,6 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
         pl.clf()
         for aperture_name, aperture in siaf.apertures.items():
             if (selected_aperture_name is not None) and (aperture_name not in list(selected_aperture_name)):
-                continue
-            if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
                 continue
             aperture.plot(mark_ref=mark_ref, label=label)
         pl.title(tag_list[j])

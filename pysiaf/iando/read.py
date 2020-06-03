@@ -386,7 +386,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
         if basepath is None:
             basepath = JWST_PRD_DATA_ROOT
         if not os.path.isdir(basepath):
-            raise OSError("Could not find SIAF data "
+            raise RuntimeError("Could not find SIAF data "
                                "in {}".format(basepath))
         filename = os.path.join(basepath, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()]
                                 + '_SIAF.xml')
@@ -569,7 +569,7 @@ def read_siaf_detector_reference_file(instrument):
     return Table.read(filename, format='ascii.basic', delimiter=',')
 
 
-def read_siaf_distortion_coefficients(instrument=None, aperture_name=None, file_name=None):
+def read_siaf_distortion_coefficients(instrument, aperture_name):
     """Return astropy table.
 
     Parameters
@@ -578,18 +578,13 @@ def read_siaf_distortion_coefficients(instrument=None, aperture_name=None, file_
         instrument name (case insensitive)
     aperture_name : str
         name of master aperture
-    file_name : str
-        file name to read from, ignoring the first two arguments
 
     Returns
     -------
     : astropy table
 
     """
-    if file_name is not None:
-        distortion_reference_file_name = file_name
-    else:
-        distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
+    distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, JWST_INSTRUMENT_NAME_MAPPING[instrument.lower()],
                                                   '{}_siaf_distortion_{}.txt'.format(
                                                       instrument.lower(), aperture_name.lower()))
 
