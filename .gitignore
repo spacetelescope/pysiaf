@@ -10,6 +10,7 @@ dist/
 *.swp
 *._
 .pytest_cache
+pysiaf/temporary_data
 docs/_build
 ~$*_SIAF.xlsx
 wedge_offsets.txt

@@ -33,10 +33,9 @@ try:
                   is False][-1]  # choose largest number from PRDs matching format: PRODOSSOC-###
 
     if JWST_PRD_VERSION != newest_prd:
-        print("**WARNING**: LOCAL JWST PRD VERSION {} IS BEHIND THE CURRENT ONLINE VERSION {}\nPlease "
+        print("**WARNING**: LOCAL JWST PRD VERSION {} DOESN'T MATCH THE CURRENT ONLINE VERSION {}\nPlease "
               "consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf".format(
               JWST_PRD_VERSION, newest_prd))
-except requests.exceptions.ConnectionError:
-    print("**WARNING**: NO INTERNET CONNECTION\nLOCAL JWST PRD VERSION {} CANNOT BE CHECKED AGAINST "
-          "ONLINE VERSION".format(JWST_PRD_VERSION))
+except:
+    print("**WARNING**: LOCAL JWST PRD VERSION {} CANNOT BE CHECKED AGAINST ONLINE VERSION".format(JWST_PRD_VERSION))
     pass
