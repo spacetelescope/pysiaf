@@ -351,7 +351,7 @@ if emulate_delivery:
     compare_against_prd = True
     compare_against_cdp7b = True
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'outdated pre-delivery']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
         if compare_to == 'outdated pre-delivery':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
         else:

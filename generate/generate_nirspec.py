@@ -326,8 +326,7 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' % X[k], end = '')
             k += 1
-        print ()
-    print ()
+
     # Now put in conventiomal layout
 
     k1 = 0
@@ -342,8 +341,6 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' %X[k], end = '')
             k += 1
-        print ()
-    print ()
 
     k1 = 0
     for i in range(order + 1):
@@ -925,7 +922,7 @@ if emulate_delivery:
         if compare_to == pysiaf.JWST_PRD_VERSION:
             ref_siaf = pysiaf.Siaf(instrument)
 
-        tags = {'reference': pysiaf.JWST_PRD_VERSION, 'comparison': 'pre_delivery'}
+        tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
