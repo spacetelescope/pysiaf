@@ -371,28 +371,13 @@ if emulate_delivery:
 
         create_jira_plots = False
         if create_jira_plots:
-            # make figures for JWSTSIAF-129 Jira ticket
-            # selected_aperture_names = [['NRCA1_GRISMTS', 'NRCA5_GRISM_F444W'],
-            #                            ['NRCA1_GRISMTS64', 'NRCA5_GRISM64_F444W'],
-            #                            ['NRCA1_GRISMTS128', 'NRCA5_GRISM128_F444W'],
-            #                            ['NRCA1_GRISMTS256', 'NRCA5_GRISM256_F444W'],
-            #                            ['NRCA5_TAGRISMTS_SCI_F444W'],
-            #                            ]
 
-            # make figures for JWSTSIAF-61 Jira ticket
-            selected_aperture_names = [['NRCA2_TAMASK210R', 'NRCA2_FULL_TAMASK210R'],
-                                       ['NRCA5_TAMASK335R', 'NRCA5_FULL_TAMASK335R'],
-                                       ['NRCA5_TAMASK430R', 'NRCA5_FULL_TAMASK430R'],
-                                       ['NRCA4_TAMASKSWB', 'NRCA4_FULL_TAMASKSWB'],
-                                       ['NRCA5_TAMASKLWB', 'NRCA5_FULL_TAMASKLWB'],
-                                       ['NRCA5_TAMASKLWBL', 'NRCA5_FULL_TAMASKLWBL'],
-                                       ['NRCA4_TAMASKSWBS', 'NRCA4_FULL_TAMASKSWBS'],
-
-                                       ['NRCA2_FSTAMASK210R', 'NRCA2_FULL_FSTAMASK210R'],
-                                       ['NRCA4_FSTAMASKSWB', 'NRCA4_FULL_FSTAMASKSWB'],
-                                       ['NRCA5_FSTAMASKLWB', 'NRCA5_FULL_FSTAMASKLWB'],
-                                       ['NRCA5_FSTAMASK335R', 'NRCA5_FULL_FSTAMASK335R'],
-                                       ['NRCA5_FSTAMASK430R', 'NRCA5_FULL_FSTAMASK430R'],
+            # # make figures for JWSTSIAF-160 Jira ticket
+            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
+                                        'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
+                                        'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
+                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR','NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
+                                        ]
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
