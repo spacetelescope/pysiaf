@@ -4,8 +4,8 @@
 
 # Based on coefficients given in nircam_cold_fit.txt,
 # 
-# Generated 2020-06-26T00:54:02.141 utc
-# by gennaro
+# Generated 2018-07-26T13:35:21.437 utc
+# by jsahlmann
 # 
   AperName , siaf_index , exponent_x , exponent_y ,                Sci2IdlX ,                Sci2IdlY ,                Idl2SciX ,                Idl2SciY
 NRCB2_FULL ,         00 ,          0 ,          0 ,                    -0.0 ,                     0.0 ,   -0.027020484065239714 ,   -0.029708389794905088
