@@ -25,7 +25,7 @@ import matplotlib.pyplot as pl
 import pysiaf
 from pysiaf.utils import tools, compare
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
-    JWST_DELIVERY_DATA_ROOT
+    JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
@@ -351,9 +351,14 @@ if emulate_delivery:
     compare_against_prd = True
     compare_against_cdp7b = True
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-027', 'PRDOPSSOC-M-026']:
         if compare_to == 'outdated pre-delivery':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
+        elif compare_to == 'PRDOPSSOC-027':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF-027.xml'))
+        elif compare_to == 'PRDOPSSOC-M-026':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
+                pysiaf.JWST_PRD_VERSION, compare_to), 'NIRCam_SIAF.xml'))
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)

@@ -21,8 +21,7 @@
 #	Note that the XDetRef and YDetRef value has NOT been corrected for filter-dependent wander. See JWSTSIAF-159.
 # Added 12 FULL apertures corresponding to the Coronagraphic TA apertures. These support calibration of the astrometric confirmation
 #	images that PRECEDE the SAM from the TA aperture to the coronagraphic mask. See JWSTSIAF-61.
-#
-<<<<<<< HEAD
+
 # gennaro 2019-12-30
 #	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
 #		
@@ -35,8 +34,7 @@
 # gennaro 2020-03-25
 #    Edited AperType for the 12 apertures introduced in JWSTSIAF-61, which were erroneously set to SUBARRAY. Now they are corrected to FULLSCA (see JWSTSIAF-170)
 #    Edited typo in XSciRef for NRCA5_MASKLWB_F277W from 239.8 to 238.8 (see JWSTSIAF-171)
-
-=======
+#
 # gennaro, jstans 2019-11-1
 # Corrected Module-A coronagraphy apertures per analysis of CV3 data using correct lyot wedge for each set of features.
 #   No update of the wedge offsets was implemented.
