@@ -363,7 +363,7 @@ if emulate_delivery:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
 
-        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
+        tags = {'reference': compare_to, 'comparison': 'pre-delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)

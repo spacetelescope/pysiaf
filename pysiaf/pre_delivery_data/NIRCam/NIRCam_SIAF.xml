@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2020-07-08T16:43:30.868 utc-->
+  <!--Generated 2020-07-14T20:54:43.701 utc-->
   <!--by sosborne-->
   <!--pysiaf version 0.9.0-->
   <SiafEntry>
@@ -20526,7 +20526,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA2_FULL_TAMASK210R</AperName>
     <DDCName>NRC_MASK210R</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -21006,7 +21006,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA5_FULL_TAMASK335R</AperName>
     <DDCName>NRC_MASK335R</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -21486,7 +21486,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA5_FULL_TAMASK430R</AperName>
     <DDCName>NRC_MASK430R</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -21966,7 +21966,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA4_FULL_TAMASKSWB</AperName>
     <DDCName>NRC_MASKLWB</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -22206,7 +22206,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA4_FULL_TAMASKSWBS</AperName>
     <DDCName>NRC_MASK430R</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -22686,7 +22686,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA5_FULL_TAMASKLWB</AperName>
     <DDCName>NRC_MASKLWB</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
@@ -22926,7 +22926,7 @@
     <InstrName>NIRCAM</InstrName>
     <AperName>NRCA5_FULL_TAMASKLWBL</AperName>
     <DDCName>NRC_MASKLWB</DDCName>
-    <AperType>SUBARRAY</AperType>
+    <AperType>FULLSCA</AperType>
     <AperShape>QUAD</AperShape>
     <XDetSize>2048</XDetSize>
     <YDetSize>2048</YDetSize>
