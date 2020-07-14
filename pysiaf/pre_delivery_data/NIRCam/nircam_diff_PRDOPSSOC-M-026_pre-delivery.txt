@@ -1,12 +1,111 @@
 Reference:  202 apertures in PRDOPSSOC-M-026
-Comparison: 206 apertures in new pre-delivery
+Comparison: 305 apertures in pre-delivery
 
-Number of added apertures 4:
+Number of added apertures 103:
 	          AperName      XDetRef      YDetRef     XSciSize     YSciSize      XSciRef      YSciRef        V2Ref        V3Ref
-	Added NRCA4_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    50.806655  -419.619926
-	Added NRCA5_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5     83.91782  -445.675189
-	Added NRCA5_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    83.944385  -446.297149
+	Added NRCA5_GRISMC_WFSS_F360M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F480M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F460M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F356W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F356W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F300M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F480M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F335M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F430M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_FULL_MASKLWB_NARROW        302.0       1682.5         2048         2048       1747.0       1682.5    38.794034  -404.771504
+	Added NRCB5_GRISMR_WFSS_F322W2_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F356W_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F335M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F322W2_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F360M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F250M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F250M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F444W_CS None         None         None         None         None         None            86.039011  -493.385704
 	Added NRCA2_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5   118.604826  -419.240929
+	Added NRCB5_GRISMR_WFSS_F460M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F430M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F300M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F277W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F430M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5     83.91782  -445.675189
+	Added NRCB5_GRISMC_WFSS_F410M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F277W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F277W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F300M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F430M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F444W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F250M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F360M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F322W2_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F322W2_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F430M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F356W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F410M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F360M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F277W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F410M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F300M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F250M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F444W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F444W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F480M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F460M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F360M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F277W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F444W_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F444W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F300M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F444W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F335M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F335M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA4_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    50.806655  -419.619926
+	Added NRCB5_GRISMC_WFSS_F322W2_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F360M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F250M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_TAPSIMG32_F405N      2024.82       216.09           32           32        16.82        16.91  -152.022768  -440.313875
+	Added NRCB5_GRISMR_WFSS_F480M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F460M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F430M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F356W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F410M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F360M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F277W_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F356W_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F335M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F356W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F410M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F460M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F250M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F335M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F430M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F430M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F360M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F410M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F460M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F322W2_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F410M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F480M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F277W_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F480M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F460M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F335M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F410M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F322W2_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F277W_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    83.944385  -446.297149
+	Added NRCB5_GRISMR_WFSS_F322W2_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F300M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMR_WFSS_F480M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMC_WFSS_F335M_CS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F300M_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA5_GRISMR_WFSS_F460M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMC_WFSS_F300M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCA5_GRISMR_WFSS_F250M_PS None         None         None         None         None         None            86.039011  -493.385704
+	Added NRCB5_GRISMC_WFSS_F250M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F356W_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMC_WFSS_F480M_CS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCB5_GRISMR_WFSS_F444W_PS None         None         None         None         None         None           -89.596514  -491.474153
+	Added NRCA4_FULL_MASKSWB_NARROW        227.5        535.5         2048         2048        227.5       1513.5    75.344407  -404.489363
 Number of modified apertures 202. Significant modifications are listed below.
 Differences are reported for any text change
 and fractional differences greater than 1e-06
@@ -5446,6 +5545,7 @@ NRCA2_TAMASK210R               Idl2SciY50 -6.186309343753633e-13 -6.179321586940
 NRCA2_TAMASK210R               Idl2SciY52 -7.743054460567151e-12 -7.74177028384887e-12        0.000000     0.0166
 NRCA2_TAMASK210R               Idl2SciY54 -6.498077373331576e-12 -6.497532844738502e-12        0.000000     0.0084
 
+NRCA2_FULL_TAMASK210R            AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA2_FULL_TAMASK210R             XDetRef                 493.5                 468.5       25.000000     5.0659
 NRCA2_FULL_TAMASK210R             YDetRef                 821.0                 773.5       47.500000     5.7856
 NRCA2_FULL_TAMASK210R             XSciRef                 493.5                 468.5       25.000000     5.0659
@@ -5831,6 +5931,7 @@ NRCA5_TAMASK335R               Idl2SciY54 -5.956917431571789e-12 -5.958413317196
 NRCA5_TAMASK335R               Idl2SciY55 -5.58515397591429e-11 -5.585132116727986e-11        0.000000     0.0004
 
 NRCA5_FULL_TAMASK335R             DDCName          NRC_MASK210R          NRC_MASK335R             N/A        N/A
+NRCA5_FULL_TAMASK335R            AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA5_FULL_TAMASK335R             XDetRef                1563.0                1558.5        4.500000     0.2879
 NRCA5_FULL_TAMASK335R             YDetRef                1552.0                1550.5        1.500000     0.0966
 NRCA5_FULL_TAMASK335R             XSciRef                 487.0                 490.5        3.500000     0.7136
@@ -6231,6 +6332,7 @@ NRCA5_TAMASK430R               Idl2SciY54 -6.08657686143686e-12 -6.0877514792161
 NRCA5_TAMASK430R               Idl2SciY55 -5.583236120459366e-11 -5.583218531584653e-11        0.000000     0.0003
 
 NRCA5_FULL_TAMASK430R             DDCName          NRC_MASK335R          NRC_MASK430R             N/A        N/A
+NRCA5_FULL_TAMASK430R            AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA5_FULL_TAMASK430R             XDetRef                1239.0                1235.5        3.500000     0.2825
 NRCA5_FULL_TAMASK430R             YDetRef                1552.0                1550.5        1.500000     0.0966
 NRCA5_FULL_TAMASK430R             XSciRef                 811.0                 813.5        2.500000     0.3073
@@ -6634,6 +6736,7 @@ NRCA4_TAMASKSWB                Idl2SciY54 -7.788837108463176e-12 -8.177423424276
 NRCA4_TAMASKSWB                Idl2SciY55 -1.346814478625655e-10 -1.346537719521826e-10        0.000000     0.0205
 
 NRCA4_FULL_TAMASKSWB              DDCName          NRC_MASK430R           NRC_MASKLWB             N/A        N/A
+NRCA4_FULL_TAMASKSWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA4_FULL_TAMASKSWB              XDetRef                 158.0                 821.5      663.500000    80.7669
 NRCA4_FULL_TAMASKSWB              YDetRef                 791.0                 787.5        3.500000     0.4425
 NRCA4_FULL_TAMASKSWB              XSciRef                 158.0                 821.5      663.500000    80.7669
@@ -6838,6 +6941,7 @@ NRCA4_TAMASKSWBS               Idl2SciY54 -8.172660098512388e-12 -7.794540511531
 NRCA4_TAMASKSWBS               Idl2SciY55 -1.346541195635184e-10 -1.346810516301549e-10        0.000000     0.0200
 
 NRCA4_FULL_TAMASKSWBS             DDCName           NRC_MASKLWB          NRC_MASK430R             N/A        N/A
+NRCA4_FULL_TAMASKSWBS            AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA4_FULL_TAMASKSWBS             XDetRef                 814.0                 166.5      647.500000    79.5455
 NRCA4_FULL_TAMASKSWBS             YDetRef                 791.0                 786.5        4.500000     0.5689
 NRCA4_FULL_TAMASKSWBS             XSciRef                 814.0                 166.5      647.500000    79.5455
@@ -7237,6 +7341,7 @@ NRCA5_TAMASKLWB                Idl2SciY52 -7.966012839853998e-12 -7.967522516183
 NRCA5_TAMASKLWB                Idl2SciY54 -6.45702582970028e-12 -6.457599269577059e-12        0.000000     0.0089
 NRCA5_TAMASKLWB                Idl2SciY55 -5.577496767513775e-11 -5.577487582885202e-11        0.000000     0.0002
 
+NRCA5_FULL_TAMASKLWB             AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA5_FULL_TAMASKLWB              XDetRef                 314.0                 312.5        1.500000     0.4777
 NRCA5_FULL_TAMASKLWB              YDetRef                1558.0                1557.5        0.500000     0.0321
 NRCA5_FULL_TAMASKLWB              XSciRef                1736.0                1736.5        0.500000     0.0288
@@ -7429,6 +7534,7 @@ NRCA5_TAMASKLWBL               Idl2SciY52 -7.672350164361801e-12 -7.674873999516
 NRCA5_TAMASKLWBL               Idl2SciY54 -6.345380732447317e-12 -6.346341093851391e-12        0.000000     0.0151
 NRCA5_TAMASKLWBL               Idl2SciY55 -5.579267212019665e-11 -5.579252133147912e-11        0.000000     0.0003
 
+NRCA5_FULL_TAMASKLWBL            AperType              SUBARRAY               FULLSCA             N/A        N/A
 NRCA5_FULL_TAMASKLWBL             XDetRef                 596.0                 593.5        2.500000     0.4195
 NRCA5_FULL_TAMASKLWBL             YDetRef                1559.0                1558.5        0.500000     0.0321
 NRCA5_FULL_TAMASKLWBL             XSciRef                1454.0                1455.5        1.500000     0.1031
