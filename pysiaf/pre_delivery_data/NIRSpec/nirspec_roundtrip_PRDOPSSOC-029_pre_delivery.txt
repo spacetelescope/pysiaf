@@ -1,4 +1,4 @@
-Reference:  75 apertures in NIRSpec_SIAF_bugfix-only (index 0 in table below)
+Reference:  75 apertures in PRDOPSSOC-029 (index 0 in table below)
 Comparison: 75 apertures in pre_delivery (index 1 in table below)
 
      AperName , siaf0_dx_mean , siaf0_dy_mean , siaf1_dx_mean , siaf1_dy_mean , difference_dx_mean , difference_dy_mean

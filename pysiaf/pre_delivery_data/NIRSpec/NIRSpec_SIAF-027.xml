@@ -1,7 +1,7 @@
 <SiafEntries>
-  <!--Generated 2020-07-14T21:05:23.214 utc-->
-  <!--by sosborne-->
-  <!--pysiaf version 0.9.0-->
+  <!--Generated 2019-11-06T16:06:16.843 utc-->
+  <!--by jsahlmann-->
+  <!--pysiaf version 0.6.1-->
   <SiafEntry>
     <InstrName>NIRSPEC</InstrName>
     <AperName>NRS1_FULL_OSS</AperName>
