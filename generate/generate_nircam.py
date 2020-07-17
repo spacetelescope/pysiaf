@@ -358,7 +358,7 @@ if emulate_delivery:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
 
-        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
+        tags = {'reference': compare_to, 'comparison': 'pre-delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
@@ -369,22 +369,22 @@ if emulate_delivery:
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        create_jira_plots = False
+        create_jira_plots = True
         if create_jira_plots:
 
             # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
+            selected_aperture_names = ['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
                                         'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
                                         'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
-                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR','NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
-                                        ]
+                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
+                                        'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                                    report_dir=pre_delivery_dir, tags=tags,
                                                    selected_aperture_name=selected_aperture_name,
-                                                   mark_ref=True, filename_appendix=selected_aperture_name[0],
+                                                   mark_ref=True, filename_appendix=selected_aperture_name,
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
 
