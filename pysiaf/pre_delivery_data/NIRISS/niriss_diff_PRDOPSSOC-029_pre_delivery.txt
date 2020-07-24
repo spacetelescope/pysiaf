@@ -1,4 +1,4 @@
-Reference:  33 apertures in PRDOPSSOC-M-026
+Reference:  33 apertures in PRDOPSSOC-029
 Comparison: 33 apertures in pre_delivery
 
 Number of modified apertures 33. Significant modifications are listed below.
