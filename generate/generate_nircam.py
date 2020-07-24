@@ -373,18 +373,19 @@ if emulate_delivery:
         if create_jira_plots:
 
             # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = ['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
+            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
                                         'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
                                         'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
                                         'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
                                         'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
+                                       ]
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                                    report_dir=pre_delivery_dir, tags=tags,
                                                    selected_aperture_name=selected_aperture_name,
-                                                   mark_ref=True, filename_appendix=selected_aperture_name,
+                                                   mark_ref=True, filename_appendix=selected_aperture_name[0],
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
 
