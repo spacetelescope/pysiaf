@@ -1,0 +1,8 @@
+Reference:  75 apertures in PRDOPSSOC-M-026 (index 0 in table below)
+Comparison: 75 apertures in pre_delivery (index 1 in table below)
+
+     AperName , siaf0_dx_mean , siaf0_dy_mean , siaf1_dx_mean , siaf1_dy_mean , difference_dx_mean , difference_dy_mean
+NRS1_FULL_OSS ,      0.000111 ,      0.000344 ,      0.000115 ,      0.000376 ,           0.000004 ,           0.000032
+    NRS1_FULL ,      0.000111 ,      0.000344 ,      0.000115 ,      0.000376 ,           0.000004 ,           0.000032
+NRS2_FULL_OSS ,      0.000117 ,      0.000333 ,      0.000148 ,      0.000392 ,           0.000031 ,           0.000059
+    NRS2_FULL ,      0.000117 ,      0.000333 ,      0.000147 ,      0.000392 ,           0.000031 ,           0.000059

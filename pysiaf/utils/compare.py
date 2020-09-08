@@ -117,7 +117,11 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                                                   attributes_to_show])), file=print_file)
         for aperture_name in added_aperture_names:
             print('\tAdded {}'.format(' '.join(['{:12}'.format(
-                getattr(comparison_siaf[aperture_name], a)) for a in attributes_to_show])),
+#                getattr(comparison_siaf[aperture_name], a)) 
+                
+                getattr(comparison_siaf[aperture_name], a) if getattr(comparison_siaf[aperture_name], a) is not None else 'None')
+                
+                for a in attributes_to_show])),
                   file=print_file)
         print()
 
@@ -284,6 +288,8 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         if (selected_aperture_name is not None) and (AperName not in list(selected_aperture_name)):
             continue
         if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
+            continue
+        if AperName not in comparison_siaf.apertures: # skip removed apertures
             continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]

@@ -27,7 +27,7 @@ from pysiaf.utils import tools, compare
 from pysiaf.utils.enhanced_aperture_file import create_enhanced_aperture_file
 
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
-    JWST_DELIVERY_DATA_ROOT
+    JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
@@ -353,14 +353,19 @@ if emulate_delivery:
     compare_against_prd = True
     compare_against_cdp7b = True
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-027', 'PRDOPSSOC-M-026']:
         if compare_to == 'outdated pre-delivery':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
+        elif compare_to == 'PRDOPSSOC-027':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF-027.xml'))
+        elif compare_to == 'PRDOPSSOC-M-026':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
+                pysiaf.JWST_PRD_VERSION, compare_to), 'NIRCam_SIAF.xml'))
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
 
-        tags = {'reference': compare_to, 'comparison': 'new pre-delivery'}
+        tags = {'reference': compare_to, 'comparison': 'pre-delivery'}
 
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
@@ -371,12 +376,11 @@ if emulate_delivery:
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags, mark_ref=True)
 
-        create_jira_plots = False
+        create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-129 Jira ticket
-            selected_aperture_names = [['NRCA5_GRISMC_WFSS', 'NRCA5_GRISMR_WFSS','NRCALL_GRISMC_WFSS','NRCALL_GRISMR_WFSS',
-                                        'NRCB5_GRISMC_WFSS','NRCB5_GRISMR_WFSS',
-                                        'NRCA2_FULL_MASK210R','NRCA4_FULL_MASKSWB','NRCA5_FULL_MASKLWB']
+            # # make figures for JWSTSIAF-160 Jira ticket
+            selected_aperture_names = [['NRCA5_FULL_MASKLWB_NARROW', 'NRCA5_MASKLWB_NARROW', 'NRCA5_MASKLWB_F250M','NRCA5_FULL_MASKLWB_F250M', 'NRCA5_MASKLWB_F444W','NRCA5_FULL_MASKLWB_F444W'],
+                                       ['NRCA4_FULL_MASKSWB_NARROW', 'NRCA4_MASKSWB_NARROW', 'NRCA4_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F182M', 'NRCA4_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F210M' ]
                                         ]
 
             for selected_aperture_name in selected_aperture_names:
