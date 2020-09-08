@@ -404,8 +404,8 @@ def dict_compare(dictionary_1, dictionary_2):
     added = d1_keys - d2_keys
     removed = d2_keys - d1_keys
     modified = {o: (dictionary_1[o], dictionary_2[o]) for o in intersect_keys
-                if dictionary_1[o] != dictionary_2[o]}
-    same = set(o for o in intersect_keys if dictionary_1[o] == dictionary_2[o])
+                if dictionary_1[o].__dict__ != dictionary_2[o].__dict__}
+    same = set(o for o in intersect_keys if dictionary_1[o].__dict__ == dictionary_2[o].__dict__)
     return added, removed, modified, same
 
 

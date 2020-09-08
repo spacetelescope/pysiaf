@@ -13,6 +13,7 @@ Authors
 -------
 
     Johannes Sahlmann
+    Mario Gennaro
 
 References
 ----------
@@ -370,6 +371,8 @@ def generate_siaf_detector_layout():
     Note that the DMS Detector frame differs in its definition from the SIAF Detector frame. What commonly is referred
     to as 'DMS coordinate system' corresponds to the SIAF Science frame.
 
+    Updated by M.Gennaro to allow for coronographic apertures support in NIRCam
+
     :return:
     """
 
@@ -381,6 +384,10 @@ def generate_siaf_detector_layout():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 0, -1, VIdlParity])
             for sca_name in 'A2 A4 B1 B3 B5'.split():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 180, -1, VIdlParity])
+            for sca_name in ['NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR']:
+                layout.add_row([instrument.upper(), '{}'.format(sca_name), 180, -1, VIdlParity])
+            for sca_name in ['NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR']:
+                layout.add_row([instrument.upper(), '{}'.format(sca_name), 0, -1, VIdlParity])
         elif instrument == 'NIRISS':
             for sca_name in ['NIS_CEN']:
                 layout.add_row([instrument, sca_name, 180, 1, VIdlParity])
@@ -461,7 +468,9 @@ def generate_siaf_pre_flight_reference_files_nircam():
         Combine shift, add and distortion steps into single set of coefficients
         trans does the forward   detector(x,y) to V2V3
         inverse does V2V3 to detector(x,y)
-
+     
+    Updated by M.Gennaro to allow for coronographic apertures spport
+    
     :return:
     """
 
@@ -528,21 +537,78 @@ def generate_siaf_pre_flight_reference_files_nircam():
         grism_parameters.write(grism_file, format='ascii.fixed_width', delimiter=',',
                                          delimiter_pad=' ', bookend=False)
 
-    # Transformation parameters, mapping used to select row in cold_fit_[] file
+    # Transformation parameters, mapping used to select rows in cold_fit_[] file
     coldfit_name_mapping = {
-        'A1': ('NIRCAMASW_1', 'NIRCAMASW'),
-        'A2': ('NIRCAMASW_2', 'NIRCAMASW'),
-        'A3': ('NIRCAMASW_3', 'NIRCAMASW'),
-        'A4': ('NIRCAMASW_4', 'NIRCAMASW'),
-        'A5': ('NIRCAMALW_1', 'NIRCAMALW'),
-        'B1': ('NIRCAMBSW_1', 'NIRCAMBSW'),
-        'B2': ('NIRCAMBSW_2', 'NIRCAMBSW'),
-        'B3': ('NIRCAMBSW_3', 'NIRCAMBSW'),
-        'B4': ('NIRCAMBSW_4', 'NIRCAMBSW'),
-        'B5': ('NIRCAMBLW_1', 'NIRCAMBLW'),
-        'AL': ('NIRCAMALW_1', 'NIRCAMALW'),
-        'AS': ('NIRCAMASW_4', 'NIRCAMASW'),
-        'BS': ('NIRCAMBSW_1', 'NIRCAMBSW')
+                             'NRCA1_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_1_20161025081540',
+                                             'pixels_to_mm':'NIRCAMASW_1ToNIRCAMASW_20161025081540',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA2_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
+                                             'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA3_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_3_20161025081552',
+                                             'pixels_to_mm':'NIRCAMASW_3ToNIRCAMASW_20161025081552',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA4_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
+                                             'pixels_to_mm':'NIRCAMASW_4ToNIRCAMASW_20161025081557',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA5_FULL' :{'degrees_to_mm':'OTESKYToNIRCAMALW_RT_20170307121022',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALWToOTESKY_RT_20170307121022',
+                                             },
+                             'NRCB1_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_1_20161025081604',
+                                             'pixels_to_mm':'NIRCAMBSW_1ToNIRCAMBSW_20161025081604',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB2_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_2_20161025081912',
+                                             'pixels_to_mm':'NIRCAMBSW_2ToNIRCAMBSW_20161025081912',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB3_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_3_20161025082300',
+                                             'pixels_to_mm':'NIRCAMBSW_3ToNIRCAMBSW_20161025082300',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB4_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_4_20161025082647',
+                                             'pixels_to_mm':'NIRCAMBSW_4ToNIRCAMBSW_20161025082647',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB5_FULL' :{'degrees_to_mm':'OTESKYToNIRCAMBLW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBLWToNIRCAMBLW_1_20161227162336',
+                                             'pixels_to_mm':'NIRCAMBLW_1ToNIRCAMBLW_20161227162336',
+                                            'mm_to_degrees':'NIRCAMBLWToOTESKY_RT_20170307121023',
+                                             },
+                   'NRCA2_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RND_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
+                                             'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
+                                            'mm_to_degrees':'NIRCAMASW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA4_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BAR_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
+                                             'pixels_to_mm':'NIRCAMASW_4ToNIRCAMASW_20161025081557',
+                                            'mm_to_degrees':'NIRCAMASW_BARToOTESKY_202005150434',
+                                             },
+                   'NRCA5_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMALW_RND_202005150434',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA5_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMALW_BAR_202005150434',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALW_BARToOTESKY_202005150434',
+                                             }
     }
 
     # coldfit_source_data_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}'.format('cold_fit_201703071210.csv'))
@@ -1548,12 +1614,9 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     for row, name in enumerate(aperture_name_list):
         if name == apName:
             r = row
-    apCode = apName[3:5] # e.g. 'A1' detector_id?
 
     # read in hardcoded dictionary
-    apSys = coldfit_name_mapping[apCode]
-    sysA = apSys[0] # e.g. 'NIRCAMASW_1'
-    sysB = apSys[1] # e.g. 'NIRCAMASW'
+    apSys = coldfit_name_mapping[apName]
     xref = siaf_aperture_definitions['XDetRef'][r]
     yref = siaf_aperture_definitions['YDetRef'][r]
     if xref == '':
@@ -1565,9 +1628,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     else:
         yref = float(yref)
 
-    print(apName, apCode, sysA, sysB, xref, yref)
+    print(apName, xref, yref)
 
-    sysC = 'OTESKY'
     order = 5 # polynomial order
     terms = (order + 1) * (order + 2) // 2 # number of poly coeffs
     A = np.zeros((terms))
@@ -1579,9 +1641,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     # read parameters from cold_fit_[] file
     for line in coldfit_source_data:
         column = line.split(',')
-        fromSystem = column[1].strip()
-        toSystem = column[2].strip()
-        if fromSystem == sysA and toSystem == sysB:
+        modelname = column[0].strip()
+        if modelname==apSys['pixels_to_mm']:
             a0 = float(column[7])
             a1 = float(column[9])
             a2 = float(column[8])
@@ -1594,7 +1655,7 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
                 print('b', b0, b1, b2)
 
         # find transformation to OTESKY
-        if fromSystem == sysB and toSystem == sysC:
+        if modelname==apSys['mm_to_degrees']:
             for i in range(terms):
                 A[i] = float(column[i + 7])
                 B[i] = float(column[i + 28])
@@ -1709,10 +1770,7 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
             if verbose:
                 print('Found aperture {}'.format(apName))
             r = row
-    apCode = apName[3:5]
-    apSys = coldfit_name_mapping[apCode]
-    sysA = apSys[0]
-    sysB = apSys[1]
+    apSys = coldfit_name_mapping[apName]
     xref = siaf_aperture_definitions['XDetRef'][r]
     yref = siaf_aperture_definitions['YDetRef'][r]
     if xref == '':
@@ -1724,7 +1782,6 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
     else:
         yref = float(yref)
 
-    sysC = 'OTESKY'
     order = 5
     terms = (order + 1) * (order + 2) // 2
     C = np.zeros((terms))
@@ -1734,9 +1791,9 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
     part2 = False
     for line in coldfit_source_data:  # coeffs read in during initialization
         column = line.split(',')
-        fromSystem = column[1].strip()
+        modelname = column[0].strip()
         toSystem = column[2].strip()
-        if fromSystem == sysB and toSystem == sysA:  # Linear transformation
+        if modelname==apSys['mm_to_pixels']: # linear transformation
             c0 = float(column[7])
             c1 = float(column[9])
             c2 = float(column[8])
@@ -1748,7 +1805,7 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
                 print('d', d0, d1, d2)
             part1 = True
 
-        if fromSystem == sysC and toSystem == sysB:  # Polynomial
+        if modelname==apSys['degrees_to_mm']:  # Polynomial
             for i in range(terms):
                 C[i] = float(column[i + 7])
                 D[i] = float(column[i + 28])

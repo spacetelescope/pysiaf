@@ -379,9 +379,13 @@ if emulate_delivery:
         create_jira_plots = True
         if create_jira_plots:
             # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA5_FULL_MASKLWB_NARROW', 'NRCA5_MASKLWB_NARROW', 'NRCA5_MASKLWB_F250M','NRCA5_FULL_MASKLWB_F250M', 'NRCA5_MASKLWB_F444W','NRCA5_FULL_MASKLWB_F444W'],
-                                       ['NRCA4_FULL_MASKSWB_NARROW', 'NRCA4_MASKSWB_NARROW', 'NRCA4_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F182M', 'NRCA4_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F210M' ]
-                                        ]
+            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
+                                        'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
+                                        'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
+                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
+                                        'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
+                                       ]
+                                       ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
