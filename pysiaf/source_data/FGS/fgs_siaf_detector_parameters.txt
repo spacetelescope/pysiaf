@@ -1,0 +1,9 @@
+# FGS detector parameter definition file for SIAF
+# 
+# This file contains the basic detector characteristics.
+# 
+# Generated 2018-04-19T16:44:22.903 utc
+# jsahlmann@nereus.stsci.edu
+# 
+InstrName , AperShape , XDetSize , YDetSize
+      FGS ,      QUAD ,     2048 ,     2048
