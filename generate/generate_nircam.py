@@ -24,8 +24,10 @@ import matplotlib.pyplot as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare
+from pysiaf.utils.enhanced_aperture_file import create_enhanced_aperture_file
+
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
-    JWST_DELIVERY_DATA_ROOT
+    JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 
@@ -351,9 +353,14 @@ if emulate_delivery:
     compare_against_prd = True
     compare_against_cdp7b = True
 
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
+    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-027', 'PRDOPSSOC-M-026']:
         if compare_to == 'outdated pre-delivery':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF_outdated.xml'))
+        elif compare_to == 'PRDOPSSOC-027':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRCam_SIAF-027.xml'))
+        elif compare_to == 'PRDOPSSOC-M-026':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
+                pysiaf.JWST_PRD_VERSION, compare_to), 'NIRCam_SIAF.xml'))
         else:
             # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
@@ -371,7 +378,6 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-
             # # make figures for JWSTSIAF-160 Jira ticket
             selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
                                         'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
@@ -388,6 +394,12 @@ if emulate_delivery:
                                                    mark_ref=True, filename_appendix=selected_aperture_name[0],
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
+
+    #If desired, create the enhanced aperture file containing OSS corners as well as V2/V3 positions of the reference point
+    enhanced_aperture_file =  True
+    
+    if enhanced_aperture_file:
+        create_enhanced_aperture_file(aperture_dict)    
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
