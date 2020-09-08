@@ -285,6 +285,8 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
             continue
         if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
             continue
+        if AperName not in comparison_siaf.apertures: # skip removed apertures
+            continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]
             coefficients = aperture.get_polynomial_coefficients()
