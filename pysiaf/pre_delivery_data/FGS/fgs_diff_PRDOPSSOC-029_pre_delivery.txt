@@ -1,0 +1,180 @@
+Reference:  32 apertures in PRDOPSSOC-029
+Comparison: 32 apertures in pre_delivery
+
+Number of modified apertures 32. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+FGS1_FULL_OSS                       V2Ref                207.19               206.464        0.726000     0.3504
+FGS1_FULL_OSS                       V3Ref                -697.5               -697.97        0.470000     0.0673
+FGS1_FULL_OSS                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_FULL_OSS                 V3SciXAngle               91.6868           90.43701942        1.249781     1.3631
+FGS1_FULL_OSS                  Sci2IdlX11    1.929879867024e-17                   0.0        0.000000   100.0000
+
+FGS1_FULL                           V2Ref                207.19               206.464        0.726000     0.3504
+FGS1_FULL                           V3Ref                -697.5               -697.97        0.470000     0.0673
+FGS1_FULL                     V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_FULL                     V3SciXAngle              -88.3132          -89.56298058        1.249781     1.3954
+FGS1_FULL                     V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_FULL_OSS                       V2Ref                 24.43                22.845        1.585000     6.4879
+FGS2_FULL_OSS                       V3Ref                -697.5              -699.489        1.989000     0.2844
+FGS2_FULL_OSS                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_FULL_OSS                 V3SciXAngle               89.0527           89.24296978        0.190270     0.2132
+FGS2_FULL_OSS                 V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FULL                           V2Ref                 24.43                22.845        1.585000     6.4879
+FGS2_FULL                           V3Ref                -697.5              -699.489        1.989000     0.2844
+FGS2_FULL                     V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_FULL                     V3SciXAngle              -90.9473          -90.75703022        0.190270     0.2092
+FGS2_FULL                     V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS1_SUB128LL                       V2Ref            140.972228            140.246208        0.726020     0.5150
+FGS1_SUB128LL                       V3Ref           -631.034122           -631.504142        0.470020     0.0744
+FGS1_SUB128LL                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128LL                 V3SciXAngle              -88.8557          -90.11986053        1.264161     1.4028
+FGS1_SUB128LL                 V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB128DIAG                     V2Ref             173.84656             173.12055        0.726010     0.4176
+FGS1_SUB128DIAG                     V3Ref           -663.974976           -664.444986        0.470010     0.0707
+FGS1_SUB128DIAG               V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128DIAG               V3SciXAngle               -88.625           -89.8829214        1.257921     1.3995
+FGS1_SUB128DIAG               V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB128CNTR                     V2Ref                207.19               206.464        0.726000     0.3504
+FGS1_SUB128CNTR                     V3Ref                -697.5               -697.97        0.470000     0.0673
+FGS1_SUB128CNTR               V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB128CNTR               V3SciXAngle              -88.3132          -89.56298058        1.249781     1.3954
+FGS1_SUB128CNTR               V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_SUB32LL                        V2Ref            140.972228            140.246208        0.726020     0.5150
+FGS1_SUB32LL                        V3Ref           -631.034122           -631.504142        0.470020     0.0744
+FGS1_SUB32LL                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32LL                  V3SciXAngle              -88.8557          -90.11986053        1.264161     1.4028
+FGS1_SUB32LL                  V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB32DIAG                      V2Ref             173.84656             173.12055        0.726010     0.4176
+FGS1_SUB32DIAG                      V3Ref           -663.974976           -664.444986        0.470010     0.0707
+FGS1_SUB32DIAG                V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32DIAG                V3SciXAngle               -88.625           -89.8829214        1.257921     1.3995
+FGS1_SUB32DIAG                V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB32CNTR                      V2Ref                207.19               206.464        0.726000     0.3504
+FGS1_SUB32CNTR                      V3Ref                -697.5               -697.97        0.470000     0.0673
+FGS1_SUB32CNTR                V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB32CNTR                V3SciXAngle              -88.3132          -89.56298058        1.249781     1.3954
+FGS1_SUB32CNTR                V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_SUB8LL                         V2Ref            140.972228            140.246208        0.726020     0.5150
+FGS1_SUB8LL                         V3Ref           -631.034122           -631.504142        0.470020     0.0744
+FGS1_SUB8LL                   V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8LL                   V3SciXAngle              -88.8557          -90.11986053        1.264161     1.4028
+FGS1_SUB8LL                   V3SciYAngle               -0.6259           -0.62591236        0.000012     0.0020
+
+FGS1_SUB8DIAG                       V2Ref             173.84656             173.12055        0.726010     0.4176
+FGS1_SUB8DIAG                       V3Ref           -663.974976           -664.444986        0.470010     0.0707
+FGS1_SUB8DIAG                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8DIAG                 V3SciXAngle               -88.625           -89.8829214        1.257921     1.3995
+FGS1_SUB8DIAG                 V3SciYAngle               -0.8989           -0.89887189        0.000028     0.0031
+
+FGS1_SUB8CNTR                       V2Ref                207.19               206.464        0.726000     0.3504
+FGS1_SUB8CNTR                       V3Ref                -697.5               -697.97        0.470000     0.0673
+FGS1_SUB8CNTR                 V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+FGS1_SUB8CNTR                 V3SciXAngle              -88.3132          -89.56298058        1.249781     1.3954
+FGS1_SUB8CNTR                 V3SciYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_SUB128LL                       V2Ref            -42.239339            -43.824314        1.584975     3.6167
+FGS2_SUB128LL                       V3Ref           -766.973055           -768.962079        1.989024     0.2587
+FGS2_SUB128LL                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128LL                 V3SciXAngle              -91.7433          -91.55024883        0.193051     0.2104
+FGS2_SUB128LL                 V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB128DIAG                     V2Ref             -8.583815            -10.168802        1.584987    15.5868
+FGS2_SUB128DIAG                     V3Ref           -731.807926           -733.796938        1.989012     0.2711
+FGS2_SUB128DIAG               V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128DIAG               V3SciXAngle              -91.2928          -91.10127546        0.191525     0.2098
+FGS2_SUB128DIAG               V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB128CNTR                     V2Ref                 24.43                22.845        1.585000     6.4879
+FGS2_SUB128CNTR                     V3Ref                -697.5              -699.489        1.989000     0.2844
+FGS2_SUB128CNTR               V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB128CNTR               V3SciXAngle              -90.9473          -90.75703022        0.190270     0.2092
+FGS2_SUB128CNTR               V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_SUB32LL                        V2Ref            -42.239339            -43.824314        1.584975     3.6167
+FGS2_SUB32LL                        V3Ref           -766.973055           -768.962079        1.989024     0.2587
+FGS2_SUB32LL                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32LL                  V3SciXAngle              -91.7433          -91.55024883        0.193051     0.2104
+FGS2_SUB32LL                  V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB32DIAG                      V2Ref             -8.583815            -10.168802        1.584987    15.5868
+FGS2_SUB32DIAG                      V3Ref           -731.807926           -733.796938        1.989012     0.2711
+FGS2_SUB32DIAG                V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32DIAG                V3SciXAngle              -91.2928          -91.10127546        0.191525     0.2098
+FGS2_SUB32DIAG                V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB32CNTR                      V2Ref                 24.43                22.845        1.585000     6.4879
+FGS2_SUB32CNTR                      V3Ref                -697.5              -699.489        1.989000     0.2844
+FGS2_SUB32CNTR                V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB32CNTR                V3SciXAngle              -90.9473          -90.75703022        0.190270     0.2092
+FGS2_SUB32CNTR                V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_SUB8LL                         V2Ref            -42.239339            -43.824314        1.584975     3.6167
+FGS2_SUB8LL                         V3Ref           -766.973055           -768.962079        1.989024     0.2587
+FGS2_SUB8LL                   V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8LL                   V3SciXAngle              -91.7433          -91.55024883        0.193051     0.2104
+FGS2_SUB8LL                   V3SciYAngle                1.0556            1.05554924        0.000051     0.0048
+
+FGS2_SUB8DIAG                       V2Ref             -8.583815            -10.168802        1.584987    15.5868
+FGS2_SUB8DIAG                       V3Ref           -731.807926           -733.796938        1.989012     0.2711
+FGS2_SUB8DIAG                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8DIAG                 V3SciXAngle              -91.2928          -91.10127546        0.191525     0.2098
+FGS2_SUB8DIAG                 V3SciYAngle                 0.576             0.5759787        0.000021     0.0037
+
+FGS2_SUB8CNTR                       V2Ref                 24.43                22.845        1.585000     6.4879
+FGS2_SUB8CNTR                       V3Ref                -697.5              -699.489        1.989000     0.2844
+FGS2_SUB8CNTR                 V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+FGS2_SUB8CNTR                 V3SciXAngle              -90.9473          -90.75703022        0.190270     0.2092
+FGS2_SUB8CNTR                 V3SciYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS1_FP1MIMF                        V2Ref            208.023661            207.297661        0.726000     0.3490
+FGS1_FP1MIMF                        V3Ref           -699.573277           -700.043277        0.470000     0.0671
+FGS1_FP1MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP2MIMF                        V2Ref            145.080483            144.354503        0.725980     0.5004
+FGS1_FP2MIMF                        V3Ref           -762.631517           -763.101536        0.470019     0.0616
+FGS1_FP2MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP3MIMF                        V2Ref            260.706289            259.980302        0.725987     0.2785
+FGS1_FP3MIMF                        V3Ref           -738.860277           -739.330261        0.469984     0.0636
+FGS1_FP3MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP4MIMF                        V2Ref            269.993462            269.267443        0.726019     0.2689
+FGS1_FP4MIMF                        V3Ref            -633.14802           -633.618001        0.469981     0.0742
+FGS1_FP4MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS1_FP5MIMF                        V2Ref            142.721295            141.995276        0.726019     0.5087
+FGS1_FP5MIMF                        V3Ref            -633.86468           -634.334699        0.470019     0.0741
+FGS1_FP5MIMF                  V3IdlYAngle               -1.2508           -1.25081713        0.000017     0.0014
+
+FGS2_FP1MIMF                        V2Ref             25.349549             23.764548        1.585001     6.2526
+FGS2_FP1MIMF                        V3Ref           -696.964345           -698.953344        1.988999     0.2846
+FGS2_FP1MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP2MIMF                        V2Ref             -23.69563            -25.280613        1.584983     6.2696
+FGS2_FP2MIMF                        V3Ref           -744.047018           -746.036035        1.989017     0.2666
+FGS2_FP2MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP3MIMF                        V2Ref             87.395563             85.810586        1.584977     1.8136
+FGS2_FP3MIMF                        V3Ref           -762.270637           -764.259614        1.988977     0.2602
+FGS2_FP3MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP4MIMF                        V2Ref              86.72036             85.135337        1.585023     1.8277
+FGS2_FP4MIMF                        V3Ref           -633.233993            -635.22297        1.988977     0.3131
+FGS2_FP4MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
+FGS2_FP5MIMF                        V2Ref            -38.123104            -39.708127        1.585023     3.9917
+FGS2_FP5MIMF                        V3Ref           -634.562792           -636.551815        1.989023     0.3125
+FGS2_FP5MIMF                  V3IdlYAngle                0.1903            0.19027904        0.000021     0.0110
+
