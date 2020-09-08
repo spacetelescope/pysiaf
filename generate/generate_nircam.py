@@ -24,6 +24,8 @@ import matplotlib.pyplot as pl
 
 import pysiaf
 from pysiaf.utils import tools, compare
+from pysiaf.utils.enhanced_aperture_file import create_enhanced_aperture_file
+
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
     JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 from pysiaf import iando
@@ -388,6 +390,12 @@ if emulate_delivery:
                                                    mark_ref=True, filename_appendix=selected_aperture_name[0],
                                                    label=True)
                 pl.close('all')  # stops system from being overwhelmed with too may plots
+
+    #If desired, create the enhanced aperture file containing OSS corners as well as V2/V3 positions of the reference point
+    enhanced_aperture_file =  True
+    
+    if enhanced_aperture_file:
+        create_enhanced_aperture_file(aperture_dict)    
 
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
