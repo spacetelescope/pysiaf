@@ -927,7 +927,7 @@ if emulate_delivery:
     pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
 
     # compare new SIAF with PRD version
-    for compare_to in [pysiaf.JWST_PRD_VERSION, 'PRDOPSSOC-027', 'PRDOPSSOC-M-026']:
+    for compare_to in [pysiaf.JWST_PRD_VERSION]:
         if compare_to == 'NIRSpec_SIAF_fullsca':
             ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
                                                                      'NIRSpec_SIAF_fullsca.xml'))
