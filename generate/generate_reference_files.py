@@ -13,6 +13,7 @@ Authors
 -------
 
     Johannes Sahlmann
+    Mario Gennaro
 
 References
 ----------
@@ -29,6 +30,7 @@ References
 
 """
 
+import copy
 import math
 import os
 
@@ -38,12 +40,115 @@ from astropy.time import Time
 import lxml.etree as ET
 
 import pysiaf
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_PRD_VERSION, JWST_DELIVERY_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT
 from pysiaf.utils import polynomial, tools
 from pysiaf import iando
 
 username = os.getlogin()
 timestamp = Time.now()
+
+def generate_fgs_fsw_coefficients(siaf=None, verbose=False, scale=0.06738281367):
+    """Write the FGS distortion coefficients for the flight software to file.
+
+    The FGS flight software (FSW) necessitates the distortion coefficients in a format that differs
+    from the SIAF. In particular, the FSW coefficients are scale-corrected, i.e. they transform
+    between ideal and distorted pixel coordinates. Second, the origin of the coordinate system
+    used for transformation is at an aperture corner and not at the center like for the SIAF
+    transformation.
+
+    Parameters
+    ----------
+    siaf : pysiaf.Siaf instance
+        The Siaf object to extract the coefficients from.
+    verbose : bool
+        verbosity
+    scale : float
+        Global pixel scale in arcsec/pixel
+
+    """
+    if siaf is None:
+        siaf = pysiaf.Siaf('fgs')
+
+    instrument = 'FGS'
+
+    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+    if not os.path.isdir(pre_delivery_dir):
+        os.makedirs(pre_delivery_dir)
+
+    for aperture_name in ['FGS1_FULL_OSS', 'FGS2_FULL_OSS']:
+
+        aperture = siaf[aperture_name]
+
+        # center_offset_x = 1023.5
+        # center_offset_y = 1023.5
+        center_offset_x = aperture.XSciRef - 1.
+        center_offset_y = aperture.YSciRef - 1.
+
+        if verbose:
+            print('External scale {}'.format(scale))
+            print(aperture.get_polynomial_scales())
+
+        # get SIAF coefficients
+        coefficients = aperture.get_polynomial_coefficients()
+
+        ar = coefficients['Sci2IdlX']
+        br = coefficients['Sci2IdlY']
+        cr = coefficients['Idl2SciX']
+        dr = coefficients['Idl2SciY']
+
+        a_fsw, b_fsw, c_fsw, d_fsw = polynomial.rescale(ar, br, cr, dr, 1. / scale)
+        factor = -1.
+
+        if 'FGS1' in aperture_name:
+            b_fsw *= -1
+            c_fsw = polynomial.flip_y(c_fsw)
+            d_fsw = polynomial.flip_y(d_fsw)
+
+        a_fsw = polynomial.shift_coefficients(a_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        b_fsw = polynomial.shift_coefficients(b_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        c_fsw = polynomial.shift_coefficients(c_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+        d_fsw = polynomial.shift_coefficients(d_fsw, factor * center_offset_x,
+                                              factor * center_offset_y)
+
+        a_fsw[0] += center_offset_x
+        b_fsw[0] += center_offset_y
+        c_fsw[0] += center_offset_x
+        d_fsw[0] += center_offset_y
+
+        # print FSW coefficients to screen
+        fsw_coefficients = Table((c_fsw, d_fsw, a_fsw, b_fsw), names=(
+         'IDEALPTOREALPXCOE', 'IDEALPTOREALPYCOE', 'REALPTOIDEALPXCOE', 'REALPTOIDEALPYCOE'))
+        if verbose:
+            fsw_coefficients.pprint()
+
+        table = Table(names=('parameter_name', 'value'), dtype=(object, float))
+        table.add_row(['XOFFSET', center_offset_x])
+        table.add_row(['YOFFSET', center_offset_y])
+        table.add_row(['PLATESCALE', scale])
+        for colname in fsw_coefficients.colnames:
+            for i in range(len(fsw_coefficients[colname])):
+                table.add_row(['{}_{}'.format(colname, i), fsw_coefficients[colname][i]])
+        table['parameter_name'] = np.array(table['parameter_name']).astype(str)
+
+        # write to file
+        fsw_distortion_file = os.path.join(pre_delivery_dir, 'ifgs{}_distortion_tbl.txt'.format(aperture_name[3]))
+        comments = []
+        comments.append('FGS distortion coefficients for FSW')
+        comments.append('')
+        comments.append('Derived from SIAF distortion coefficients.')
+        comments.append('')
+        comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+        comments.append('by {}'.format(username))
+        comments.append('')
+        table.meta['comments'] = comments
+        formats={'parameter_name': '%-20s', 'value': '%+2.6e'}
+        table.write(fsw_distortion_file, format='ascii.fixed_width',
+                                         delimiter=',', delimiter_pad=' ', bookend=False,
+                                         overwrite=True, formats=formats)
+
 
 def generate_initial_siaf_aperture_definitions(instrument):
     """Write text file that contains all the necessary aperture information to generate the full SIAF given the
@@ -266,6 +371,8 @@ def generate_siaf_detector_layout():
     Note that the DMS Detector frame differs in its definition from the SIAF Detector frame. What commonly is referred
     to as 'DMS coordinate system' corresponds to the SIAF Science frame.
 
+    Updated by M.Gennaro to allow for coronographic apertures support in NIRCam
+
     :return:
     """
 
@@ -277,6 +384,10 @@ def generate_siaf_detector_layout():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 0, -1, VIdlParity])
             for sca_name in 'A2 A4 B1 B3 B5'.split():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 180, -1, VIdlParity])
+            for sca_name in ['NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR']:
+                layout.add_row([instrument.upper(), '{}'.format(sca_name), 180, -1, VIdlParity])
+            for sca_name in ['NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR']:
+                layout.add_row([instrument.upper(), '{}'.format(sca_name), 0, -1, VIdlParity])
         elif instrument == 'NIRISS':
             for sca_name in ['NIS_CEN']:
                 layout.add_row([instrument, sca_name, 180, 1, VIdlParity])
@@ -357,12 +468,14 @@ def generate_siaf_pre_flight_reference_files_nircam():
         Combine shift, add and distortion steps into single set of coefficients
         trans does the forward   detector(x,y) to V2V3
         inverse does V2V3 to detector(x,y)
-
+     
+    Updated by M.Gennaro to allow for coronographic apertures spport
+    
     :return:
     """
 
     instrument = 'NIRCam'
-    overwrite_wedge_file = True
+    overwrite_wedge_file = False
     overwrite_grism_file = False
 
 
@@ -392,8 +505,11 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
     if (not os.path.isfile(wedge_file) or (overwrite_grism_file)):
         # grism parameters,     see WFSS worksheet in EXCEL SIAF
-        grism_parameters = Table.read(os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'grism_parameters.txt'), format='ascii.basic', delimiter='\t', guess=False)
+        grism_parameters = Table.read(grism_file, format='ascii.basic', delimiter=',', guess=False)
 
+        # Save a backup copy of the grism file
+        cmd = 'cp {} {}'.format(grism_file,os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'nircam_siaf_grism_parameters_backup.txt'))
+        os.system(cmd)
 
         # different sign in Y for NRCB apertures
         factor = np.array(
@@ -401,10 +517,11 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
         for col in grism_parameters.colnames[1:]:
             # these are Sci coordinates
-            if 'X' in col:
-                grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
-            elif 'Y' in col:
-                grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
+            if col[0] != 'D':
+                if 'X' in col:
+                    grism_parameters['D{}'.format(col)] = grism_parameters[col].data - 1024.5
+                elif 'Y' in col:
+                    grism_parameters['D{}'.format(col)] = factor * (grism_parameters[col].data - 1024.5)
 
 
 
@@ -420,21 +537,78 @@ def generate_siaf_pre_flight_reference_files_nircam():
         grism_parameters.write(grism_file, format='ascii.fixed_width', delimiter=',',
                                          delimiter_pad=' ', bookend=False)
 
-    # Transformation parameters, mapping used to select row in cold_fit_[] file
+    # Transformation parameters, mapping used to select rows in cold_fit_[] file
     coldfit_name_mapping = {
-        'A1': ('NIRCAMASW_1', 'NIRCAMASW'),
-        'A2': ('NIRCAMASW_2', 'NIRCAMASW'),
-        'A3': ('NIRCAMASW_3', 'NIRCAMASW'),
-        'A4': ('NIRCAMASW_4', 'NIRCAMASW'),
-        'A5': ('NIRCAMALW_1', 'NIRCAMALW'),
-        'B1': ('NIRCAMBSW_1', 'NIRCAMBSW'),
-        'B2': ('NIRCAMBSW_2', 'NIRCAMBSW'),
-        'B3': ('NIRCAMBSW_3', 'NIRCAMBSW'),
-        'B4': ('NIRCAMBSW_4', 'NIRCAMBSW'),
-        'B5': ('NIRCAMBLW_1', 'NIRCAMBLW'),
-        'AL': ('NIRCAMALW_1', 'NIRCAMALW'),
-        'AS': ('NIRCAMASW_4', 'NIRCAMASW'),
-        'BS': ('NIRCAMBSW_1', 'NIRCAMBSW')
+                             'NRCA1_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_1_20161025081540',
+                                             'pixels_to_mm':'NIRCAMASW_1ToNIRCAMASW_20161025081540',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA2_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
+                                             'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA3_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_3_20161025081552',
+                                             'pixels_to_mm':'NIRCAMASW_3ToNIRCAMASW_20161025081552',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA4_FULL': {'degrees_to_mm':'OTESKYToNIRCAMASW_201609161431',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
+                                             'pixels_to_mm':'NIRCAMASW_4ToNIRCAMASW_20161025081557',
+                                            'mm_to_degrees':'NIRCAMASWoOTESKY_201609161431',
+                                             },
+                             'NRCA5_FULL' :{'degrees_to_mm':'OTESKYToNIRCAMALW_RT_20170307121022',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALWToOTESKY_RT_20170307121022',
+                                             },
+                             'NRCB1_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_1_20161025081604',
+                                             'pixels_to_mm':'NIRCAMBSW_1ToNIRCAMBSW_20161025081604',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB2_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_2_20161025081912',
+                                             'pixels_to_mm':'NIRCAMBSW_2ToNIRCAMBSW_20161025081912',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB3_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_3_20161025082300',
+                                             'pixels_to_mm':'NIRCAMBSW_3ToNIRCAMBSW_20161025082300',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB4_FULL': {'degrees_to_mm':'OTESKYToNIRCAMBSW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBSWToNIRCAMBSW_4_20161025082647',
+                                             'pixels_to_mm':'NIRCAMBSW_4ToNIRCAMBSW_20161025082647',
+                                            'mm_to_degrees':'NIRCAMBSWToOTESKY_RT_20170307121024',
+                                             },
+                             'NRCB5_FULL' :{'degrees_to_mm':'OTESKYToNIRCAMBLW_RT_20170307121023',
+                                             'mm_to_pixels':'NIRCAMBLWToNIRCAMBLW_1_20161227162336',
+                                             'pixels_to_mm':'NIRCAMBLW_1ToNIRCAMBLW_20161227162336',
+                                            'mm_to_degrees':'NIRCAMBLWToOTESKY_RT_20170307121023',
+                                             },
+                   'NRCA2_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RND_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
+                                             'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
+                                            'mm_to_degrees':'NIRCAMASW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA4_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BAR_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
+                                             'pixels_to_mm':'NIRCAMASW_4ToNIRCAMASW_20161025081557',
+                                            'mm_to_degrees':'NIRCAMASW_BARToOTESKY_202005150434',
+                                             },
+                   'NRCA5_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMALW_RND_202005150434',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA5_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMALW_BAR_202005150434',
+                                             'mm_to_pixels':'NIRCAMALWToNIRCAMALW_1_20161227162042',
+                                             'pixels_to_mm':'NIRCAMALW_1ToNIRCAMALW_20161227162042',
+                                            'mm_to_degrees':'NIRCAMALW_BARToOTESKY_202005150434',
+                                             }
     }
 
     # coldfit_source_data_file = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}'.format('cold_fit_201703071210.csv'))
@@ -975,9 +1149,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
             comments.append('by {}'.format(username))
             comments.append('')
             distortion_reference_table.meta['comments'] = comments
-            # distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
-            distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False)
-            # data = Table.read(distortion_reference_file_name, delimiter=',', format='ascii.fixed_width')
+            distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
 
 
     comments = []
@@ -991,6 +1163,281 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
     siaf_alignment.meta['comments'] = comments
     siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
                                      delimiter_pad=' ', bookend=False)
+
+
+# FGS reference files
+def generate_siaf_pre_flight_reference_files_fgs(verbose=False, mode='siaf'):
+    """Write the FGS alignment and distortion source data files to file.
+
+    The inputs are hardcoded reference positions and distortion coefficients obtained from
+    Honeywell.
+
+    Parameters
+    ----------
+    verbose : bool
+        verbosity
+    mode : str
+        Either `siaf` or `fsw`. This specifies in which convention/format the distortion
+        coefficients are written.
+
+    """
+    instrument = 'FGS'
+
+    center_offset_x = 1023.5
+    center_offset_y = 1023.5
+
+    # hardcoded pixelscale, reference?
+    scale = 0.06738281367  # arcsec/pixel
+
+    if mode == 'siaf':
+        # write focal plane alignment reference file
+        outfile = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_siaf_alignment.txt'.format(instrument.lower()))
+        oss_flags = [False, True]
+    elif mode == 'fsw':
+        outfile = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, '{}_fsw_coefficients.txt'.format(instrument.lower()))
+        oss_flags = [True]
+
+    if os.path.isfile(outfile):
+        os.remove(outfile)
+
+    siaf_alignment = None
+    counter = 0
+
+    for aperture_id in 'FGS1 FGS2'.split():
+
+        if aperture_id == 'FGS1':
+            V2Ref = 207.1900
+            V3Ref = -697.5000
+
+            # coefficients copied from Cox' makeSIAF.py to reproduce PRDOPSSOC-H-015
+            # February 2015 FGS delivery
+            # these numbers match the `To be Updated for CV3` column in the Tables on page 6ff
+            # of an unpublished word document entitled `FGS Transformation for CV3.docx` by
+            # Julia Zhou, e.g. C = IDEALPTOREALPXCOE_N
+
+            # Initialize the parameters
+            A = np.array(
+                [-2.33369320E+01, 9.98690490E-01, 1.05024970E-02, 2.69889020E-06, 6.74362640E-06,
+                 9.91415010E-07, 1.21090320E-09, -2.84802930E-11, 1.27892930E-09, -1.91322470E-11,
+                 5.34567520E-14, 9.29791010E-14, 8.27060020E-14, 9.70576590E-14, 1.94203870E-14])
+
+            B = np.array(
+                [-2.70337440E+01, -2.54596080E-03, 1.01166810E+00, 2.46371870E-06, 2.08880620E-06,
+                 9.32489680E-06, -4.11885660E-11, 1.26383770E-09, -7.60173360E-11, 1.36525900E-09,
+                 2.70499280E-14, 5.70198270E-14, 1.43943080E-13, 7.02321790E-14, 1.21579450E-13])
+
+            C = np.array(
+                [2.31013520E+01, 1.00091800E+00, -1.06389620E-02, -2.65680980E-06, -6.51704610E-06,
+                 -7.45631440E-07, -1.29600400E-09, -4.27453220E-12, -1.27808870E-09, 5.01165140E-12,
+                 2.72622090E-15, 5.42715750E-15, 3.46979980E-15, 2.49124350E-15, 1.22848570E-15])
+
+            D = np.array(
+                [2.67853100E+01, 2.26545910E-03, 9.87816850E-01, -2.35598140E-06, -1.91455620E-06,
+                 -8.92779540E-06, -3.24201520E-11, -1.30056630E-09, -1.73730700E-11,
+                 -1.27341590E-09, 1.84205730E-15, 3.13647160E-15, -2.99705840E-16, 1.98589690E-15,
+                 -1.26523200E-15])
+
+        elif aperture_id == 'FGS2':
+            V2Ref = 24.4300
+            V3Ref = -697.5000
+
+            A = np.array(
+                [-3.28410900E+01, 1.03455010E+00, 2.11920160E-02, -9.08746430E-06, -1.43516480E-05,
+                 -3.93814140E-06, 1.60956450E-09, 5.82814640E-10, 2.02870570E-09, 2.08582470E-10,
+                 -2.79748590E-14, -8.11622820E-14, -4.76943000E-14, -9.01937740E-14,
+                 -8.76203780E-15])
+
+            B = np.array(
+                [-7.76806220E+01, 2.92234710E-02, 1.07790000E+00, -6.31144890E-06, -7.87266390E-06,
+                 -2.14170580E-05, 2.13293560E-10, 2.03376270E-09, 6.74607790E-10, 2.41463060E-09,
+                 -2.30267730E-14, -3.63681270E-14, -1.35117660E-13, -4.22207660E-14,
+                 -1.16201020E-13])
+
+            C = np.array(
+                [3.03390890E+01, 9.68539030E-01, -1.82288450E-02, 7.72758330E-06, 1.17536430E-05,
+                 2.71516870E-06, -1.28167820E-09, -6.34376120E-12, -1.24563160E-09, -9.26192040E-12,
+                 8.14604260E-16, -5.93798790E-16, -2.69247540E-15, -4.05196100E-15, 2.14529600E-15])
+
+            D = np.array(
+                [7.13783150E+01, -2.55191710E-02, 9.30941560E-01, 5.01322910E-06, 5.10548510E-06,
+                 1.68083960E-05, 9.41565630E-12, -1.29749490E-09, -1.89194230E-11, -1.29425530E-09,
+                 -2.81501600E-15, -1.73025000E-15, 2.57732600E-15, 1.75268080E-15, 2.95238320E-15])
+
+        number_of_coefficients = len(A)
+        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+
+        # generate distortion coefficient files
+        siaf_index = []
+        exponent_x = []
+        exponent_y = []
+        for i in range(polynomial_degree + 1):
+            for j in np.arange(i + 1):
+                siaf_index.append('{:d}{:d}'.format(i, j))
+                exponent_x.append(i-j)
+                exponent_y.append(j)
+
+
+        print('*'*100)
+        aperture_name = '{}_FULL'.format(aperture_id)
+        for oss in oss_flags:
+
+            if oss:
+                aperture_name = aperture_name + '_OSS'
+                oss_factor =  1.
+            else:
+                oss_factor = -1.
+
+            print('{}'.format(aperture_name))
+
+            if mode == 'fsw':
+                (AX, BX, CX, DX) = (A, B, C, D)
+
+                AS = polynomial.shift_coefficients(AX, center_offset_x, center_offset_y)
+                BS = polynomial.shift_coefficients(BX, center_offset_x, center_offset_y)
+
+                AS0 = copy.deepcopy(AS[0])
+                BS0 = copy.deepcopy(BS[0])
+                AS[0] = 0.0
+                BS[0] = 0.0
+
+                betaY = np.arctan2(AS[2], BS[2])
+                print('Beta Y', np.degrees(betaY))
+                print('Shift zeros', AS0, BS0)
+
+                AR = AS * np.cos(betaY) - BS * np.sin(betaY)
+                BR = AS * np.sin(betaY) + BS * np.cos(betaY)
+
+
+                AR[0] = center_offset_x
+                BR[0] = center_offset_y
+
+                AF = polynomial.shift_coefficients(AR, -center_offset_x, -center_offset_y)
+                BF = polynomial.shift_coefficients(BR, -center_offset_x, -center_offset_y)
+
+                # Inverse matrices
+                xc = polynomial.poly(AX, center_offset_x, center_offset_y)
+                yc = polynomial.poly(BX, center_offset_x, center_offset_y)
+                # CS1 = 1.0*C1 # Force a real copy
+                CS = polynomial.shift_coefficients(CX, xc, yc)
+                DS = polynomial.shift_coefficients(DX, xc, yc)
+                CS0 = copy.deepcopy(CS[0])
+                DS0 = copy.deepcopy(DS[0])
+
+                CS[0] = 0.0
+                DS[0] = 0.0
+                CR = polynomial.prepend_rotation_to_polynomial(CS, np.degrees(betaY))
+                DR = polynomial.prepend_rotation_to_polynomial(DS, np.degrees(betaY))
+                CR[0] = CS0
+                DR[0] = DS0
+                CF = polynomial.shift_coefficients(CR, -center_offset_x, -center_offset_y)
+                DF = polynomial.shift_coefficients(DR, -center_offset_x, -center_offset_y)
+                distortion_reference_table = Table((siaf_index, exponent_x, exponent_y, AF, BF, CF, DF),
+                                                   names=('siaf_index', 'exponent_x', 'exponent_y', 'Sci2IdlX', 'Sci2IdlY', 'Idl2SciX','Idl2SciY'))
+
+                V3angle = 0
+                betaX = 0
+
+
+            else:
+                # Scale to arcsec
+                (AX, BX, CX, DX) = polynomial.rescale(A, B, C, D, scale)
+
+
+                V2c = polynomial.poly(AX, center_offset_x, center_offset_y)
+                V3c = polynomial.poly(BX, center_offset_x, center_offset_y)
+
+                AS = polynomial.shift_coefficients(AX, center_offset_x, center_offset_y)
+                AS[0] = 0.0
+                BS = polynomial.shift_coefficients(BX, center_offset_x, center_offset_y)
+                BS[0] = 0.0
+                CS = polynomial.shift_coefficients(CX, V2c, V3c)
+                CS[0] = 0.0
+                DS = polynomial.shift_coefficients(DX, V2c, V3c)
+                DS[0] = 0.0
+
+                if aperture_id == 'FGS1':
+                    if oss is False:
+                        AF = -polynomial.flip_x(polynomial.flip_y(AS))
+                        BF = -polynomial.flip_x(polynomial.flip_y(BS))
+                        CF = -polynomial.flip_x(polynomial.flip_y(CS))
+                        DF = -polynomial.flip_x(polynomial.flip_y(DS))
+                    else:
+                        AF = AS # For OSS detector and science are identical
+                        BF = -BS
+                        CF = polynomial.flip_y(CS)
+                        DF = polynomial.flip_y(DS)
+                elif aperture_id == 'FGS2':
+                    if oss is False:
+                        AF = -polynomial.flip_x(AS)
+                        BF =  polynomial.flip_x(BS)
+                        CF = -polynomial.flip_x(CS)
+                        DF =  polynomial.flip_x(DS)
+                    else:
+                        AF = AS # For OSS detector and science are identical
+                        BF = BS
+                        CF = CS
+                        DF = DS
+
+                betaX = np.arctan2(oss_factor * AF[1], BF[1])
+                betaY = np.arctan2(oss_factor * AF[2], BF[2])
+
+                V3angle = copy.deepcopy(betaY)
+                if (abs(V3angle) > np.pi/2):
+                    V3angle = V3angle - np.copysign(np.pi, V3angle)
+
+                (AR,BR) = polynomial.add_rotation(AF, BF, -1 * oss_factor * np.rad2deg(V3angle))
+
+                # take out the rotation, carried separately in V3IdlYangle
+                CR = polynomial.prepend_rotation_to_polynomial(CF, oss_factor * np.rad2deg(V3angle))
+                DR = polynomial.prepend_rotation_to_polynomial(DF, oss_factor * np.rad2deg(V3angle))
+                distortion_reference_table = Table((siaf_index, exponent_x, exponent_y, AR, BR, CR, DR),
+                                                   names=('siaf_index', 'exponent_x', 'exponent_y', 'Sci2IdlX', 'Sci2IdlY', 'Idl2SciX','Idl2SciY'))
+
+            print('{} {}'.format(aperture_name, np.rad2deg(betaY)))
+            # if aperture_name == 'FGS1_FULL':  # first in loop
+            if counter == 0:  # first in loop
+                siaf_alignment = Table()
+                siaf_alignment['AperName'] = ['{:>30}'.format(aperture_name)]
+                siaf_alignment['V3IdlYAngle'] = [np.rad2deg(V3angle)]
+                siaf_alignment['V3SciXAngle'] = [np.rad2deg(betaX)]
+                siaf_alignment['V3SciYAngle'] = [np.rad2deg(betaY)]
+                siaf_alignment['V2Ref'] = [V2Ref]
+                siaf_alignment['V3Ref'] = [V3Ref]
+            else:
+                siaf_alignment.add_row(['{:>30}'.format(aperture_name), np.rad2deg(V3angle), np.rad2deg(betaX), np.rad2deg(betaY), V2Ref, V3Ref])
+
+            counter += 1
+
+
+            distortion_reference_table.add_column(Column([aperture_name] * len(distortion_reference_table), name='AperName'), index=0)
+            if mode == 'fsw':
+                distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'fgs_fsw_distortion_{}.txt'.format(aperture_name.lower()))
+            else:
+                distortion_reference_file_name = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'fgs_siaf_distortion_{}.txt'.format(aperture_name.lower()))
+
+            comments = []
+            comments.append('FGS distortion reference file for SIAF\n')
+            comments.append('')
+            comments.append('Based on coefficients delivered to STScI in February 2015.')
+            comments.append('These parameters are stored in PRDOPSSOC-H-014.')
+            comments.append('')
+            comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+            comments.append('by {}'.format(username))
+            comments.append('')
+            distortion_reference_table.meta['comments'] = comments
+            distortion_reference_table.write(distortion_reference_file_name, format='ascii.fixed_width', delimiter=',', delimiter_pad=' ', bookend=False, overwrite=True)
+
+    comments = []
+    comments.append('{} alignment parameter reference file for SIAF'.format(instrument))
+    comments.append('')
+    comments.append('This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.')
+    comments.append('')
+    comments.append('Generated {} {}'.format(timestamp.isot, timestamp.scale))
+    comments.append('by {}'.format(username))
+    comments.append('')
+    siaf_alignment.meta['comments'] = comments
+    siaf_alignment.write(outfile, format='ascii.fixed_width', delimiter=',',
+                                     delimiter_pad=' ', bookend=False, overwrite=True)
 
 
 def generate_siaf_xml_field_format_reference_files(verbose=False):
@@ -1167,12 +1614,9 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     for row, name in enumerate(aperture_name_list):
         if name == apName:
             r = row
-    apCode = apName[3:5] # e.g. 'A1' detector_id?
 
     # read in hardcoded dictionary
-    apSys = coldfit_name_mapping[apCode]
-    sysA = apSys[0] # e.g. 'NIRCAMASW_1'
-    sysB = apSys[1] # e.g. 'NIRCAMASW'
+    apSys = coldfit_name_mapping[apName]
     xref = siaf_aperture_definitions['XDetRef'][r]
     yref = siaf_aperture_definitions['YDetRef'][r]
     if xref == '':
@@ -1184,9 +1628,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     else:
         yref = float(yref)
 
-    print(apName, apCode, sysA, sysB, xref, yref)
+    print(apName, xref, yref)
 
-    sysC = 'OTESKY'
     order = 5 # polynomial order
     terms = (order + 1) * (order + 2) // 2 # number of poly coeffs
     A = np.zeros((terms))
@@ -1198,9 +1641,8 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     # read parameters from cold_fit_[] file
     for line in coldfit_source_data:
         column = line.split(',')
-        fromSystem = column[1].strip()
-        toSystem = column[2].strip()
-        if fromSystem == sysA and toSystem == sysB:
+        modelname = column[0].strip()
+        if modelname==apSys['pixels_to_mm']:
             a0 = float(column[7])
             a1 = float(column[9])
             a2 = float(column[8])
@@ -1213,7 +1655,7 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
                 print('b', b0, b1, b2)
 
         # find transformation to OTESKY
-        if fromSystem == sysB and toSystem == sysC:
+        if modelname==apSys['mm_to_degrees']:
             for i in range(terms):
                 A[i] = float(column[i + 7])
                 B[i] = float(column[i + 28])
@@ -1328,10 +1770,7 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
             if verbose:
                 print('Found aperture {}'.format(apName))
             r = row
-    apCode = apName[3:5]
-    apSys = coldfit_name_mapping[apCode]
-    sysA = apSys[0]
-    sysB = apSys[1]
+    apSys = coldfit_name_mapping[apName]
     xref = siaf_aperture_definitions['XDetRef'][r]
     yref = siaf_aperture_definitions['YDetRef'][r]
     if xref == '':
@@ -1343,7 +1782,6 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
     else:
         yref = float(yref)
 
-    sysC = 'OTESKY'
     order = 5
     terms = (order + 1) * (order + 2) // 2
     C = np.zeros((terms))
@@ -1353,9 +1791,9 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
     part2 = False
     for line in coldfit_source_data:  # coeffs read in during initialization
         column = line.split(',')
-        fromSystem = column[1].strip()
+        modelname = column[0].strip()
         toSystem = column[2].strip()
-        if fromSystem == sysB and toSystem == sysA:  # Linear transformation
+        if modelname==apSys['mm_to_pixels']: # linear transformation
             c0 = float(column[7])
             c1 = float(column[9])
             c2 = float(column[8])
@@ -1367,7 +1805,7 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
                 print('d', d0, d1, d2)
             part1 = True
 
-        if fromSystem == sysC and toSystem == sysB:  # Polynomial
+        if modelname==apSys['degrees_to_mm']:  # Polynomial
             for i in range(terms):
                 C[i] = float(column[i + 7])
                 D[i] = float(column[i + 28])

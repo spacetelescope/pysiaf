@@ -22,6 +22,7 @@ import matplotlib.pyplot as pl
 from ..constants import JWST_PRD_VERSION
 from ..iando.read import get_siaf, read_siaf_aperture_definitions
 from ..siaf import Siaf
+from ..aperture import Aperture
 from ..utils import tools
 from ..aperture import compare_apertures
 
@@ -117,7 +118,11 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                                                   attributes_to_show])), file=print_file)
         for aperture_name in added_aperture_names:
             print('\tAdded {}'.format(' '.join(['{:12}'.format(
-                getattr(comparison_siaf[aperture_name], a)) for a in attributes_to_show])),
+#                getattr(comparison_siaf[aperture_name], a)) 
+                
+                getattr(comparison_siaf[aperture_name], a) if getattr(comparison_siaf[aperture_name], a) is not None else 'None')
+                
+                for a in attributes_to_show])),
                   file=print_file)
         print()
 
@@ -285,6 +290,8 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
             continue
         if (skipped_aperture_type is not None) and (aperture.AperType in list(skipped_aperture_type)):
             continue
+        if AperName not in comparison_siaf.apertures: # skip removed apertures
+            continue
         for j, siaf in enumerate(siaf_list):
             aperture = siaf[AperName]
             coefficients = aperture.get_polynomial_coefficients()
@@ -397,9 +404,17 @@ def dict_compare(dictionary_1, dictionary_2):
     intersect_keys = d1_keys.intersection(d2_keys)
     added = d1_keys - d2_keys
     removed = d2_keys - d1_keys
-    modified = {o: (dictionary_1[o], dictionary_2[o]) for o in intersect_keys
-                if dictionary_1[o] != dictionary_2[o]}
-    same = set(o for o in intersect_keys if dictionary_1[o] == dictionary_2[o])
+    modified = {}
+    for o in intersect_keys:
+        for key in dictionary_1[o].__dict__.keys():
+            if isinstance(dictionary_1[o].__dict__[key], Aperture) and isinstance(dictionary_2[o].__dict__[key], Aperture):
+                # No need to compare apertures a second time since they're part of original dictionary_1/2
+                continue
+            else:
+                if dictionary_1[o].__dict__[key] != dictionary_2[o].__dict__[key]:
+                    modified[o] = (dictionary_1[o], dictionary_2[o])
+
+    same = set(o for o in intersect_keys if dictionary_1[o].__dict__ == dictionary_2[o].__dict__)
     return added, removed, modified, same
 
 

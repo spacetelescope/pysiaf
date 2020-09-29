@@ -34,7 +34,8 @@ import pysiaf
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
 from pysiaf.utils import compare, polynomial
-from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, REPORTS_ROOT, V3_TO_YAN_OFFSET_DEG, JWST_DELIVERY_DATA_ROOT
+from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, REPORTS_ROOT, \
+    V3_TO_YAN_OFFSET_DEG, JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 import generate_reference_files
 
 
@@ -326,7 +327,8 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' % X[k], end = '')
             k += 1
-
+    #     print ()
+    # print ()
     # Now put in conventiomal layout
 
     k1 = 0
@@ -341,6 +343,8 @@ def rearrange(X):
             square[i, j] = X[k]
             # print ('%15.6e' %X[k], end = '')
             k += 1
+    #     print ()
+    # print ()
 
     k1 = 0
     for i in range(order + 1):
@@ -373,31 +377,35 @@ def reorder(pcfName, verbose=False):
             print ('Order', order, terms, ' terms')
 
         if '*xForward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                xForward.append(float(f[k]))
+                text = pcf.readline()
+                xForward.append(float(text))  # f[k]
             xForward = np.array(xForward)
 
         if '*xBackward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                xBackward.append(float(f[k]))
+                text = pcf.readline()
+                xBackward.append(float(text))  # f[k]
             xBackward = np.array(xBackward)
 
         if '*yForward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                yForward.append(float(f[k]))
+                text = pcf.readline()
+                yForward.append(float(text))  # f[k]
             yForward = np.array(yForward)
 
         if '*yBackward' in text:
-            text = pcf.readline()
-            f = text.split()  # Array of terms text strings
+            # text = pcf.readline()
+            # f = text.split()  # Array of terms text strings
             for k in range(terms):
-                yBackward.append(float(f[k]))
+                text = pcf.readline()
+                yBackward.append(float(text))  # f[k]
             yBackward = np.array(yBackward)
     pcf.close()
 
@@ -677,8 +685,8 @@ source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print ('Loading reference files from directory: {}'.format(source_data_dir))
 
 # XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
-tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX.gtp')
-tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY.gtp')
+tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX_TA.gtp')
+tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY_TA.gtp')
 disperser_mirror_tiltx = read_pcf_gtp(tiltx_gtp_file)
 disperser_mirror_tilty = read_pcf_gtp(tilty_gtp_file)
 
@@ -877,9 +885,11 @@ for AperName in aperture_name_list:
 
         if siaf_aperture_definitions['dependency_type'][index] == 'default':
             aperture.VIdlParity = parent_aperture.VIdlParity
+
+        # first MIMF field point inherits properties from parent SLIT aperture
         elif siaf_aperture_definitions['dependency_type'][index] == 'FP1MIMF':
             idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
-            for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes: #''DetSciYAngle Sci2IdlDeg DetSciParity VIdlParity'.split():
+            for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes:
                 setattr(aperture, attribute, getattr(parent_aperture, attribute))
 
     aperture_dict[AperName] = aperture
@@ -918,8 +928,19 @@ if emulate_delivery:
 
     # compare new SIAF with PRD version
     for compare_to in [pysiaf.JWST_PRD_VERSION]:
-
-        if compare_to == pysiaf.JWST_PRD_VERSION:
+        if compare_to == 'NIRSpec_SIAF_fullsca':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                     'NIRSpec_SIAF_fullsca.xml'))
+        elif compare_to == 'NIRSpec_SIAF_bugfix-only':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                     'NIRSpec_SIAF_bugfix-only.xml'))
+        elif compare_to == 'PRDOPSSOC-027':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRSpec_SIAF-027.xml'))
+        elif compare_to == 'PRDOPSSOC-M-026':
+            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
+                pysiaf.JWST_PRD_VERSION, compare_to), 'NIRSpec_SIAF.xml'))
+        else:
+            # compare new SIAF with PRD version
             ref_siaf = pysiaf.Siaf(instrument)
 
         tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
@@ -927,10 +948,19 @@ if emulate_delivery:
         compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                              fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
 
+        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                           report_dir=pre_delivery_dir, tags=tags,
+                                           skipped_aperture_type=['TRANSFORM'],
+                                           selected_aperture_name=['NRS1_FP1MIMF', 'NRS1_FP2MIMF', 'NRS1_FP3MIMF', 'NRS2_FP4MIMF', 'NRS2_FP5MIMF'],
+                                           mark_ref=True, xlimits=(100, 700), ylimits=(-700, -100),
+                                           filename_appendix='MIMF_apertures')
+
         compare.compare_transformation_roundtrip(pre_delivery_siaf,
                                                  reference_siaf_input=ref_siaf, tags=tags,
                                                  report_dir=pre_delivery_dir,
-                                                 skipped_aperture_type=['TRANSFORM'])
+                                                 skipped_aperture_type=['TRANSFORM', 'SLIT'],
+                                                 selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+
 
         compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
                                            report_dir=pre_delivery_dir, tags=tags,
@@ -982,8 +1012,8 @@ else:
     compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
     # tools.compare_siaf_xml(ref_siaf, new_siaf)
 
-selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
-                          ('MSA' not in AperName) and ('SKY' not in AperName)]
-# run roundtrip test on all apertures
-compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
-                                         selected_aperture_name=selected_aperture_name)
+# selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
+#                           ('MSA' not in AperName) and ('SKY' not in AperName)]
+# # run roundtrip test on all apertures
+# compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
+#                                          selected_aperture_name=selected_aperture_name)
