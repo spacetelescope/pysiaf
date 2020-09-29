@@ -22,6 +22,7 @@ import matplotlib.pyplot as pl
 from ..constants import JWST_PRD_VERSION
 from ..iando.read import get_siaf, read_siaf_aperture_definitions
 from ..siaf import Siaf
+from ..aperture import Aperture
 from ..utils import tools
 from ..aperture import compare_apertures
 
@@ -403,8 +404,16 @@ def dict_compare(dictionary_1, dictionary_2):
     intersect_keys = d1_keys.intersection(d2_keys)
     added = d1_keys - d2_keys
     removed = d2_keys - d1_keys
-    modified = {o: (dictionary_1[o], dictionary_2[o]) for o in intersect_keys
-                if dictionary_1[o].__dict__ != dictionary_2[o].__dict__}
+    modified = {}
+    for o in intersect_keys:
+        for key in dictionary_1[o].__dict__.keys():
+            if isinstance(dictionary_1[o].__dict__[key], Aperture) and isinstance(dictionary_2[o].__dict__[key], Aperture):
+                # No need to compare apertures a second time since they're part of original dictionary_1/2
+                continue
+            else:
+                if dictionary_1[o].__dict__[key] != dictionary_2[o].__dict__[key]:
+                    modified[o] = (dictionary_1[o], dictionary_2[o])
+
     same = set(o for o in intersect_keys if dictionary_1[o].__dict__ == dictionary_2[o].__dict__)
     return added, removed, modified, same
 
