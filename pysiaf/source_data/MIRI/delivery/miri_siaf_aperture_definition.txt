@@ -4,7 +4,7 @@
 # This file also defines the order in which the apertures are presented.
 #
 # Imager/LRS information is based on CDP-7 reference file: MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits
-# Modified by hand 2019-03-21 by D. Law
+# Modified by hand 2020-10-22 by D. Law for MIRI Rehearsal Test updates
 # Note that V3IdlYAngle will be populated automatically for 'None', or overridden with values specified here.
 #
 # MRS
@@ -38,8 +38,8 @@
        MIRIM_MASK1140 ,  SUBARRAY ,    None     ,         -1 ,    119.5 ,    354.5 ,       288 ,       224 ,       1 ,     245 ,   119.5 ,   110.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
        MIRIM_MASK1550 ,  SUBARRAY ,    None     ,         -1 ,    119.5 ,    575.0 ,       288 ,       224 ,       1 ,     467 ,   119.5 ,   109.0 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
        MIRIM_MASKLYOT ,  SUBARRAY ,    None     ,         -1 ,    142.5 ,    884.5 ,       320 ,       304 ,       1 ,     717 ,   142.5 ,   168.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
-          MIRIM_TAMRS ,       ROI ,    None     ,         -1 ,    997.5 ,    993.5 ,        48 ,        48 ,     974 ,     970 ,    24.5 ,    24.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
-          MIRIM_TALRS ,       ROI ,    None     ,         -1 ,    413.5 ,    289.5 ,        48 ,        48 ,     390 ,     266 ,    24.5 ,    24.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
+          MIRIM_TAMRS ,       ROI ,    None     ,         -1 ,   1005.5 ,   1001.5 ,        32 ,        32 ,     990 ,     986 ,    16.5 ,    16.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
+	  MIRIM_TALRS ,       ROI ,    None     ,         -1 ,    405.5 ,    297.5 ,        32 ,        32 ,     390 ,     282 ,    16.5 ,    16.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
         MIRIM_TABLOCK ,       ROI ,    None     ,         -1 ,    267.5 ,    427.5 ,        32 ,        32 ,     252 ,     412 ,    16.5 ,    16.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
       MIRIM_TALYOT_UL ,       ROI ,    None     ,         -1 ,     70.5 ,    952.5 ,        48 ,        48 ,      47 ,     929 ,    24.5 ,    24.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
       MIRIM_TALYOT_UR ,       ROI ,    None     ,         -1 ,    211.5 ,    952.5 ,        48 ,        48 ,     188 ,     929 ,    24.5 ,    24.5 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
