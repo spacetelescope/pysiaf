@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2021-02-09T16:16:26.736 utc-->
+  <!--Generated 2021-02-09T21:44:03.423 utc-->
   <!--by mfix-->
   <!--pysiaf version 0.9.0.dev95+g79c05793-->
   <SiafEntry>
@@ -9978,8 +9978,8 @@
     <YSciRef>1194.00</YSciRef>
     <XSciScale>0.03124026</XSciScale>
     <YSciScale>0.03140228</YSciScale>
-    <V2Ref>53.770433</V2Ref>
-    <V3Ref>-479.626871</V3Ref>
+    <V2Ref>52.188433</V2Ref>
+    <V3Ref>-482.708871</V3Ref>
     <V3IdlYAngle>0.25975897</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>
@@ -11178,8 +11178,8 @@
     <YSciRef>1122.00</YSciRef>
     <XSciScale>0.03125346</XSciScale>
     <YSciScale>0.03141212</YSciScale>
-    <V2Ref>-53.534745</V2Ref>
-    <V3Ref>-479.666231</V3Ref>
+    <V2Ref>-52.338745</V2Ref>
+    <V3Ref>-482.699231</V3Ref>
     <V3IdlYAngle>-0.31331467</V3IdlYAngle>
     <VIdlParity>-1</VIdlParity>
     <DetSciYAngle>0</DetSciYAngle>

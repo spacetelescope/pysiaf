@@ -212,8 +212,8 @@ NRCA3_DHSPIL_WEDGES               XSciRef                1015.0                 
 NRCA3_DHSPIL_WEDGES               YSciRef                1080.0                1194.0      114.000000     9.5477
 NRCA3_DHSPIL_WEDGES             XSciScale            0.03126996            0.03124026        0.000030     0.0950
 NRCA3_DHSPIL_WEDGES             YSciScale            0.03143836            0.03140228        0.000036     0.1148
-NRCA3_DHSPIL_WEDGES                 V2Ref             52.191034             53.770433        1.579399     2.9373
-NRCA3_DHSPIL_WEDGES                 V3Ref            -483.20766           -479.626871        3.580789     0.7410
+NRCA3_DHSPIL_WEDGES                 V2Ref             52.191034             52.188433        0.002601     0.0050
+NRCA3_DHSPIL_WEDGES                 V3Ref            -483.20766           -482.708871        0.498789     0.1032
 NRCA3_DHSPIL_WEDGES           V3IdlYAngle            0.27288256            0.25975897        0.013124     4.8092
 NRCA3_DHSPIL_WEDGES           V3SciXAngle          -89.96247159          -89.95841658        0.004055     0.0045
 NRCA3_DHSPIL_WEDGES           V3SciYAngle            0.27288256            0.25975897        0.013124     4.8092
@@ -505,8 +505,8 @@ NRCB4_DHSPIL_WEDGES               XSciRef                1036.0                1
 NRCB4_DHSPIL_WEDGES               YSciRef                1080.0                1122.0       42.000000     3.7433
 NRCB4_DHSPIL_WEDGES             XSciScale            0.03126339            0.03125346        0.000010     0.0318
 NRCB4_DHSPIL_WEDGES             YSciScale            0.03142468            0.03141212        0.000013     0.0400
-NRCB4_DHSPIL_WEDGES                 V2Ref            -53.214925            -53.534745        0.319820     0.5974
-NRCB4_DHSPIL_WEDGES                 V3Ref           -480.985321           -479.666231        1.319090     0.2742
+NRCB4_DHSPIL_WEDGES                 V2Ref            -53.214925            -52.338745        0.876180     1.6465
+NRCB4_DHSPIL_WEDGES                 V3Ref           -480.985321           -482.699231        1.713910     0.3551
 NRCB4_DHSPIL_WEDGES           V3IdlYAngle           -0.31506829           -0.31331467        0.001754     0.5566
 NRCB4_DHSPIL_WEDGES           V3SciXAngle          -90.08298098          -90.08661598        0.003635     0.0040
 NRCB4_DHSPIL_WEDGES           V3SciYAngle           -0.31506829           -0.31331467        0.001754     0.5566
