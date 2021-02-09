@@ -156,8 +156,10 @@ for AperName in aperture_name_list:
                 # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
                 aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
 
-            if dependency_type == 'wedge':
+            if dependency_type != 'default':
                 sca_name = aperture.AperName[0:5]
+
+            if dependency_type == 'wedge':
                 if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
                     # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += '335R430R'
@@ -166,7 +168,15 @@ for AperName in aperture_name_list:
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
-                aperture.V3Ref += 43.
+                if sca_name == 'NRCA3':
+                    aperture.V2Ref += -1.582
+                    aperture.V3Ref += 39.918
+                elif sca_name == 'NRCB4':
+                    aperture.V2Ref += 1.196
+                    aperture.V3Ref += 39.967
+                else:
+                    print('dhspil_wedge aperture not supported')
+                    assert False
 
             aperture.complement()
 
