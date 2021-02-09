@@ -135,7 +135,7 @@ for AperName in aperture_name_list:
     parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
     dependency_type = siaf_aperture_definitions['dependency_type'][index]
 
-    if parent_apertures is not None:
+    if parent_apertures is not None: 
 
         if dependency_type in ['default', 'wedge', 'dhspil_wedge']:
             aperture._parent_apertures = parent_apertures

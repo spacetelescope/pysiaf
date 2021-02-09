@@ -168,3 +168,4 @@ this can probably be fixed by un-installing and re-installing PyQt5, e.g.
 `pip uninstall pyqt5`       
 `pip uninstall pyqt5-sip`       
 `pip install pyqt5`     
+
