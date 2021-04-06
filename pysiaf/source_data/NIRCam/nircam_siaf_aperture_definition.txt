@@ -158,9 +158,9 @@
 NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
  NRCA5_TAGRISMTS_SCI_F444W ,      ROI ,  1097.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
 # WFSC / MIMF Field Points (Module-A)
-              NRCA3_DHSPIL ,  FULLSCA ,  1034.0 ,  1080.0 ,     2048 ,     2048 ,  1015.0 ,  1080.0 ,                                     NRCA3_FULL ,         default
-        NRCA3_DHSPIL_SUB96 , SUBARRAY ,  1034.0 ,  1080.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCA3_FULL ,         default
-       NRCA3_DHSPIL_WEDGES ,  FULLSCA ,  1034.0 ,  1080.0 ,     2048 ,     2048 ,  1015.0 ,  1080.0 ,                                     NRCA3_FULL ,    dhspil_wedge
+              NRCA3_DHSPIL ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,                                     NRCA3_FULL ,         default
+        NRCA3_DHSPIL_SUB96 , SUBARRAY ,  1084.0 ,  1194.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCA3_FULL ,         default
+       NRCA3_DHSPIL_WEDGES ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,                                     NRCA3_FULL ,    dhspil_wedge
                  NRCA3_FP1 ,  FULLSCA ,  1587.5 ,  1410.5 ,     2048 ,     2048 ,   461.5 ,  1410.5 ,                                     NRCA3_FULL ,         default
             NRCA3_FP1_SUB8 , SUBARRAY ,  1587.5 ,  1410.5 ,        8 ,        8 ,     4.5 ,     4.5 ,                                     NRCA3_FULL ,         default
            NRCA3_FP1_SUB64 , SUBARRAY ,  1587.5 ,  1410.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA3_FULL ,         default
@@ -169,9 +169,9 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
              NRCA2_FP4MIMF ,  FULLSCA ,   229.0 ,   229.0 ,     2048 ,     2048 ,   229.0 ,  1820.0 ,                                     NRCA2_FULL ,         default
              NRCA4_FP5MIMF ,  FULLSCA ,  1704.0 ,   345.0 ,     2048 ,     2048 ,  1704.0 ,  1704.0 ,                                     NRCA4_FULL ,         default
 # WFSC / MIMF Field Points (Module-B)
-              NRCB4_DHSPIL ,  FULLSCA ,  1013.0 ,  1080.0 ,     2048 ,     2048 ,  1036.0 ,  1080.0 ,                                     NRCB4_FULL ,         default
-        NRCB4_DHSPIL_SUB96 , SUBARRAY ,  1013.0 ,  1080.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCB4_FULL ,         default
-       NRCB4_DHSPIL_WEDGES ,  FULLSCA ,  1013.0 ,  1080.0 ,     2048 ,     2048 ,  1036.0 ,  1080.0 ,                                     NRCB4_FULL ,    dhspil_wedge
+              NRCB4_DHSPIL ,  FULLSCA ,  1003.0 ,  1122.0 ,     2048 ,     2048 ,  1046.0 ,  1122.0 ,                                     NRCB4_FULL ,         default
+        NRCB4_DHSPIL_SUB96 , SUBARRAY ,  1003.0 ,  1122.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCB4_FULL ,         default
+       NRCB4_DHSPIL_WEDGES ,  FULLSCA ,  1003.0 ,  1122.0 ,     2048 ,     2048 ,  1046.0 ,  1122.0 ,                                     NRCB4_FULL ,    dhspil_wedge
                  NRCB4_FP1 ,  FULLSCA ,   228.5 ,  1817.5 ,     2048 ,     2048 ,  1820.5 ,  1817.5 ,                                     NRCB4_FULL ,         default
             NRCB4_FP1_SUB8 , SUBARRAY ,   228.5 ,  1817.5 ,        8 ,        8 ,     4.5 ,     4.5 ,                                     NRCB4_FULL ,         default
            NRCB4_FP1_SUB64 , SUBARRAY ,   228.5 ,  1817.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCB4_FULL ,         default
