@@ -301,14 +301,14 @@ for AperName in aperture_name_list:
             for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity VIdlParity'.split():
                 setattr(aperture, attribute, getattr(master_aperture, attribute))
 
-            # the aperture on A5 whose V2Ref, V3Ref should be matched
-            a5_aperture = aperture_dict[aperture._parent_apertures[1]]
+            # the aperture on the LW channel whose V2Ref, V3Ref should be matched
+            LW_aperture = aperture_dict[aperture._parent_apertures[1]]
 
             # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
             aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
 
             # modify aperture so that V2Ref, V3Ref match the a5_aperture
-            aperture = tools.match_v2v3(copy.deepcopy(a5_aperture), copy.deepcopy(aperture),
+            aperture = tools.match_v2v3(copy.deepcopy(LW_aperture), copy.deepcopy(aperture),
                                         verbose=False, match_v2_only=True)
 
             aperture.complement()
