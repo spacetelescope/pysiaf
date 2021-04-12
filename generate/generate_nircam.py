@@ -293,7 +293,7 @@ for AperName in aperture_name_list:
                 setattr(aperture, 'XIdlVert{:d}'.format(j + 1), corners_Idl_x[j])
                 setattr(aperture, 'YIdlVert{:d}'.format(j + 1), corners_Idl_y[j])
 
-        elif dependency_type == 'grism_f444w':
+        elif dependency_type == 'grism_ts_sw':
             aperture._parent_apertures = [s.strip() for s in parent_apertures.split(';')]
 
             # the SCA on which this aperture is located
