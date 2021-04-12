@@ -307,7 +307,7 @@ for AperName in aperture_name_list:
             # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
             aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
 
-            # modify aperture so that V2Ref, V3Ref match the a5_aperture
+            # modify aperture so that V2Ref, V3Ref match the LW_aperture
             aperture = tools.match_v2v3(copy.deepcopy(LW_aperture), copy.deepcopy(aperture),
                                         verbose=False, match_v2_only=True)
 
