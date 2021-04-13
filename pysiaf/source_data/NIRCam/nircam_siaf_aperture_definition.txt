@@ -158,9 +158,9 @@
 NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
  NRCA5_TAGRISMTS_SCI_F444W ,      ROI ,  1097.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
 # Grism Time Series (Module-B. Only apertures for NRC-35 activity)
-     NRCB5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,  2014.0 ,     2048 ,      256 ,   468.0 ,    35.0 ,                                     NRCB5_FULL ,         default
-     NRCB5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,  2014.0 ,     2048 ,      128 ,   468.0 ,    35.0 ,                                     NRCB5_FULL ,         default
-      NRCB5_GRISM64_F322W2 , SUBARRAY ,   468.0 ,  2014.0 ,     2048 ,       64 ,   468.0 ,    35.0 ,                                     NRCB5_FULL ,         default
+     NRCB5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,   468.0 ,   222.0 ,                                     NRCB5_FULL ,         default
+     NRCB5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,   468.0 ,    94.0 ,                                     NRCB5_FULL ,         default
+      NRCB5_GRISM64_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,   468.0 ,    30.0 ,                                     NRCB5_FULL ,         default
           NRCB2_GRISMTS256 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,      256 ,   192.0 ,   167.0 ,                                     NRCB2_FULL ,         default
           NRCB2_GRISMTS128 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,      128 ,   192.0 ,    65.0 ,                                     NRCB2_FULL ,         default
            NRCB2_GRISMTS64 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,       64 ,   192.0 ,    33.0 ,                                     NRCB2_FULL ,         default
