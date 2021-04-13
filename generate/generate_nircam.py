@@ -309,7 +309,7 @@ for AperName in aperture_name_list:
 
             # modify aperture so that V2Ref, V3Ref match the LW_aperture
             aperture = tools.match_v2v3(copy.deepcopy(LW_aperture), copy.deepcopy(aperture),
-                                        verbose=True, match_v2_only=True)
+                                        verbose=False, match_v2_only=True)
 
             aperture.complement()
 
