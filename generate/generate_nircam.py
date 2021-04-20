@@ -293,7 +293,7 @@ for AperName in aperture_name_list:
                 setattr(aperture, 'XIdlVert{:d}'.format(j + 1), corners_Idl_x[j])
                 setattr(aperture, 'YIdlVert{:d}'.format(j + 1), corners_Idl_y[j])
 
-        elif dependency_type == 'grism_f444w':
+        elif dependency_type == 'grism_ts_sw':
             aperture._parent_apertures = [s.strip() for s in parent_apertures.split(';')]
 
             # the SCA on which this aperture is located
@@ -301,14 +301,14 @@ for AperName in aperture_name_list:
             for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity VIdlParity'.split():
                 setattr(aperture, attribute, getattr(master_aperture, attribute))
 
-            # the aperture on A5 whose V2Ref, V3Ref should be matched
-            a5_aperture = aperture_dict[aperture._parent_apertures[1]]
+            # the aperture on the LW channel whose V2Ref, V3Ref should be matched
+            LW_aperture = aperture_dict[aperture._parent_apertures[1]]
 
             # compute V2Ref, V3Ref, distortion from XDetRef and YDetRef of aperture, based on the parent_aperture
             aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
 
-            # modify aperture so that V2Ref, V3Ref match the a5_aperture
-            aperture = tools.match_v2v3(copy.deepcopy(a5_aperture), copy.deepcopy(aperture),
+            # modify aperture so that V2Ref, V3Ref match the LW_aperture
+            aperture = tools.match_v2v3(copy.deepcopy(LW_aperture), copy.deepcopy(aperture),
                                         verbose=False, match_v2_only=True)
 
             aperture.complement()
@@ -389,12 +389,20 @@ if emulate_delivery:
         create_jira_plots = True
         if create_jira_plots:
             # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
-                                        'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
-                                        'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
-                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
-                                        'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
-                                       ]
+            selected_aperture_names = [['NRCB5_GRISM256_F322W2','NRCB5_GRISM128_F322W2','NRCB5_GRISM64_F322W2','NRCB5_FULL',
+                                        'NRCA5_GRISM256_F322W2','NRCA5_GRISM128_F322W2','NRCA5_GRISM64_F322W2','NRCA5_FULL'],
+                                        ['NRCB2_GRISMTS256','NRCB2_GRISMTS128','NRCB2_GRISMTS64','NRCB2_FULL',
+                                         'NRCB4_GRISMTS256','NRCB4_GRISMTS128','NRCB4_GRISMTS64','NRCB4_FULL',
+                                         'NRCB5_FULL',
+                                         'NRCA1_GRISMTS256','NRCA1_GRISMTS128','NRCA1_GRISMTS64','NRCA1_FULL',
+                                         'NRCA3_GRISMTS256','NRCA3_GRISMTS128','NRCA3_GRISMTS64','NRCA3_FULL',
+                                         'NRCA5_FULL'],
+                                        ['NRCB2_FULL','NRCB2_GRISMTS256',
+                                         'NRCB4_GRISMTS256','NRCB4_FULL',
+                                         'NRCB5_GRISM256_F322W2','NRCB5_FULL',
+                                         'NRCA1_GRISMTS256','NRCA1_FULL',
+                                         'NRCA3_GRISMTS256','NRCA3_FULL',
+                                         'NRCA5_GRISM256_F322W2','NRCA5_GRISM256_F444W','NRCA5_FULL']
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
