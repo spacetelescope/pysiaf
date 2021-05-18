@@ -203,7 +203,7 @@ if emulate_delivery:
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
-    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.04)
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=True, threshold=0.04)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 

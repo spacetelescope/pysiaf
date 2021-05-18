@@ -389,13 +389,14 @@ if emulate_delivery:
         create_jira_plots = True
         if create_jira_plots:
             # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
-                                        'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
-                                        'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
-                                        'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
-                                        'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
-                                       ]
-                                       ]
+            #selected_aperture_names = [['NRCA2_MASK210R', 'NRCA2_FULL_MASK210R',
+            #                            'NRCA5_MASK335R','NRCA5_FULL_MASK335R',
+            #                            'NRCA5_MASK430R','NRCA5_FULL_MASK430R',
+            #                            'NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR',
+            #                            'NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR'
+            #                           ]
+            #                           ]
+            selected_aperture_names = [['NRCA1_FULL', 'NRCA5_FULL']]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
@@ -414,7 +415,7 @@ if emulate_delivery:
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
-    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=True, threshold=0.5)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
