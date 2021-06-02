@@ -44,7 +44,7 @@ from .iando import read
 from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
 
 # shorthands for supported coordinate systems
-FRAMES = ('det', 'sci', 'idl', 'tel', 'raw')
+FRAMES = ('det', 'sci', 'idl', 'tel', 'raw', 'sky')
 
 # list of attributes for the distortion coefficients up to degree 5
 POLYNOMIAL_COEFFICIENT_NAMES = 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split()
@@ -225,6 +225,9 @@ class Aperture(object):
 
         # parent apertures, if any
         self.__dict__['_parent_apertures'] = None
+
+        # Attitude matrix, used for transforming to sky coordinates given some attitude
+        self._attitude_matrix = None
 
     def __setattr__(self, key, value):
         """Set an aperture attribute and verify that is has the correct format.
@@ -1377,6 +1380,67 @@ class Aperture(object):
     def idl_to_raw(self, *args):
         """Ideal to raw frame transformation."""
         return self.sci_to_raw(*self.idl_to_sci(*args))
+
+    def tel_to_sky(self, *args):
+        """Tel to sky frame transformation. Requires an attitude matrix.
+
+        Note, sky coordinates are returned as floats with angles in degrees.
+        It's easy to cast into an astropy SkyCoord and then convert into any desired other representation.
+        For instance:
+
+            >>> sc = astropy.coordinates.SkyCoord( *aperture.tel_to_sky(xtel, ytel), unit='deg' )
+            >>> sc.to_string('hmsdms')
+
+        """
+
+        if self._attitude_matrix is None:
+            raise RuntimeError("An attitude matrix must be supplied to transform to sky coords. Use .set_attitude_matrix().")
+
+        sky_coords_radians = rotations.tel_to_sky(self._attitude_matrix, *args)
+        return tuple(s.to_value(u.deg) for s in sky_coords_radians)
+
+    def sky_to_tel(self, *args):
+        """Sky to Tel frame transformation. Requires an attitude matrix.
+
+        Input sky coords should be given in degrees RA and Dec, or equivalent astropy.Quantities
+
+        Results are returned as floats with implicit units of arcseconds, for consistency with the
+        other *_to_tel functions.
+
+        """
+
+        args_in_degrees = (rotations.convert_quantity(a, u.deg) for a in args)
+
+        if self._attitude_matrix is None:
+            raise RuntimeError("An attitude matrix must be supplied to transform from sky coords. Use .set_attitude_matrix().")
+
+        tel_coords_radians = rotations.sky_to_tel(self._attitude_matrix, *args_in_degrees)
+
+        return tuple(t.to_value(u.arcsec) for t in tel_coords_radians)
+
+    def idl_to_sky(self, *args):
+        return self.tel_to_sky(*self.idl_to_tel(*args))
+
+    def sci_to_sky(self, *args):
+        return self.tel_to_sky(*self.sci_to_tel(*args))
+
+    def det_to_sky(self, *args):
+        return self.tel_to_sky(*self.det_to_tel(*args))
+
+    def sky_to_idl(self, *args):
+        return self.tel_to_idl(*self.sky_to_tel(*args))
+
+    def sky_to_sci(self, *args):
+        return self.tel_to_sci(*self.sky_to_tel(*args))
+
+    def sky_to_det(self, *args):
+        return self.tel_to_det(*self.sky_to_tel(*args))
+
+    def set_attitude_matrix(self, attmat):
+        """Set an atttude matrix, for use in subsequent transforms to sky frame."""
+        if attmat.shape != (3,3):
+            raise ValueError("Attitude matrix has an invalid shape. Please supply a 3x3 matrix")
+        self._attitude_matrix = attmat
 
     def validate(self):
         """Verify that the instance's attributes fully qualify the aperture.

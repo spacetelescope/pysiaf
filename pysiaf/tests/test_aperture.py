@@ -238,3 +238,41 @@ def test_raw_transformations(verbose=False):
                 print('{} {}: Error in {}<->{} {}-transform is {:02.6f})'.format(
                     aperture.InstrName, aper_name, from_frame, to_frame, labels[i], error))
             assert error < threshold
+
+def test_jwst_sky_transformations(verbose=False):
+    """ Test tel_to_sky and sky_to_tel transformations, using an attitude matrix
+    """
+    from ..utils import rotations
+    from . import test_rotations as tr
+    import astropy.units as u
+
+    # let's borrow the attitude matrix set up code from test_rotations/test_attitude_matrix:
+    ra = tr.ra_deg * u.deg
+    dec = tr.dec_deg * u.deg
+    pa = tr.pa_deg * u.deg
+    v2 = tr.v2_arcsec * u.arcsec
+    v3 = tr.v3_arcsec * u.arcsec
+    attitude_matrix = rotations.attitude_matrix(v2, v3, ra, dec, pa)
+
+    # Load an aperture and set it to that attitude matrix
+    fgs_aperture = Siaf('FGS').apertures['FGS1_FULL']
+
+    fgs_aperture.set_attitude_matrix(attitude_matrix)
+
+    # Test that, with that attitude matrix, sky<->tel transforms at the reference point work as expected
+    assert np.allclose( fgs_aperture.sky_to_tel(ra, dec), (tr.v2_arcsec, tr.v3_arcsec)), "Unexpected result for Tel coords"
+    assert np.allclose( fgs_aperture.tel_to_sky(tr.v2_arcsec, tr.v3_arcsec), (tr.ra_deg, tr.dec_deg)), "Unexpected result for Sky coords"
+
+    # test on some arbitrary points that sky_to_tel and tel_to_sky are inverses
+    t1 = 123
+    t2 = -456
+    assert np.allclose(fgs_aperture.sky_to_tel(*fgs_aperture.tel_to_sky(t1,t2)), (t1,t2)), "sky_to_tel(tel_to_sky) was not an identity"
+
+    s1 = 0.1
+    s2 = -0.3
+    assert np.allclose(fgs_aperture.tel_to_sky(*fgs_aperture.sky_to_tel(s1,s2)), (s1,s2)), "tel_to_sky(sky_to_tel) was not an identity"
+
+    d1 = 512
+    d2 = 1024
+    # test to/from detector coords, to test all the intermediate transforms too
+    assert np.allclose(fgs_aperture.sky_to_det(*fgs_aperture.det_to_sky(d1,d2)), (d1,d2)), "sky_to_det(det_to_sky) was not an identity"
