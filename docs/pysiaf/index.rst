@@ -84,6 +84,24 @@ Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames)::
     # transform from Science frame to Ideal frame
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
 
+
+Using sky transforms
+********************
+Transformations to/from `sky` coordinates (RA, Dec) are also supported, but you have to first define and set an
+attitude matrix that represents the observatory orientation with respect to the celestial sphere. This can be done with
+`pysiaf.utils.rotations.attitude_matrix`::
+
+    # find attitude with some coordinates (v2,v3) pointed at (ra, dec) with a given pa
+    attmat = pysiaf.utils.rotations.attitude_matrix(v2, v3, ra, dec, pa)
+
+    # set that attitude for the transforms
+    nis_cen.set_attitude_matrix(attmat)
+
+    # transform from Science frame to Sky frame
+    sky_ra, sky_dec = nis_cen.sci_to_sky(sci_x, sci_y)
+
+Sky coordinates are given in units of degrees RA and Dec.
+
 Reporting Issues / Contributing
 ===============================
 Do you have feedback and feature requests? Is there something missing you would like to see? Please open a new issue or new pull request at https://github.com/spacetelescope/pysiaf for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome! This package follows the STScI `Code of Conduct <https://github.com/spacetelescope/pysiaf/blob/master/CODE_OF_CONDUCT.md>`_ strives to provide a welcoming community to all of our users and contributors.

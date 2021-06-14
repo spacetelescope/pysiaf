@@ -141,8 +141,23 @@ def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, 
             aps.plot_detector_channels()
 
 
-def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kwargs):
-    """Plot main/master apertures."""
+def plot_main_apertures(label=False, darkbg=False, detector_channels=False, frame='tel',
+        attitude_matrix=None, **kwargs):
+    """Plot main/master apertures.
+
+    Parameters
+    ----------
+    frame : string
+        Either 'tel' or 'sky'. (It does not make sense to plot apertures from multiple instruments in any of the
+        other frames)
+    attitude_matrix : 3x3 ndarray
+        Rotation matrix representing observatory attitude. Needed for sky frame plots.
+
+    """
+
+    if frame not in ['tel', 'sky']:
+        raise ValueError("Only the tel or sky frames make sense for plot_main_apertures")
+
     if darkbg:
         col_imaging = 'aqua'
         col_coron = 'lime'
@@ -192,19 +207,24 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, **kw
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
-            ap.plot(color=col, frame='tel', label=label, **kwargs)
+
+            if frame=='sky':
+                ap.set_attitude_matrix(attitude_matrix)
+
+            ap.plot(color=col, frame=frame, label=label, **kwargs)
             if detector_channels:
                 try:
-                    ap.plot_detector_channels('tel')
+                    ap.plot_detector_channels(frame)
                 except TypeError:
                     pass
 
-    # ensure V2 increases to the left
-    ax = pl.gca()
-    xlim = ax.get_xlim()
+    if frame=='tel':
+        # ensure V2 increases to the left
+        ax = pl.gca()
+        xlim = ax.get_xlim()
 
-    if xlim[0] < xlim[1]:
-        ax.set_xlim(xlim[::-1])
+        if xlim[0] < xlim[1]:
+            ax.set_xlim(xlim[::-1])
 
 
 def plot_master_apertures(**kwargs):
