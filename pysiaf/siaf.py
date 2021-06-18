@@ -401,6 +401,8 @@ class Siaf(ApertureCollection):
         for ap in iterable():
             if ap.AperType == "TRANSFORM":
                 continue
+            if ap.AperName == "J-FRAME":
+                continue
             if names is not None:
                 if ap.AperName not in names:
                     continue
