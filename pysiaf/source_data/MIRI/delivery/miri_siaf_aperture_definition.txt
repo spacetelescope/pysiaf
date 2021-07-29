@@ -3,8 +3,8 @@
 # This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary information (DDC mapping, wedge offsets, ...)
 # This file also defines the order in which the apertures are presented.
 #
-# Imager/LRS information is based on CDP-7 reference file: MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits
-# Modified by hand 2019-03-21 by D. Law
+# Imager/LRS information is based on LRE5 reference file: MIRI_FM_MIRIMAGE_DISTORTION_SS.04.00.fits
+# Modified by hand 2021-07-29 by D. Law
 # Note that V3IdlYAngle will be populated automatically for 'None', or overridden with values specified here.
 #
 # MRS
@@ -90,7 +90,7 @@ MIRIM_TASLITLESSPRISM ,       ROI ,    None     ,         -1 ,     38.5 ,    912
         MIRIM_FP3MIMF ,   FULLSCA ,    None     ,         -1 ,    375.0 ,    100.0 ,      1032 ,      1024 ,       1 ,       1 ,   375.0 ,   100.0 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
         MIRIM_FP4MIMF ,   FULLSCA ,    None     ,         -1 ,    374.0 ,    924.0 ,      1032 ,      1024 ,       1 ,       1 ,   374.0 ,   924.0 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
         MIRIM_FP5MIMF ,   FULLSCA ,    None     ,         -1 ,    765.0 ,    761.0 ,      1032 ,      1024 ,       1 ,       1 ,   765.0 ,   761.0 ,             None ,            None ,        None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None ,      None
-           MIRIM_SLIT ,      SLIT ,    4.710280 ,         -1 ,     None ,     None ,      None ,      None ,    None ,    None ,    None ,    None ,             None ,            None ,        None ,      None ,  -415.069 ,  -400.576 ,  -412.735 ,  -417.445 ,  -417.403 ,  -412.693 ,  -401.028 ,  -400.636 ,  -400.123 ,  -400.515
+           MIRIM_SLIT ,      SLIT ,    4.752011 ,         -1 ,     None ,     None ,      None ,      None ,    None ,    None ,    None ,    None ,             None ,            None ,        None ,      None ,  -414.660 ,  -400.605 ,  -412.327 ,  -412.284 ,  -416.993 ,  -417.035 ,  -401.056 ,  -400.543 ,  -400.152 ,  -400.665
      MIRIFU_CHANNEL1A ,  COMPOUND ,          0. ,         -1 ,     None ,     None ,      None ,      None ,    None ,    None ,    None ,    None ,             None ,            None ,        None ,      None , -503.6545 , -318.7425 , -504.9767 , -505.5097 , -502.3281 , -501.8214 , -316.6725 , -320.3408 , -320.8358 , -317.1180
      MIRIFU_1ASLICE01 ,      SLIT ,          0. ,         -1 ,     None ,     None ,      None ,      None ,    None ,    None ,    None ,    None ,             None ,            None ,        101A ,         1 , -503.4070 , -316.9838 , -505.0234 , -505.0488 , -501.7720 , -501.7479 , -316.6659 , -316.8406 , -317.3055 , -317.1284
      MIRIFU_1ASLICE02 ,      SLIT ,          0. ,         -1 ,     None ,     None ,      None ,      None ,    None ,    None ,    None ,    None ,             None ,            None ,        102A ,         2 , -503.4317 , -317.1597 , -505.0404 , -505.0658 , -501.7753 , -501.7512 , -316.8418 , -317.0164 , -317.4855 , -317.3084

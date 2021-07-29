@@ -58,7 +58,7 @@ master_aperture_names = detector_layout['AperName'].data
 source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
 print('Loading source data files from directory: {}'.format(source_data_dir))
 
-miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_07.04.01.fits'
+miri_distortion_file = 'MIRI_FM_MIRIMAGE_DISTORTION_SS.04.00.fits'
 
 # Fundamental aperture definitions: names, types, reference positions, dependencies
 # for MIRI this file is part of the delivered source files and contains more columns
