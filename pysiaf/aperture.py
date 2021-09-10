@@ -689,7 +689,9 @@ class Aperture(object):
                     horizontalalignment='center', rotation=label_rotation,
                     color=ax.lines[-1].get_color())
         if fill:
-            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha)
+            # If a transform kwarg is supplied, pass it through to the fill function too
+            transform_kw = kwargs.get('transform', None)
+            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw)
 
         if title:
             ax.set_title("{0} frame".format(frame))
