@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/spacetelescope/pysiaf.svg?branch=master)](https://travis-ci.org/spacetelescope/pysiaf)
+[![Build Status](https://github.com/spacetelescope/pysiaf/workflows/pysiaf%20CI/badge.svg)](https://github.com/spacetelescope/pysiaf/actions)
 [![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/spacetelescope/pysiaf/badge.svg?branch=master)](https://coveralls.io/github/spacetelescope/pysiaf?branch=master)
 [![PyPI version](https://badge.fury.io/py/pysiaf.svg)](https://badge.fury.io/py/pysiaf)
