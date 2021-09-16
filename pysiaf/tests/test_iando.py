@@ -15,7 +15,10 @@ from ..aperture import JwstAperture
 from ..siaf import ApertureCollection
 from ..iando.write import write_jwst_siaf
 
+ON_GITHUB_ACTIONS = '/home/runner' in os.path.expanduser('~') or '/Users/runner' in os.path.expanduser('~')
 
+
+@pytest.mark.skipif(ON_GITHUB_ACTIONS, reason="Don't want to write and remove dirs on GHA Server")
 def test_write_jwst_siaf_xml(tmpdir):
     """Basic test to check that JWST SIAF XML file is written out"""
 
@@ -40,6 +43,7 @@ def test_write_jwst_siaf_xml(tmpdir):
     tmpdir.remove()
 
 
+@pytest.mark.skipif(ON_GITHUB_ACTIONS, reason="Don't want to write and remove dirs on GHA Server")
 def test_write_jwst_siaf_xlsx(tmpdir):
     """Basic test to check that JWST SIAF XLSX file is written out"""
 
