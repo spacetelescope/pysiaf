@@ -133,7 +133,7 @@ The following describes the typical work flow for contributing to the pysiaf pro
 11. Delete your local copy of your branch.
 
 ### Installation  
-This package was developed in a python 3.5 environment.   
+This package was developed in a python 3.7 environment.   
 
 `pip install pysiaf`
 
