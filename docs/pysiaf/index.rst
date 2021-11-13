@@ -22,11 +22,11 @@ pysiaf is hosted and developed at https://github.com/spacetelescope/pysiaf
 
 Installation
 ==================
-This package is being developed in a python 3.6 environment.
+This package is being developed in a python 3.7 environment.
 
 How to install
 **************
-pysiaf is available on `PyPI <https://pypi.org/project/pysiaf/>`_ and is included in astroconda.
+pysiaf is available on `PyPI <https://pypi.org/project/pysiaf/>`_
 
 
 `pip install pysiaf`
