@@ -100,7 +100,7 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 install_requires = [
-        'astropy>=1.2',
+        'astropy>=1.2,<5.0',
         'numpy>=1.13',
         'numpydoc',
         'matplotlib>=3.0.0',
