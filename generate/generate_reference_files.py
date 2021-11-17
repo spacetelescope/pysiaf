@@ -384,9 +384,9 @@ def generate_siaf_detector_layout():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 0, -1, VIdlParity])
             for sca_name in 'A2 A4 B1 B3 B5'.split():
                 layout.add_row([instrument.upper(), 'NRC{}_FULL'.format(sca_name), 180, -1, VIdlParity])
-            for sca_name in ['NRCA2_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR']:
+            for sca_name in ['NRCA2_FULL_WEDGE_RND','NRCA2_FULL_WEDGE_BAR','NRCA4_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_BAR']:
                 layout.add_row([instrument.upper(), '{}'.format(sca_name), 180, -1, VIdlParity])
-            for sca_name in ['NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR']:
+            for sca_name in ['NRCA1_FULL_WEDGE_RND','NRCA1_FULL_WEDGE_BAR','NRCA3_FULL_WEDGE_RND','NRCA3_FULL_WEDGE_BAR','NRCA5_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_BAR']:
                 layout.add_row([instrument.upper(), '{}'.format(sca_name), 0, -1, VIdlParity])
         elif instrument == 'NIRISS':
             for sca_name in ['NIS_CEN']:
@@ -469,7 +469,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
         trans does the forward   detector(x,y) to V2V3
         inverse does V2V3 to detector(x,y)
      
-    Updated by M.Gennaro to allow for coronographic apertures spport
+    Updated by M.Gennaro to allow for coronographic master apertures support
     
     :return:
     """
@@ -589,10 +589,40 @@ def generate_siaf_pre_flight_reference_files_nircam():
                                              'pixels_to_mm':'NIRCAMBLW_1ToNIRCAMBLW_20161227162336',
                                             'mm_to_degrees':'NIRCAMBLWToOTESKY_RT_20170307121023',
                                              },
+                   'NRCA1_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RNDNC_202110261138',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_1_20161025081540',
+                                             'pixels_to_mm':'NIRCAMASW_1ToNIRCAMASW_20161025081540',
+                                            'mm_to_degrees':'NIRCAMASW_RNDNCToOTESKY_202110261138',
+                                             },
                    'NRCA2_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RND_202005150434',
                                              'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
                                              'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
                                             'mm_to_degrees':'NIRCAMASW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA3_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RNDNC_202110261138',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_3_20161025081552',
+                                             'pixels_to_mm':'NIRCAMASW_3ToNIRCAMASW_20161025081552',
+                                            'mm_to_degrees':'NIRCAMASW_RNDNCToOTESKY_202110261138',
+                                             },
+                   'NRCA4_FULL_WEDGE_RND' :{'degrees_to_mm':'OTESKYToNIRCAMASW_RND_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
+                                             'pixels_to_mm':'NIRCAMASW_4ToNIRCAMASW_20161025081557',
+                                            'mm_to_degrees':'NIRCAMASW_RNDToOTESKY_202005150434',
+                                             },
+                   'NRCA1_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BARNC_202110261138',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_1_20161025081540',
+                                             'pixels_to_mm':'NIRCAMASW_1ToNIRCAMASW_20161025081540',
+                                            'mm_to_degrees':'NIRCAMASW_BARNCToOTESKY_202110261138',
+                                             },
+                   'NRCA2_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BAR_202005150434',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_2_20161025081547',
+                                             'pixels_to_mm':'NIRCAMASW_2ToNIRCAMASW_20161025081547',
+                                            'mm_to_degrees':'NIRCAMASW_BARToOTESKY_202005150434',
+                                             },
+                   'NRCA3_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BARNC_202110261138',
+                                             'mm_to_pixels':'NIRCAMASWToNIRCAMASW_3_20161025081552',
+                                             'pixels_to_mm':'NIRCAMASW_3ToNIRCAMASW_20161025081552',
+                                            'mm_to_degrees':'NIRCAMASW_BARNCToOTESKY_202110261138',
                                              },
                    'NRCA4_FULL_WEDGE_BAR' :{'degrees_to_mm':'OTESKYToNIRCAMASW_BAR_202005150434',
                                              'mm_to_pixels':'NIRCAMASWToNIRCAMASW_4_20161025081557',
@@ -633,7 +663,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
     for AperName in aperture_name_list:
 
-        # process the 10 master apertures of NIRCam
+        # process the master apertures of NIRCam
         if AperName in siaf_detector_layout['AperName']:
             (A, B, C, D, betaX, betaY, V2Ref, V3Ref) = nircam_get_polynomial_both(AperName, siaf_aperture_definitions, coldfit_name_mapping, coldfit_source_data)
 
@@ -1609,6 +1639,7 @@ def nircam_get_polynomial_forward(apName, siaf_aperture_definitions, coldfit_nam
     aperture_name_list is the list of aperture names read from current SIAF
 
     """
+    
     aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
 
     for row, name in enumerate(aperture_name_list):
@@ -1792,7 +1823,6 @@ def nircam_get_polynomial_inverse(apName, siaf_aperture_definitions, coldfit_nam
     for line in coldfit_source_data:  # coeffs read in during initialization
         column = line.split(',')
         modelname = column[0].strip()
-        toSystem = column[2].strip()
         if modelname==apSys['mm_to_pixels']: # linear transformation
             c0 = float(column[7])
             c1 = float(column[9])
