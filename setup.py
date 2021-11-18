@@ -100,14 +100,14 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 install_requires = [
-        'astropy==4.3.1',
-        'lxml==4.6.4',
-        'matplotlib==3.4.3',
-        'numpy==1.21.4',
-        'numpydoc==1.1.0',
-        'openpyxl==3.0.9',
-        'requests==2.26.0',
-        'scipy==1.7.2',
+        'astropy>=4.3.1',
+        'lxml>=4.6.4',
+        'matplotlib>=3.4.3',
+        'numpy>=1.21.4',
+        'numpydoc>=1.1.0',
+        'openpyxl>=3.0.9',
+        'requests>=2.26.0',
+        'scipy>=1.7.2',
     ]
 
 # Patch because MacOS Mojave causes matplotlib to fail without pyqt5 - will remove line if this bug is patched
