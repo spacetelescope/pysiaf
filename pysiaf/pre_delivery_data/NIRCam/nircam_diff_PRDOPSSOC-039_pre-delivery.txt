@@ -1,0 +1,16 @@
+Reference:  314 apertures in PRDOPSSOC-039
+Comparison: 320 apertures in pre-delivery
+
+Number of added apertures 6:
+	          AperName      XDetRef      YDetRef     XSciSize     YSciSize      XSciRef      YSciRef        V2Ref        V3Ref
+	Added NRCA2_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5   117.774239  -420.452595
+	Added NRCA3_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5     50.16459  -488.297138
+	Added NRCA3_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5    50.305987  -487.939906
+	Added NRCA1_FULL_WEDGE_BAR       1024.5       1024.5         2048         2048       1024.5       1024.5   118.429037  -487.703219
+	Added NRCA1_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5   118.291158  -488.060207
+	Added NRCA4_FULL_WEDGE_RND       1024.5       1024.5         2048         2048       1024.5       1024.5     50.55005  -420.729871
+Number of modified apertures 0. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
