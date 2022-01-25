@@ -133,7 +133,7 @@ The following describes the typical work flow for contributing to the pysiaf pro
 11. Delete your local copy of your branch.
 
 ### Installation  
-This package was developed in a python 3.7 environment.   
+This package is supported in python 3.7, 3.8 and 3.9
 
 `pip install pysiaf`
 
@@ -141,9 +141,11 @@ Clone the repository:
 `git clone https://github.com/spacetelescope/pysiaf`  
 Install pysiaf:  
 `cd pysiaf`  
-`python setup.py install` or  
-`pip install .`     
+`pip install .` 
 _Note: If you are using MacOS Mojave, use `pip install .` due to an issue with the operating system. See the known issues section for more information._
+
+Install in Develop Mode
+`pip install -e .`
 
 ### Known installation issues
 
