@@ -69,7 +69,7 @@ master_aperture_names = detector_layout['AperName'].data
 
 # directory containing reference files delivered by IDT
 source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument)
-print ('Loading reference files from directory: {}'.format(source_data_dir))
+print('Loading reference files from directory: {}'.format(source_data_dir))
 
 generate_preflight_alignment_and_distortion_reference_files = False
 if generate_preflight_alignment_and_distortion_reference_files:
@@ -94,14 +94,18 @@ for AperName in aperture_name_list:
     aperture.YDetSize = siaf_detector_parameters['YDetSize'][0]
     aperture.AperShape = siaf_detector_parameters['AperShape'][0]
 
+    aperture.DDCName = 'not set'
+    aperture.Comment = None
+    aperture.UseAfterDate = '2014-01-01'
+
+    if AperName == 'J-FRAME':
+        aperture_dict[AperName] = aperture
+        continue
+
     aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
     # Retrieve basic aperture parameters from definition files
     for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
         setattr(aperture, attribute, siaf_aperture_definitions[attribute][aperture_definitions_index])
-
-    aperture.DDCName = 'not set'
-    aperture.Comment = None
-    aperture.UseAfterDate = '2014-01-01'
 
     if aperture.AperType == 'OSS':
         aperture.DetSciYAngle = 0
@@ -115,9 +119,9 @@ for AperName in aperture_name_list:
                 setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
 
         index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
-        aperture.V3SciYAngle = siaf_alignment_parameters['V3SciYAngle'][index]
-        aperture.V3SciXAngle = siaf_alignment_parameters['V3SciXAngle'][index]
-        aperture.V3IdlYAngle = siaf_alignment_parameters['V3IdlYAngle'][index]
+        aperture.V3SciYAngle = float(siaf_alignment_parameters['V3SciYAngle'][index])
+        aperture.V3SciXAngle = float(siaf_alignment_parameters['V3SciXAngle'][index])
+        aperture.V3IdlYAngle = float(siaf_alignment_parameters['V3IdlYAngle'][index])
 
         for attribute_name in 'V2Ref V3Ref'.split():
             setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][index])
@@ -140,8 +144,10 @@ for AperName in aperture_name_list:
 
     aperture_dict[AperName] = aperture
 
-#second pass to set parameters for apertures that depend on other apertures
+# Second pass to set parameters for apertures that depend on other apertures
 for AperName in aperture_name_list:
+    if AperName == 'J-FRAME':
+        continue
     index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
     aperture = aperture_dict[AperName]
 
@@ -169,7 +175,6 @@ for AperName in aperture_name_list:
 
     aperture.complement()
 
-
     # set Sci2IdlX11 to zero if it is very small
     coefficient_threshold = 1e-15
     if np.abs(aperture.Sci2IdlX11) < coefficient_threshold:
@@ -177,6 +182,19 @@ for AperName in aperture_name_list:
 
     aperture_dict[AperName] = aperture
 
+# Set attributes for the special case of the J-FRAME aperture
+aperture = aperture_dict['J-FRAME']
+definition_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+for attributes, value in [('VIdlParity', 1),
+                          ('AperType', siaf_aperture_definitions['AperType'][definition_index]),
+                          ('XDetSize YDetSize DetSciYAngle DetSciParity', None),
+                          ('XIdlVert2 XIdlVert3 YIdlVert1 YIdlVert2', 1000.),
+                          ('XIdlVert1 XIdlVert4 YIdlVert3 YIdlVert4', -1000.)]:
+    [setattr(aperture, attribute_name, value) for attribute_name in attributes.split()]
+alignment_index = siaf_alignment_parameters['AperName'].tolist().index('J-FRAME')
+for attribute_name in 'V3IdlYAngle V2Ref V3Ref'.split():
+    setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][alignment_index])
+aperture_dict[AperName] = aperture
 
 # sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))

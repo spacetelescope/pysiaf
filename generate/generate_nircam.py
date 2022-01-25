@@ -388,21 +388,11 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-160 Jira ticket
-            selected_aperture_names = [['NRCB5_GRISM256_F322W2','NRCB5_GRISM128_F322W2','NRCB5_GRISM64_F322W2','NRCB5_FULL',
-                                        'NRCA5_GRISM256_F322W2','NRCA5_GRISM128_F322W2','NRCA5_GRISM64_F322W2','NRCA5_FULL'],
-                                        ['NRCB2_GRISMTS256','NRCB2_GRISMTS128','NRCB2_GRISMTS64','NRCB2_FULL',
-                                         'NRCB4_GRISMTS256','NRCB4_GRISMTS128','NRCB4_GRISMTS64','NRCB4_FULL',
-                                         'NRCB5_FULL',
-                                         'NRCA1_GRISMTS256','NRCA1_GRISMTS128','NRCA1_GRISMTS64','NRCA1_FULL',
-                                         'NRCA3_GRISMTS256','NRCA3_GRISMTS128','NRCA3_GRISMTS64','NRCA3_FULL',
-                                         'NRCA5_FULL'],
-                                        ['NRCB2_FULL','NRCB2_GRISMTS256',
-                                         'NRCB4_GRISMTS256','NRCB4_FULL',
-                                         'NRCB5_GRISM256_F322W2','NRCB5_FULL',
-                                         'NRCA1_GRISMTS256','NRCA1_FULL',
-                                         'NRCA3_GRISMTS256','NRCA3_FULL',
-                                         'NRCA5_GRISM256_F322W2','NRCA5_GRISM256_F444W','NRCA5_FULL']
+            # # make figures for JWSTSIAF-206 Jira ticket
+            selected_aperture_names = [['NRCA1_FULL_WEDGE_BAR','NRCA2_FULL_WEDGE_BAR','NRCA3_FULL_WEDGE_BAR','NRCA4_FULL_WEDGE_BAR','NRCA5_FULL_WEDGE_BAR',
+                                        'NRCA2_MASK210R','NRCA4_MASKSWB','NRCA5_MASK335R','NRCA5_MASK430R','NRCA5_MASKLWB'],
+                                       ['NRCA1_FULL_WEDGE_RND','NRCA2_FULL_WEDGE_RND','NRCA3_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_RND','NRCA5_FULL_WEDGE_RND',
+                                       'NRCA2_MASK210R','NRCA4_MASKSWB','NRCA5_MASK335R','NRCA5_MASK430R','NRCA5_MASKLWB']
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
@@ -422,7 +412,7 @@ if emulate_delivery:
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
-    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.1)
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.11)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
