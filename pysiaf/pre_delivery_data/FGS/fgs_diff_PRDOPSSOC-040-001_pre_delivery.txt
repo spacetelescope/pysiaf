@@ -1,0 +1,12 @@
+Reference:  33 apertures in PRDOPSSOC-040-001
+Comparison: 33 apertures in pre_delivery
+
+Number of modified apertures 1. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+J-FRAME                             V2Ref                10.199               163.826      153.627000    93.7745
+J-FRAME                             V3Ref                41.167               177.606      136.439000    76.8212
+J-FRAME                       V3IdlYAngle            0.00968759            0.00963132        0.000056     0.5808
+
