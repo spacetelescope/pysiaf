@@ -2,11 +2,8 @@
 # 
 # This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.
 # 
-# Generated 2019-04-04T18:55:34.216 utc
-# by jsahlmann
-#
-# 2019-11-05 jsahlmann: change V2Ref,V3Ref of both main apertures according to
-# https://jira.stsci.edu/browse/JWSTSIAF-163
+# Generated 2022-02-26
+# by tsohn, sosborne
 #
 #
                       AperName ,         V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,  V2Ref ,  V3Ref
@@ -14,4 +11,4 @@
                  FGS1_FULL_OSS , -1.2508171328901623 ,  90.43701942465326 ,  178.74918286710982 , 206.464 , -697.970
                      FGS2_FULL , 0.19027904463505274 , -90.75703022480756 , 0.19027904463505274 ,  22.845 , -699.489
                  FGS2_FULL_OSS , 0.19027904463505274 ,  89.24296977519244 , 0.19027904463505274 ,  22.845 , -699.489
-                       J-FRAME ,         0.009590396 ,               None ,                None , 163.551 ,  183.066
+                       J-FRAME , 0.04168637154925194 ,               None ,                None , 184.179 ,  165.738
