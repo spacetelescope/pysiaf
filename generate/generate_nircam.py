@@ -311,6 +311,10 @@ for AperName in aperture_name_list:
             aperture = tools.match_v2v3(copy.deepcopy(LW_aperture), copy.deepcopy(aperture),
                                         verbose=False, match_v2_only=True)
 
+            # update the rest of the aperture attributes after changing its poistion to match the LW aperture
+            aperture = tools.set_reference_point_and_distortion(instrument, aperture, master_aperture)
+
+
             aperture.complement()
 
     aperture_dict[AperName] = aperture
@@ -412,7 +416,7 @@ if emulate_delivery:
     # run some tests on the new SIAF
     from pysiaf.tests import test_aperture
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
-    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.11)
+    test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.2)
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
