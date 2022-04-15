@@ -22,9 +22,7 @@ jobs:
             uses: actions/checkout@v2
 
           - name: Fix issue with repository ownership
-            run: |
-            echo $GITHUB_WORKSPACE
-            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+            run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
           - name: custom action
             uses: spacetelescope/action-publish_to_pypi@master
