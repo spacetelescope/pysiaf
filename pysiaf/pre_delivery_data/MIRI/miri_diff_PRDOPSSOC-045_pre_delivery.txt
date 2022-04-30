@@ -1,0 +1,57 @@
+Reference:  277 apertures in PRDOPSSOC-045
+Comparison: 277 apertures in pre_delivery
+
+Number of modified apertures 5. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+MIRIM_SUB128                      YSciRef                  64.5                  62.5        2.000000     3.1008
+MIRIM_SUB128                    XIdlVert1               -7.7336                -7.732        0.001600     0.0207
+MIRIM_SUB128                    XIdlVert2                 7.201                7.2023        0.001300     0.0180
+MIRIM_SUB128                    XIdlVert3                7.2762                7.2773        0.001100     0.0151
+MIRIM_SUB128                    XIdlVert4               -7.6378               -7.6365        0.001300     0.0170
+MIRIM_SUB128                    YIdlVert1               -7.1015               -6.8811        0.220400     3.1036
+MIRIM_SUB128                    YIdlVert2               -7.0063               -6.7858        0.220500     3.1472
+MIRIM_SUB128                    YIdlVert3                7.0807                7.3005        0.219800     3.0108
+MIRIM_SUB128                    YIdlVert4                6.9849                7.2047        0.219800     3.0508
+
+MIRIM_MASK1065                    YSciRef                 114.0                 112.0        2.000000     1.7544
+MIRIM_MASK1065                  XIdlVert1              -13.2142              -13.2145        0.000300     0.0023
+MIRIM_MASK1065                  XIdlVert3               18.6709               18.6713        0.000400     0.0021
+MIRIM_MASK1065                  XIdlVert4              -13.1791              -13.1783        0.000800     0.0061
+MIRIM_MASK1065                  YIdlVert1              -12.1979              -11.9835        0.214400     1.7577
+MIRIM_MASK1065                  YIdlVert2              -12.4109              -12.1949        0.216000     1.7404
+MIRIM_MASK1065                  YIdlVert3               12.0771               12.2978        0.220700     1.7946
+MIRIM_MASK1065                  YIdlVert4               12.1332               12.3527        0.219500     1.7769
+
+MIRIM_MASK1140                    YSciRef                 110.5                 112.5        2.000000     1.7778
+MIRIM_MASK1140                  XIdlVert1              -13.2011              -13.2019        0.000800     0.0061
+MIRIM_MASK1140                  XIdlVert2               18.6485                18.648        0.000500     0.0027
+MIRIM_MASK1140                  XIdlVert3               18.7184               18.7177        0.000700     0.0037
+MIRIM_MASK1140                  XIdlVert4              -13.0695               -13.071        0.001500     0.0115
+MIRIM_MASK1140                  YIdlVert1               -12.119              -12.3385        0.219500     1.7790
+MIRIM_MASK1140                  YIdlVert2              -12.1739              -12.3946        0.220700     1.7806
+MIRIM_MASK1140                  YIdlVert3               12.6575               12.4352        0.222300     1.7563
+MIRIM_MASK1140                  YIdlVert4               12.5976               12.3761        0.221500     1.7583
+
+MIRIM_MASK1550                    YSciRef                 109.0                 113.0        4.000000     3.5398
+MIRIM_MASK1550                  XIdlVert1              -13.2024              -13.2053        0.002900     0.0220
+MIRIM_MASK1550                  XIdlVert2               18.5862               18.5847        0.001500     0.0081
+MIRIM_MASK1550                  XIdlVert3               18.6762               18.6745        0.001700     0.0091
+MIRIM_MASK1550                  XIdlVert4              -13.0207              -13.0241        0.003400     0.0261
+MIRIM_MASK1550                  YIdlVert1              -12.0722               -12.515        0.442800     3.5382
+MIRIM_MASK1550                  YIdlVert2              -12.0131              -12.4577        0.444600     3.5689
+MIRIM_MASK1550                  YIdlVert3                12.868               12.4243        0.443700     3.4481
+MIRIM_MASK1550                  YIdlVert4               12.7354               12.2927        0.442700     3.4761
+
+MIRIM_MASKLYOT                    YSciRef                 168.5                 166.5        2.000000     1.1869
+MIRIM_MASKLYOT                  XIdlVert1              -15.7352              -15.7335        0.001700     0.0108
+MIRIM_MASKLYOT                  XIdlVert2               19.4694               19.4702        0.000800     0.0041
+MIRIM_MASKLYOT                  XIdlVert3               19.5706               19.5712        0.000600     0.0031
+MIRIM_MASKLYOT                  XIdlVert4              -15.4922              -15.4908        0.001400     0.0090
+MIRIM_MASKLYOT                  YIdlVert1              -18.6502               -18.429        0.221200     1.1860
+MIRIM_MASKLYOT                  YIdlVert2              -18.5055              -18.2838        0.221700     1.1980
+MIRIM_MASKLYOT                  YIdlVert3               15.0417               15.2614        0.219700     1.4396
+MIRIM_MASKLYOT                  YIdlVert4               14.8682                15.088        0.219800     1.4568
+
