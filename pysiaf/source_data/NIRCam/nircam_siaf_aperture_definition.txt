@@ -334,12 +334,12 @@ NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None
       NRCA4_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
       NRCA5_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
 # Coronagraphic science and astrometric confirmation-image apertures -- Round occulters(Module-A)
-            NRCA2_MASK210R , SUBARRAY ,   712.0 ,   528.0 ,      640 ,      640 ,   321.0 ,   336.0 ,                           NRCA2_FULL_WEDGE_RND ,         default
-       NRCA2_FULL_MASK210R ,  FULLSCA ,   712.0 ,   528.0 ,     2048 ,     2048 ,   712.0 ,  1521.0 ,                           NRCA2_FULL_WEDGE_RND ,         default
-            NRCA5_MASK335R , SUBARRAY ,  1398.0 ,  1673.5 ,      320 ,      320 ,   160.0 ,   172.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
-       NRCA5_FULL_MASK335R ,  FULLSCA ,  1398.0 ,  1673.5 ,     2048 ,     2048 ,   651.0 ,  1673.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
-            NRCA5_MASK430R , SUBARRAY ,  1075.5 ,  1673.5 ,      320 ,      320 ,   160.5 ,   172.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
-       NRCA5_FULL_MASK430R ,  FULLSCA ,  1075.5 ,  1673.5 ,     2048 ,     2048 ,   973.5 ,  1673.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
+            NRCA2_MASK210R , SUBARRAY ,   712.1 ,   531.5 ,      640 ,      640 ,   321.1 ,   332.5 ,                           NRCA2_FULL_WEDGE_RND ,         default
+       NRCA2_FULL_MASK210R ,  FULLSCA ,   712.1 ,   531.5 ,     2048 ,     2048 ,   712.1 ,  1517.5 ,                           NRCA2_FULL_WEDGE_RND ,         default
+            NRCA5_MASK335R , SUBARRAY ,  1398.8 ,  1673.5 ,      320 ,      320 ,   159.2 ,   172.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
+       NRCA5_FULL_MASK335R ,  FULLSCA ,  1398.0 ,  1673.5 ,     2048 ,     2048 ,   650.2 ,  1673.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
+            NRCA5_MASK430R , SUBARRAY ,  1075.5 ,  1673.5 ,      320 ,      320 ,   160.7 ,   172.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
+       NRCA5_FULL_MASK430R ,  FULLSCA ,  1075.5 ,  1673.5 ,     2048 ,     2048 ,   973.7 ,  1673.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
 # Coronagraphic science and astrometric confirmation-image apertures - SW Bar occulter (Module-A)
              NRCA4_MASKSWB , SUBARRAY ,   490.5 ,   535.5 ,      640 ,      640 ,   320.5 ,   340.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
         NRCA4_FULL_MASKSWB ,  FULLSCA ,   490.5 ,   535.5 ,     2048 ,     2048 ,   490.5 ,  1513.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
