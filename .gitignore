@@ -1,6 +1,3 @@
-RELIC-INFO
-relic/
-pysiaf/version.py
 build/
 dist/
 *.pyc
