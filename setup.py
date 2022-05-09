@@ -5,7 +5,6 @@ import platform
 import sys
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.test import test as TestCommand
-from subprocess import check_call, CalledProcessError
 
 try:
     from distutils.config import ConfigParser
@@ -112,7 +111,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     setup_requires=['setuptools_scm'],
-    use_scm_version=True,
+    use_scm_version={'write_to': os.path.join(PACKAGENAME, 'version.py')},
     install_requires=install_requires,
     extras_require={
         'docs': ['stsci_rtd_theme',

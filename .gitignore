@@ -1,5 +1,7 @@
+.eggs/
 build/
 dist/
+pysiaf/version.py
 *.pyc
 *.o
 *.so
