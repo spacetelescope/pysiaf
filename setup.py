@@ -5,7 +5,6 @@ import platform
 import sys
 from setuptools import setup, find_packages, Extension, Command
 from setuptools.command.test import test as TestCommand
-from subprocess import check_call, CalledProcessError
 
 try:
     from distutils.config import ConfigParser
@@ -23,28 +22,6 @@ AUTHOR = metadata.get('author', 'STScI')
 AUTHOR_EMAIL = metadata.get('author_email', 'help@stsci.edu')
 URL = metadata.get('url', 'https://www.stsci.edu/')
 LICENSE = metadata.get('license', 'BSD')
-
-
-if not pkgutil.find_loader('relic'):
-    relic_local = os.path.exists('relic')
-    relic_submodule = (relic_local and
-                       os.path.exists('.gitmodules') and
-                       not os.listdir('relic'))
-    try:
-        if relic_submodule:
-            check_call(['git', 'submodule', 'update', '--init', '--recursive'])
-        elif not relic_local:
-            check_call(['git', 'clone', 'https://github.com/spacetelescope/relic.git'])
-
-        sys.path.insert(1, 'relic')
-    except CalledProcessError as e:
-        print(e)
-        exit(1)
-
-import relic.release
-
-version = relic.release.get_info()
-relic.release.write_template(version, PACKAGENAME)
 
 
 # allows you to build sphinx docs from the pacakge
@@ -120,7 +97,6 @@ if platform.system().lower() == 'darwin' and platform.mac_ver()[0].split('.')[0:
 
 setup(
     name=PACKAGENAME,
-    version=version.short,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
@@ -134,6 +110,8 @@ setup(
         'Topic :: Scientific/Engineering :: Astronomy',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    setup_requires=['setuptools_scm'],
+    use_scm_version={'write_to': os.path.join(PACKAGENAME, 'version.py')},
     install_requires=install_requires,
     extras_require={
         'docs': ['stsci_rtd_theme',

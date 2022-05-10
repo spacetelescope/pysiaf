@@ -3,14 +3,15 @@
 """
 
 from __future__ import absolute_import, print_function, division
-
 import re
 import requests
 
+from pkg_resources import get_distribution, DistributionNotFound
 try:
-    from .version import *
-except ImportError:
-    pass
+    __version__ = get_distribution(__name__).version
+except DistributionNotFound:
+    # package is not installed
+    __version__ = 'unknown'
 
 from .aperture import Aperture, HstAperture, JwstAperture
 from .constants import JWST_PRD_VERSION, JWST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT_EXCEL, HST_PRD_VERSION, \
