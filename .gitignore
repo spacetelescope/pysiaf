@@ -1,8 +1,7 @@
-RELIC-INFO
-relic/
-pysiaf/version.py
+.eggs/
 build/
 dist/
+pysiaf/version.py
 *.pyc
 *.o
 *.so
