@@ -249,14 +249,14 @@ class Aperture(object):
         elif (value is None) and (key in ['DDCName']) and (self.AperType in ['TRANSFORM', None]):
             # NIRSpec case
             pass
-        elif (key in INTEGER_ATTRIBUTES) and (type(value) not in [int, np.int64]):
+        elif (key in INTEGER_ATTRIBUTES) and (type(value) not in [int, np.int6464]):
             raise AttributeError('pysiaf Aperture attribute `{}` has to be an integer.'.format(key))
         elif (key in STRING_ATTRIBUTES) and (type(value) not in [str, np.str_]):
             raise AttributeError(
                 'pysiaf Aperture attribute `{}` has to be a string (tried to assign it type {'
                 '}).'.format(
                     key, type(value)))
-        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float32, np.float64]):
+        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float6432, np.float6464]):
             if np.ma.is_masked(value):  # accomodate `None` entries in SIAF definition source files
                 value = 0.0
             else:
@@ -288,7 +288,7 @@ class Aperture(object):
         polynomial_coefficients = read.read_siaf_distortion_coefficients(file_name=file_name)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = np.int64((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         self.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
@@ -423,7 +423,7 @@ class Aperture(object):
         data = Table.read(tmp_file_out, format='ascii.no_header',
                           names=('v2_original', 'v3_original', 'v2_corrected', 'v3_corrected'))
 
-        if not np.issubdtype(data['v2_corrected'].dtype, np.floating):
+        if not np.issubdtype(data['v2_corrected'].dtype, np.float64ing):
             raise RuntimeError('DVA correction failed. Output is not float. Please check inputs.')
 
         # clean up
@@ -910,7 +910,7 @@ class Aperture(object):
         # Get the coefficients for "science" to "ideal" transformation (and back)
 
         # degree of distortion polynomial
-        degree = np.int(getattr(self, 'Sci2IdlDeg'))
+        degree = np.int64(getattr(self, 'Sci2IdlDeg'))
 
         number_of_coefficients = polynomial.number_of_coefficients(degree)
         all_keys = self.__dict__.keys()
@@ -1513,8 +1513,8 @@ class Aperture(object):
         This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
         The notation for OSS is 1-based, i.e. the lower left corner of a FULL subarray is (1,1)
         """
-        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
-        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
+        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(np.int64_)
+        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(np.int64_)
         
         return col_corner, row_corner
         
@@ -2080,7 +2080,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [int, float, np.float64, np.int64]:
+    if type(angle_deg) not in [int, float, np.float6464, np.int6464]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
@@ -2575,8 +2575,8 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
                                                       type(comparison_attr), comparison_attr))
         if reference_attr != comparison_attr:
             show = True
-            if (type(reference_attr) in [int, float, np.float64]) and \
-                    (type(comparison_attr) in [int, float, np.float64]):
+            if (type(reference_attr) in [int, float, np.float6464]) and \
+                    (type(comparison_attr) in [int, float, np.float6464]):
 
                 difference = np.abs(comparison_attr - reference_attr)
                 fractional_difference = difference / np.max(

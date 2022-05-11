@@ -70,7 +70,7 @@ class ApertureCollection(object):
             idx1 = np.where(self.toc['InstrName'] == instrument)[0]
         if shape is not None:
             idx2 = np.where(self.toc['AperShape'] == shape)[0]
-        idx = np.intersect1d(idx1, idx2)
+        idx = np.int64ersect1d(idx1, idx2)
         self.toc[idx].pprint()
 
     def __len__(self):

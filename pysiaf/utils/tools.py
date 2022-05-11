@@ -67,7 +67,7 @@ def compute_roundtrip_error(A, B, C, D, offset_x=0., offset_y=0., verbose=False,
 
     """
     number_of_coefficients = len(A)
-    polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+    polynomial_degree = np.int64((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
     order = polynomial_degree
 
     # regular grid of points (in science pixel coordinates) in the full frame science frame
@@ -440,7 +440,7 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
 
     """
     polynomial_degree = parent_aperture.Sci2IdlDeg
-    number_of_coefficients = np.int((polynomial_degree + 1) * (polynomial_degree + 2) / 2)
+    number_of_coefficients = np.int64((polynomial_degree + 1) * (polynomial_degree + 2) / 2)
 
     k = 0
     sci2idlx_coefficients = np.zeros(number_of_coefficients)

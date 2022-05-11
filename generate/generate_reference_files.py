@@ -669,7 +669,7 @@ def generate_siaf_pre_flight_reference_files_nircam():
 
             #generate distortion reference file
             number_of_coefficients = len(A)
-            polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+            polynomial_degree = np.int64((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
             siaf_index = []
             exponent_x = []
             exponent_y = []
@@ -1143,7 +1143,7 @@ def generate_siaf_pre_flight_reference_files_niriss(distortion_file_name, verbos
 
 
         number_of_coefficients = len(AR)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = np.int64((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
 
         # if oss is False:
         if 1:
@@ -1294,7 +1294,7 @@ def generate_siaf_pre_flight_reference_files_fgs(verbose=False, mode='siaf'):
                  -2.81501600E-15, -1.73025000E-15, 2.57732600E-15, 1.75268080E-15, 2.95238320E-15])
 
         number_of_coefficients = len(A)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = np.int64((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
 
         # generate distortion coefficient files
         siaf_index = []

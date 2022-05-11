@@ -72,7 +72,7 @@ def test_against_test_data(siaf=None):
                     tilt = None
                 else:
                     test_header = fits.getheader(test_data_file)
-                    tilt = (np.float(test_header['GWA_XTIL']), np.float(test_header['GWA_YTIL']))
+                    tilt = (np.float64(test_header['GWA_XTIL']), np.float64(test_header['GWA_YTIL']))
 
                 if sca_name == 'SCA491':
                     AperName = 'NRS1_FULL_OSS'
