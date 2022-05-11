@@ -249,14 +249,14 @@ class Aperture(object):
         elif (value is None) and (key in ['DDCName']) and (self.AperType in ['TRANSFORM', None]):
             # NIRSpec case
             pass
-        elif (key in INTEGER_ATTRIBUTES) and (type(value) not in [int, np.int6464]):
+        elif (key in INTEGER_ATTRIBUTES) and (type(value) not in [int, np.int64]):
             raise AttributeError('pysiaf Aperture attribute `{}` has to be an integer.'.format(key))
         elif (key in STRING_ATTRIBUTES) and (type(value) not in [str, np.str_]):
             raise AttributeError(
                 'pysiaf Aperture attribute `{}` has to be a string (tried to assign it type {'
                 '}).'.format(
                     key, type(value)))
-        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float6432, np.float6464]):
+        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float6432, np.float64]):
             if np.ma.is_masked(value):  # accomodate `None` entries in SIAF definition source files
                 value = 0.0
             else:
@@ -2080,7 +2080,7 @@ def linear_transform_model(from_system, to_system, parity, angle_deg):
         Transformation models
 
     """
-    if type(angle_deg) not in [int, float, np.float6464, np.int6464]:
+    if type(angle_deg) not in [int, float, np.float64, np.int64]:
         raise TypeError('Angle has to be a float. It is of type {} and has the value {}'.format(
             type(angle_deg), angle_deg))
 
@@ -2575,8 +2575,8 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
                                                       type(comparison_attr), comparison_attr))
         if reference_attr != comparison_attr:
             show = True
-            if (type(reference_attr) in [int, float, np.float6464]) and \
-                    (type(comparison_attr) in [int, float, np.float6464]):
+            if (type(reference_attr) in [int, float, np.float64]) and \
+                    (type(comparison_attr) in [int, float, np.float64]):
 
                 difference = np.abs(comparison_attr - reference_attr)
                 fractional_difference = difference / np.max(
