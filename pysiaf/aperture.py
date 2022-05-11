@@ -256,7 +256,7 @@ class Aperture(object):
                 'pysiaf Aperture attribute `{}` has to be a string (tried to assign it type {'
                 '}).'.format(
                     key, type(value)))
-        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float6432, np.float64]):
+        elif (key in FLOAT_ATTRIBUTES) and (type(value) not in [float, np.float32, np.float64]):
             if np.ma.is_masked(value):  # accomodate `None` entries in SIAF definition source files
                 value = 0.0
             else:
