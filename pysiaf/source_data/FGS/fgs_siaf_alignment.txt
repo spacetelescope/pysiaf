@@ -1,14 +1,14 @@
 # FGS alignment parameter reference file for SIAF
 # 
-# This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.
+# This file contains the focal plane alignment parameters calibrated during FGS-SI alignment programs NRC-21, FGS-11, NIS-13.
 # 
-# Generated 2022-03-24
-# by tsohn, sosborne
+# Generated 2022-05-12T15:00:00
+# by tsohn
 #
 #
-                      AperName ,         V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,  V2Ref ,  V3Ref
-                     FGS1_FULL , -1.2508171328901783 , -89.56298057534674 , -1.2508171328901783 , 206.464 , -697.970
-                 FGS1_FULL_OSS , -1.2508171328901623 ,  90.43701942465326 ,  178.74918286710982 , 206.464 , -697.970
-                     FGS2_FULL , 0.19027904463505274 , -90.75703022480756 , 0.19027904463505274 ,  22.845 , -699.489
-                 FGS2_FULL_OSS , 0.19027904463505274 ,  89.24296977519244 , 0.19027904463505274 ,  22.845 , -699.489
-                       J-FRAME ,         0.041688872 ,               None ,                None , 180.255 ,  175.783
+                      AperName ,       V3IdlYAngle ,        V3SciXAngle ,        V3SciYAngle ,   V2Ref ,    V3Ref
+                     FGS1_FULL , -1.24120427177907 , -89.55803284733281 ,  -1.24120427177907 , 206.407 , -697.765
+                 FGS1_FULL_OSS , -1.24120427177907 ,  90.44196715266719 , 178.75879572822095 , 206.407 , -697.765
+                     FGS2_FULL ,  0.29148280112031 , -90.69066276462223 ,   0.29148280112031 ,  22.835 , -699.423
+                 FGS2_FULL_OSS ,  0.29148280112031 ,  89.30933723537777 ,   0.29148280112031 ,  22.835 , -699.423
+                       J-FRAME ,       0.041688872 ,               None ,               None , 180.255 ,  175.783
