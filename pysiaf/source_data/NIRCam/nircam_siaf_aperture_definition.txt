@@ -400,8 +400,8 @@ NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None
       NRCA4_FULL_TAMASKSWB ,  FULLSCA ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
           NRCA4_TAMASKSWBS , SUBARRAY ,   166.5 ,   786.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
      NRCA4_FULL_TAMASKSWBS ,  FULLSCA ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA4_FSTAMASKSWB , SUBARRAY ,   392.5 ,   774.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_FSTAMASKSWB ,  FULLSCA ,   392.5 ,   774.5 ,     2048 ,     2048 ,   392.5 ,  1274.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+         NRCA4_FSTAMASKSWB , SUBARRAY ,   532.5 ,   789.5 ,      128 ,      128 ,    64.5 ,    64.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_FSTAMASKSWB ,  FULLSCA ,   532.5 ,   789.5 ,     2048 ,     2048 ,   532.5 ,  1259.5 ,                           NRCA4_FULL_WEDGE_BAR ,         default
 # Coronagraphic TA and associated astrometric confirmation-image apertures - LW Bar occulters (Module-A)
            NRCA5_TAMASKLWB , SUBARRAY ,   312.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                           NRCA5_FULL_WEDGE_BAR ,         default
       NRCA5_FULL_TAMASKLWB ,  FULLSCA ,   312.5 ,  1557.5 ,     2048 ,     2048 ,  1736.5 ,  1557.5 ,                           NRCA5_FULL_WEDGE_BAR ,         default
