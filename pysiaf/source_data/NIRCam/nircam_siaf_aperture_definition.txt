@@ -337,7 +337,7 @@ NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None
             NRCA2_MASK210R , SUBARRAY ,   712.7 ,   533.3 ,      640 ,      640 ,   321.7 ,   330.7 ,                           NRCA2_FULL_WEDGE_RND ,         default
        NRCA2_FULL_MASK210R ,  FULLSCA ,   712.7 ,   533.3 ,     2048 ,     2048 ,   712.7 ,  1515.7 ,                           NRCA2_FULL_WEDGE_RND ,         default
             NRCA5_MASK335R , SUBARRAY ,  1400.5 ,  1675.1 ,      320 ,      320 ,   157.5 ,   174.1 ,                           NRCA5_FULL_WEDGE_RND ,         default
-       NRCA5_FULL_MASK335R ,  FULLSCA ,  1400.3 ,  1675.1 ,     2048 ,     2048 ,   648.5 ,  1675.1 ,                           NRCA5_FULL_WEDGE_RND ,         default
+       NRCA5_FULL_MASK335R ,  FULLSCA ,  1400.5 ,  1675.1 ,     2048 ,     2048 ,   648.5 ,  1675.1 ,                           NRCA5_FULL_WEDGE_RND ,         default
             NRCA5_MASK430R , SUBARRAY ,  1077.3 ,  1675.5 ,      320 ,      320 ,   158.7 ,   174.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
        NRCA5_FULL_MASK430R ,  FULLSCA ,  1077.3 ,  1675.5 ,     2048 ,     2048 ,   971.7 ,  1675.5 ,                           NRCA5_FULL_WEDGE_RND ,         default
 # Coronagraphic science and astrometric confirmation-image apertures - SW Bar occulter (Module-A)
