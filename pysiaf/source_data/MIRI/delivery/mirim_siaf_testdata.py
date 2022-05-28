@@ -1,6 +1,6 @@
 #
 """
-Reference data for testing the MIRI imager CDP-7 distortion solution.
+Reference data for testing the MIRI imager FLT-1 distortion solution.
 This is for SIAF testing, and therefore includes only F770W reference data
 using SIAF-convention x,y pixel conventions.
 
@@ -12,16 +12,19 @@ results if passed into the 0-indexed JWST calibration pipeline or the miricoord 
 import numpy as np
 
 def siaf_testdata():
-    # F770W tests
-    v2v3_770=np.array([[-415.069,-400.576],[-453.559,-373.814],[-434.083,-375.388],[-480.,-348.],[-450.,-348.],[-420.,-348.],[-390.,-348.],[-480.,-378.],[-450.,-378.],[-420,-378.],[-390.,-378.],[-480.,-408.],[-450.,-408.],[-420.,-408.],[-390.,-408.]])
-    xy_770=np.array([[321.13,299.7],[688.5,511.5],[511.5,511.5],[948.18,724.94],[676.75,745.67],[404.81,767.77],[132.65,791.34],[923.52,455.40],[653.11,476.53],[382.37,498.57],[111.34,521.66],[899.64,184.81],[629.88,206.95],[360.00,229.12],[89.77,251.55]],dtype=np.float) + [5,1]
-    # Note that we had to add 5,1 to Alistair's x,y locations because he uses 0-indexed science pixels,
-    # not 1-indexed detector pixels like the SIAF does.
-
-
-    x=xy_770[:,0]
-    y=xy_770[:,1]
-    v2=v2v3_770[:,0]
-    v3=v2v3_770[:,1]
-
-    return x,y,v2,v3
+    # F770W tests, xy are 0-indexed detector pixels, add 1 to convert to the 1-indexed
+    # pixels used by SIAF
+    x_770=np.array([692.5 , 511.5 , 948.18, 676.75, 404.81, 132.65, 923.52, 653.11,
+       382.37, 111.34, 899.64, 629.88, 360.  ,  89.77])+1
+    y_770=np.array([511.5 , 511.5 , 724.94, 745.67, 767.77, 791.34, 455.4 , 476.54,
+       498.57, 521.66, 184.81, 206.95, 229.12, 251.55])+1
+    v2_770=np.array([-453.37849012, -433.44711881, -479.38722157, -449.37963073,
+       -419.36112578, -389.35626367, -479.3919599 , -449.37616406,
+       -419.35697586, -389.37064485, -479.40300538, -449.38210468,
+       -419.37276534, -389.41978253])
+    v3_770=np.array([-373.8105493 , -375.41618152, -348.02002698, -348.01117266,
+       -348.00931455, -347.99931539, -378.04217418, -378.03365908,
+       -378.02616193, -378.00120274, -408.06008198, -408.04722395,
+       -408.03075064, -407.99078552])
+    
+    return x_770,y_770,v2_770,v3_770
