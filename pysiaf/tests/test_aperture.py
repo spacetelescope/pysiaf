@@ -120,6 +120,8 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
                 threshold = 0.04
             elif siaf.instrument in ['nircam']:
                 threshold = 42.
+            elif siaf.instrument in ['fgs']:
+                threshold = 0.26
             else:
                 threshold = 0.05
         for aper_name in siaf.apertures.keys():
