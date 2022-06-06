@@ -127,17 +127,17 @@
               NRCB2_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB160 , SUBARRAY ,   984.5 ,  1028.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB160 , SUBARRAY , 1012.62 , 1028.13 ,      160 ,      160 ,   80.62 ,   80.87 ,                                     NRCB5_FULL ,         default
               NRCB1_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB1_FULL ,         default
               NRCB2_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB320 , SUBARRAY ,   984.5 ,  1028.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB320 , SUBARRAY , 1012.57 , 1028.20 ,      320 ,      320 ,  160.57 ,  160.80 ,                                     NRCB5_FULL ,         default
               NRCB1_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB1_FULL ,         default
               NRCB2_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB640 , SUBARRAY ,   984.5 ,  1028.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB640 , SUBARRAY , 1012.41 , 1028.57 ,      640 ,      640 ,  320.41 ,  320.43 ,                                     NRCB5_FULL ,         default
 # Grism Time Series (Module-A)
      NRCA5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
      NRCA5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
