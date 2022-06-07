@@ -388,20 +388,15 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-184 Jira ticket
-            selected_aperture_names = [['NRCA1_FULL_WEDGE_RND','NRCA2_FULL_WEDGE_RND','NRCA3_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_RND','NRCA2_MASK210R'],
-                                       ['NRCA1_FULL_WEDGE_BAR','NRCA2_FULL_WEDGE_BAR','NRCA3_FULL_WEDGE_BAR','NRCA4_FULL_WEDGE_BAR','NRCA4_MASKSWB'],
-                                       ['NRCA5_FULL_WEDGE_RND','NRCA5_MASK335R','NRCA5_MASK430R'],
-                                       ['NRCA5_FULL_WEDGE_BAR','NRCA5_MASKLWB'],
-                                       ['NRCA2_MASK210R','NRCA2_TAMASK210R','NRCA2_FSTAMASK210R'],
-                                       ['NRCA4_MASKSWB','NRCA4_MASKSWB_F182M','NRCA4_MASKSWB_F187N','NRCA4_MASKSWB_F210M','NRCA4_MASKSWB_F212N','NRCA4_MASKSWB_F200W','NRCA4_MASKSWB_NARROW',
-                                        'NRCA4_TAMASKSWB','NRCA4_TAMASKSWBS','NRCA4_FSTAMASKSWB'  ],
-                                       ['NRCA5_MASK335R','NRCA5_TAMASK335R','NRCA5_FSTAMASK335R'],
-                                       ['NRCA5_MASK430R','NRCA5_TAMASK430R','NRCA5_FSTAMASK430R'],
-                                       ['NRCA5_MASKLWB','NRCA5_MASKLWB_F250M','NRCA5_MASKLWB_F300M','NRCA5_MASKLWB_F277W','NRCA5_MASKLWB_F335M','NRCA5_MASKLWB_F360M','NRCA5_MASKLWB_F356W',
-                                        'NRCA5_MASKLWB_F410M','NRCA5_MASKLWB_F430M','NRCA5_MASKLWB_F460M','NRCA5_MASKLWB_F480M','NRCA5_MASKLWB_F444W','NRCA5_MASKLWB_NARROW',
-                                        'NRCA5_TAMASKLWB','NRCA5_TAMASKLWBL','NRCA5_FSTAMASKLWB']
-                                        ]
+            # # make figures for JWSTSIAF-242 Jira ticket
+            selected_aperture_names = [['NRCB{}_SUB160'.format(sca) for sca in ['5','1','2','3','4']],
+                                       ['NRCB{}_SUB320'.format(sca) for sca in ['5','1','2','3','4']],
+                                       ['NRCB{}_SUB640'.format(sca) for sca in ['5','1','2','3','4']],
+                                       ['NRCB5_SUB64P','NRCB1_SUB64P','NRCB5_FULL','NRCB1_FULL'],
+                                       ['NRCB5_SUB160P','NRCB1_SUB160P','NRCB5_FULL','NRCB1_FULL'],
+                                       ['NRCB5_SUB400P','NRCB1_SUB400P','NRCB5_FULL','NRCB1_FULL'],
+                                       ['NRCB1_SUB64P','NRCB1_SUB160P','NRCB1_SUB400P','NRCB5_SUB64P','NRCB5_SUB160P','NRCB5_SUB400P']
+                                      ]
                                                              
 
             for selected_aperture_name in selected_aperture_names:
