@@ -148,13 +148,13 @@
       NRCA5_GRISM256_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
       NRCA5_GRISM128_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
        NRCA5_GRISM64_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
-      NRCA5_GRISM256_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,      256 ,   952.0 ,    35.0 ,                                     NRCA5_FULL ,         default
-      NRCA5_GRISM128_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,      128 ,   952.0 ,    35.0 ,                                     NRCA5_FULL ,         default
-       NRCA5_GRISM64_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,       64 ,   952.0 ,    35.0 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM256_F444W , SUBARRAY ,  1191.0 ,    35.0 ,     2048 ,      256 ,   858.0 ,    35.0 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM128_F444W , SUBARRAY ,  1191.0 ,    35.0 ,     2048 ,      128 ,   858.0 ,    35.0 ,                                     NRCA5_FULL ,         default
+       NRCA5_GRISM64_F444W , SUBARRAY ,  1191.0 ,    35.0 ,     2048 ,       64 ,   858.0 ,    35.0 ,                                     NRCA5_FULL ,         default
         NRCA5_GRISM_F322W2 ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,                                     NRCA5_FULL ,         default
          NRCA5_GRISM_F277W ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,                                     NRCA5_FULL ,         default
          NRCA5_GRISM_F356W ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,                                     NRCA5_FULL ,         default
-         NRCA5_GRISM_F444W ,  FULLSCA ,  1097.0 ,   280.0 ,     2048 ,     2048 ,   952.0 ,   280.0 ,                                     NRCA5_FULL ,         default
+         NRCA5_GRISM_F444W ,  FULLSCA ,  1191.0 ,   280.0 ,     2048 ,     2048 ,   858.0 ,   280.0 ,                                     NRCA5_FULL ,         default
              NRCA1_GRISMTS ,  FULLSCA ,   192.0 ,  1082.0 ,     2048 ,     2048 ,  1857.0 ,  1082.0 ,                  NRCA1_FULL; NRCA5_GRISM_F444W ,     grism_ts_sw
           NRCA1_GRISMTS256 , SUBARRAY ,   192.0 ,   167.0 ,     2048 ,      256 ,  1857.0 ,   167.0 ,               NRCA1_FULL; NRCA5_GRISM256_F444W ,     grism_ts_sw
           NRCA1_GRISMTS128 , SUBARRAY ,   192.0 ,   167.0 ,     2048 ,      128 ,  1857.0 ,    65.0 ,               NRCA1_FULL; NRCA5_GRISM128_F444W ,     grism_ts_sw
