@@ -116,7 +116,7 @@ The STScI Telescopes Branch provides full support of pysiaf for S&OC operational
 
 ### Contributing
 Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
- Do you have feedback and feature requests? Is there something missing you would like to see? Please open an issue or send an email to the maintainers. This package follows the Spacetelescope [Code of Conduct](CODE_OF_CONDUCT.md) strives to provide a welcoming community to all of our users and contributors.
+ Do you have feedback and feature requests? Is there something missing you would like to see? Please open an issue or send an email to the maintainers. This package follows the Space Telescope [Code of Conduct](CODE_OF_CONDUCT.md) strives to provide a welcoming community to all of our users and contributors.
 
 The following describes the typical work flow for contributing to the pysiaf project (adapted from JWQL):
 0. Do not commit any sensitive information (e.g. STScI-internal path structures, machine names, user names, passwords, etc.) to this public repository. Git history cannot be erased.
@@ -141,7 +141,7 @@ Clone the repository:
 `git clone https://github.com/spacetelescope/pysiaf`  
 Install pysiaf:  
 `cd pysiaf`  
-`pip install .` 
+`pip install .`
 
 Install in Develop Mode
 `pip install -e .`
@@ -159,13 +159,3 @@ and states
 this can probably be fixed by downgrading the version of lxml, e.g.      
     `pip uninstall lxml`  
     `pip install lxml==3.6.4`
-
-If you get an error upon    
-`import pysiaf`  
-that states     
-`ImportError: Failed to import any qt binding`      
-and your computer runs on MacOS Mojave and you installed the tool with `python setup.py install`,
-this can probably be fixed by un-installing and re-installing PyQt5, e.g.            
-`pip uninstall pyqt5`       
-`pip uninstall pyqt5-sip`       
-`pip install pyqt5`     
