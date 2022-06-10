@@ -1,0 +1,425 @@
+# NIRCam aperture definition file for SIAF
+# 
+# This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary
+# information (DDC mapping, wedge offsets, ...)
+# This file also defines the order in which the apertures are presented.
+# 
+# Originally based on PRDOPSSOC-H-015.
+# 
+# Generated 2018-06-12T13:57:29.020 utc
+# jsahlmann
+#
+# jsahlmann 2018-06-12:
+# Modified XDetRef,YDetRef of COMPOUND apertures NRCAS_FULL, NRCBS_FULL, NRCALL_FULL to be able
+# to derive the V2,V3 reference point from a pixel coordinate on a detector.
+#
+# jsahlmann 2018-07-26:
+# Modified XSciRef,YSciRef of 6 apertures to match half-integer values of DetRef
+#
+# jstans, Gennaro 2019-10-07
+# Added NRCA5_TAGRISMTS32_F405N to support TA in the F405N filter as well as F335M. This is for future use, not currently supported.
+#	Note that the XDetRef and YDetRef value has NOT been corrected for filter-dependent wander. See JWSTSIAF-159.
+# Added 12 FULL apertures corresponding to the Coronagraphic TA apertures. These support calibration of the astrometric confirmation
+#	images that PRECEDE the SAM from the TA aperture to the coronagraphic mask. See JWSTSIAF-61.
+
+# gennaro 2019-12-30
+#	Added new FULL apertures for the coronagraphic SCAs to act as master apertures and host potential new distortion solutions for coronagraphy
+#		
+#    NRCA2_FULL_WEDGE_RND
+#    NRCA4_FULL_WEDGE_BAR
+#    NRCA5_FULL_WEDGE_RND
+#    NRCA5_FULL_WEDGE_BAR
+#	See jira.stsci.edu JWSTSIAF-164
+#
+# gennaro 2020-03-25
+#    Edited AperType for the 12 apertures introduced in JWSTSIAF-61, which were erroneously set to SUBARRAY. Now they are corrected to FULLSCA (see JWSTSIAF-170)
+#    Edited typo in XSciRef for NRCA5_MASKLWB_F277W from 239.8 to 238.8 (see JWSTSIAF-171)
+#
+# gennaro, jstans 2019-11-1
+# Corrected Module-A coronagraphy apertures per analysis of CV3 data using correct lyot wedge for each set of features.
+#   No update of the wedge offsets was implemented.
+#   See jira.stsci.edu JWSTSIAF-118, JWSTSIAF-77.
+#
+# jstans, gennaro 2019-11-6
+# Updated reference positions for numerous apertures to be at central 4-corner position. Mostly done to provide uniformity
+#   across all the apertures where some external factor doesn't dictate the reference position. Update to the 8x8 subarray
+#   reference positions is arguably more important than that, just because of the small size of that aperture.
+#   Reference positions for the other WFS field points (NRC[A/B]*_FP[1-5]*) were baselined at pixel centers in CV3 testing,
+#   so no changes were made to those, either.
+#   See jira.stsci.edu JWSTSIAF-124, JWSTSIAF-162
+# Also re-ordered the entries to group apertures by template and module, added comment lines between groups.
+# Changed reference positions are for:
+#        NRCA5_TAGRISMTS32  ## moved to center 4-corner   
+#  NRCA5_TAGRISMTS32_F405N  ## added tweak for filter...  
+#                NRCA3_FP1  ## moved to center 4-corner   
+#           NRCA3_FP1_SUB8  ## moved to center 4-corner   
+#          NRCA3_FP1_SUB64  ## moved to center 4-corner   
+#                NRCB4_FP1  ## moved to center 4-corner   
+#           NRCB4_FP1_SUB8  ## moved to center 4-corner   
+#          NRCB4_FP1_SUB64  ## moved to center 4-corner   
+#             NRCB5_SUB64P  ## updated to match B1_64P    
+#            NRCB5_SUB160P  ## updated to match B1_160P   
+#            NRCB5_SUB400P  ## updated to match B1_400P   
+#              NRCB5_FULLP  ## updated to match B1_FULLP
+#
+# jstans 2019-12-13
+# 	Added FULL apertures corresponding to the MASKxWBAR apertures:
+#		NRCA5_FULL_MASKLWB_NARROW 
+#		NRCA4_FULL_MASKSWB_NARROW
+#   See jira.stsci.edu JWSTSIAF-160 
+#	
+# gennaro 2021-11-03
+#	Added new FULL apertures for the coronagraphic SCAs to act as master apertures for 6 additional cases:
+#		
+#    NRCA1_FULL_WEDGE_RND
+#    NRCA3_FULL_WEDGE_RND
+#    NRCA4_FULL_WEDGE_RND
+#    NRCA1_FULL_WEDGE_BAR
+#    NRCA2_FULL_WEDGE_BAR
+#    NRCA3_FULL_WEDGE_BAR
+#	See jira.stsci.edu JWSTSIAF-206
+
+                  AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,   ColCorner ,   RowCorner ,               V2_ref ,               V3_ref ,                               parent_apertures , dependency_type
+#        -------------------------------------------------------------------------------------------------------------------------------------------------------------
+# OSS apertures, for on-board computation of small angle maneuvers
+            NRCA1_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   120.52193099999998 ,  -527.68127100000015 ,                                     NRCA1_FULL ,         default
+            NRCA2_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   119.66874899999991 ,  -459.96834599999988 ,                                     NRCA2_FULL ,         default
+            NRCA3_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    51.90590499999999 ,  -528.12674599999980 ,                                     NRCA3_FULL ,         default
+            NRCA4_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    52.29502000000003 ,  -460.09983000000017 ,                                     NRCA4_FULL ,         default
+            NRCA5_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    85.87762999999998 ,  -493.58693900000009 ,                                     NRCA5_FULL ,         default
+            NRCB1_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,  -122.63675400000001 ,  -457.77169699999990 ,                                     NRCB1_FULL ,         default
+            NRCB2_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,  -122.87333500000004 ,  -525.48625499999991 ,                                     NRCB2_FULL ,         default
+            NRCB3_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -54.82950700000001 ,  -457.75269399999996 ,                                     NRCB3_FULL ,         default
+            NRCB4_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -54.58607699999997 ,  -525.67615699999988 ,                                     NRCB4_FULL ,         default
+            NRCB5_FULL_OSS ,      OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -89.48299600000001 ,  -491.49365999999992 ,                                     NRCB5_FULL ,         default
+# FULL apertures and combination/compound for each module and both modules
+               NRCALL_FULL , COMPOUND ,  2713.5 ,  2057.5 ,     None ,     None ,    None ,    None ,        None ,        None ,    -2.16341082037540 ,  -492.91112183459501 , NRCA1_FULL; NRCB2_FULL; NRCB1_FULL; NRCA2_FULL , nircam_compound
+                NRCAS_FULL , COMPOUND ,  1964.0 ,  1978.5 ,     None ,     None ,    None ,    None ,        None ,        None ,    81.21380546245388 ,  -498.25786228691231 , NRCA1_FULL; NRCA3_FULL; NRCA4_FULL; NRCA2_FULL , nircam_compound
+                NRCA1_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   120.52193100000000 ,  -527.68127100000004 ,                                           None ,          master
+                NRCA2_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   119.66874900000001 ,  -459.96834600000000 ,                                           None ,          master
+                NRCA3_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    51.90590500000000 ,  -528.12674600000003 ,                                           None ,          master
+                NRCA4_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    52.29502000000000 ,  -460.09983000000000 ,                                           None ,          master
+                NRCA5_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    85.87763000000000 ,  -493.58693899999997 ,                                           None ,          master
+                NRCBS_FULL , COMPOUND ,    87.0 ,  1974.0 ,     None ,     None ,    None ,    None ,        None ,        None ,   -83.84846603016899 ,  -496.04017590182593 , NRCB4_FULL; NRCB2_FULL; NRCB1_FULL; NRCB3_FULL , nircam_compound
+                NRCB1_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,  -122.63675400000000 ,  -457.77169700000002 ,                                           None ,          master
+                NRCB2_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,  -122.87333500000000 ,  -525.48625500000003 ,                                           None ,          master
+                NRCB3_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -54.82950700000000 ,  -457.75269400000002 ,                                           None ,          master
+                NRCB4_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -54.58607700000000 ,  -525.67615699999999 ,                                           None ,          master
+                NRCB5_FULL ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   -89.48299600000000 ,  -491.49365999999998 ,                                           None ,          master
+# Extended Source Imaging (Module-A, backup)
+              NRCA1_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,        1889 ,    91.03288849067987 ,  -498.40523907169086 ,                                     NRCA1_FULL ,         default
+              NRCA2_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,        1889 ,        1889 ,    90.63880786494623 ,  -489.25782582723986 ,                                     NRCA2_FULL ,         default
+              NRCA3_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,        1889 ,        1889 ,    81.35333525329595 ,  -498.56895556878555 ,                                     NRCA3_FULL ,         default
+              NRCA4_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,        1889 ,    81.51279109492225 ,  -489.27899641924114 ,                                     NRCA4_FULL ,         default
+              NRCA5_SUB160 , SUBARRAY ,  1024.5 ,  1024.5 ,      160 ,      160 ,    80.5 ,    80.5 ,         945 ,         945 ,    85.87762999999998 ,  -493.58693900000009 ,                                     NRCA5_FULL ,         default
+              NRCA1_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,           1 ,        1729 ,    93.51785949625530 ,  -500.88598615185987 ,                                     NRCA1_FULL ,         default
+              NRCA2_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,        1729 ,        1729 ,    93.11032846306077 ,  -486.77096985611610 ,                                     NRCA2_FULL ,         default
+              NRCA3_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,        1729 ,        1729 ,    78.87318997532454 ,  -501.06543342924851 ,                                     NRCA3_FULL ,         default
+              NRCA4_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,           1 ,        1729 ,    79.02676318978163 ,  -486.80975625578884 ,                                     NRCA4_FULL ,         default
+              NRCA5_SUB320 , SUBARRAY ,  1024.5 ,  1024.5 ,      320 ,      320 ,   160.5 ,   160.5 ,         865 ,         865 ,    85.87762999999998 ,  -493.58693900000009 ,                                     NRCA5_FULL ,         default
+              NRCA1_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,           1 ,        1409 ,    98.49515084068787 ,  -505.84715901979638 ,                                     NRCA1_FULL ,         default
+              NRCA2_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,        1409 ,        1409 ,    98.04660609793092 ,  -481.80049302992734 ,                                     NRCA2_FULL ,         default
+              NRCA3_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,        1409 ,        1409 ,    73.90498549116400 ,  -506.06235047019726 ,                                     NRCA3_FULL ,         default
+              NRCA4_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,           1 ,        1409 ,    74.06029168841313 ,  -481.86958508094108 ,                                     NRCA4_FULL ,         default
+              NRCA5_SUB640 , SUBARRAY ,  1024.5 ,  1024.5 ,      640 ,      640 ,   320.5 ,   320.5 ,         705 ,         705 ,    85.87762999999998 ,  -493.58693900000009 ,                                     NRCA5_FULL ,         default
+# Extended Source Imaging (Module-B)
+              NRCB1_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,        1889 ,   -93.67379380526700 ,  -487.06351854272145 ,                                     NRCB1_FULL ,         default
+              NRCB2_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,        1889 ,        1889 ,   -93.29625241026889 ,  -496.36455172633998 ,                                     NRCB2_FULL ,         default
+              NRCB3_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,        1889 ,        1889 ,   -83.80167164234673 ,  -487.10934938451061 ,                                     NRCB3_FULL ,         default
+              NRCB4_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,        1889 ,   -84.04941138539377 ,  -496.21121105635666 ,                                     NRCB4_FULL ,         default
+              NRCB5_SUB160 , SUBARRAY , 1012.62 , 1028.13 ,      160 ,      160 ,   80.62 ,   80.87 ,         933 ,         949 ,   -88.73625100145836 ,  -491.72384128034776 ,                                     NRCB5_FULL ,         default
+              NRCB1_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,           1 ,        1729 ,   -96.13916154592576 ,  -484.57683814966560 ,                                     NRCB1_FULL ,         default
+              NRCB2_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,        1729 ,        1729 ,   -95.78785196775713 ,  -498.83218192981298 ,                                     NRCB2_FULL ,         default
+              NRCB3_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,        1729 ,        1729 ,   -81.33622386767874 ,  -484.62502597718145 ,                                     NRCB3_FULL ,         default
+              NRCB4_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,           1 ,        1729 ,   -81.56802341948803 ,  -498.69928292543153 ,                                     NRCB4_FULL ,         default
+              NRCB5_SUB320 , SUBARRAY , 1012.57 , 1028.20 ,      320 ,      320 ,  160.57 ,  160.80 ,         853 ,         869 ,   -88.73310747908266 ,  -491.72826601989499 ,                                     NRCB5_FULL ,         default
+              NRCB1_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,           1 ,        1409 ,  -101.06359693038418 ,  -479.60639132985631 ,                                     NRCB1_FULL ,         default
+              NRCB2_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,        1409 ,        1409 ,  -100.77899957517876 ,  -503.76669711830277 ,                                     NRCB2_FULL ,         default
+              NRCB3_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,        1409 ,        1409 ,   -76.41127780970145 ,  -479.65474335809557 ,                                     NRCB3_FULL ,         default
+              NRCB4_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,           1 ,        1409 ,   -76.59720408119949 ,  -503.68001818221245 ,                                     NRCB4_FULL ,         default
+              NRCB5_SUB640 , SUBARRAY , 1012.41 , 1028.57 ,      640 ,      640 ,  320.41 ,  320.43 ,         693 ,         709 ,   -88.72304695362656 ,  -491.75164615748622 ,                                     NRCB5_FULL ,         default
+# Grism Time Series (Module-A)
+     NRCA5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+     NRCA5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM64_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM256_F277W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM128_F277W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+       NRCA5_GRISM64_F277W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM256_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM128_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+       NRCA5_GRISM64_F356W , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,  1581.0 ,    35.0 ,           1 ,           1 ,    50.61258183674491 ,  -556.66815297450944 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM256_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,      256 ,   952.0 ,    35.0 ,           1 ,           1 ,    90.66359218718816 ,  -556.47370773012551 ,                                     NRCA5_FULL ,         default
+      NRCA5_GRISM128_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,      128 ,   952.0 ,    35.0 ,           1 ,           1 ,    90.66359218718816 ,  -556.47370773012551 ,                                     NRCA5_FULL ,         default
+       NRCA5_GRISM64_F444W , SUBARRAY ,  1097.0 ,    35.0 ,     2048 ,       64 ,   952.0 ,    35.0 ,           1 ,           1 ,    90.66359218718816 ,  -556.47370773012551 ,                                     NRCA5_FULL ,         default
+        NRCA5_GRISM_F322W2 ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,           1 ,           1 ,    50.67807526638639 ,  -540.93649811701061 ,                                     NRCA5_FULL ,         default
+         NRCA5_GRISM_F277W ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,           1 ,           1 ,    50.67807526638639 ,  -540.93649811701061 ,                                     NRCA5_FULL ,         default
+         NRCA5_GRISM_F356W ,  FULLSCA ,   468.0 ,   280.0 ,     2048 ,     2048 ,  1581.0 ,   280.0 ,           1 ,           1 ,    50.67807526638639 ,  -540.93649811701061 ,                                     NRCA5_FULL ,         default
+         NRCA5_GRISM_F444W ,  FULLSCA ,  1097.0 ,   280.0 ,     2048 ,     2048 ,   952.0 ,   280.0 ,           1 ,           1 ,    90.58582523124058 ,  -540.78720251322034 ,                                     NRCA5_FULL ,         default
+             NRCA1_GRISMTS ,  FULLSCA ,   192.0 ,  1082.0 ,     2048 ,     2048 ,  1857.0 ,  1082.0 ,           1 ,           1 ,    90.58582523124058 ,  -526.07134160131739 ,                  NRCA1_FULL; NRCA5_GRISM_F444W ,     grism_ts_sw
+          NRCA1_GRISMTS256 , SUBARRAY ,   192.0 ,   167.0 ,     2048 ,      256 ,  1857.0 ,   167.0 ,           1 ,           1 ,    90.66359218718816 ,  -554.87843505622391 ,               NRCA1_FULL; NRCA5_GRISM256_F444W ,     grism_ts_sw
+          NRCA1_GRISMTS128 , SUBARRAY ,   192.0 ,   167.0 ,     2048 ,      128 ,  1857.0 ,    65.0 ,           1 ,         103 ,    90.66359218718816 ,  -554.87843505622391 ,               NRCA1_FULL; NRCA5_GRISM128_F444W ,     grism_ts_sw
+           NRCA1_GRISMTS64 , SUBARRAY ,   192.0 ,   167.0 ,     2048 ,       64 ,  1857.0 ,    33.0 ,           1 ,         135 ,    90.66359218718816 ,  -554.87843505622391 ,                NRCA1_FULL; NRCA5_GRISM64_F444W ,     grism_ts_sw
+             NRCA3_GRISMTS ,  FULLSCA ,  1003.0 ,  1091.0 ,     2048 ,     2048 ,  1046.0 ,  1091.0 ,           1 ,           1 ,    51.24360529720415 ,  -526.03550581232253 ,                                     NRCA3_FULL ,         default
+          NRCA3_GRISMTS256 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,      256 ,  1046.0 ,   176.0 ,           1 ,           1 ,    51.11204196332040 ,  -554.92956523726991 ,                                     NRCA3_FULL ,         default
+          NRCA3_GRISMTS128 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,      128 ,  1046.0 ,    65.0 ,           1 ,         112 ,    51.11204196332040 ,  -554.92956523726991 ,                                     NRCA3_FULL ,         default
+           NRCA3_GRISMTS64 , SUBARRAY ,  1003.0 ,   176.0 ,     2048 ,       64 ,  1046.0 ,    33.0 ,           1 ,         144 ,    51.11204196332040 ,  -554.92956523726991 ,                                     NRCA3_FULL ,         default
+         NRCA5_TAGRISMTS32 , SUBARRAY ,   820.5 ,   110.5 ,       32 ,       32 ,    16.5 ,    16.5 ,         805 ,          95 ,    73.07172067148890 ,  -551.73057094074784 ,                                     NRCA5_FULL ,         default
+   NRCA5_TAGRISMTS32_F405N , SUBARRAY , 820.595 , 110.693 ,       32 ,       32 ,  16.405 ,  16.693 ,         805 ,          95 ,    73.07774728736838 ,  -551.71815873782009 ,                                     NRCA5_FULL ,         default
+NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,         452 ,          42 ,    50.61848430876654 ,  -555.21967002748192 ,                                     NRCA5_FULL ,         default
+ NRCA5_TAGRISMTS_SCI_F444W ,      ROI ,  1097.0 ,    57.5 ,       32 ,       32 ,    16.0 ,    16.5 ,        1081 ,          42 ,    90.65594018369730 ,  -555.02941378915557 ,                                     NRCA5_FULL ,         default
+# Grism Time Series (Module-B. Only apertures for NRC-35 activity)
+     NRCB5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,   468.0 ,   222.0 ,           1 ,           1 ,   -54.89883363886485 ,  -429.12050181232689 ,                                     NRCB5_FULL ,         default
+     NRCB5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,   468.0 ,    94.0 ,           1 ,           1 ,   -54.89883363886485 ,  -429.12050181232689 ,                                     NRCB5_FULL ,         default
+      NRCB5_GRISM64_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,       64 ,   468.0 ,    30.0 ,           1 ,           1 ,   -54.89883363886485 ,  -429.12050181232689 ,                                     NRCB5_FULL ,         default
+          NRCB2_GRISMTS256 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,      256 ,   192.0 ,   167.0 ,           1 ,           1 ,   -97.23087334782943 ,  -552.75809497688363 ,                                     NRCB2_FULL ,         default
+          NRCB2_GRISMTS128 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,      128 ,   192.0 ,    65.0 ,           1 ,         103 ,   -97.23087334782943 ,  -552.75809497688363 ,                                     NRCB2_FULL ,         default
+           NRCB2_GRISMTS64 , SUBARRAY ,  1857.0 ,   167.0 ,     2048 ,       64 ,   192.0 ,    33.0 ,           1 ,         135 ,   -97.23087334782943 ,  -552.75809497688363 ,                                     NRCB2_FULL ,         default
+          NRCB4_GRISMTS256 , SUBARRAY ,  1046.0 ,   176.0 ,     2048 ,      256 ,  1003.0 ,   176.0 ,           1 ,           1 ,   -54.89883363886485 ,  -552.44610903909836 ,              NRCB4_FULL; NRCB5_GRISM256_F322W2 ,     grism_ts_sw
+          NRCB4_GRISMTS128 , SUBARRAY ,  1046.0 ,   176.0 ,     2048 ,      128 ,  1003.0 ,    65.0 ,           1 ,         112 ,   -54.89883363886485 ,  -552.44610903909836 ,              NRCB4_FULL; NRCB5_GRISM128_F322W2 ,     grism_ts_sw
+           NRCB4_GRISMTS64 , SUBARRAY ,  1046.0 ,   176.0 ,     2048 ,       64 ,  1003.0 ,    33.0 ,           1 ,         144 ,   -54.89883363886485 ,  -552.44610903909836 ,               NRCB4_FULL; NRCB5_GRISM64_F322W2 ,     grism_ts_sw
+# WFSC / MIMF Field Points (Module-A)
+              NRCA3_DHSPIL ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,           1 ,           1 ,    53.78987068873501 ,  -522.80069465268764 ,                                     NRCA3_FULL ,         default
+        NRCA3_DHSPIL_SUB96 , SUBARRAY ,  1084.0 ,  1194.0 ,       96 ,       96 ,    48.0 ,    49.0 ,        1036 ,        1146 ,    53.78987068873501 ,  -522.80069465268764 ,                                     NRCA3_FULL ,         default
+       NRCA3_DHSPIL_WEDGES ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,           1 ,           1 ,    52.20787068873501 ,  -482.88269465268763 ,                                     NRCA3_FULL ,    dhspil_wedge
+                 NRCA3_FP1 ,  FULLSCA ,  1587.5 ,  1410.5 ,     2048 ,     2048 ,   461.5 ,  1410.5 ,           1 ,           1 ,    69.50954452127242 ,  -516.00689339774692 ,                                     NRCA3_FULL ,         default
+            NRCA3_FP1_SUB8 , SUBARRAY ,  1587.5 ,  1410.5 ,        8 ,        8 ,     4.5 ,     4.5 ,        1584 ,        1407 ,    69.50954452127242 ,  -516.00689339774692 ,                                     NRCA3_FULL ,         default
+           NRCA3_FP1_SUB64 , SUBARRAY ,  1587.5 ,  1410.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1556 ,        1379 ,    69.50954452127242 ,  -516.00689339774692 ,                                     NRCA3_FULL ,         default
+             NRCA3_FP2MIMF ,  FULLSCA ,   229.0 ,   229.0 ,     2048 ,     2048 ,  1820.0 ,   229.0 ,           1 ,           1 ,    26.72547793886942 ,  -553.25936465926759 ,                                     NRCA3_FULL ,         default
+             NRCA1_FP3MIMF ,  FULLSCA ,  1818.0 ,   229.0 ,     2048 ,     2048 ,   231.0 ,   229.0 ,           1 ,           1 ,   145.64691276687824 ,  -552.40731589263896 ,                                     NRCA1_FULL ,         default
+             NRCA2_FP4MIMF ,  FULLSCA ,   229.0 ,   229.0 ,     2048 ,     2048 ,   229.0 ,  1820.0 ,           1 ,           1 ,   143.95130217493039 ,  -435.32942394995257 ,                                     NRCA2_FULL ,         default
+             NRCA4_FP5MIMF ,  FULLSCA ,  1704.0 ,   345.0 ,     2048 ,     2048 ,  1704.0 ,  1704.0 ,           1 ,           1 ,    31.39352095675132 ,  -439.00632674753939 ,                                     NRCA4_FULL ,         default
+# WFSC / MIMF Field Points (Module-B)
+              NRCB4_DHSPIL ,  FULLSCA ,  1003.0 ,  1122.0 ,     2048 ,     2048 ,  1046.0 ,  1122.0 ,           1 ,           1 ,   -55.27709205784075 ,  -522.61613420777167 ,                                     NRCB4_FULL ,         default
+        NRCB4_DHSPIL_SUB96 , SUBARRAY ,  1003.0 ,  1122.0 ,       96 ,       96 ,    48.0 ,    49.0 ,         955 ,        1074 ,   -55.27709205784075 ,  -522.61613420777167 ,                                     NRCB4_FULL ,         default
+       NRCB4_DHSPIL_WEDGES ,  FULLSCA ,  1003.0 ,  1122.0 ,     2048 ,     2048 ,  1046.0 ,  1122.0 ,           1 ,           1 ,   -54.08109205784076 ,  -482.64913420777168 ,                                     NRCB4_FULL ,    dhspil_wedge
+                 NRCB4_FP1 ,  FULLSCA ,   228.5 ,  1817.5 ,     2048 ,     2048 ,  1820.5 ,  1817.5 ,           1 ,           1 ,   -79.45654944271136 ,  -500.90875953492360 ,                                     NRCB4_FULL ,         default
+            NRCB4_FP1_SUB8 , SUBARRAY ,   228.5 ,  1817.5 ,        8 ,        8 ,     4.5 ,     4.5 ,         225 ,        1814 ,   -79.45654944271136 ,  -500.90875953492360 ,                                     NRCB4_FULL ,         default
+           NRCB4_FP1_SUB64 , SUBARRAY ,   228.5 ,  1817.5 ,       64 ,       64 ,    32.5 ,    32.5 ,         197 ,        1786 ,   -79.45654944271136 ,  -500.90875953492360 ,                                     NRCB4_FULL ,         default
+             NRCB4_FP2MIMF ,  FULLSCA ,  1818.0 ,   229.0 ,     2048 ,     2048 ,   231.0 ,   229.0 ,           1 ,           1 ,   -29.45714101996847 ,  -550.73135024625594 ,                                     NRCB4_FULL ,         default
+             NRCB2_FP3MIMF ,  FULLSCA ,   229.0 ,   229.0 ,     2048 ,     2048 ,  1820.0 ,   229.0 ,           1 ,           1 ,  -148.14396806098040 ,  -550.08680396182285 ,                                     NRCB2_FULL ,         default
+             NRCB1_FP4MIMF ,  FULLSCA ,  1818.0 ,   229.0 ,     2048 ,     2048 ,  1818.0 ,  1820.0 ,           1 ,           1 ,  -146.80839088046605 ,  -433.13050476765039 ,                                     NRCB1_FULL ,         default
+             NRCB3_FP5MIMF ,  FULLSCA ,   229.0 ,   229.0 ,     2048 ,     2048 ,   229.0 ,  1820.0 ,           1 ,           1 ,   -30.57694169645674 ,  -432.89994958339378 ,                                     NRCB3_FULL ,         default
+# Point-source Imaging (Module-A, backup)
+              NRCA3_SUB64P , SUBARRAY ,  2016.5 ,   132.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1985 ,         101 ,    82.95158995927125 ,  -556.18658774517712 ,                                     NRCA3_FULL ,         default
+             NRCA3_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,           1 ,    21.98076990211789 ,  -557.98111737470413 ,                                     NRCA3_FULL ,         default
+             NRCA3_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,           1 ,           1 ,    25.81603859193130 ,  -554.16471971784426 ,                                     NRCA3_FULL ,         default
+              NRCA5_SUB64P , SUBARRAY ,   971.5 ,    40.0 ,       64 ,       64 ,    32.5 ,    40.0 ,         940 ,           1 ,    82.68302506449405 ,  -556.20432299798335 ,                                     NRCA5_FULL ,         default
+             NRCA5_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,           1 ,           1 ,    25.85910006040912 ,  -553.77237904926096 ,                                     NRCA5_FULL ,         default
+             NRCA5_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,           1 ,           1 ,    33.60265853578347 ,  -546.04773421490131 ,                                     NRCA5_FULL ,         default
+# Point-source Imaging and Time Series (Module-B)
+              NRCB1_SUB64P , SUBARRAY , 1882.31 ,  202.78 ,       64 ,       64 ,   32.31 ,   30.22 ,        1851 ,         169 ,  -148.77078011857608 ,  -432.30582408593978 ,                                     NRCB1_FULL ,         default
+             NRCB1_SUB160P , SUBARRAY , 1882.31 ,  202.78 ,      160 ,      160 ,   80.31 ,   78.22 ,        1803 ,         121 ,  -148.77078011857608 ,  -432.30582408593978 ,                                     NRCB1_FULL ,         default
+             NRCB1_SUB400P , SUBARRAY , 1882.31 ,  202.78 ,      400 ,      400 ,  234.31 ,  198.22 ,        1649 ,           1 ,  -148.77078011857608 ,  -432.30582408593978 ,                                     NRCB1_FULL ,         default
+              NRCB5_SUB64P , SUBARRAY , 1975.50 ,   86.50 ,       64 ,       64 ,   32.50 ,   32.50 ,        1944 ,          55 ,  -148.76901632960448 ,  -432.30581410146846 ,                                     NRCB5_FULL ,         default
+             NRCB5_SUB160P , SUBARRAY , 1975.50 ,   86.50 ,      160 ,      160 ,   87.50 ,   74.50 ,        1889 ,           1 ,  -148.76901632960448 ,  -432.30581410146846 ,                                     NRCB5_FULL ,         default
+             NRCB5_SUB400P , SUBARRAY , 1975.50 ,   86.50 ,      400 ,      400 ,  327.50 ,  314.50 ,        1649 ,           1 ,  -148.76901632960448 ,  -432.30581410146846 ,                                     NRCB5_FULL ,         default
+               NRCB1_FULLP ,  FULLSCA , 1430.94 ,  675.99 ,     2048 ,     2048 , 1430.94 , 1373.01 ,           1 ,           1 ,  -135.04377652935511 ,  -446.96108884979407 ,                                     NRCB1_FULL ,         default
+               NRCB5_FULLP ,  FULLSCA ,  1726.0 ,   318.5 ,     2048 ,     2048 ,  1726.0 ,  1730.5 ,           1 ,           1 ,  -133.27869006286400 ,  -446.95509813243768 ,                                     NRCB5_FULL ,         default
+           NRCB5_TAPSIMG32 , SUBARRAY ,  2024.5 ,   216.5 ,       32 ,       32 ,    16.5 ,    16.5 ,        2009 ,         201 ,  -151.86997422070365 ,  -440.40089578309386 ,                                     NRCB5_FULL ,         default
+     NRCB5_TAPSIMG32_F405N , SUBARRAY , 2024.82 , 216.092 ,       32 ,       32 ,   16.82 ,  16.908 ,        2009 ,         201 ,  -151.88978950443712 ,  -440.37515604046621 ,                                     NRCB5_FULL ,         default
+# Wide Field Slitless Spectroscopy
+         NRCA5_GRISMC_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+         NRCA5_GRISMR_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+        NRCALL_GRISMC_WFSS , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    -2.16341082037540 ,  -492.91112183459501 ,                                    NRCALL_FULL ,      grism_wfss
+        NRCALL_GRISMR_WFSS , COMPOUND ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    -2.16341082037540 ,  -492.91112183459501 ,                                    NRCALL_FULL ,      grism_wfss
+         NRCB5_GRISMC_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+         NRCB5_GRISMR_WFSS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+# Wide Field Slitless Spectroscopy - filter-dependent complete-spectra apertures
+ NRCA5_GRISMR_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMR_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMR_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F250M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F277W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F300M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMC_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMC_WFSS_F322W2_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F335M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F356W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F360M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F410M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F430M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F444W_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F460M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F480M_CS,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+# Wide Field Slitless Spectroscopy - filter-dependent partial-spectra apertures
+ NRCA5_GRISMR_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMR_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMR_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMR_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMR_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F250M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F277W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F300M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+NRCA5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+NRCB5_GRISMC_WFSS_F322W2_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F335M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F356W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F360M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F410M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F430M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F444W_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F460M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+ NRCA5_GRISMC_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,    85.87763000000000 ,  -493.58693899999997 ,                                     NRCA5_FULL ,      grism_wfss
+ NRCB5_GRISMC_WFSS_F480M_PS ,     SLIT ,    None ,    None ,     None ,     None ,    None ,    None ,        None ,        None ,   -89.48299600000000 ,  -491.49365999999998 ,                                     NRCB5_FULL ,      grism_wfss
+# Coronagraphic master apertures
+      NRCA1_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   118.33762500000000 ,  -487.66534600000000 ,                                           None ,          master
+      NRCA2_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   117.78670500000000 ,  -420.41445800000002 ,                                           None ,          master
+      NRCA3_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    50.23291300000000 ,  -487.94213200000002 ,                                           None ,          master
+      NRCA4_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    50.60452000000000 ,  -420.37121100000002 ,                                           None ,          master
+      NRCA5_FULL_WEDGE_RND ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    83.87680400000001 ,  -446.06359500000002 ,                                           None ,          master
+      NRCA1_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   118.45450400000000 ,  -487.33634999999998 ,                                           None ,          master
+      NRCA2_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,   117.90188900000000 ,  -420.04763700000001 ,                                           None ,          master
+      NRCA3_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    50.35531000000000 ,  -487.59089999999998 ,                                           None ,          master
+      NRCA4_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    50.72289400000000 ,  -420.03491600000001 ,                                           None ,          master
+      NRCA5_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,           1 ,           1 ,    83.63399800000001 ,  -446.67721899999998 ,                                           None ,          master
+# Coronagraphic science and astrometric confirmation-image apertures -- Round occulters(Module-A)
+            NRCA2_MASK210R , SUBARRAY ,   712.7 ,   533.3 ,      640 ,      640 ,   321.7 ,   330.7 ,         392 ,         224 ,   127.31990419423462 ,  -405.20335022420369 ,                           NRCA2_FULL_WEDGE_RND ,         default
+       NRCA2_FULL_MASK210R ,  FULLSCA ,   712.7 ,   533.3 ,     2048 ,     2048 ,   712.7 ,  1515.7 ,           1 ,           1 ,   127.31990419423462 ,  -405.20335022420369 ,                           NRCA2_FULL_WEDGE_RND ,         default
+            NRCA5_MASK335R , SUBARRAY ,  1400.5 ,  1675.1 ,      320 ,      320 ,   157.5 ,   174.1 ,        1238 ,        1502 ,   107.31466797798208 ,  -405.14337120407515 ,                           NRCA5_FULL_WEDGE_RND ,         default
+       NRCA5_FULL_MASK335R ,  FULLSCA ,  1400.5 ,  1675.1 ,     2048 ,     2048 ,   648.5 ,  1675.1 ,           1 ,           1 ,   107.31466797798208 ,  -405.14337120407515 ,                           NRCA5_FULL_WEDGE_RND ,         default
+            NRCA5_MASK430R , SUBARRAY ,  1077.3 ,  1675.5 ,      320 ,      320 ,   158.7 ,   174.5 ,         916 ,        1502 ,    87.26258589636394 ,  -405.13565222445555 ,                           NRCA5_FULL_WEDGE_RND ,         default
+       NRCA5_FULL_MASK430R ,  FULLSCA ,  1077.3 ,  1675.5 ,     2048 ,     2048 ,   971.7 ,  1675.5 ,           1 ,           1 ,    87.26258589636394 ,  -405.13565222445555 ,                           NRCA5_FULL_WEDGE_RND ,         default
+# Coronagraphic science and astrometric confirmation-image apertures - SW Bar occulter (Module-A)
+             NRCA4_MASKSWB , SUBARRAY ,   489.2 ,   540.8 ,      640 ,      640 ,   319.2 ,   335.2 ,         171 ,         236 ,    67.15936137160728 ,  -405.09488938278668 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+        NRCA4_FULL_MASKSWB ,  FULLSCA ,   489.2 ,   540.8 ,     2048 ,     2048 ,   489.2 ,  1508.2 ,           1 ,           1 ,    67.15936137160728 ,  -405.09488938278668 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_MASKSWB_F182M , SUBARRAY ,   432.3 ,   541.0 ,      640 ,      640 ,   262.3 ,   335.0 ,         171 ,         236 ,    68.90152628465687 ,  -405.10229298787050 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+  NRCA4_FULL_MASKSWB_F182M ,  FULLSCA ,   432.3 ,   541.0 ,     2048 ,     2048 ,   432.3 ,  1508.0 ,           1 ,           1 ,    68.90152628465687 ,  -405.10229298787050 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_MASKSWB_F187N , SUBARRAY ,   438.8 ,   541.0 ,      640 ,      640 ,   268.8 ,   335.0 ,         171 ,         236 ,    68.70252687163688 ,  -405.10219601955600 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+  NRCA4_FULL_MASKSWB_F187N ,  FULLSCA ,   438.8 ,   541.0 ,     2048 ,     2048 ,   438.8 ,  1508.0 ,           1 ,           1 ,    68.70252687163688 ,  -405.10219601955600 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_MASKSWB_F210M , SUBARRAY ,   488.1 ,   540.8 ,      640 ,      640 ,   318.1 ,   335.2 ,         171 ,         236 ,    67.19304413313687 ,  -405.09492089135142 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+  NRCA4_FULL_MASKSWB_F210M ,  FULLSCA ,   488.1 ,   540.8 ,     2048 ,     2048 ,   488.1 ,  1508.2 ,           1 ,           1 ,    67.19304413313687 ,  -405.09492089135142 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_MASKSWB_F212N , SUBARRAY ,   493.9 ,   540.8 ,      640 ,      640 ,   323.9 ,   335.2 ,         171 ,         236 ,    67.01544268829596 ,  -405.09475123619711 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+  NRCA4_FULL_MASKSWB_F212N ,  FULLSCA ,   493.9 ,   540.8 ,     2048 ,     2048 ,   493.9 ,  1508.2 ,           1 ,           1 ,    67.01544268829596 ,  -405.09475123619711 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_MASKSWB_F200W , SUBARRAY ,   495.6 ,   540.8 ,      640 ,      640 ,   325.6 ,   335.2 ,         171 ,         236 ,    66.96338642236545 ,  -405.09469986374955 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+  NRCA4_FULL_MASKSWB_F200W ,  FULLSCA ,   495.6 ,   540.8 ,     2048 ,     2048 ,   495.6 ,  1508.2 ,           1 ,           1 ,    66.96338642236545 ,  -405.09469986374955 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+      NRCA4_MASKSWB_NARROW , SUBARRAY ,   226.2 ,   541.4 ,      640 ,      640 ,    56.2 ,   334.6 ,         171 ,         236 ,    75.20927253448872 ,  -405.11208569856484 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,   226.2 ,   541.4 ,     2048 ,     2048 ,   226.2 ,  1507.6 ,           1 ,           1 ,    75.20927253448872 ,  -405.11208569856484 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+# Coronagraphic science and astrometric confirmation-image apertures - LW Bar occulter (Module-A)
+             NRCA5_MASKLWB , SUBARRAY ,   437.0 ,  1684.0 ,      320 ,      320 ,   158.0 ,   177.0 ,         275 ,        1508 ,    47.19270031974360 ,  -404.91720378719464 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+        NRCA5_FULL_MASKLWB ,  FULLSCA ,   437.0 ,  1684.0 ,     2048 ,     2048 ,  1612.0 ,  1684.0 ,           1 ,           1 ,    47.19270031974360 ,  -404.91720378719464 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F250M , SUBARRAY ,   331.8 ,  1683.7 ,      320 ,      320 ,   263.2 ,   176.7 ,         275 ,        1508 ,    40.62592154504763 ,  -404.84343806869720 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F250M ,  FULLSCA ,   331.8 ,  1683.7 ,     2048 ,     2048 ,  1717.2 ,  1683.7 ,           1 ,           1 ,    40.62592154504763 ,  -404.84343806869720 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F300M , SUBARRAY ,   356.2 ,  1683.8 ,      320 ,      320 ,   238.8 ,   176.8 ,         275 ,        1508 ,    42.14980492127413 ,  -404.85973566812095 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F300M ,  FULLSCA ,   356.2 ,  1683.8 ,     2048 ,     2048 ,  1692.8 ,  1683.8 ,           1 ,           1 ,    42.14980492127413 ,  -404.85973566812095 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F277W , SUBARRAY ,   358.2 ,  1683.8 ,      320 ,      320 ,   236.8 ,   176.8 ,         275 ,        1508 ,    42.27468749149650 ,  -404.86155989592874 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F277W ,  FULLSCA ,   358.2 ,  1683.8 ,     2048 ,     2048 ,  1690.8 ,  1683.8 ,           1 ,           1 ,    42.27468749149650 ,  -404.86155989592874 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F335M , SUBARRAY ,   374.9 ,  1683.9 ,      320 ,      320 ,   220.1 ,   176.9 ,         275 ,        1508 ,    43.31738935601251 ,  -404.87029602026212 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F335M ,  FULLSCA ,   374.9 ,  1683.9 ,     2048 ,     2048 ,  1674.1 ,  1683.9 ,           1 ,           1 ,    43.31738935601251 ,  -404.87029602026212 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F360M , SUBARRAY ,   388.0 ,  1683.9 ,      320 ,      320 ,   207.0 ,   176.9 ,         275 ,        1508 ,    44.13511997511857 ,  -404.88188643006777 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F360M ,  FULLSCA ,   388.0 ,  1683.9 ,     2048 ,     2048 ,  1661.0 ,  1683.9 ,           1 ,           1 ,    44.13511997511857 ,  -404.88188643006777 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F356W , SUBARRAY ,   399.7 ,  1683.9 ,      320 ,      320 ,   195.3 ,   176.9 ,         275 ,        1508 ,    44.86534752280321 ,  -404.89207426625427 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F356W ,  FULLSCA ,   399.7 ,  1683.9 ,     2048 ,     2048 ,  1649.3 ,  1683.9 ,           1 ,           1 ,    44.86534752280321 ,  -404.89207426625427 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F410M , SUBARRAY ,   411.0 ,  1683.9 ,      320 ,      320 ,   184.0 ,   176.9 ,         275 ,        1508 ,    45.57051090549631 ,  -404.90176698825553 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F410M ,  FULLSCA ,   411.0 ,  1683.9 ,     2048 ,     2048 ,  1638.0 ,  1683.9 ,           1 ,           1 ,    45.57051090549631 ,  -404.90176698825553 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F430M , SUBARRAY ,   421.0 ,  1684.0 ,      320 ,      320 ,   174.0 ,   177.0 ,         275 ,        1508 ,    46.19452298379824 ,  -404.90390637942943 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F430M ,  FULLSCA ,   421.0 ,  1684.0 ,     2048 ,     2048 ,  1628.0 ,  1684.0 ,           1 ,           1 ,    46.19452298379824 ,  -404.90390637942943 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F460M , SUBARRAY ,   438.5 ,  1684.1 ,      320 ,      320 ,   156.5 ,   177.1 ,         275 ,        1508 ,    47.28632304545917 ,  -404.91211837072956 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F460M ,  FULLSCA ,   438.5 ,  1684.1 ,     2048 ,     2048 ,  1610.5 ,  1684.1 ,           1 ,           1 ,    47.28632304545917 ,  -404.91211837072956 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F480M , SUBARRAY ,   450.7 ,  1684.1 ,      320 ,      320 ,   144.3 ,   177.1 ,         275 ,        1508 ,    48.04729299580802 ,  -404.92204319995716 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F480M ,  FULLSCA ,   450.7 ,  1684.1 ,     2048 ,     2048 ,  1598.3 ,  1684.1 ,           1 ,           1 ,    48.04729299580802 ,  -404.92204319995716 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+       NRCA5_MASKLWB_F444W , SUBARRAY ,   448.6 ,  1684.1 ,      320 ,      320 ,   146.4 ,   177.1 ,         275 ,        1508 ,    47.91631407552501 ,  -404.92034680195206 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+  NRCA5_FULL_MASKLWB_F444W ,  FULLSCA ,   448.6 ,  1684.1 ,     2048 ,     2048 ,  1600.4 ,  1684.1 ,           1 ,           1 ,    47.91631407552501 ,  -404.92034680195206 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+      NRCA5_MASKLWB_NARROW , SUBARRAY ,   304.0 ,  1684.3 ,      320 ,      320 ,   291.0 ,   177.3 ,         275 ,        1508 ,    38.88951851128905 ,  -404.77891219530227 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+ NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,   304.0 ,  1684.3 ,     2048 ,     2048 ,  1745.0 ,  1684.3 ,           1 ,           1 ,    38.88951851128905 ,  -404.77891219530227 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+# Coronagraphic TA and associated astrometric confirmation-image apertures - Round occulters (Module-A)
+          NRCA2_TAMASK210R , SUBARRAY ,   468.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,         405 ,         710 ,   134.78894514579002 ,  -412.55796900451583 ,                           NRCA2_FULL_WEDGE_RND ,         default
+     NRCA2_FULL_TAMASK210R ,  FULLSCA ,   468.5 ,   773.5 ,     2048 ,     2048 ,   468.5 ,  1275.5 ,           1 ,           1 ,   134.78894514579002 ,  -412.55796900451583 ,                           NRCA2_FULL_WEDGE_RND ,         default
+        NRCA2_FSTAMASK210R , SUBARRAY ,   627.5 ,   773.5 ,      128 ,      128 ,    64.5 ,    64.5 ,         564 ,         710 ,   129.92649351573110 ,  -412.59695888213474 ,                           NRCA2_FULL_WEDGE_RND ,         default
+   NRCA2_FULL_FSTAMASK210R ,  FULLSCA ,   627.5 ,   773.5 ,     2048 ,     2048 ,   627.5 ,  1275.5 ,           1 ,           1 ,   129.92649351573110 ,  -412.59695888213474 ,                           NRCA2_FULL_WEDGE_RND ,         default
+          NRCA5_TAMASK335R , SUBARRAY ,  1558.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1527 ,        1519 ,   117.11873038956773 ,  -412.92866330022770 ,                           NRCA5_FULL_WEDGE_RND ,         default
+     NRCA5_FULL_TAMASK335R ,  FULLSCA ,  1558.5 ,  1550.5 ,     2048 ,     2048 ,   490.5 ,  1550.5 ,           1 ,           1 ,   117.11873038956773 ,  -412.92866330022770 ,                           NRCA5_FULL_WEDGE_RND ,         default
+        NRCA5_FSTAMASK335R , SUBARRAY ,  1429.5 ,  1551.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1398 ,        1520 ,   109.10890742696606 ,  -412.91061395851500 ,                           NRCA5_FULL_WEDGE_RND ,         default
+   NRCA5_FULL_FSTAMASK335R ,  FULLSCA ,  1429.5 ,  1551.5 ,     2048 ,     2048 ,   619.5 ,  1551.5 ,           1 ,           1 ,   109.10890742696606 ,  -412.91061395851500 ,                           NRCA5_FULL_WEDGE_RND ,         default
+          NRCA5_TAMASK430R , SUBARRAY ,  1235.5 ,  1550.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1204 ,        1519 ,    97.06283504803818 ,  -413.00761255681778 ,                           NRCA5_FULL_WEDGE_RND ,         default
+     NRCA5_FULL_TAMASK430R ,  FULLSCA ,  1235.5 ,  1550.5 ,     2048 ,     2048 ,   813.5 ,  1550.5 ,           1 ,           1 ,    97.06283504803818 ,  -413.00761255681778 ,                           NRCA5_FULL_WEDGE_RND ,         default
+        NRCA5_FSTAMASK430R , SUBARRAY ,  1113.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,        1082 ,        1526 ,    89.48661694754094 ,  -412.56823791810075 ,                           NRCA5_FULL_WEDGE_RND ,         default
+   NRCA5_FULL_FSTAMASK430R ,  FULLSCA ,  1113.5 ,  1557.5 ,     2048 ,     2048 ,   935.5 ,  1557.5 ,           1 ,           1 ,    89.48661694754094 ,  -412.56823791810075 ,                           NRCA5_FULL_WEDGE_RND ,         default
+# Coronagraphic TA and associated astrometric confirmation-image apertures - SW Bar occulters (Module-A)
+           NRCA4_TAMASKSWB , SUBARRAY ,   821.5 ,   787.5 ,      128 ,      128 ,    64.5 ,    64.5 ,         758 ,         724 ,    56.97177598335146 ,  -412.71173102537074 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+      NRCA4_FULL_TAMASKSWB ,  FULLSCA ,   821.5 ,   787.5 ,     2048 ,     2048 ,   821.5 ,  1261.5 ,           1 ,           1 ,    56.97177598335146 ,  -412.71173102537074 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+          NRCA4_TAMASKSWBS , SUBARRAY ,   166.5 ,   786.5 ,      128 ,      128 ,    64.5 ,    64.5 ,         103 ,         723 ,    77.05223280397033 ,  -412.68753919674873 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+     NRCA4_FULL_TAMASKSWBS ,  FULLSCA ,   166.5 ,   786.5 ,     2048 ,     2048 ,   166.5 ,  1262.5 ,           1 ,           1 ,    77.05223280397033 ,  -412.68753919674873 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+         NRCA4_FSTAMASKSWB , SUBARRAY ,   532.5 ,   789.5 ,      128 ,      128 ,    64.5 ,    64.5 ,         469 ,         726 ,    65.83829018957583 ,  -412.78975315891188 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_FSTAMASKSWB ,  FULLSCA ,   532.5 ,   789.5 ,     2048 ,     2048 ,   532.5 ,  1259.5 ,           1 ,           1 ,    65.83829018957583 ,  -412.78975315891188 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+# Coronagraphic TA and associated astrometric confirmation-image apertures - LW Bar occulters (Module-A)
+           NRCA5_TAMASKLWB , SUBARRAY ,   312.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,         281 ,        1526 ,    39.35064111781632 ,  -412.80080525484993 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+      NRCA5_FULL_TAMASKLWB ,  FULLSCA ,   312.5 ,  1557.5 ,     2048 ,     2048 ,  1736.5 ,  1557.5 ,           1 ,           1 ,    39.35064111781632 ,  -412.80080525484993 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+          NRCA5_TAMASKLWBL , SUBARRAY ,   593.5 ,  1558.5 ,       64 ,       64 ,    32.5 ,    32.5 ,         562 ,        1527 ,    56.89205227466496 ,  -412.94989819334126 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+     NRCA5_FULL_TAMASKLWBL ,  FULLSCA ,   593.5 ,  1558.5 ,     2048 ,     2048 ,  1455.5 ,  1558.5 ,           1 ,           1 ,    56.89205227466496 ,  -412.94989819334126 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_FSTAMASKLWB , SUBARRAY ,   391.5 ,  1557.5 ,       64 ,       64 ,    32.5 ,    32.5 ,         360 ,        1526 ,    44.28774663288369 ,  -412.86918509845157 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_FSTAMASKLWB ,  FULLSCA ,   391.5 ,  1557.5 ,     2048 ,     2048 ,  1657.5 ,  1557.5 ,           1 ,           1 ,    44.28774663288369 ,  -412.86918509845157 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+# Coronagraphic science apertures (Module-B, backup)
+            NRCB1_MASK210R , SUBARRAY ,  1287.0 ,   511.0 ,      640 ,      640 ,   320.0 ,   321.0 ,         968 ,         192 ,  -128.84020387985470 ,  -401.75362312537794 ,                                     NRCB1_FULL ,           wedge
+            NRCB5_MASK335R , SUBARRAY ,  1345.0 ,   359.0 ,      320 ,      320 ,   160.0 ,   161.0 ,        1186 ,         200 ,  -107.30207413921570 ,  -402.09997033939982 ,                                     NRCB5_FULL ,           wedge
+            NRCB5_MASK430R , SUBARRAY ,  1021.0 ,   361.0 ,      320 ,      320 ,   160.0 ,   161.0 ,         862 ,         202 ,   -87.08914761454272 ,  -402.24199035557763 ,                                     NRCB5_FULL ,           wedge
+             NRCB3_MASKSWB , SUBARRAY ,   881.0 ,   515.0 ,      640 ,      640 ,   320.0 ,   321.0 ,         562 ,         196 ,   -48.96774419933852 ,  -401.85192446444137 ,                                     NRCB3_FULL ,           wedge
+# Coronagraphic target acquisition apertures (Module-B, backup)
+             NRCB5_MASKLWB , SUBARRAY ,   702.0 ,   364.0 ,      320 ,      320 ,   160.0 ,   161.0 ,         543 ,         205 ,   -67.16334742496571 ,  -402.36829665779032 ,                                     NRCB5_FULL ,           wedge
+          NRCB1_TAMASK210R , SUBARRAY ,  1533.0 ,   759.0 ,      128 ,      128 ,    64.0 ,    65.0 ,        1470 ,         696 ,  -136.42432350170031 ,  -409.31224553558377 ,                                     NRCB1_FULL ,           wedge
+          NRCB5_TAMASK335R , SUBARRAY ,  1506.0 ,   479.0 ,       64 ,       64 ,    32.0 ,    33.0 ,        1475 ,         448 ,  -117.36349658870448 ,  -409.58047289283678 ,                                     NRCB5_FULL ,           wedge
+          NRCB5_TAMASK430R , SUBARRAY ,  1184.0 ,   479.0 ,       64 ,       64 ,    32.0 ,    33.0 ,        1153 ,         448 ,   -97.25640000863463 ,  -409.64287670647076 ,                                     NRCB5_FULL ,           wedge
+           NRCB3_TAMASKSWB , SUBARRAY ,   637.0 ,   763.0 ,      128 ,      128 ,    64.0 ,    65.0 ,         574 ,         700 ,   -41.37415422183152 ,  -409.43201364824085 ,                                     NRCB3_FULL ,           wedge
+           NRCB5_TAMASKLWB , SUBARRAY ,   862.0 ,   481.0 ,       64 ,       64 ,    32.0 ,    33.0 ,         831 ,         450 ,   -77.13542499598205 ,  -409.75425516701006 ,                                     NRCB5_FULL ,           wedge
+          NRCB5_TAMASKLWBL , SUBARRAY ,   540.0 ,   483.0 ,       64 ,       64 ,    32.0 ,    33.0 ,         509 ,         452 ,   -56.97904460963606 ,  -409.78927555232627 ,                                     NRCB5_FULL ,           wedge
+          NRCB3_TAMASKSWBS , SUBARRAY ,  1209.0 ,   759.0 ,      128 ,      128 ,    64.0 ,    65.0 ,        1146 ,         696 ,   -58.99256373575322 ,  -409.46978959949121 ,                                     NRCB3_FULL ,           wedge
