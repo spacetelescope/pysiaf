@@ -388,15 +388,11 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-242 Jira ticket
-            selected_aperture_names = [['NRCB{}_SUB160'.format(sca) for sca in ['5','1','2','3','4']],
-                                       ['NRCB{}_SUB320'.format(sca) for sca in ['5','1','2','3','4']],
-                                       ['NRCB{}_SUB640'.format(sca) for sca in ['5','1','2','3','4']],
-                                       ['NRCB5_SUB64P','NRCB1_SUB64P','NRCB5_FULL','NRCB1_FULL'],
-                                       ['NRCB5_SUB160P','NRCB1_SUB160P','NRCB5_FULL','NRCB1_FULL'],
-                                       ['NRCB5_SUB400P','NRCB1_SUB400P','NRCB5_FULL','NRCB1_FULL'],
-                                       ['NRCB1_SUB64P','NRCB1_SUB160P','NRCB1_SUB400P','NRCB5_SUB64P','NRCB5_SUB160P','NRCB5_SUB400P']
-                                      ]
+            # # make figures for JWSTSIAF-186 Jira ticket
+            selected_aperture_names = [['NRCA1_GRISMTS256','NRCA1_GRISMTS128','NRCA1_GRISMTS64'],
+            						   ['NRCA3_GRISMTS256','NRCA3_GRISMTS128','NRCA3_GRISMTS64'],
+                                       ['NRCA5_TAGRISMTS32','NRCA5_TAGRISMTS32_F405N']
+                                       ]
                                                              
 
             for selected_aperture_name in selected_aperture_names:
