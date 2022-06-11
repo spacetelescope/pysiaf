@@ -127,17 +127,17 @@
               NRCB2_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB160 , SUBARRAY ,  1968.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB160 , SUBARRAY ,    80.5 ,  1968.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB160 , SUBARRAY ,   984.5 ,  1028.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB160 , SUBARRAY , 1012.62 , 1028.13 ,      160 ,      160 ,   80.62 ,   80.87 ,                                     NRCB5_FULL ,         default
               NRCB1_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB1_FULL ,         default
               NRCB2_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB320 , SUBARRAY ,  1888.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB320 , SUBARRAY ,   160.5 ,  1888.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB320 , SUBARRAY ,   984.5 ,  1028.5 ,      320 ,      320 ,   160.5 ,   160.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB320 , SUBARRAY , 1012.57 , 1028.20 ,      320 ,      320 ,  160.57 ,  160.80 ,                                     NRCB5_FULL ,         default
               NRCB1_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB1_FULL ,         default
               NRCB2_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB2_FULL ,         default
               NRCB3_SUB640 , SUBARRAY ,  1728.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB3_FULL ,         default
               NRCB4_SUB640 , SUBARRAY ,   320.5 ,  1728.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB4_FULL ,         default
-              NRCB5_SUB640 , SUBARRAY ,   984.5 ,  1028.5 ,      640 ,      640 ,   320.5 ,   320.5 ,                                     NRCB5_FULL ,         default
+              NRCB5_SUB640 , SUBARRAY , 1012.41 , 1028.57 ,      640 ,      640 ,  320.41 ,  320.43 ,                                     NRCB5_FULL ,         default
 # Grism Time Series (Module-A)
      NRCA5_GRISM256_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      256 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
      NRCA5_GRISM128_F322W2 , SUBARRAY ,   468.0 ,    35.0 ,     2048 ,      128 ,  1581.0 ,    35.0 ,                                     NRCA5_FULL ,         default
@@ -207,12 +207,12 @@ NRCA5_TAGRISMTS_SCI_F322W2 ,      ROI ,   468.0 ,    57.5 ,       32 ,       32 
              NRCA5_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA5_FULL ,         default
              NRCA5_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA5_FULL ,         default
 # Point-source Imaging and Time Series (Module-B)
-              NRCB1_SUB64P , SUBARRAY ,  2014.5 ,    46.0 ,       64 ,       64 ,    30.5 ,    19.0 ,                                     NRCB1_FULL ,         default
-             NRCB1_SUB160P , SUBARRAY ,  1968.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCB1_FULL ,         default
-             NRCB1_SUB400P , SUBARRAY ,  1848.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCB1_FULL ,         default
-              NRCB5_SUB64P , SUBARRAY , 2010.96 ,    9.39 ,       64 ,       64 ,   26.96 ,   55.61 ,                                     NRCB5_FULL ,         default
-             NRCB5_SUB160P , SUBARRAY , 1988.48 ,   26.31 ,      160 ,      160 ,  100.48 ,  134.69 ,                                     NRCB5_FULL ,         default
-             NRCB5_SUB400P , SUBARRAY ,  1929.9 ,   85.15 ,      400 ,      400 ,   281.9 ,  315.85 ,                                     NRCB5_FULL ,         default
+              NRCB1_SUB64P , SUBARRAY , 1882.31 ,  202.78 ,       64 ,       64 ,   32.31 ,   30.22 ,                                     NRCB1_FULL ,         default
+             NRCB1_SUB160P , SUBARRAY , 1882.31 ,  202.78 ,      160 ,      160 ,   80.31 ,   78.22 ,                                     NRCB1_FULL ,         default
+             NRCB1_SUB400P , SUBARRAY , 1882.31 ,  202.78 ,      400 ,      400 ,  234.31 ,  198.22 ,                                     NRCB1_FULL ,         default
+              NRCB5_SUB64P , SUBARRAY , 1975.50 ,   86.50 ,       64 ,       64 ,   32.50 ,   32.50 ,                                     NRCB5_FULL ,         default
+             NRCB5_SUB160P , SUBARRAY , 1975.50 ,   86.50 ,      160 ,      160 ,   87.50 ,   74.50 ,                                     NRCB5_FULL ,         default
+             NRCB5_SUB400P , SUBARRAY , 1975.50 ,   86.50 ,      400 ,      400 ,  327.50 ,  314.50 ,                                     NRCB5_FULL ,         default
                NRCB1_FULLP ,  FULLSCA , 1430.94 ,  675.99 ,     2048 ,     2048 , 1430.94 , 1373.01 ,                                     NRCB1_FULL ,         default
                NRCB5_FULLP ,  FULLSCA ,  1726.0 ,   318.5 ,     2048 ,     2048 ,  1726.0 ,  1730.5 ,                                     NRCB5_FULL ,         default
            NRCB5_TAPSIMG32 , SUBARRAY ,  2024.5 ,   216.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCB5_FULL ,         default
