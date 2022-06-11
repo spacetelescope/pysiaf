@@ -1,0 +1,86 @@
+# NIRSpec aperture definition file for SIAF
+# 
+# This file contains all the necessary aperture information to generate the full SIAF given the necessary reference files (focal plane alignment, distortion) and auxiliary information (DDC mapping, wedge offsets, ...)
+# This file also defines the order in which the apertures are presented.
+# 
+# Originally based on PRDOPSSOC-H-014.
+# 
+# Generated 2018-04-10T14:40:45.911 utc
+# jsahlmann@nereus.local.stsci.edu
+# 
+               AperName ,  AperType , XDetRef , YDetRef , XSciSize , YSciSize ,        XSciRef ,        YSciRef , parent_apertures , dependency_type
+          NRS1_FULL_OSS ,       OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,         1024.5 ,         1024.5 ,        NRS1_FULL ,     oss_default
+              NRS1_FULL ,   FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,         1024.5 ,         1024.5 ,             None ,            None
+          NRS2_FULL_OSS ,       OSS ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,         1024.5 ,         1024.5 ,        NRS2_FULL ,     oss_default
+              NRS2_FULL ,   FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,         1024.5 ,         1024.5 ,             None ,            None
+        NRS_S200A1_SLIT ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_S200A2_SLIT ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_S400A1_SLIT ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+       NRS_S1600A1_SLIT ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_S200B1_SLIT ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+           NRS_FULL_IFU ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE00 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE01 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE02 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE03 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE04 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE05 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE06 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE07 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE08 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE09 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE10 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE11 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE12 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE13 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE14 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE15 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE16 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE17 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE18 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE19 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE20 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE21 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE22 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE23 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE24 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE25 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE26 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE27 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE28 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_IFU_SLICE29 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS_FULL_MSA ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,             None ,            None
+          NRS_FULL_MSA1 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+          NRS_FULL_MSA2 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+          NRS_FULL_MSA3 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+          NRS_FULL_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+      NRS_VIGNETTED_MSA ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,             None ,            None
+     NRS_VIGNETTED_MSA1 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+     NRS_VIGNETTED_MSA2 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+     NRS_VIGNETTED_MSA3 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+     NRS_VIGNETTED_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_FIELD1_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+        NRS_FIELD2_MSA4 ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS1_FP1MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None , NRS_S1600A1_SLIT ,         FP1MIMF
+           NRS1_FP2MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS1_FP3MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS1_FULL ,         default
+           NRS2_FP4MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+           NRS2_FP5MIMF ,      SLIT ,    None ,    None ,     None ,     None ,           None ,           None ,        NRS2_FULL ,         default
+          CLEAR_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
+          F110W_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
+          F140X_GWA_OTE , TRANSFORM ,    None ,    None ,     None ,     None , 0.196614012122 , 0.347495883703 ,             None ,            None
+          NRS_SKY_OTEIP , TRANSFORM ,    None ,    None ,     None ,     None ,        0.10539 , -0.11913000025 ,             None ,            None
+ NRS_CLEAR_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+ NRS_CLEAR_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F070LP_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F070LP_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F100LP_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F100LP_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F170LP_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F170LP_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F290LP_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+NRS_F290LP_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+ NRS_F110W_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+ NRS_F110W_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+ NRS_F140X_OTEIP_MSA_L0 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None
+ NRS_F140X_OTEIP_MSA_L1 , TRANSFORM ,    None ,    None ,     None ,     None ,   -2.27962e-07 ,    -2.6094e-07 ,             None ,            None

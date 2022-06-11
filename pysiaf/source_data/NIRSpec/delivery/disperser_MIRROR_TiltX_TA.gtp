@@ -1,0 +1,37 @@
+*REFERENCE
+ESA-JWST-SCI-NRS-TN-2017-027, NID 480
+
+*AUTHOR
+p_generate_gtp_files.py 1.0.1
+
+*DATE
+2022-05-11T07:54:09.526903
+
+*VERSION
+2.0.1
+
+*TYPE
+GTP
+
+*DESCRIPTION
+GWA Y tilt sensor fit for MIRROR with zero point for NRS_COMM_10_NRS019_CAP027_4_GWA_CAP027_20220429T1247_calves
+
+*Unit
+arcsec
+
+*N_Temperatures
+1
+
+*Temperatures 1
+37.5
+
+*Order
+1
+
+*Zeroreadings 1
+0.1955430360000001
+
+*CoeffsTemperature00 2
+5439.212501169971
+-1063.6187787083136
+
