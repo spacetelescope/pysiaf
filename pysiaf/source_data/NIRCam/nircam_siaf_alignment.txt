@@ -12,6 +12,13 @@
 # Aligned the coronographic apertures to the imaging apertures - modified by tsohn, sosborne according to the OTE-10-.
 # Now the offsets between coron and imaging apertures at fixed SCA are the same as in pre-flight
 #
+# Modified 2022-06-29
+# by gennaro
+#
+# Tweaked the NRCA5_FULL_WEDGE_RND and NRCA5_FULL_WEDGE_BAR apertures to account for the PW tuning changes, AR-1325
+# The new alignment parameters are derived by shifting the previous version of these master apertures by the amount 
+# of (v2,V3) offset induced by the change in the PW clocking
+#
                       AperName ,  V3IdlYAngle          ,  V3SciXAngle       ,  V3SciYAngle          ,  V2Ref               ,  V3Ref
                     NRCA1_FULL , -0.57873665133359     , -90.53134882031526 , -0.57873665133359     ,  120.521931          , -527.681271
                     NRCA2_FULL , -0.21514994419897     , -90.27290447960130 , -0.21514994419897     ,  119.668749          , -459.968346
@@ -27,9 +34,9 @@
           NRCA2_FULL_WEDGE_RND ,  0.02423127000000     , -90.29051250999999 ,  0.02423127000000     ,  117.786705          , -420.414458
           NRCA3_FULL_WEDGE_RND ,  0.30837949000000     , -89.66970549000000 ,  0.30837949000000     ,   50.232913          , -487.942132
           NRCA4_FULL_WEDGE_RND ,  0.08305695000000     , -89.63598793000000 ,  0.08305695000000     ,   50.604520          , -420.371211
-          NRCA5_FULL_WEDGE_RND ,  0.07921492000000     , -89.97076383000000 ,  0.07921492000000     ,   83.876804          , -446.063595
+          NRCA5_FULL_WEDGE_RND ,  0.08234906964979     , -89.97216057005521 ,  0.08234906964979     ,   83.409810          , -446.076167
           NRCA1_FULL_WEDGE_BAR , -0.33180754000000     , -90.54932540000000 , -0.33180754000000     ,  118.454504          , -487.33635
           NRCA2_FULL_WEDGE_BAR ,  0.02521288000000     , -90.29260742999999 ,  0.02521288000000     ,  117.901889          , -420.047637
           NRCA3_FULL_WEDGE_BAR ,  0.30801422000000     , -89.66813883000000 ,  0.30801422000000     ,   50.355310          , -487.590900
           NRCA4_FULL_WEDGE_BAR ,  0.08193758000000     , -89.63485863000000 ,  0.08193758000000     ,   50.722894          , -420.034916
-          NRCA5_FULL_WEDGE_BAR ,  0.07952796000000     , -89.96936368000000 ,  0.07952796000000     ,   83.633998          , -446.677219
+          NRCA5_FULL_WEDGE_BAR ,  0.08213809709691     , -89.97554806774346 ,  0.08213809709691     ,   83.240650          , -446.716752

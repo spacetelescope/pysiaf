@@ -388,7 +388,7 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-184 Jira ticket
+            # # make figures for JWSTSIAF-245 Jira ticket
             selected_aperture_names = [['NRCA1_FULL_WEDGE_RND','NRCA2_FULL_WEDGE_RND','NRCA3_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_RND','NRCA2_MASK210R'],
                                        ['NRCA1_FULL_WEDGE_BAR','NRCA2_FULL_WEDGE_BAR','NRCA3_FULL_WEDGE_BAR','NRCA4_FULL_WEDGE_BAR','NRCA4_MASKSWB'],
                                        ['NRCA5_FULL_WEDGE_RND','NRCA5_MASK335R','NRCA5_MASK430R'],
