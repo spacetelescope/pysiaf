@@ -388,6 +388,7 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
+
             # # make figures for JWSTSIAF-189 Jira ticket
             selected_aperture_names = [['NRCA2_MASK210R', 'NRCA5_MASK210R','NRCA2_FULL_MASK210R', 'NRCA5_FULL_MASK210R'],
                                        ['NRCA5_MASK335R', 'NRCA2_MASK335R','NRCA5_FULL_MASK335R', 'NRCA2_FULL_MASK335R','NRCA5_MASK430R', 'NRCA2_MASK430R',
