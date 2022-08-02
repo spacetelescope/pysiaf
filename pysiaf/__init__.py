@@ -3,8 +3,12 @@
 """
 
 from __future__ import absolute_import, print_function, division
+import logging
 import re
 import requests
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 from pkg_resources import get_distribution, DistributionNotFound
 try:
@@ -34,9 +38,9 @@ try:
                   is False][-1]  # choose largest number from PRDs matching format: PRODOSSOC-###
 
     if JWST_PRD_VERSION != newest_prd:
-        print("**WARNING**: LOCAL JWST PRD VERSION {} DOESN'T MATCH THE CURRENT ONLINE VERSION {}\nPlease "
-              "consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf".format(
-              JWST_PRD_VERSION, newest_prd))
+        logger.warning("**WARNING**: LOCAL JWST PRD VERSION %s DOESN'T MATCH THE CURRENT ONLINE VERSION %s"
+                       "\nPlease consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf",
+                       JWST_PRD_VERSION, newest_prd)
 except:
-    print("**WARNING**: LOCAL JWST PRD VERSION {} CANNOT BE CHECKED AGAINST ONLINE VERSION".format(JWST_PRD_VERSION))
+    logger.warning("**WARNING**: LOCAL JWST PRD VERSION %s CANNOT BE CHECKED AGAINST ONLINE VERSION", JWST_PRD_VERSION)
     pass
