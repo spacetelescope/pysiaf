@@ -59,9 +59,9 @@ Plotting (only a small subset of options is illustrated):
 </p>
 
 ````
-    import matplotlib.pyplot as pl
+    import matplotlib.pyplot as plt
 
-    pl.figure(figsize=(4, 4), facecolor='w', edgecolor='k'); pl.clf()
+    plt.figure(figsize=(4, 4), facecolor='w', edgecolor='k'); plt.clf()
 
     # plot single aperture
     nis_cen.plot()
@@ -69,27 +69,27 @@ Plotting (only a small subset of options is illustrated):
     # plot all apertures in SIAF
     for aperture_name, aperture in siaf.apertures.items():
         aperture.plot()
-    pl.show()
+    plt.show()
 ````
 ````
     # plot 'master' apertures
     from pysiaf.siaf import plot_master_apertures
-    pl.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); pl.clf()
+    plt.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); plt.clf()
     plot_master_apertures(mark_ref=True)
-    pl.show()
+    plt.show()
 ````
 ````
     # plot HST apertures
     siaf = pysiaf.Siaf('HST')
     aperture_names = ['FGS1', 'FGS2', 'FGS3', 'IUVIS1FIX', 'IUVIS2FIX', 'JWFC1FIX', 'JWFC2FIX']
 
-    pl.figure(figsize=(4, 4), facecolor='w', edgecolor='k')
+    plt.figure(figsize=(4, 4), facecolor='w', edgecolor='k')
     for aperture_name in aperture_names:
         siaf[aperture_name].plot(color='r', fill_color='darksalmon', mark_ref=True)
-    ax = pl.gca()
+    ax = plt.gca()
     ax.set_aspect('equal')
     ax.invert_yaxis()
-    pl.show()
+    plt.show()
 
 ````
 
