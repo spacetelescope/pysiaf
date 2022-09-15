@@ -388,9 +388,32 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-247 Jira ticket
-            selected_aperture_names = [['NRC{}{}_FULL'.format(mod,det) for mod in ['A','B'] for det in ['1','2','3','4','5']]
-                                        ]
+
+            # # make figures for JWSTSIAF-189 Jira ticket
+            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA5_MASK210R','NRCA2_FULL_MASK210R', 'NRCA5_FULL_MASK210R'],
+                                       ['NRCA5_MASK335R', 'NRCA2_MASK335R','NRCA5_FULL_MASK335R', 'NRCA2_FULL_MASK335R','NRCA5_MASK430R', 'NRCA2_MASK430R',
+                                        'NRCA5_FULL_MASK430R', 'NRCA2_FULL_MASK430R'],
+                                       ['NRCA4_MASKSWB', 'NRCA5_MASKSWB','NRCA4_MASKSWB_F182M', 'NRCA5_MASKSWB_F182M','NRCA4_MASKSWB_F187N', 
+                                        'NRCA5_MASKSWB_F187N','NRCA4_MASKSWB_F210M', 'NRCA5_MASKSWB_F210M','NRCA4_MASKSWB_F212N',
+                                        'NRCA5_MASKSWB_F212N','NRCA4_MASKSWB_F200W', 'NRCA5_MASKSWB_F200W','NRCA4_MASKSWB_NARROW', 'NRCA5_MASKSWB_NARROW'],
+                                       ['NRCA4_FULL_MASKSWB', 'NRCA5_FULL_MASKSWB','NRCA4_FULL_MASKSWB_F182M', 'NRCA5_FULL_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F187N',
+                                        'NRCA5_FULL_MASKSWB_F187N','NRCA4_FULL_MASKSWB_F210M', 'NRCA5_FULL_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F212N', 'NRCA5_FULL_MASKSWB_F212N',
+                                        'NRCA4_FULL_MASKSWB_F200W', 'NRCA5_FULL_MASKSWB_F200W','NRCA4_FULL_MASKSWB_NARROW', 'NRCA5_FULL_MASKSWB_NARROW'],
+                                       ['NRCA5_400X256_MASKLWB', 'NRCA4_400X256_MASKLWB','NRCA5_400X256_MASKLWB_F250M', 'NRCA4_400X256_MASKLWB_F250M',
+                                        'NRCA5_400X256_MASKLWB_F300M', 'NRCA4_400X256_MASKLWB_F300M','NRCA5_400X256_MASKLWB_F277W', 'NRCA4_400X256_MASKLWB_F277W',
+                                        'NRCA5_400X256_MASKLWB_F335M', 'NRCA4_400X256_MASKLWB_F335M','NRCA5_400X256_MASKLWB_F360M', 'NRCA4_400X256_MASKLWB_F360M',
+                                        'NRCA5_400X256_MASKLWB_F356W', 'NRCA4_400X256_MASKLWB_F356W','NRCA5_400X256_MASKLWB_F410M', 'NRCA4_400X256_MASKLWB_F410M',
+                                        'NRCA5_400X256_MASKLWB_F430M', 'NRCA4_400X256_MASKLWB_F430M','NRCA5_400X256_MASKLWB_F460M', 'NRCA4_400X256_MASKLWB_F460M',
+                                        'NRCA5_400X256_MASKLWB_F480M', 'NRCA4_400X256_MASKLWB_F480M','NRCA5_400X256_MASKLWB_F444W', 'NRCA4_400X256_MASKLWB_F444W',
+                                        'NRCA5_400X256_MASKLWB_NARROW', 'NRCA4_400X256_MASKLWB_NARROW'],
+                                        ['NRCA5_FULL_MASKLWB', 'NRCA4_FULL_MASKLWB','NRCA5_FULL_MASKLWB_F250M', 'NRCA4_FULL_MASKLWB_F250M',
+                                        'NRCA5_FULL_MASKLWB_F300M', 'NRCA4_FULL_MASKLWB_F300M','NRCA5_FULL_MASKLWB_F277W', 'NRCA4_FULL_MASKLWB_F277W',
+                                        'NRCA5_FULL_MASKLWB_F335M', 'NRCA4_FULL_MASKLWB_F335M','NRCA5_FULL_MASKLWB_F360M', 'NRCA4_FULL_MASKLWB_F360M',
+                                        'NRCA5_FULL_MASKLWB_F356W', 'NRCA4_FULL_MASKLWB_F356W','NRCA5_FULL_MASKLWB_F410M', 'NRCA4_FULL_MASKLWB_F410M',
+                                        'NRCA5_FULL_MASKLWB_F430M', 'NRCA4_FULL_MASKLWB_F430M','NRCA5_FULL_MASKLWB_F460M', 'NRCA4_FULL_MASKLWB_F460M',
+                                        'NRCA5_FULL_MASKLWB_F480M', 'NRCA4_FULL_MASKLWB_F480M','NRCA5_FULL_MASKLWB_F444W', 'NRCA4_FULL_MASKLWB_F444W',
+                                        'NRCA5_FULL_MASKLWB_NARROW', 'NRCA4_FULL_MASKLWB_NARROW']
+                                       ]
                                                              
 
             for selected_aperture_name in selected_aperture_names:
