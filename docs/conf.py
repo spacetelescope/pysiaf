@@ -18,6 +18,7 @@ import os
 import sphinx
 import stsci_rtd_theme
 import sys
+import tomli
 
 
 def setup(app):

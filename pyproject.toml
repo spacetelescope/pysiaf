@@ -32,6 +32,7 @@ docs = [
     'numpy',
     'matplotlib',
     'scipy',
+    'tomli; python_version <"3.11"'
 ]
 
 [project.urls]
