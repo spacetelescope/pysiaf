@@ -1,4 +1,3 @@
-Changes included in this version
+Pysiaf v0.19.1
 --------------------------------
-
-Edit this template to detail updates to the codebase
+- Patch for new numpy version release (1.25.0). This version deprecated np.int and np.float. This release removes mention of these old methods.

@@ -133,7 +133,7 @@ The following describes the typical work flow for contributing to the pysiaf pro
 11. Delete your local copy of your branch.
 
 ### Installation  
-This package is supported in python 3.7, 3.8 and 3.9
+This package is supported in python 3.8 and 3.9
 
 `pip install pysiaf`
 
