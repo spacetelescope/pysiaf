@@ -156,8 +156,8 @@ def read_hst_siaf(file=None, version=None):
 
         elif (text.rstrip()[-3::] == 'CAJ') & (CAJ_index == 2):
             # Process the third 'CAJ' record.
-            a.im_par = np.int(text[0:2])  # Image Parity.
-            a.ideg = np.int(text[2])  # !Polynomial Degree.
+            a.im_par = int(text[0:2])  # Image Parity.
+            a.ideg = int(text[2])  # !Polynomial Degree.
             a.xa0 = np.float(text[3:18])  # !SIAS X Center. -> like JWST SCIENCE frame
             a.ya0 = np.float(text[18:33])  # !SIAS Y Center.
             a.xs0 = np.float(text[33:48])  # !SICS X Center. -> like JWST IDEAL frame
@@ -229,7 +229,7 @@ def read_hst_siaf(file=None, version=None):
 
         elif (text.rstrip()[-3::] == 'CAK') & (CAK_index == 0):
             # Process the first 'CAK' record.
-            n_polynomial_coefficients = np.int(((a.ideg + 1) * (a.ideg + 2)) / 2)
+            n_polynomial_coefficients = int(((a.ideg + 1) * (a.ideg + 2)) / 2)
             # the order is
             # SIAS to SICS X Transformation.
             # SIAS to SICS Y Transformation.
@@ -415,7 +415,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                     except (TypeError, ValueError) as e:
                         # print('{}: {}: {}'.format(e, node.tag, node.text))
                         if node.tag == 'DetSciYAngle':
-                            value = np.int(float((node.text)))
+                            value = int(float((node.text)))
                         else:
                             raise TypeError
                 elif node.tag in aperture.STRING_ATTRIBUTES:

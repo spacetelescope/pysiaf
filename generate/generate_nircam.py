@@ -108,7 +108,7 @@ for AperName in aperture_name_list:
         polynomial_coefficients = iando.read.read_siaf_distortion_coefficients(instrument, AperName)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         aperture.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
