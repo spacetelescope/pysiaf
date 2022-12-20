@@ -375,7 +375,7 @@ def jacob(a, b, x, y):
 def number_of_coefficients(poly_degree):
     """Return number of coefficients corresponding to polynomial degree."""
     if type(poly_degree) == int:
-        n_coefficients = np.int((poly_degree + 1) * (poly_degree + 2) / 2)
+        n_coefficients = int((poly_degree + 1) * (poly_degree + 2) / 2)
         return n_coefficients
     else:
         raise TypeError('Argument has to be of type int')
@@ -486,7 +486,7 @@ def polynomial_degree(number_of_coefficients):
     if not poly_degree.is_integer():
         raise ValueError('Number of coefficients does not match a valid polynomial degree.')
     else:
-        return np.int(poly_degree)
+        return int(poly_degree)
 
 
 def prepend_rotation_to_polynomial(a, theta, verbose=False):

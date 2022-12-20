@@ -108,7 +108,7 @@ for AperName in aperture_name_list:
         polynomial_coefficients = iando.read.read_siaf_distortion_coefficients(instrument, AperName)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         aperture.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
@@ -163,8 +163,8 @@ for AperName in aperture_name_list:
                 if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
                     # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += '335R430R'
-                v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
-                v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
+                v2_offset = float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
+                v3_offset = float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
