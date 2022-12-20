@@ -297,7 +297,7 @@ def read_pcf_gtp(file_name):
     # transform to numpy array when possible
     for key in data.keys():
         try:
-            data[key] = np.array(data[key][0].split()).astype(np.float)
+            data[key] = np.array(data[key][0].split()).astype(float)
         except:
             pass
 
@@ -802,7 +802,7 @@ for AperName in aperture_name_list:
     # 'F140X_GWA_OTE', 'F110W_GWA_OTE', 'CLEAR_GWA_OTE']
     elif AperName in pcf_file_mapping.keys():
         number_of_coefficients = len(pcf_data[AperName]['A'])
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         aperture.Sci2IdlDeg = polynomial_degree
         k = 0
         # polynomial coefficients for transformation that goes directly from the GWA pupil plane to the sky
@@ -816,10 +816,10 @@ for AperName in aperture_name_list:
 
         # coefficients to apply the reflection in the MIRROR taking into account the correction
         # to the GWA position as derived from the sensor readings and their calibration relation
-        aperture.XSciScale = np.float(disperser_mirror_tiltx['CoeffsTemperature00'][0])
-        aperture.YSciScale = np.float(disperser_mirror_tilty['CoeffsTemperature00'][0])
-        aperture.XSciRef = np.float(disperser_mirror_tiltx['Zeroreadings'][0])
-        aperture.YSciRef = np.float(disperser_mirror_tilty['Zeroreadings'][0])
+        aperture.XSciScale = float(disperser_mirror_tiltx['CoeffsTemperature00'][0])
+        aperture.YSciScale = float(disperser_mirror_tilty['CoeffsTemperature00'][0])
+        aperture.XSciRef = float(disperser_mirror_tiltx['Zeroreadings'][0])
+        aperture.YSciRef = float(disperser_mirror_tilty['Zeroreadings'][0])
         aperture.DDCName = 'None'
 
     # TRANSFORM apertures for the conversion between the OTE image plane and the MSA plane
@@ -838,7 +838,7 @@ for AperName in aperture_name_list:
         fore_pcf_data = read_pcf_gtp(fore_pcf)
 
         # deal with different formats of the .pcf files
-        fore_year = np.int(fore_pcf_data['DATE'][0][0:4])
+        fore_year = int(fore_pcf_data['DATE'][0][0:4])
         if fore_year > 2016:
             new_pcf_format = True
         else:

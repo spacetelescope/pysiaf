@@ -288,7 +288,7 @@ class Aperture(object):
         polynomial_coefficients = read.read_siaf_distortion_coefficients(file_name=file_name)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         self.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
@@ -910,7 +910,7 @@ class Aperture(object):
         # Get the coefficients for "science" to "ideal" transformation (and back)
 
         # degree of distortion polynomial
-        degree = np.int(getattr(self, 'Sci2IdlDeg'))
+        degree = int(getattr(self, 'Sci2IdlDeg'))
 
         number_of_coefficients = polynomial.number_of_coefficients(degree)
         all_keys = self.__dict__.keys()
@@ -1513,8 +1513,8 @@ class Aperture(object):
         This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
         The notation for OSS is 1-based, i.e. the lower left corner of a FULL subarray is (1,1)
         """
-        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
-        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
+        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(int)
+        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(int)
         
         return col_corner, row_corner
         

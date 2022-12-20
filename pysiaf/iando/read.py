@@ -126,11 +126,11 @@ def read_hst_siaf(file=None, version=None):
             a = aperture.HstAperture()
             # Process the first 'CAJ' record.
             a.ap_name = text[0:10].strip()  # Aperture Identifier.
-            a.v2_cent = np.float(text[10:25])  # SICS V2 Center. (same as a_v2_ref)
-            a.v3_cent = np.float(text[25:40])  # SICS V3 Center. (same as a_v3_ref)
+            a.v2_cent = float(text[10:25])  # SICS V2 Center. (same as a_v2_ref)
+            a.v3_cent = float(text[25:40])  # SICS V3 Center. (same as a_v3_ref)
             a.a_shape = text[40:44]  # Aperture Shape.
             try:
-                a.maj = np.float(text[44:59])  # Major Axis Dimension.
+                a.maj = float(text[44:59])  # Major Axis Dimension.
             except ValueError:  # when field is empty
                 a.maj = None
             a.Mac_Flag = text[59]  # !SI Macro Aperture Flag.
@@ -144,24 +144,24 @@ def read_hst_siaf(file=None, version=None):
         elif (text.rstrip()[-3::] == 'CAJ') & (CAJ_index == 1):
             # Process the second 'CAJ' record.
             try:
-                a.min = np.float(text[0:15])  # !Minor Axis Dimension.
+                a.min = float(text[0:15])  # !Minor Axis Dimension.
             except ValueError:  # when field is empty
                 a.min = None
-            a.plate_scale = np.float(text[15:30])  # !Arcsecond per Pixel plate scale.
-            a.a_area = np.float(text[30:45])  # !Area of SI Aperture.
-            a.theta = np.float(text[45:60])  # !Aperture Rotation Angle.
+            a.plate_scale = float(text[15:30])  # !Arcsecond per Pixel plate scale.
+            a.a_area = float(text[30:45])  # !Area of SI Aperture.
+            a.theta = float(text[45:60])  # !Aperture Rotation Angle.
             a.SIAS_Flag = text[60]  # !SIAS coordinate system flag. (If set then AK rec.)
             rec_type = text[70:73]  # !Record type.
             CAJ_index = 2
 
         elif (text.rstrip()[-3::] == 'CAJ') & (CAJ_index == 2):
             # Process the third 'CAJ' record.
-            a.im_par = np.int(text[0:2])  # Image Parity.
-            a.ideg = np.int(text[2])  # !Polynomial Degree.
-            a.xa0 = np.float(text[3:18])  # !SIAS X Center. -> like JWST SCIENCE frame
-            a.ya0 = np.float(text[18:33])  # !SIAS Y Center.
-            a.xs0 = np.float(text[33:48])  # !SICS X Center. -> like JWST IDEAL frame
-            a.ys0 = np.float(text[48:63])  # !SICS Y Center.
+            a.im_par = int(text[0:2])  # Image Parity.
+            a.ideg = int(text[2])  # !Polynomial Degree.
+            a.xa0 = float(text[3:18])  # !SIAS X Center. -> like JWST SCIENCE frame
+            a.ya0 = float(text[18:33])  # !SIAS Y Center.
+            a.xs0 = float(text[33:48])  # !SICS X Center. -> like JWST IDEAL frame
+            a.ys0 = float(text[48:63])  # !SICS Y Center.
             rec_type = text[70:73]  # !Record type.
             CAJ_index = 0
 
@@ -174,34 +174,34 @@ def read_hst_siaf(file=None, version=None):
             rec_type = text[70:73]  # !Record type.
 
         elif text.rstrip()[-3::] == 'CAQ':
-            a.v1x = np.float(text[0:15])  # !SICS Vertex 1_X -> like JWST IDEAL frame
-            a.v1y = np.float(text[15:30])  # !SICS Vertex 1_Y
-            a.v2x = np.float(text[30:45])  # !SICS Vertex 2_X
-            a.v2y = np.float(text[45:60])  # !SICS Vertex 2_Y
+            a.v1x = float(text[0:15])  # !SICS Vertex 1_X -> like JWST IDEAL frame
+            a.v1y = float(text[15:30])  # !SICS Vertex 1_Y
+            a.v2x = float(text[30:45])  # !SICS Vertex 2_X
+            a.v2y = float(text[45:60])  # !SICS Vertex 2_Y
             rec_type = text[70:73]  # !Record type.
 
         elif text.rstrip()[-2::] == 'AQ':
-            a.v3x = np.float(text[0:15])  # !SICS Vertex 3_X
-            a.v3y = np.float(text[15:30])  # !SICS Vertex 3_Y
-            a.v4x = np.float(text[30:45])  # !SICS Vertex 4_X
-            a.v4y = np.float(text[45:60])  # !SICS Vertex 4_Y
+            a.v3x = float(text[0:15])  # !SICS Vertex 3_X
+            a.v3y = float(text[15:30])  # !SICS Vertex 3_Y
+            a.v4x = float(text[30:45])  # !SICS Vertex 4_X
+            a.v4y = float(text[45:60])  # !SICS Vertex 4_Y
             rec_type = text[70:73]  # !Record type.
 
         elif text.rstrip()[-2::] == 'AP':
             # FGS pickles
-            a.pi_angle = np.float(text[0:15])  # !Inner Radius Orientation Angle.
-            a.pi_ext = np.float(text[15:30])  # !Angular Extent of the Inner Radius.
-            a.po_angle = np.float(text[30:45])  # !Outer Radius Orientation Angle.
-            a.po_ext = np.float(text[45:60])  # !Angular Extent of the Outer Radius.
+            a.pi_angle = float(text[0:15])  # !Inner Radius Orientation Angle.
+            a.pi_ext = float(text[15:30])  # !Angular Extent of the Inner Radius.
+            a.po_angle = float(text[30:45])  # !Outer Radius Orientation Angle.
+            a.po_ext = float(text[45:60])  # !Angular Extent of the Outer Radius.
             rec_type = text[70:73]  # !Record type.
 
         elif text.rstrip()[-2::] == 'AM':
-            a.a_v2_ref = np.float(text[0:15])  # !V2 Coordinate of Aperture Reference Point.
+            a.a_v2_ref = float(text[0:15])  # !V2 Coordinate of Aperture Reference Point.
             # (same as v2_cent)
-            a.a_v3_ref = np.float(text[15:30])  # !V3 Coordinate of Aperture Reference Point.
+            a.a_v3_ref = float(text[15:30])  # !V3 Coordinate of Aperture Reference Point.
             # (same as v3_cent)
-            a.a_x_incr = np.float(text[30:45])  # !First Coordinate Axis increment.
-            a.a_y_incr = np.float(text[45:60])  # !Second Coordinate Axis increment.
+            a.a_x_incr = float(text[30:45])  # !First Coordinate Axis increment.
+            a.a_y_incr = float(text[45:60])  # !Second Coordinate Axis increment.
 
         elif text.rstrip()[-2::] == 'AN':
             if (a.a_shape == 'PICK') and ('FGS' in a.ap_name):
@@ -229,7 +229,7 @@ def read_hst_siaf(file=None, version=None):
 
         elif (text.rstrip()[-3::] == 'CAK') & (CAK_index == 0):
             # Process the first 'CAK' record.
-            n_polynomial_coefficients = np.int(((a.ideg + 1) * (a.ideg + 2)) / 2)
+            n_polynomial_coefficients = int(((a.ideg + 1) * (a.ideg + 2)) / 2)
             # the order is
             # SIAS to SICS X Transformation.
             # SIAS to SICS Y Transformation.
@@ -238,19 +238,19 @@ def read_hst_siaf(file=None, version=None):
 
             polynomial_coefficients = np.ones((n_polynomial_coefficients, 4)) * -99
             for jj in np.arange(4):
-                polynomial_coefficients[CAK_index, jj] = np.float(text[15 * jj:15 * (jj + 1)])
+                polynomial_coefficients[CAK_index, jj] = float(text[15 * jj:15 * (jj + 1)])
             CAK_index += 1
 
         elif (text.rstrip()[-3::] == 'CAK') & (CAK_index != 0):
             # Process the remaining 'CAK' records
             for jj in np.arange(4):
-                polynomial_coefficients[CAK_index, jj] = np.float(text[15 * jj:15 * (jj + 1)])
+                polynomial_coefficients[CAK_index, jj] = float(text[15 * jj:15 * (jj + 1)])
             CAK_index += 1
 
         elif text.rstrip()[-2::] == 'AK':
             # Process the last polynomial coefficient record.
             for jj in np.arange(4):
-                polynomial_coefficients[CAK_index, jj] = np.float(text[15 * jj:15 * (jj + 1)])
+                polynomial_coefficients[CAK_index, jj] = float(text[15 * jj:15 * (jj + 1)])
             a.polynomial_coefficients = polynomial_coefficients
             CAK_index = 0
 
@@ -415,7 +415,7 @@ def read_jwst_siaf(instrument=None, filename=None, basepath=None):
                     except (TypeError, ValueError) as e:
                         # print('{}: {}: {}'.format(e, node.tag, node.text))
                         if node.tag == 'DetSciYAngle':
-                            value = np.int(float((node.text)))
+                            value = int(float((node.text)))
                         else:
                             raise TypeError
                 elif node.tag in aperture.STRING_ATTRIBUTES:
