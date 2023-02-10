@@ -21,7 +21,7 @@ from .aperture import Aperture, HstAperture, JwstAperture
 from .constants import JWST_PRD_VERSION, JWST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT_EXCEL, HST_PRD_VERSION, \
     HST_PRD_DATA_ROOT
 from .iando import read, write
-from .siaf import Siaf, ApertureCollection
+from .siaf import Siaf, ApertureCollection, RomanSiaf, RomanAperture, SpecPars
 # from .tests import test_aperture#, test_polynomial
 from .utils import polynomial, rotations, tools, projection
 
