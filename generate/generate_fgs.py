@@ -102,6 +102,10 @@ for AperName in aperture_name_list:
         aperture_dict[AperName] = aperture
         continue
 
+    if AperName == 'V-FRAME':
+        aperture_dict[AperName] = aperture
+        continue
+
     aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
     # Retrieve basic aperture parameters from definition files
     for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
@@ -148,6 +152,10 @@ for AperName in aperture_name_list:
 for AperName in aperture_name_list:
     if AperName == 'J-FRAME':
         continue
+
+    if AperName == 'V-FRAME':
+        continue
+
     index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
     aperture = aperture_dict[AperName]
 
@@ -192,6 +200,20 @@ for attributes, value in [('VIdlParity', 1),
                           ('XIdlVert1 XIdlVert4 YIdlVert3 YIdlVert4', -1000.)]:
     [setattr(aperture, attribute_name, value) for attribute_name in attributes.split()]
 alignment_index = siaf_alignment_parameters['AperName'].tolist().index('J-FRAME')
+for attribute_name in 'V3IdlYAngle V2Ref V3Ref'.split():
+    setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][alignment_index])
+aperture_dict[AperName] = aperture
+
+# Set attributes for the special case of the V-FRAME aperture
+aperture = aperture_dict['V-FRAME']
+definition_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+for attributes, value in [('VIdlParity', 1),
+                          ('AperType', siaf_aperture_definitions['AperType'][definition_index]),
+                          ('XDetSize YDetSize DetSciYAngle DetSciParity', None),
+                          ('XIdlVert2 XIdlVert3 YIdlVert1 YIdlVert2', 1000.),
+                          ('XIdlVert1 XIdlVert4 YIdlVert3 YIdlVert4', -1000.)]:
+    [setattr(aperture, attribute_name, value) for attribute_name in attributes.split()]
+alignment_index = siaf_alignment_parameters['AperName'].tolist().index('V-FRAME')
 for attribute_name in 'V3IdlYAngle V2Ref V3Ref'.split():
     setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][alignment_index])
 aperture_dict[AperName] = aperture

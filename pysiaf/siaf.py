@@ -403,6 +403,8 @@ class Siaf(ApertureCollection):
                 continue
             if ap.AperName == "J-FRAME":
                 continue
+            if ap.AperName == "V-FRAME":
+                continue
             if names is not None:
                 if ap.AperName not in names:
                     continue
