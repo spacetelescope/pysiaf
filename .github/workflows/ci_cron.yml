@@ -1,0 +1,38 @@
+
+name: Weekly cron
+
+on:
+  schedule:
+    # Weekly Monday 6AM build
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, Python ${{ matrix.python }})
+    needs: [ style ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            python: "3.7"
+          - os: macos-latest
+            python: "3.8"
+          - os: macos-latest
+            python: "3.9"
+          - os: macos-latest
+            python: "3.10"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/cache@v3
+        with:
+          path: ${{ env.pythonLocation }}
+          key: test-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('**/pyproject.toml', '**/setup.*') }}
+      - run: python -m pip install . pytest pytest-xdist
+      - run: pip freeze
+      - run: pytest -n auto
