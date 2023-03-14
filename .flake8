@@ -1,0 +1,21 @@
+# flake8 does not support pyproject.toml (https://github.com/PyCQA/flake8/issues/234)
+
+[flake8]
+select = F, W, E, C
+# We should set max line length lower eventually
+max-line-length = 130
+exclude =
+    docs,
+    .tox,
+    .eggs,
+    build
+ignore =
+    F401, # imported but unused
+    F821, # undefined name
+    F841, # local variable assigned but never used
+    E122, # continuation line missing indentation or outdented
+    E126, # continuation line over-indented for hanging indent
+    E127, # continuation line over-indented for visual indent
+    E402, # module level import not at top of file
+    E501, # line too long (103 > 79 characters)
+    E741, # ambiguous variable name
