@@ -140,15 +140,20 @@ def test_jwst_aperture_transforms(siaf_objects, verbose=False, threshold=None):
                 if verbose:
                     print('testing {} {}'.format(siaf.instrument, aper_name))
 
+                # added below to fix bug (Apr 12, 2023 - Tony Sohn)
+                x_sci_ref = x_sci + aperture.XSciRef
+                y_sci_ref = y_sci + aperture.YSciRef
+
+                # all instances of x_sci, y_sci replaced to x_sci_ref, y_sci_ref (Apr 12, 2023 - Tony Sohn)
                 for to_frame in to_frames:
                     forward_transform = getattr(aperture, '{}_to_{}'.format(from_frame, to_frame))
                     backward_transform = getattr(aperture, '{}_to_{}'.format(to_frame, from_frame))
 
-                    x_out, y_out = backward_transform(*forward_transform(x_sci, y_sci))
-                    x_mean_error = np.mean(np.abs(x_sci - x_out))
-                    y_mean_error = np.mean(np.abs(y_sci - y_out))
-                    x_rms_error = np.std(np.abs(x_sci - x_out))
-                    y_rms_error = np.std(np.abs(y_sci - y_out))
+                    x_out, y_out = backward_transform(*forward_transform(x_sci_ref, y_sci_ref))
+                    x_mean_error = np.mean(np.abs(x_sci_ref - x_out))
+                    y_mean_error = np.mean(np.abs(y_sci_ref - y_out))
+                    x_rms_error = np.std(np.abs(x_sci_ref - x_out))
+                    y_rms_error = np.std(np.abs(y_sci_ref - y_out))
                     for i, error in enumerate([x_mean_error, y_mean_error]):
                         if verbose:
                             print('{} {}: mean absolute error in {}<->{} {}-transform is {:02.6f})'.format(
