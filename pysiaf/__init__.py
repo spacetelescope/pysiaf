@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import, print_function, division
 import logging
+import os
 import re
 import requests
 
@@ -29,18 +30,18 @@ __all__ = ['Aperture', 'HstAperture', 'JwstAperture', 'SIAF', 'JWST_PRD_VERSION'
 
 # Check PRD version is up to date
 try:
-    req = requests.get('https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST').text
-    p = re.compile("/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST/(.*?)/SIAFXML")
-    prd_list = p.findall(req)
-    prd_list.sort()
-    newest_prd = [prd for i, prd in enumerate(prd_list) if
-                  bool(re.match(r"^[A-Z]-\d+", prd_list[i].split("PRDOPSSOC-")[1]))
-                  is False][-1]  # choose largest number from PRDs matching format: PRODOSSOC-###
+    url = 'https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST'
+    req = requests.get(url).json()
+    prd_list = [url + '/' + route['path'] for route in req['payload']['tree']['items']]
+    newest_prd_path = [prd for i, prd in enumerate(prd_list) if
+                       bool(re.match(r"^[A-Z]-\d+", prd_list[i].split("PRDOPSSOC-")[1]))
+                       is False][-1]  # choose largest number from PRDs matching format: PRODOSSOC-###
+    newest_prd = os.path.split(os.path.split(newest_prd_path)[0])[1]
 
     if JWST_PRD_VERSION != newest_prd:
         logger.warning("**WARNING**: LOCAL JWST PRD VERSION %s DOESN'T MATCH THE CURRENT ONLINE VERSION %s"
-                       "\nPlease consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf",
-                       JWST_PRD_VERSION, newest_prd)
+                        "\nPlease consider updating pysiaf, e.g. pip install --upgrade pysiaf or conda update pysiaf",
+                        JWST_PRD_VERSION, newest_prd)
 except:
     logger.warning("**WARNING**: LOCAL JWST PRD VERSION %s CANNOT BE CHECKED AGAINST ONLINE VERSION", JWST_PRD_VERSION)
     pass
