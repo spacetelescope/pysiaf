@@ -30,7 +30,7 @@ __all__ = ['Aperture', 'HstAperture', 'JwstAperture', 'SIAF', 'JWST_PRD_VERSION'
 # Check PRD version is up to date
 try:
     req = requests.get('https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST').text
-    p = re.compile("/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST/(.*?)/SIAFXML")
+    p = re.compile("pysiaf/prd_data/JWST/(.*?)/SIAFXML")
     prd_list = p.findall(req)
     prd_list.sort()
     newest_prd = [prd for i, prd in enumerate(prd_list) if
