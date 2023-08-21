@@ -108,7 +108,7 @@ for AperName in aperture_name_list:
         polynomial_coefficients = iando.read.read_siaf_distortion_coefficients(instrument, AperName)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         aperture.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
@@ -163,8 +163,8 @@ for AperName in aperture_name_list:
                 if (sca_name == 'NRCA5') and (('MASK335R' in aperture.AperName) or ('MASK430R' in aperture.AperName)):
                     # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += '335R430R'
-                v2_offset = np.float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
-                v3_offset = np.float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
+                v2_offset = float(wedge_offsets['v2_offset'][wedge_offsets['name'] == sca_name])
+                v3_offset = float(wedge_offsets['v3_offset'][wedge_offsets['name'] == sca_name])
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
             elif dependency_type == 'dhspil_wedge':
@@ -388,21 +388,31 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-245 Jira ticket
-            selected_aperture_names = [['NRCA1_FULL_WEDGE_RND','NRCA2_FULL_WEDGE_RND','NRCA3_FULL_WEDGE_RND','NRCA4_FULL_WEDGE_RND','NRCA2_MASK210R'],
-                                       ['NRCA1_FULL_WEDGE_BAR','NRCA2_FULL_WEDGE_BAR','NRCA3_FULL_WEDGE_BAR','NRCA4_FULL_WEDGE_BAR','NRCA4_MASKSWB'],
-                                       ['NRCA5_FULL_WEDGE_RND','NRCA5_MASK335R','NRCA5_MASK430R'],
-                                       ['NRCA5_FULL_WEDGE_BAR','NRCA5_MASKLWB'],
-                                       ['NRCA2_MASK210R','NRCA2_TAMASK210R','NRCA2_FSTAMASK210R'],
-                                       ['NRCA4_MASKSWB','NRCA4_MASKSWB_F182M','NRCA4_MASKSWB_F187N','NRCA4_MASKSWB_F210M','NRCA4_MASKSWB_F212N','NRCA4_MASKSWB_F200W','NRCA4_MASKSWB_NARROW',
-                                        'NRCA4_TAMASKSWB','NRCA4_TAMASKSWBS','NRCA4_FSTAMASKSWB'  ],
-                                       ['NRCA5_MASK335R','NRCA5_TAMASK335R','NRCA5_FSTAMASK335R'],
-                                       ['NRCA5_MASK430R','NRCA5_TAMASK430R','NRCA5_FSTAMASK430R'],
-                                       ['NRCA5_MASKLWB','NRCA5_MASKLWB_F250M','NRCA5_MASKLWB_F300M','NRCA5_MASKLWB_F277W','NRCA5_MASKLWB_F335M','NRCA5_MASKLWB_F360M','NRCA5_MASKLWB_F356W',
-                                        'NRCA5_MASKLWB_F410M','NRCA5_MASKLWB_F430M','NRCA5_MASKLWB_F460M','NRCA5_MASKLWB_F480M','NRCA5_MASKLWB_F444W','NRCA5_MASKLWB_NARROW',
-                                        'NRCA5_TAMASKLWB','NRCA5_TAMASKLWBL','NRCA5_FSTAMASKLWB']
-                                        ]
-                                                             
+            # # make figures for JWSTSIAF-189 Jira ticket
+            selected_aperture_names = [['NRCA2_MASK210R', 'NRCA5_MASK210R','NRCA2_FULL_MASK210R', 'NRCA5_FULL_MASK210R'],
+                                       ['NRCA5_MASK335R', 'NRCA2_MASK335R','NRCA5_FULL_MASK335R', 'NRCA2_FULL_MASK335R','NRCA5_MASK430R', 'NRCA2_MASK430R',
+                                        'NRCA5_FULL_MASK430R', 'NRCA2_FULL_MASK430R'],
+                                       ['NRCA4_MASKSWB', 'NRCA5_MASKSWB','NRCA4_MASKSWB_F182M', 'NRCA5_MASKSWB_F182M','NRCA4_MASKSWB_F187N', 
+                                        'NRCA5_MASKSWB_F187N','NRCA4_MASKSWB_F210M', 'NRCA5_MASKSWB_F210M','NRCA4_MASKSWB_F212N',
+                                        'NRCA5_MASKSWB_F212N','NRCA4_MASKSWB_F200W', 'NRCA5_MASKSWB_F200W','NRCA4_MASKSWB_NARROW', 'NRCA5_MASKSWB_NARROW'],
+                                       ['NRCA4_FULL_MASKSWB', 'NRCA5_FULL_MASKSWB','NRCA4_FULL_MASKSWB_F182M', 'NRCA5_FULL_MASKSWB_F182M','NRCA4_FULL_MASKSWB_F187N',
+                                        'NRCA5_FULL_MASKSWB_F187N','NRCA4_FULL_MASKSWB_F210M', 'NRCA5_FULL_MASKSWB_F210M','NRCA4_FULL_MASKSWB_F212N', 'NRCA5_FULL_MASKSWB_F212N',
+                                        'NRCA4_FULL_MASKSWB_F200W', 'NRCA5_FULL_MASKSWB_F200W','NRCA4_FULL_MASKSWB_NARROW', 'NRCA5_FULL_MASKSWB_NARROW'],
+                                       ['NRCA5_400X256_MASKLWB', 'NRCA4_400X256_MASKLWB','NRCA5_400X256_MASKLWB_F250M', 'NRCA4_400X256_MASKLWB_F250M',
+                                        'NRCA5_400X256_MASKLWB_F300M', 'NRCA4_400X256_MASKLWB_F300M','NRCA5_400X256_MASKLWB_F277W', 'NRCA4_400X256_MASKLWB_F277W',
+                                        'NRCA5_400X256_MASKLWB_F335M', 'NRCA4_400X256_MASKLWB_F335M','NRCA5_400X256_MASKLWB_F360M', 'NRCA4_400X256_MASKLWB_F360M',
+                                        'NRCA5_400X256_MASKLWB_F356W', 'NRCA4_400X256_MASKLWB_F356W','NRCA5_400X256_MASKLWB_F410M', 'NRCA4_400X256_MASKLWB_F410M',
+                                        'NRCA5_400X256_MASKLWB_F430M', 'NRCA4_400X256_MASKLWB_F430M','NRCA5_400X256_MASKLWB_F460M', 'NRCA4_400X256_MASKLWB_F460M',
+                                        'NRCA5_400X256_MASKLWB_F480M', 'NRCA4_400X256_MASKLWB_F480M','NRCA5_400X256_MASKLWB_F444W', 'NRCA4_400X256_MASKLWB_F444W',
+                                        'NRCA5_400X256_MASKLWB_NARROW', 'NRCA4_400X256_MASKLWB_NARROW'],
+                                        ['NRCA5_FULL_MASKLWB', 'NRCA4_FULL_MASKLWB','NRCA5_FULL_MASKLWB_F250M', 'NRCA4_FULL_MASKLWB_F250M',
+                                        'NRCA5_FULL_MASKLWB_F300M', 'NRCA4_FULL_MASKLWB_F300M','NRCA5_FULL_MASKLWB_F277W', 'NRCA4_FULL_MASKLWB_F277W',
+                                        'NRCA5_FULL_MASKLWB_F335M', 'NRCA4_FULL_MASKLWB_F335M','NRCA5_FULL_MASKLWB_F360M', 'NRCA4_FULL_MASKLWB_F360M',
+                                        'NRCA5_FULL_MASKLWB_F356W', 'NRCA4_FULL_MASKLWB_F356W','NRCA5_FULL_MASKLWB_F410M', 'NRCA4_FULL_MASKLWB_F410M',
+                                        'NRCA5_FULL_MASKLWB_F430M', 'NRCA4_FULL_MASKLWB_F430M','NRCA5_FULL_MASKLWB_F460M', 'NRCA4_FULL_MASKLWB_F460M',
+                                        'NRCA5_FULL_MASKLWB_F480M', 'NRCA4_FULL_MASKLWB_F480M','NRCA5_FULL_MASKLWB_F444W', 'NRCA4_FULL_MASKLWB_F444W',
+                                        'NRCA5_FULL_MASKLWB_NARROW', 'NRCA4_FULL_MASKLWB_NARROW']
+                                       ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,

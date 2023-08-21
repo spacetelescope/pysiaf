@@ -5,7 +5,7 @@ ESA-JWST-SCI-NRS-TN-2017-027, NID 480
 p_generate_gtp_files.py 1.0.1
 
 *DATE
-2022-05-11T07:54:09.527449
+2022-06-09T07:23:16.120813
 
 *VERSION
 2.0.1
@@ -14,7 +14,7 @@ p_generate_gtp_files.py 1.0.1
 GTP
 
 *DESCRIPTION
-GWA X tilt sensor fit for MIRROR with zero point for NRS_COMM_10_NRS019_CAP027_4_GWA_CAP027_20220429T1247_calves
+GWA X tilt sensor fit for MIRROR with zero point for NRS_COMM_13_NRS019_CAP031_2_FORE_MIRRORrecal
 
 *Unit
 arcsec
@@ -32,6 +32,6 @@ arcsec
 0.3401928540000005
 
 *CoeffsTemperature00 2
--9105.101017197403
-3097.5396844272277
+-8916.400440039151
+3033.415156102174
 
