@@ -159,3 +159,6 @@ and states
 this can probably be fixed by downgrading the version of lxml, e.g.      
     `pip uninstall lxml`  
     `pip install lxml==3.6.4`
+
+pyqt5 installation issues:
+    If using MacOS Mojave, it causes matplotlib to fail without pyqt5. Please take appropriate action to make sure pyqt5 is installed for
