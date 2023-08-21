@@ -14,23 +14,22 @@
 
 import datetime
 import importlib
-import sys
 import os
 import sphinx
 import stsci_rtd_theme
+import sys
+if sys.version_info < (3, 11):
+     import tomli as tomllib
+ else:
+     import tomllib
+
 
 def setup(app):
     app.add_stylesheet("stsci.css")
     # app.add_stylesheet("default.css")
 
 
-
 from distutils.version import LooseVersion
-try:
-    from ConfigParser import ConfigParser
-except ImportError:
-    from configparser import ConfigParser
-conf = ConfigParser()
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -40,8 +39,9 @@ sys.path.insert(0, os.path.abspath('pysiaf/'))
 sys.path.insert(0, os.path.abspath('exts/'))
 
 # -- General configuration ------------------------------------------------
-conf.read([os.path.join(os.path.dirname(__file__), '..', 'setup.cfg')])
-setup_cfg = dict(conf.items('metadata'))
+with open(Path(__file__).parent.parent / "pyproject.toml", "rb") as configuration_file:
+    conf = tomllib.load(configuration_file)
+setup_cfg = conf['project']
 
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.3'
@@ -58,13 +58,14 @@ def check_sphinx_version(expected_version):
             "documentation.  Found {1}.".format(
                 expected_version, sphinx_version))
 
+
 # Configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('http://docs.python.org/3/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
     'matplotlib': ('http://matplotlib.org/', None),
-    }
+}
 
 if sys.version_info[0] == 2:
     intersphinx_mapping['python'] = ('http://docs.python.org/2/', None)
@@ -76,12 +77,14 @@ if sys.version_info[0] == 2:
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_automodapi.automodapi',
-              'sphinx_automodapi.automodsumm',
-              'numpydoc',
-              'sphinx.ext.autodoc',
-              'sphinx.ext.mathjax',
-              'sphinx.ext.viewcode',]
+extensions = [
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.automodsumm',
+    'numpydoc',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+]
 
 # extensions = [
 #     'numfig',
@@ -132,11 +135,10 @@ master_doc = 'index'
 # Suppress the warnings requires Sphinx v1.4.2
 suppress_warnings = ['app.add_directive', ]
 
-
 # General information about the project
 project = setup_cfg['package_name']
-author = setup_cfg['author']
-copyright = '{0}, {1}'.format(datetime.datetime.now().year, author)
+author = f'{setup_cfg["authors"][0]["name"]} <{setup_cfg["authors"][0]["email"]}>'
+copyright = f'{datetime.datetime.now().year}, {author}'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -170,7 +172,6 @@ exclude_patterns = ['_build']
 # documents.
 default_role = 'obj'
 
-
 # Don't show summaries of the members in each class along with the
 # class' docstring
 # numpydoc_show_class_members = False
@@ -196,7 +197,6 @@ graphviz_dot_args = [
     '-Gfontname=Helvetica Neue, Helvetica, Arial, sans-serif'
 ]
 
-
 # If true, '()' will be appended to :func: etc. cross-reference text.
 # add_function_parentheses = True
 
@@ -219,7 +219,6 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
-
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -290,7 +289,6 @@ html_use_index = True
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'pysiafdoc'
 
-
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
@@ -306,8 +304,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'pysiaf.tex', u'Pysiaf Documentation',
-   u'pysiaf', 'manual'),
+    ('index', 'pysiaf.tex', u'Pysiaf Documentation',
+     u'pysiaf', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -329,19 +327,16 @@ latex_show_urls = 'True'
 # If false, no module index is generated.
 latex_domain_indices = True
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pysiaf', u'Pysiaf Documentation',
-     [u'pysiaf'], 1)
+    ('index', 'pysiaf', u'Pysiaf Documentation', [u'pysiaf'], 1),
 ]
 
 # If true, show URL addresses after external links.
 man_show_urls = True
-
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -349,9 +344,9 @@ man_show_urls = True
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'pysiaf', u'Pysiaf Documentation',
-   u'pysiaf', 'pysiaf', 'Packagname',
-   'Miscellaneous'),
+    ('index', 'pysiaf', u'Pysiaf Documentation',
+     u'pysiaf', 'pysiaf', 'Packagname',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

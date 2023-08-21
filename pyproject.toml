@@ -1,0 +1,84 @@
+[project]
+name = "pysiaf"
+description = "Handling of Science Instrument Aperture Files (SIAF) for space telescopes"
+requires-python = ">=3.8"
+authors = [
+    { name = "STScI", email = "help@stsci.edu" },
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "astropy>=4.3.1",
+    "lxml>=4.6.4",
+    "matplotlib>=3.4.3",
+    "numpy>=1.21.4",
+    "numpydoc>=1.1.0",
+    "openpyxl>=3.0.9",
+    "requests>=2.26.0",
+    "scipy>=1.7.2",
+]
+dynamic = [
+    "version",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.license]
+file = "LICENSE.md"
+content-type = "text/plain"
+
+[project.urls]
+documentation = "https://pysiaf.readthedocs.io/en/latest/"
+repository = "https://github.com/spacetelescope/pysiaf"
+
+[project.optional-dependencies]
+docs = [
+    "stsci_rtd_theme",
+    "sphinx_automodapi",
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "tomli; python_version<\"3.11\"",
+]
+
+[build-system]
+requires = [
+    "setuptools>=61.2",
+    "setuptools_scm[toml]>=3.4",
+    "wheel",
+    "oldest-supported-numpy",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "pysiaf/version.py"
+
+[tool.setuptools.packages.find]
+
+[tool.setuptools.package-data]
+pysiaf = [
+    "prd_data/HST/*",
+    "prd_data/JWST/*/*/*/*.xlsx",
+    "prd_data/JWST/*/*/*/*.xml",
+    "pre_delivery_data/*/*.*",
+    "source_data/*/*/*.txt",
+    "source_data/*/*.txt",
+    "source_data/*.txt",
+    "tests/test_data/*/*/*/*.fits",
+    "tests/test_data/*/*/*/*.txt",
+]
+
+[tool.pytest.ini_options]
+minversion = 3.0
+norecursedirs = [
+    "build",
+    "docs/_build",
+]
