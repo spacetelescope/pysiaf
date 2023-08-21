@@ -40,6 +40,9 @@ documentation = "https://pysiaf.readthedocs.io/en/latest/"
 repository = "https://github.com/spacetelescope/pysiaf"
 
 [project.optional-dependencies]
+test = [
+    'pytest',
+]
 docs = [
     "stsci_rtd_theme",
     "sphinx_automodapi",
