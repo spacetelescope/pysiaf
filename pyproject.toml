@@ -1,8 +1,6 @@
 [project]
 name = "pysiaf"
 description = "Handling of Science Instrument Aperture Files (SIAF) for space telescopes"
-<<<<<<< HEAD
-requires-python = ">=3.8"
 authors = [
     { name = "STScI", email = "help@stsci.edu" },
 ]
@@ -85,60 +83,3 @@ norecursedirs = [
     "build",
     "docs/_build",
 ]
-=======
-readme = "README.md"
-authors = [
-  { name = "Doug Long" },
-  { name = "Mees Fix" },
-  { name = "Matt Lallo" },
-  { name = "Shannon Osbourne" },
-]
-keywords = ["astronomy", "python"]
-classifiers = ["Programming Language :: Python"]
-requires-python = ">=3.9"
-dependencies = [
-    'astropy>=4.3.1',
-    'lxml>=4.6.4',
-    'matplotlib>=3.4.3',
-    'numpy>=1.21.4',
-    'numpydoc>=1.1.0',
-    'openpyxl>=3.0.9',
-    'pip>=23.1.2',
-    'requests>=2.26.0',
-    'scipy>=1.7.2',
-]
-
-dynamic = ["version"]
-
-[project.optional-dependencies]
-test = [
-  "pytest",
-  "pytest-cov",
-]  
-docs = [
-  "sphinx",
-  "sphinx_rtd_theme",
-  "stsci_rtd_theme",
-]
-
-[project.license]
-file = "LICENSE"
-content-type = "text/plain"
-
-[build-system]
-requires = ["setuptools >= 61.2",
-            "setuptools_scm[toml]>=7.1"]
-build-backend = 'setuptools.build_meta'
-
-
-[tool.setuptools]
-include-package-data = true
-
-[tool.setuptools.packages.find]
-namespaces = false
-
-[tool.setuptools_scm]
-
-[tool.pytest]
-junit_family = "xunit2"
->>>>>>> e3a1ee4 (Adding manifest and pyproject)
