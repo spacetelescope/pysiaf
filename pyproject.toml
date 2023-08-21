@@ -40,6 +40,9 @@ documentation = "https://pysiaf.readthedocs.io/en/latest/"
 repository = "https://github.com/spacetelescope/pysiaf"
 
 [project.optional-dependencies]
+test = [
+    'pytest',
+]
 docs = [
     "stsci_rtd_theme",
     "sphinx_automodapi",
@@ -54,7 +57,6 @@ requires = [
     "setuptools>=61.2",
     "setuptools_scm[toml]>=3.4",
     "wheel",
-    "oldest-supported-numpy",
 ]
 build-backend = "setuptools.build_meta"
 
