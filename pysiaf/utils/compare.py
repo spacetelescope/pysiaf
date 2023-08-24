@@ -1,12 +1,15 @@
 """Functions to support comparisons between SIAF files.
+
 Authors
 -------
     Johannes Sahlmann
+
 References
 ----------
     The format of the difference files was adapted from Colin Cox' matchcsv.py
     dict_compare was adapted from
     https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
+
 """
 
 from __future__ import absolute_import, print_function, division
@@ -48,6 +51,7 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
                  selected_aperture_name=None, ignore_attributes=None, tags=None):
     """Compare two SIAF files and write a difference file.
     Generate comparison figures showing the apertures if specified.
+    
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -61,6 +65,8 @@ def compare_siaf(comparison_siaf_input, fractional_tolerance=1e-4, reference_sia
     verbose
     make_figures
     selected_aperture_name
+    
+
     """
     if verbose:
         print(comparison_siaf_input)
@@ -209,6 +215,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
                                      instrument=None, make_plot=False, tags=None):
     """Compare the forward-backward roundtrip transformations of two SIAF files.
     and write a difference file.
+    
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -228,6 +235,7 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
         aperture type(s) not to include in plot
     instrument
     make_plot
+    
     Returns
     -------
     roundtrip_table : astropy.table.Table object
@@ -388,16 +396,20 @@ def compare_transformation_roundtrip(comparison_siaf_input, fractional_tolerance
 def dict_compare(dictionary_1, dictionary_2):
     """Compare two dictionaries and return keys of the differing items.
     From https://stackoverflow.com/questions/4527942/comparing-two-dictionaries-in-python/4527957
+    
     Parameters
     ----------
     dictionary_1 : dict
         first dictionary
     dictionary_2 : dict
         second dictionary
+    
     Returns
     -------
     added, removed, modified, same : set
         Sets of dictionary keys that were added, removed, modified, or are the same
+    
+
     """
     d1_keys = set(dictionary_1.keys())
     d2_keys = set(dictionary_2.keys())
@@ -422,6 +434,7 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
                                selected_aperture_name=None, skipped_aperture_type=None, tags=None, mark_ref=False,
                                xlimits=None, ylimits=None, filename_appendix='', label=False):
     """Visualize aperture of two SIAF files.
+    
     Parameters
     ----------
     comparison_siaf_input : str (absolute file name) or pysiaf.Siaf object
@@ -437,8 +450,11 @@ def compare_inspection_figures(comparison_siaf_input, reference_siaf_input=None,
     xlimits : tuple of limits of output plots
     ylimits : tuple of limits of output plots
 
+
     Returns
     -------
+
+
     """
     comparison_siaf = get_siaf(comparison_siaf_input)
     instrument = comparison_siaf.instrument

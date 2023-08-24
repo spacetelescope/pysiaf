@@ -94,8 +94,8 @@ def get_jwst_apertures(apertures_dict, include_oss_apertures=False, exact_patter
     ApertureCollection : `ApertureCollection` object
         Collection of apertures corresponding to selection criteria
 
-    Example
-    -------
+    Examples
+    --------
     apertures_dict = {'instrument':['FGS']}
     apertures_dict['pattern'] = ['FULL']*len(apertures_dict['instrument'])
     fgs_apertures_all = get_jwst_apertures(apertures_dict)
@@ -273,7 +273,7 @@ class Siaf(ApertureCollection):
         Name of observatory
 
     Examples
-    ---------
+    --------
     fgs_siaf = SIAF('FGS')
     fgs_siaf.apernames                # returns a list of aperture names
     ap = fgs_siaf['FGS1_FULL']        # returns an aperture object
@@ -286,7 +286,7 @@ class Siaf(ApertureCollection):
         """Read a SIAF from disk.
 
         Parameters
-        -----------
+        ----------
         instrument : string
             one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case-insensitive.
         basepath : string
@@ -360,7 +360,7 @@ class Siaf(ApertureCollection):
         """Plot all apertures in this SIAF.
 
         Parameters
-        -----------
+        ----------
         names : list of strings
             A subset of aperture names, if you wish to plot only a subset
         subarrays : bool
@@ -424,7 +424,7 @@ class Siaf(ApertureCollection):
         """Mark on the plot the frame's origin in Det and Sci coordinates.
 
         Parameters
-        -----------
+        ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
             Optional if you have already called plot() to specify a
