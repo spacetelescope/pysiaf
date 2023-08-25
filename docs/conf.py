@@ -16,7 +16,6 @@ import datetime
 import importlib
 import os
 import sphinx
-import stsci_rtd_theme
 import sys
 if sys.version_info < (3, 11):
      import tomli as tomllib
