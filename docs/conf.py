@@ -145,7 +145,7 @@ copyright = f'{datetime.datetime.now().year}, {author}'
 # build documents.
 #
 # The short X.Y version.
-package = importlib.import_module(setup_cfg['package_name'])
+package = "pysiaf"
 try:
     version = package.__version__.split('-', 1)[0]
     # The full version, including alpha/beta/rc tags.
