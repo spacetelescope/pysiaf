@@ -19,7 +19,7 @@ import sphinx
 import sys
 if sys.version_info < (3, 11):
      import tomli as tomllib
- else:
+else:
      import tomllib
 
 
