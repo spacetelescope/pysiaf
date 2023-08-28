@@ -136,7 +136,7 @@ master_doc = 'index'
 suppress_warnings = ['app.add_directive', ]
 
 # General information about the project
-project = setup_cfg['package_name']
+project = setup_cfg['name']
 author = f'{setup_cfg["authors"][0]["name"]} <{setup_cfg["authors"][0]["email"]}>'
 copyright = f'{datetime.datetime.now().year}, {author}'
 
@@ -145,7 +145,7 @@ copyright = f'{datetime.datetime.now().year}, {author}'
 # build documents.
 #
 # The short X.Y version.
-package = "pysiaf"
+package = importlib.import_module(setup_cfg['name'])
 try:
     version = package.__version__.split('-', 1)[0]
     # The full version, including alpha/beta/rc tags.
