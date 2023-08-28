@@ -15,6 +15,7 @@
 import datetime
 import importlib
 import os
+from pathlib import Path
 import sphinx
 import sys
 if sys.version_info < (3, 11):
