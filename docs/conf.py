@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import sphinx
 import sys
+import stsci_rtd_theme
 
 if sys.version_info < (3, 11):
     import tomli as tomllib
