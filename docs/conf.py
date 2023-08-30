@@ -42,8 +42,9 @@ sys.path.insert(0, os.path.abspath('exts/'))
 
 # -- General configuration ------------------------------------------------
 with open("../pyproject.toml", "rb") as configuration_file:
-    conf = tomllib.load(configuration_file)
-setup_cfg = conf['name']
+    setup_cfg = tomllib.load(configuration_file)
+
+project = setup_cfg["project"]
 
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.3'
@@ -114,8 +115,8 @@ master_doc = 'index'
 suppress_warnings = ['app.add_directive', ]
 
 # General information about the project
-project = setup_cfg['name']
-author = f'{setup_cfg["authors"][0]["name"]} <{setup_cfg["authors"][0]["email"]}>'
+package_name = project['name']
+author = f'{project["authors"][0]["name"]} <{project["authors"][0]["email"]}>'
 copyright = f'{datetime.datetime.now().year}, {author}'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -123,7 +124,7 @@ copyright = f'{datetime.datetime.now().year}, {author}'
 # build documents.
 #
 # The short X.Y version.
-package = importlib.import_module(setup_cfg['name'])
+package = importlib.import_module(project['name'])
 try:
     version = package.__version__.split('-', 1)[0]
     # The full version, including alpha/beta/rc tags.
