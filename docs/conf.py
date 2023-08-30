@@ -18,6 +18,7 @@ import os
 from pathlib import Path
 import sphinx
 import sys
+import stsci_rtd_theme
 
 if sys.version_info < (3, 11):
     import tomli as tomllib
@@ -44,7 +45,7 @@ sys.path.insert(0, os.path.abspath('exts/'))
 with open("../pyproject.toml", "rb") as configuration_file:
     setup_cfg = tomllib.load(configuration_file)
 
-project = setup_cfg["project"]
+project_meta = setup_cfg["project"]
 
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.3'
@@ -115,8 +116,8 @@ master_doc = 'index'
 suppress_warnings = ['app.add_directive', ]
 
 # General information about the project
-package_name = project['name']
-author = f'{project["authors"][0]["name"]} <{project["authors"][0]["email"]}>'
+project = project_meta['name']
+author = f'{project_meta["authors"][0]["name"]} <{project_meta["authors"][0]["email"]}>'
 copyright = f'{datetime.datetime.now().year}, {author}'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -124,7 +125,7 @@ copyright = f'{datetime.datetime.now().year}, {author}'
 # build documents.
 #
 # The short X.Y version.
-package = importlib.import_module(project['name'])
+package = importlib.import_module(project)
 try:
     version = package.__version__.split('-', 1)[0]
     # The full version, including alpha/beta/rc tags.
