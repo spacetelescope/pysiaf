@@ -344,9 +344,12 @@ def invert(A, B, u, v, verbose=False):
 def jacob(a, b, x, y):
     """Calculate relative area using the Jacobian.
 
-               | da_dx   db_dx |
-    Jacobian = |               |
-               | da_dy   db_dy |
+    ```                             ```
+    ```           | da_dx   db_dx | ```
+    ```Jacobian = |               | ```
+    ```           | da_dy   db_dy | ```
+    ```                             ```
+
     Then the relative area is the absolute value of the determinant of the Jacobian.
     x and y will usually be Science coordinates while u and v are Ideal coordinates
 
@@ -361,10 +364,12 @@ def jacob(a, b, x, y):
     y : array
         y pixel position or array of y positions matching the y positions
 
+
     Returns
     -------
     area : array
         area in (u,v) coordinates matching unit area in the (x,y) coordinates.
+
 
     """
     j = dpdx(a, x, y)*dpdy(b, x, y) - dpdx(b, x, y)*dpdy(a, x, y)

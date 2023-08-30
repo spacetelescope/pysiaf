@@ -18,15 +18,17 @@ import os
 from pathlib import Path
 import sphinx
 import sys
+
 if sys.version_info < (3, 11):
-     import tomli as tomllib
+    import tomli as tomllib
 else:
      import tomllib
 
-
 def setup(app):
-    app.add_stylesheet("stsci.css")
-    # app.add_stylesheet("default.css")
+    try:
+        app.add_css_file('stsci.css')
+    except AttributeError:
+        app.add_stylesheet('stsci.css')
 
 
 from distutils.version import LooseVersion
@@ -39,9 +41,9 @@ sys.path.insert(0, os.path.abspath('pysiaf/'))
 sys.path.insert(0, os.path.abspath('exts/'))
 
 # -- General configuration ------------------------------------------------
-with open(Path(__file__).parent.parent / "pyproject.toml", "rb") as configuration_file:
+with open("../pyproject.toml", "rb") as configuration_file:
     conf = tomllib.load(configuration_file)
-setup_cfg = conf['project']
+setup_cfg = conf['name']
 
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.3'
@@ -80,40 +82,16 @@ if sys.version_info[0] == 2:
 extensions = [
     'sphinx_automodapi.automodapi',
     'sphinx_automodapi.automodsumm',
+    'sphinx.ext.autosummary',
     'numpydoc',
     'sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
+    'sphinx.ext.todo',
+    'sphinx_automodapi.smart_resolver',
     'sphinx.ext.viewcode',
 ]
 
-# extensions = [
-#     'numfig',
-#     'sphinx_automodapi.automodapi',
-#     'sphinx_automodapi.automodsumm',
-#     'sphinx.ext.autodoc',
-#     'sphinx.ext.intersphinx',
-#     'sphinx.ext.todo',
-#     'sphinx.ext.inheritance_diagram',
-#     'sphinx.ext.viewcode',
-#     'sphinx.ext.autosummary',
-#     'numpydoc',
-#     # 'sphinx.ext.mathjax'
-#     ]
-
-# extensions = ['sphinx_automodapi.automodapi',
-#               'sphinx_automodapi.automodsumm',
-#               'numpydoc',
-#               'sphinx.ext.autodoc',
-#               'sphinx.ext.mathjax',
-#               'sphinx.ext.viewcode']
-
-# if on_rtd:
-#     extensions.append('sphinx.ext.mathjax')
-#
-# elif LooseVersion(sphinx.__version__) < LooseVersion('1.4'):
-#     extensions.append('sphinx.ext.pngmath')
-# else:
-#     extensions.append('sphinx.ext.imgmath')
+if on_rtd:
+    extensions.append('sphinx.ext.mathjax')
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -175,9 +153,9 @@ default_role = 'obj'
 # Don't show summaries of the members in each class along with the
 # class' docstring
 # numpydoc_show_class_members = False
-numpydoc_show_class_members = True
-
-autosummary_generate = True
+numpydoc_show_class_members = False
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
 
 automodapi_toctreedirnm = 'api'
 
