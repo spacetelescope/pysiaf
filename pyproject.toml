@@ -43,8 +43,10 @@ test = [
     'pytest',
 ]
 docs = [
-    "stsci_rtd_theme",
-    "sphinx_automodapi",
+    "stsci-rtd-theme",
+    "sphinx-rtd-theme",
+    "sphinx-automodapi",
+    "sphinx",
     "numpy",
     "matplotlib",
     "scipy",
