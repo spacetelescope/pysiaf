@@ -46,7 +46,7 @@ docs = [
     "stsci-rtd-theme",
     "sphinx-rtd-theme",
     "sphinx-automodapi",
-    "sphinx",
+    "sphinx<7.0.0",
     "numpy",
     "matplotlib",
     "scipy",
