@@ -206,7 +206,6 @@ todo_include_todos = False
 # a list of builtin themes.
 html_theme = 'stsci_rtd_theme'
 html_theme_path = [stsci_rtd_theme.get_html_theme_path()]
-html_static_path = ['_static']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
