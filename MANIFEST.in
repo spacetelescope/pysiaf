@@ -1,0 +1,7 @@
+include README.md
+include CHANGES.rst
+include setup.cfg
+include LICENSE
+include pyproject.toml
+
+recursive-include pysiaf/source_data/ *

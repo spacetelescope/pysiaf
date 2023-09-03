@@ -15,18 +15,21 @@
 import datetime
 import importlib
 import os
+from pathlib import Path
 import sphinx
-import stsci_rtd_theme
 import sys
+import stsci_rtd_theme
+
 if sys.version_info < (3, 11):
-     import tomli as tomllib
- else:
+    import tomli as tomllib
+else:
      import tomllib
 
-
 def setup(app):
-    app.add_stylesheet("stsci.css")
-    # app.add_stylesheet("default.css")
+    try:
+        app.add_css_file('stsci.css')
+    except AttributeError:
+        app.add_stylesheet('stsci.css')
 
 
 from distutils.version import LooseVersion
@@ -39,9 +42,10 @@ sys.path.insert(0, os.path.abspath('pysiaf/'))
 sys.path.insert(0, os.path.abspath('exts/'))
 
 # -- General configuration ------------------------------------------------
-with open(Path(__file__).parent.parent / "pyproject.toml", "rb") as configuration_file:
-    conf = tomllib.load(configuration_file)
-setup_cfg = conf['project']
+with open("../pyproject.toml", "rb") as configuration_file:
+    setup_cfg = tomllib.load(configuration_file)
+
+project_meta = setup_cfg["project"]
 
 # If your documentation needs a minimal Sphinx version, state it here.
 needs_sphinx = '1.3'
@@ -80,40 +84,16 @@ if sys.version_info[0] == 2:
 extensions = [
     'sphinx_automodapi.automodapi',
     'sphinx_automodapi.automodsumm',
+    'sphinx.ext.autosummary',
     'numpydoc',
     'sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
+    'sphinx.ext.todo',
+    'sphinx_automodapi.smart_resolver',
     'sphinx.ext.viewcode',
 ]
 
-# extensions = [
-#     'numfig',
-#     'sphinx_automodapi.automodapi',
-#     'sphinx_automodapi.automodsumm',
-#     'sphinx.ext.autodoc',
-#     'sphinx.ext.intersphinx',
-#     'sphinx.ext.todo',
-#     'sphinx.ext.inheritance_diagram',
-#     'sphinx.ext.viewcode',
-#     'sphinx.ext.autosummary',
-#     'numpydoc',
-#     # 'sphinx.ext.mathjax'
-#     ]
-
-# extensions = ['sphinx_automodapi.automodapi',
-#               'sphinx_automodapi.automodsumm',
-#               'numpydoc',
-#               'sphinx.ext.autodoc',
-#               'sphinx.ext.mathjax',
-#               'sphinx.ext.viewcode']
-
-# if on_rtd:
-#     extensions.append('sphinx.ext.mathjax')
-#
-# elif LooseVersion(sphinx.__version__) < LooseVersion('1.4'):
-#     extensions.append('sphinx.ext.pngmath')
-# else:
-#     extensions.append('sphinx.ext.imgmath')
+if on_rtd:
+    extensions.append('sphinx.ext.mathjax')
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -136,8 +116,8 @@ master_doc = 'index'
 suppress_warnings = ['app.add_directive', ]
 
 # General information about the project
-project = setup_cfg['package_name']
-author = f'{setup_cfg["authors"][0]["name"]} <{setup_cfg["authors"][0]["email"]}>'
+project = project_meta['name']
+author = f'{project_meta["authors"][0]["name"]} <{project_meta["authors"][0]["email"]}>'
 copyright = f'{datetime.datetime.now().year}, {author}'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -145,7 +125,7 @@ copyright = f'{datetime.datetime.now().year}, {author}'
 # build documents.
 #
 # The short X.Y version.
-package = importlib.import_module(setup_cfg['package_name'])
+package = importlib.import_module(project)
 try:
     version = package.__version__.split('-', 1)[0]
     # The full version, including alpha/beta/rc tags.
@@ -175,9 +155,9 @@ default_role = 'obj'
 # Don't show summaries of the members in each class along with the
 # class' docstring
 # numpydoc_show_class_members = False
-numpydoc_show_class_members = True
-
-autosummary_generate = True
+numpydoc_show_class_members = False
+numpydoc_show_inherited_class_members = False
+numpydoc_class_members_toctree = False
 
 automodapi_toctreedirnm = 'api'
 
@@ -225,7 +205,6 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'stsci_rtd_theme'
-html_static_path = []
 html_theme_path = [stsci_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
