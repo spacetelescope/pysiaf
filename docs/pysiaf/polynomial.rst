@@ -1,6 +1,6 @@
-********
+**********
 polynomial
-********
+**********
 
 .. automodule:: pysiaf.utils.polynomial
     :members:

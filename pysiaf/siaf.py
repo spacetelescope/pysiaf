@@ -29,6 +29,14 @@ import matplotlib.pyplot as pl
 
 from .iando import read
 
+# from soc_roman_tools
+import sys
+import ast
+import importlib.resources as importlib_resources
+from xml.etree import ElementTree as ET
+
+
+
 
 class ApertureCollection(object):
     """Structure class for an aperture collection, e.g. read from a SIAF file."""
@@ -94,8 +102,8 @@ def get_jwst_apertures(apertures_dict, include_oss_apertures=False, exact_patter
     ApertureCollection : `ApertureCollection` object
         Collection of apertures corresponding to selection criteria
 
-    Example
-    -------
+    Examples
+    --------
     apertures_dict = {'instrument':['FGS']}
     apertures_dict['pattern'] = ['FULL']*len(apertures_dict['instrument'])
     fgs_apertures_all = get_jwst_apertures(apertures_dict)
@@ -246,7 +254,7 @@ def plot_master_apertures(**kwargs):
         ax.set_xlim(xlim[::-1])
 
 
-ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst'.split()
+ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst roman'.split()
 
 # mapping from internal lower-case names to mixed-case names used for xml file names
 JWST_INSTRUMENT_NAME_MAPPING = {'nircam': 'NIRCam',
@@ -273,7 +281,7 @@ class Siaf(ApertureCollection):
         Name of observatory
 
     Examples
-    ---------
+    --------
     fgs_siaf = SIAF('FGS')
     fgs_siaf.apernames                # returns a list of aperture names
     ap = fgs_siaf['FGS1_FULL']        # returns an aperture object
@@ -286,7 +294,7 @@ class Siaf(ApertureCollection):
         """Read a SIAF from disk.
 
         Parameters
-        -----------
+        ----------
         instrument : string
             one of 'NIRCam', 'NIRSpec', 'NIRISS', 'MIRI', 'FGS'; case-insensitive.
         basepath : string
@@ -309,6 +317,9 @@ class Siaf(ApertureCollection):
         if self.instrument == 'hst':
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
+        elif self.instrument == 'roman':
+            self.apertures = read.read_roman_siaf()
+            self.observatory = 'Roman'
         else:
             self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
             self.observatory = 'JWST'
@@ -360,7 +371,7 @@ class Siaf(ApertureCollection):
         """Plot all apertures in this SIAF.
 
         Parameters
-        -----------
+        ----------
         names : list of strings
             A subset of aperture names, if you wish to plot only a subset
         subarrays : bool
@@ -403,6 +414,8 @@ class Siaf(ApertureCollection):
                 continue
             if ap.AperName == "J-FRAME":
                 continue
+            if ap.AperName == "V-FRAME":
+                continue
             if names is not None:
                 if ap.AperName not in names:
                     continue
@@ -424,7 +437,7 @@ class Siaf(ApertureCollection):
         """Mark on the plot the frame's origin in Det and Sci coordinates.
 
         Parameters
-        -----------
+        ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
             Optional if you have already called plot() to specify a
@@ -472,3 +485,4 @@ class Siaf(ApertureCollection):
 
         for ap in self._getFullApertures():
             ap.plot_detector_channels(frame=frame, ax=ax)
+            

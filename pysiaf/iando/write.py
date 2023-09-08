@@ -56,9 +56,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
     filenames : list
         list of the filenames written out
 
-    TODO
-    ----
-        test support of astropy Table.write formats (FITS not working)
+    .. todo:: test support of astropy Table.write formats (FITS not working)
 
 
     """

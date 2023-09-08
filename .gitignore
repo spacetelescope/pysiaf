@@ -18,3 +18,4 @@ examples/.ipynb_checkpoints
 *.zip
 pysiaf/temporary_data
 **/.idea/*
+*.DS_Store
