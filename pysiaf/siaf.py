@@ -29,6 +29,14 @@ import matplotlib.pyplot as pl
 
 from .iando import read
 
+# from soc_roman_tools
+import sys
+import ast
+import importlib.resources as importlib_resources
+from xml.etree import ElementTree as ET
+
+
+
 
 class ApertureCollection(object):
     """Structure class for an aperture collection, e.g. read from a SIAF file."""
@@ -246,7 +254,7 @@ def plot_master_apertures(**kwargs):
         ax.set_xlim(xlim[::-1])
 
 
-ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst'.split()
+ACCEPTED_INSTRUMENT_NAMES = 'nircam niriss miri nirspec fgs hst roman'.split()
 
 # mapping from internal lower-case names to mixed-case names used for xml file names
 JWST_INSTRUMENT_NAME_MAPPING = {'nircam': 'NIRCam',
@@ -309,6 +317,9 @@ class Siaf(ApertureCollection):
         if self.instrument == 'hst':
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
+        elif self.instrument == 'roman':
+            self.apertures = read.read_roman_siaf()
+            self.observatory = 'Roman'
         else:
             self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
             self.observatory = 'JWST'
@@ -472,3 +483,4 @@ class Siaf(ApertureCollection):
 
         for ap in self._getFullApertures():
             ap.plot_detector_channels(frame=frame, ax=ax)
+            

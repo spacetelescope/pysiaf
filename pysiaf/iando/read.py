@@ -22,6 +22,9 @@ from astropy.table import Table
 from astropy.time import Time
 import lxml.etree as ET
 
+# from soc_roman_tools
+import importlib.resources as importlib_resources
+
 from ..constants import HST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT, JWST_SOURCE_DATA_ROOT, HST_PRD_VERSION
 from ..siaf import JWST_INSTRUMENT_NAME_MAPPING
 
@@ -616,3 +619,77 @@ def read_siaf_xml_field_format_reference_file(instrument=None):
                             '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')
+
+def read_roman_siaf(siaf_file=None):
+        """
+        Purpose
+        -------
+        Read the SIAF file.
+
+        Inputs
+        ------
+        None
+
+        Returns
+        -------
+        apertures (collections.OrderedDict)
+            An ordered dictionary of pysiaf.aperture objects containing each
+            aperture from the Roman SIAF file that was read.
+        """
+
+        from pysiaf import aperture  # runtime import to avoid circular import on startup
+        from pysiaf import specpars
+
+        if not siaf_file:
+            with importlib_resources.path('pysiaf.prd_data.Roman', 
+                                          'roman_siaf.xml') as siaf_file:
+                siaf_file = str(siaf_file)
+        else:
+                siaf_file = str(siaf_file)
+
+        apertures = OrderedDict()
+        tree = ET.parse(siaf_file)
+        for entry in tree.getroot().iter('SiafEntry'):
+            roman_aperture = aperture.RomanAperture()
+            apertype = None
+            for node in entry:
+                if node.tag == 'AperType':
+                    apertype = node.text
+                if (node.tag in aperture.ATTRIBUTES_THAT_CAN_BE_NONE) and \
+                        (node.text is None):
+                    value = node.text
+                elif node.tag in aperture.INTEGER_ATTRIBUTES:
+                    try:
+                        value = int(node.text)
+                    except (TypeError, ValueError) as e:
+                        if node.tag == 'DetSciYAngle':
+                            value = np.int(float(node.text))
+                        elif not node.text:
+                            value = None
+                        else:
+                            raise TypeError
+                elif node.tag in aperture.STRING_ATTRIBUTES:
+                    value = node.text
+                elif node.tag in aperture.FLOAT_ATTRIBUTES:
+                    value = float(node.text)
+                # If it has children (which we can test by a simple boolean),
+                # then we need to get things out of it. The only time this will
+                # happen is the containers for the prism and grism parameters.
+                # Each child will be a Position container.
+                elif node.tag:
+                    if apertype == 'FULLSCA':
+                        data = list()
+                        for child in node:
+                            data.append(specpars.SpecPars(child))
+                        value = data
+                else:
+                    try:
+                        value = float(node.text)
+                    except TypeError:
+                        print('{}: {}'.format(node.tag, node.text))
+                        raise TypeError
+                setattr(roman_aperture, node.tag, value)
+
+            apertures[roman_aperture.AperName] = roman_aperture
+
+        return apertures

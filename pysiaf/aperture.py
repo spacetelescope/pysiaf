@@ -2606,3 +2606,16 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
         print('', file=print_file)
 
     return comparison_table
+
+class RomanAperture(Aperture):
+    """
+    A class that defines the accepted aperture types for
+    the Roman SIAF. This is built upon the pysiaf.aperture.Aperture
+    base class.
+    """
+
+    _accepted_aperture_types = ['FULLSCA', 'COMPOUND']
+
+    def __init__(self):
+        super(RomanAperture, self).__init__()
+        self.observatory = 'Roman'
