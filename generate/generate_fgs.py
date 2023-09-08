@@ -98,103 +98,104 @@ for AperName in aperture_name_list:
     aperture.Comment = None
     aperture.UseAfterDate = '2014-01-01'
 
-    if AperName == 'J-FRAME':
-        aperture_dict[AperName] = aperture
-        continue
+    if AperName not in ['J-FRAME', 'V-FRAME']:
 
-    aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
-    # Retrieve basic aperture parameters from definition files
-    for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
-        setattr(aperture, attribute, siaf_aperture_definitions[attribute][aperture_definitions_index])
+        aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+        # Retrieve basic aperture parameters from definition files
+        for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
+            setattr(aperture, attribute, siaf_aperture_definitions[attribute][aperture_definitions_index])
 
-    if aperture.AperType == 'OSS':
-        aperture.DetSciYAngle = 0
-        aperture.DetSciParity = 1
-        aperture.VIdlParity = 1
+        if aperture.AperType == 'OSS':
+            aperture.DetSciYAngle = 0
+            aperture.DetSciParity = 1
+            aperture.VIdlParity = 1
 
-    if AperName in ['FGS1_FULL', 'FGS1_FULL_OSS', 'FGS2_FULL', 'FGS2_FULL_OSS']:
-        if AperName in detector_layout['AperName']:
-            detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
-            for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
-                setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
+        if AperName in ['FGS1_FULL', 'FGS1_FULL_OSS', 'FGS2_FULL', 'FGS2_FULL_OSS']:
+            if AperName in detector_layout['AperName']:
+                detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
+                for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
+                    setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
 
-        index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
-        aperture.V3SciYAngle = float(siaf_alignment_parameters['V3SciYAngle'][index])
-        aperture.V3SciXAngle = float(siaf_alignment_parameters['V3SciXAngle'][index])
-        aperture.V3IdlYAngle = float(siaf_alignment_parameters['V3IdlYAngle'][index])
+            index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
+            aperture.V3SciYAngle = float(siaf_alignment_parameters['V3SciYAngle'][index])
+            aperture.V3SciXAngle = float(siaf_alignment_parameters['V3SciXAngle'][index])
+            aperture.V3IdlYAngle = float(siaf_alignment_parameters['V3IdlYAngle'][index])
 
-        for attribute_name in 'V2Ref V3Ref'.split():
-            setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][index])
+            for attribute_name in 'V2Ref V3Ref'.split():
+                setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][index])
 
-        polynomial_coefficients = iando.read.read_siaf_distortion_coefficients(instrument, AperName)
+            polynomial_coefficients = iando.read.read_siaf_distortion_coefficients(instrument, AperName)
 
-        number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+            number_of_coefficients = len(polynomial_coefficients)
+            polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
 
-        # set polynomial coefficients
-        siaf_indices = ['{:02d}'.format(d) for d in polynomial_coefficients['siaf_index'].tolist()]
-        for i in range(polynomial_degree + 1):
-            for j in np.arange(i + 1):
-                row_index = siaf_indices.index('{:d}{:d}'.format(i, j))
-                for colname in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
-                    setattr(aperture, '{}{:d}{:d}'.format(colname, i, j), polynomial_coefficients[colname][row_index])
+            # set polynomial coefficients
+            siaf_indices = ['{:02d}'.format(d) for d in polynomial_coefficients['siaf_index'].tolist()]
+            for i in range(polynomial_degree + 1):
+                for j in np.arange(i + 1):
+                    row_index = siaf_indices.index('{:d}{:d}'.format(i, j))
+                    for colname in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
+                        setattr(aperture, '{}{:d}{:d}'.format(colname, i, j), polynomial_coefficients[colname][row_index])
 
-        aperture.Sci2IdlDeg = polynomial_degree
-        aperture.complement()
+            aperture.Sci2IdlDeg = polynomial_degree
+            aperture.complement()
 
     aperture_dict[AperName] = aperture
 
 # Second pass to set parameters for apertures that depend on other apertures
 for AperName in aperture_name_list:
-    if AperName == 'J-FRAME':
-        continue
-    index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+
+    if AperName not in ['J-FRAME', 'V-FRAME']:
+
+        index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+        aperture = aperture_dict[AperName]
+
+        if (siaf_aperture_definitions['parent_apertures'][index] is not None) and (siaf_aperture_definitions['dependency_type'][index] == 'default'):
+
+            aperture._parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
+            parent_aperture = aperture_dict[aperture._parent_apertures]
+
+            for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity ' \
+                             'VIdlParity V3IdlYAngle'.split(): # V3SciYAngle V3SciXAngle
+                setattr(aperture, attribute, getattr(parent_aperture, attribute))
+
+            aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
+
+            # see Excel spreadsheet -> Calc -> N85
+            phi_y = np.rad2deg(np.arctan2(aperture.Sci2IdlX11*aperture.VIdlParity, aperture.Sci2IdlY11))
+            aperture.V3SciYAngle = aperture.V3IdlYAngle + phi_y
+
+            phi_x = np.rad2deg(np.arctan2(aperture.Sci2IdlX10*aperture.VIdlParity, aperture.Sci2IdlY10))
+            aperture.V3SciXAngle = aperture.V3IdlYAngle + phi_x
+
+            if 'MIMF' in AperName:
+                for attribute in 'V3SciYAngle V3SciXAngle'.split():
+                    setattr(aperture, attribute, 0.)
+
+        aperture.complement()
+
+        # set Sci2IdlX11 to zero if it is very small
+        coefficient_threshold = 1e-15
+        if np.abs(aperture.Sci2IdlX11) < coefficient_threshold:
+            aperture.Sci2IdlX11 = 0.
+
+        aperture_dict[AperName] = aperture
+
+# Set attributes for the special cases of the J-FRAME and V-FRAME apertures
+
+for AperName in ['J-FRAME','V-FRAME']:
     aperture = aperture_dict[AperName]
-
-    if (siaf_aperture_definitions['parent_apertures'][index] is not None) and (siaf_aperture_definitions['dependency_type'][index] == 'default'):
-
-        aperture._parent_apertures = siaf_aperture_definitions['parent_apertures'][index]
-        parent_aperture = aperture_dict[aperture._parent_apertures]
-
-        for attribute in 'DetSciYAngle Sci2IdlDeg DetSciParity ' \
-                         'VIdlParity V3IdlYAngle'.split(): # V3SciYAngle V3SciXAngle
-            setattr(aperture, attribute, getattr(parent_aperture, attribute))
-
-        aperture = tools.set_reference_point_and_distortion(instrument, aperture, parent_aperture)
-
-        # see Excel spreadsheet -> Calc -> N85
-        phi_y = np.rad2deg(np.arctan2(aperture.Sci2IdlX11*aperture.VIdlParity, aperture.Sci2IdlY11))
-        aperture.V3SciYAngle = aperture.V3IdlYAngle + phi_y
-
-        phi_x = np.rad2deg(np.arctan2(aperture.Sci2IdlX10*aperture.VIdlParity, aperture.Sci2IdlY10))
-        aperture.V3SciXAngle = aperture.V3IdlYAngle + phi_x
-
-        if 'MIMF' in AperName:
-            for attribute in 'V3SciYAngle V3SciXAngle'.split():
-                setattr(aperture, attribute, 0.)
-
-    aperture.complement()
-
-    # set Sci2IdlX11 to zero if it is very small
-    coefficient_threshold = 1e-15
-    if np.abs(aperture.Sci2IdlX11) < coefficient_threshold:
-        aperture.Sci2IdlX11 = 0.
-
+    definition_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+    for attributes, value in [('VIdlParity', 1),
+                              ('AperType', siaf_aperture_definitions['AperType'][definition_index]),
+                              ('XDetSize YDetSize DetSciYAngle DetSciParity', None),
+                              ('XIdlVert2 XIdlVert3 YIdlVert1 YIdlVert2', 1000.),
+                              ('XIdlVert1 XIdlVert4 YIdlVert3 YIdlVert4', -1000.)]:
+        [setattr(aperture, attribute_name, value) for attribute_name in attributes.split()]
+    alignment_index = siaf_alignment_parameters['AperName'].tolist().index(AperName)
+    for attribute_name in 'V3IdlYAngle V2Ref V3Ref'.split():
+        setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][alignment_index])
     aperture_dict[AperName] = aperture
-
-# Set attributes for the special case of the J-FRAME aperture
-aperture = aperture_dict['J-FRAME']
-definition_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
-for attributes, value in [('VIdlParity', 1),
-                          ('AperType', siaf_aperture_definitions['AperType'][definition_index]),
-                          ('XDetSize YDetSize DetSciYAngle DetSciParity', None),
-                          ('XIdlVert2 XIdlVert3 YIdlVert1 YIdlVert2', 1000.),
-                          ('XIdlVert1 XIdlVert4 YIdlVert3 YIdlVert4', -1000.)]:
-    [setattr(aperture, attribute_name, value) for attribute_name in attributes.split()]
-alignment_index = siaf_alignment_parameters['AperName'].tolist().index('J-FRAME')
-for attribute_name in 'V3IdlYAngle V2Ref V3Ref'.split():
-    setattr(aperture, attribute_name, siaf_alignment_parameters[attribute_name][alignment_index])
-aperture_dict[AperName] = aperture
 
 # sort SIAF entries in the order of the aperture definition file
 aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
