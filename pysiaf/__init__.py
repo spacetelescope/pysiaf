@@ -17,20 +17,21 @@ except DistributionNotFound:
     # package is not installed
     __version__ = 'unknown'
 
-from .aperture import Aperture, HstAperture, JwstAperture
+from .aperture import Aperture, HstAperture, JwstAperture, RomanAperture
 from .constants import JWST_PRD_VERSION, JWST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT_EXCEL, HST_PRD_VERSION, \
     HST_PRD_DATA_ROOT
 from .iando import read, write
 from .siaf import Siaf, ApertureCollection
 # from .tests import test_aperture#, test_polynomial
 from .utils import polynomial, rotations, tools, projection
+from .specpars import SpecPars
 
 __all__ = ['Aperture', 'HstAperture', 'JwstAperture', 'SIAF', 'JWST_PRD_VERSION', 'JWST_PRD_DATA_ROOT', 'HST_PRD_VERSION', 'HST_PRD_DATA_ROOT', '_JWST_STAGING_ROOT', 'siaf', 'iando', 'polynomial', 'rotations', 'tools', 'compare', 'JWST_PRD_DATA_ROOT_EXCEL', 'generate', 'projection']
 
 # Check PRD version is up to date
 try:
     req = requests.get('https://github.com/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST').text
-    p = re.compile("/spacetelescope/pysiaf/tree/master/pysiaf/prd_data/JWST/(.*?)/SIAFXML")
+    p = re.compile("pysiaf/prd_data/JWST/(.*?)/SIAFXML")
     prd_list = p.findall(req)
     prd_list.sort()
     newest_prd = [prd for i, prd in enumerate(prd_list) if

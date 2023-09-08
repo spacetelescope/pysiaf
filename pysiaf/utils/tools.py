@@ -297,9 +297,8 @@ def jwst_fgs_to_fgs_matrix(direction='fgs2_to_fgs1', siaf=None, verbose=False):
 
     References
     ----------
-        See JWST-PLAN-006166, Section 5.8.3 for definitions.
-
-        Implementation adapted from Cox' BetweenFGS.ipynb
+    ..  See JWST-PLAN-006166, Section 5.8.3 for definitions.
+        Implementation adapted from Cox BetweenFGS.ipynb
 
     """
     if siaf is None:
@@ -433,9 +432,9 @@ def set_reference_point_and_distortion(instrument, aperture, parent_aperture):
     ----------
     instrument : str
         Instrument name
-    aperture : `pysiaf.Aperture` object
+    aperture : ``pysiaf.Aperture`` object
         Aperture
-    parent_aperture : `pysiaf.Aperture` object
+    parent_aperture : ``pysiaf.Aperture`` object
         Parent aperture
 
     """
@@ -623,16 +622,16 @@ def match_v2v3(aperture_1, aperture_2, verbose=False, match_v2_only=False):
 
     Parameters
     ----------
-    aperture_1 : `pysiaf.Aperture object`
+    aperture_1 : ``pysiaf.Aperture object``
         Aperture whose V2,V3 reference position is to be used
-    aperture_2 : `pysiaf.Aperture object`
+    aperture_2 : ``pysiaf.Aperture object``
         The V2,V3 reference position is to be altered to match that of aperture_1
     verbose : bool
         verbosity
 
     Returns
     -------
-    new_aperture_2: `pysiaf.Aperture object`
+    new_aperture_2: ``pysiaf.Aperture object``
         An aperture object derived from aperture_2 but with some parameters changed to match
         altered V2V3.
 
