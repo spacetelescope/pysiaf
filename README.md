@@ -1,6 +1,5 @@
 [![Build Status](https://github.com/spacetelescope/pysiaf/workflows/pysiaf%20CI/badge.svg)](https://github.com/spacetelescope/pysiaf/actions)
 [![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
-[![Coverage Status](https://coveralls.io/repos/github/spacetelescope/pysiaf/badge.svg?branch=master)](https://coveralls.io/github/spacetelescope/pysiaf?branch=master)
 [![PyPI version](https://badge.fury.io/py/pysiaf.svg)](https://badge.fury.io/py/pysiaf)
 [![PyPI - License](https://img.shields.io/pypi/l/Django.svg)](https://github.com/spacetelescope/pysiaf/blob/master/LICENSE.md)
 [![DOI](https://zenodo.org/badge/122391513.svg)](https://zenodo.org/badge/latestdoi/122391513)
@@ -159,3 +158,6 @@ and states
 this can probably be fixed by downgrading the version of lxml, e.g.      
     `pip uninstall lxml`  
     `pip install lxml==3.6.4`
+
+pyqt5 installation issues:
+    If using MacOS Mojave, it causes matplotlib to fail without pyqt5. Please take appropriate action to make sure pyqt5 is installed for
