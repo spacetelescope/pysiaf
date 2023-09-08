@@ -1,6 +1,6 @@
-********
+*****
 tools
-********
+*****
 
 .. automodule:: pysiaf.utils.tools
     :members:

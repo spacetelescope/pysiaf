@@ -1,6 +1,6 @@
-********
+**********
 projection
-********
+**********
 
 .. automodule:: pysiaf.utils.projection
     :members:
