@@ -20,6 +20,10 @@ jobs:
             python: "3.9"
           - os: macos-latest
             python: "3.10"
+          - os: ubuntu-latest
+            python: "3.12-dev"
+          - os: macos-latest
+            python: "3.12-dev"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
