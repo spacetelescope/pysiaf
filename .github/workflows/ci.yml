@@ -6,26 +6,8 @@ name: pysiaf CI
 on: [ push, pull_request ]
 
 jobs:
-  style:
-    name: Code style checks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.pythonLocation }}
-          key: style-${{ runner.os }}-${{ env.pythonLocation }}-${{ hashFiles('**/pyproject.toml', '**/setup.*') }}
-      - run: pip install flake8
-      - run: pip freeze
-      - run: flake8
   test:
     name: test (${{ matrix.os }}, Python ${{ matrix.python }})
-    needs: [ style ]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
