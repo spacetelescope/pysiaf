@@ -17,10 +17,6 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            python: "3.7"
-          - os: macos-latest
-            python: "3.8"
-          - os: macos-latest
             python: "3.9"
           - os: macos-latest
             python: "3.10"
