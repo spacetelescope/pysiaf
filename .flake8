@@ -10,12 +10,13 @@ exclude =
     .eggs,
     build
 ignore =
-    F401, # imported but unused
-    F821, # undefined name
-    F841, # local variable assigned but never used
-    E122, # continuation line missing indentation or outdented
-    E126, # continuation line over-indented for hanging indent
-    E127, # continuation line over-indented for visual indent
-    E402, # module level import not at top of file
-    E501, # line too long (103 > 79 characters)
-    E741, # ambiguous variable name
+    F401,F821,F841,E122,E126,E127,E402,E501,E741
+    # F401, # imported but unused
+    # F821, # undefined name
+    # F841, # local variable assigned but never used
+    # E122, # continuation line missing indentation or outdented
+    # E126, # continuation line over-indented for hanging indent
+    # E127, # continuation line over-indented for visual indent
+    # E402, # module level import not at top of file
+    # E501, # line too long (103 > 79 characters)
+    # E741, # ambiguous variable name
