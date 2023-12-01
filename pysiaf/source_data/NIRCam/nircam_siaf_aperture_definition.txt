@@ -338,99 +338,99 @@
         NRCA5_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
 # Coronagraphic science and astrometric confirmation-image apertures -- Round occulters(Module-A)
               NRCA2_MASK210R , SUBARRAY ,  712.80 ,  532.50 ,      640 ,      640 ,  321.80 ,  331.50 ,                           NRCA2_FULL_WEDGE_RND ,         default
-              NRCA5_MASK210R , SUBARRAY , 1730.76 , 1672.37 ,      640 ,      640 ,  318.24 ,  320.37 ,                           NRCA5_FULL_WEDGE_RND ,         default
+              NRCA5_MASK210R , SUBARRAY , 1730.30 , 1673.98 ,      640 ,      640 ,  318.70 ,  320.98 ,                           NRCA5_FULL_WEDGE_RND ,         default
          NRCA2_FULL_MASK210R ,  FULLSCA ,  712.80 ,  532.50 ,     2048 ,     2048 ,  712.80 , 1516.50 ,                           NRCA2_FULL_WEDGE_RND ,         default
-         NRCA5_FULL_MASK210R ,  FULLSCA , 1730.76 , 1672.37 ,     2048 ,     2048 ,  318.24 , 1672.37 ,                           NRCA5_FULL_WEDGE_RND ,         default
+         NRCA5_FULL_MASK210R ,  FULLSCA , 1730.30 , 1673.98 ,     2048 ,     2048 ,  318.70 , 1673.98 ,                           NRCA5_FULL_WEDGE_RND ,         default
               NRCA5_MASK335R , SUBARRAY , 1407.80 , 1675.60 ,      320 ,      320 ,  150.20 ,  174.60 ,                           NRCA5_FULL_WEDGE_RND ,         default
-              NRCA2_MASK335R , SUBARRAY , 1368.03 ,  529.20 ,      320 ,      320 ,  160.03 ,  160.80 ,                           NRCA2_FULL_WEDGE_RND ,         default
+              NRCA2_MASK335R , SUBARRAY , 1367.94 ,  532.16 ,      320 ,      320 ,  160.94 ,  160.84 ,                           NRCA2_FULL_WEDGE_RND ,         default
          NRCA5_FULL_MASK335R ,  FULLSCA , 1407.80 , 1675.60 ,     2048 ,     2048 ,  641.20 , 1675.60 ,                           NRCA5_FULL_WEDGE_RND ,         default
-         NRCA2_FULL_MASK335R ,  FULLSCA , 1368.03 ,  529.20 ,     2048 ,     2048 , 1368.03 , 1519.80 ,                           NRCA2_FULL_WEDGE_RND ,         default
+         NRCA2_FULL_MASK335R ,  FULLSCA , 1367.94 ,  532.16 ,     2048 ,     2048 , 1367.94 , 1516.84 ,                           NRCA2_FULL_WEDGE_RND ,         default
               NRCA5_MASK430R , SUBARRAY , 1084.70 , 1676.20 ,      320 ,      320 ,  151.30 ,  175.20 ,                           NRCA5_FULL_WEDGE_RND ,         default
-              NRCA2_MASK430R , SUBARRAY , 2023.41 ,  529.12 ,      320 ,      320 ,  295.41 ,  160.88 ,                           NRCA2_FULL_WEDGE_RND ,         default
+              NRCA2_MASK430R , SUBARRAY , 2024.07 ,  532.24 ,      320 ,      320 ,  296.07 ,  160.76 ,                           NRCA2_FULL_WEDGE_RND ,         default
          NRCA5_FULL_MASK430R ,  FULLSCA , 1084.70 , 1676.20 ,     2048 ,     2048 ,  964.30 , 1676.20 ,                           NRCA5_FULL_WEDGE_RND ,         default
-         NRCA2_FULL_MASK430R ,  FULLSCA , 2023.41 ,  529.12 ,     2048 ,     2048 , 2023.41 , 1519.88 ,                           NRCA2_FULL_WEDGE_RND ,         default
+         NRCA2_FULL_MASK430R ,  FULLSCA , 2024.07 ,  532.24 ,     2048 ,     2048 , 2024.07 , 1516.76 ,                           NRCA2_FULL_WEDGE_RND ,         default
 # Coronagraphic science and astrometric confirmation-image apertures - SW Bar occulter (Module-A)
                NRCA4_MASKSWB , SUBARRAY ,  489.20 ,  540.50 ,      640 ,      640 ,  319.20 ,  335.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-               NRCA5_MASKSWB , SUBARRAY ,  763.92 , 1685.52 ,      640 ,      640 ,  320.08 ,  320.52 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+               NRCA5_MASKSWB , SUBARRAY ,  764.88 , 1685.63 ,      640 ,      640 ,  319.12 ,  320.63 ,                           NRCA5_FULL_WEDGE_BAR ,         default
           NRCA4_FULL_MASKSWB ,  FULLSCA ,  489.20 ,  540.50 ,     2048 ,     2048 ,  489.20 , 1508.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-          NRCA5_FULL_MASKSWB ,  FULLSCA ,  763.92 , 1685.52 ,     2048 ,     2048 , 1285.08 , 1685.52 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+          NRCA5_FULL_MASKSWB ,  FULLSCA ,  764.88 , 1685.63 ,     2048 ,     2048 , 1284.12 , 1685.63 ,                           NRCA5_FULL_WEDGE_BAR ,         default
          NRCA4_MASKSWB_F182M , SUBARRAY ,  432.30 ,  540.40 ,      640 ,      640 ,  262.30 ,  335.60 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA5_MASKSWB_F182M , SUBARRAY ,  791.94 , 1685.60 ,      640 ,      640 ,  292.06 ,  320.60 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_MASKSWB_F182M , SUBARRAY ,  792.92 , 1685.81 ,      640 ,      640 ,  291.08 ,  320.81 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKSWB_F182M ,  FULLSCA ,  432.30 ,  540.40 ,     2048 ,     2048 ,  432.30 , 1508.60 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKSWB_F182M ,  FULLSCA ,  791.94 , 1685.60 ,     2048 ,     2048 , 1257.06 , 1685.60 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKSWB_F182M ,  FULLSCA ,  792.92 , 1685.81 ,     2048 ,     2048 , 1256.08 , 1685.81 ,                           NRCA5_FULL_WEDGE_BAR ,         default
          NRCA4_MASKSWB_F187N , SUBARRAY ,  438.80 ,  540.40 ,      640 ,      640 ,  268.80 ,  335.60 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA5_MASKSWB_F187N , SUBARRAY ,  788.74 , 1685.58 ,      640 ,      640 ,  295.26 ,  320.58 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_MASKSWB_F187N , SUBARRAY ,  789.72 , 1685.79 ,      640 ,      640 ,  294.28 ,  320.79 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKSWB_F187N ,  FULLSCA ,  438.80 ,  540.40 ,     2048 ,     2048 ,  438.80 , 1508.60 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKSWB_F187N ,  FULLSCA ,  788.74 , 1685.58 ,     2048 ,     2048 , 1260.26 , 1685.58 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKSWB_F187N ,  FULLSCA ,  789.72 , 1685.79 ,     2048 ,     2048 , 1259.28 , 1685.79 ,                           NRCA5_FULL_WEDGE_BAR ,         default
          NRCA4_MASKSWB_F210M , SUBARRAY ,  488.10 ,  540.50 ,      640 ,      640 ,  318.10 ,  335.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA5_MASKSWB_F210M , SUBARRAY ,  764.47 , 1685.52 ,      640 ,      640 ,  319.53 ,  320.52 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_MASKSWB_F210M , SUBARRAY ,  765.43 , 1685.63 ,      640 ,      640 ,  318.57 ,  320.63 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKSWB_F210M ,  FULLSCA ,  488.10 ,  540.50 ,     2048 ,     2048 ,  488.10 , 1508.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKSWB_F210M ,  FULLSCA ,  764.47 , 1685.52 ,     2048 ,     2048 , 1284.53 , 1685.52 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKSWB_F210M ,  FULLSCA ,  765.43 , 1685.63 ,     2048 ,     2048 , 1283.57 , 1685.63 ,                           NRCA5_FULL_WEDGE_BAR ,         default
          NRCA4_MASKSWB_F212N , SUBARRAY ,  493.90 ,  540.50 ,      640 ,      640 ,  323.90 ,  335.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA5_MASKSWB_F212N , SUBARRAY ,  761.61 , 1685.50 ,      640 ,      640 ,  322.39 ,  320.50 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_MASKSWB_F212N , SUBARRAY ,  762.57 , 1685.62 ,      640 ,      640 ,  321.43 ,  320.62 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKSWB_F212N ,  FULLSCA ,  493.90 ,  540.50 ,     2048 ,     2048 ,  493.90 , 1508.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKSWB_F212N ,  FULLSCA ,  761.61 , 1685.50 ,     2048 ,     2048 , 1287.39 , 1685.50 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKSWB_F212N ,  FULLSCA ,  762.57 , 1685.62 ,     2048 ,     2048 , 1286.43 , 1685.62 ,                           NRCA5_FULL_WEDGE_BAR ,         default
          NRCA4_MASKSWB_F200W , SUBARRAY ,  495.60 ,  540.50 ,      640 ,      640 ,  325.60 ,  335.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-         NRCA5_MASKSWB_F200W , SUBARRAY ,  760.77 , 1685.50 ,      640 ,      640 ,  323.23 ,  320.50 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+         NRCA5_MASKSWB_F200W , SUBARRAY ,  761.73 , 1685.62 ,      640 ,      640 ,  322.27 ,  320.62 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKSWB_F200W ,  FULLSCA ,  495.60 ,  540.50 ,     2048 ,     2048 ,  495.60 , 1508.50 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKSWB_F200W ,  FULLSCA ,  760.77 , 1685.50 ,     2048 ,     2048 , 1288.23 , 1685.50 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKSWB_F200W ,  FULLSCA ,  761.73 , 1685.62 ,     2048 ,     2048 , 1287.27 , 1685.62 ,                           NRCA5_FULL_WEDGE_BAR ,         default
         NRCA4_MASKSWB_NARROW , SUBARRAY ,  226.20 ,  540.30 ,      640 ,      640 ,   56.20 ,  335.70 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-        NRCA5_MASKSWB_NARROW , SUBARRAY ,  893.43 , 1686.06 ,      640 ,      640 ,  190.57 ,  321.06 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+        NRCA5_MASKSWB_NARROW , SUBARRAY ,  894.45 , 1686.32 ,      640 ,      640 ,  189.55 ,  321.32 ,                           NRCA5_FULL_WEDGE_BAR ,         default
    NRCA4_FULL_MASKSWB_NARROW ,  FULLSCA ,  226.20 ,  540.30 ,     2048 ,     2048 ,  226.20 , 1508.70 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-   NRCA5_FULL_MASKSWB_NARROW ,  FULLSCA ,  893.43 , 1686.06 ,     2048 ,     2048 , 1155.57 , 1686.06 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+   NRCA5_FULL_MASKSWB_NARROW ,  FULLSCA ,  894.45 , 1686.32 ,     2048 ,     2048 , 1154.55 , 1686.32 ,                           NRCA5_FULL_WEDGE_BAR ,         default
 # Coronagraphic science and astrometric confirmation-image apertures - LW Bar occulter (Module-A)
        NRCA5_400X256_MASKLWB , SUBARRAY ,  380.80 , 1684.70 ,      400 ,      256 ,  194.20 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-       NRCA4_400X256_MASKLWB , SUBARRAY , 1267.26 ,  538.12 ,      400 ,      256 ,  200.26 ,  128.88 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+       NRCA4_400X256_MASKLWB , SUBARRAY , 1269.02 ,  540.51 ,      400 ,      256 ,  202.02 ,  126.49 ,                           NRCA4_FULL_WEDGE_BAR ,         default
           NRCA5_FULL_MASKLWB ,  FULLSCA ,  443.30 , 1684.70 ,     2048 ,     2048 , 1605.70 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-          NRCA4_FULL_MASKLWB ,  FULLSCA , 1140.38 ,  538.97 ,     2048 ,     2048 , 1140.38 , 1510.03 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+          NRCA4_FULL_MASKLWB ,  FULLSCA , 1142.10 ,  541.11 ,     2048 ,     2048 , 1142.10 , 1507.89 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F250M , SUBARRAY ,  338.10 , 1684.80 ,      400 ,      256 ,  236.90 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F250M , SUBARRAY , 1353.93 ,  538.15 ,      400 ,      256 ,  286.93 ,  128.85 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F250M , SUBARRAY , 1355.73 ,  539.89 ,      400 ,      256 ,  288.73 ,  127.11 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F250M ,  FULLSCA ,  338.10 , 1684.80 ,     2048 ,     2048 , 1710.90 , 1685.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F250M ,  FULLSCA , 1353.93 ,  538.15 ,     2048 ,     2048 , 1353.93 , 1510.85 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F250M ,  FULLSCA , 1355.73 ,  539.89 ,     2048 ,     2048 , 1355.73 , 1509.11 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F300M , SUBARRAY ,  362.50 , 1684.80 ,      400 ,      256 ,  212.50 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F300M , SUBARRAY , 1304.40 ,  538.28 ,      400 ,      256 ,  237.40 ,  128.72 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F300M , SUBARRAY , 1306.18 ,  540.13 ,      400 ,      256 ,  239.18 ,  126.87 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F300M ,  FULLSCA ,  362.50 , 1684.80 ,     2048 ,     2048 , 1686.50 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F300M ,  FULLSCA , 1304.40 ,  538.28 ,     2048 ,     2048 , 1304.40 , 1510.72 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F300M ,  FULLSCA , 1306.18 ,  540.13 ,     2048 ,     2048 , 1306.18 , 1508.87 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F277W , SUBARRAY ,  364.50 , 1684.80 ,      400 ,      256 ,  210.50 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F277W , SUBARRAY , 1300.35 ,  538.31 ,      400 ,      256 ,  233.35 ,  128.69 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F277W , SUBARRAY , 1302.12 ,  540.15 ,      400 ,      256 ,  235.12 ,  126.85 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F277W ,  FULLSCA ,  364.50 , 1684.80 ,     2048 ,     2048 , 1684.50 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F277W ,  FULLSCA , 1300.35 ,  538.31 ,     2048 ,     2048 , 1300.35 , 1510.69 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F277W ,  FULLSCA , 1302.12 ,  540.15 ,     2048 ,     2048 , 1302.12 , 1508.85 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F335M , SUBARRAY ,  381.20 , 1684.80 ,      400 ,      256 ,  193.80 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F335M , SUBARRAY , 1266.45 ,  538.33 ,      400 ,      256 ,  199.45 ,  128.67 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F335M , SUBARRAY , 1268.21 ,  540.31 ,      400 ,      256 ,  201.21 ,  126.69 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F335M ,  FULLSCA ,  381.20 , 1684.80 ,     2048 ,     2048 , 1667.80 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F335M ,  FULLSCA , 1266.45 ,  538.33 ,     2048 ,     2048 , 1266.45 , 1510.67 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F335M ,  FULLSCA , 1268.21 ,  540.31 ,     2048 ,     2048 , 1268.21 , 1508.69 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F360M , SUBARRAY ,  394.30 , 1684.80 ,      400 ,      256 ,  180.70 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F360M , SUBARRAY , 1239.85 ,  538.51 ,      400 ,      256 ,  172.85 ,  128.49 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F360M , SUBARRAY , 1241.60 ,  540.44 ,      400 ,      256 ,  174.60 ,  126.56 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F360M ,  FULLSCA ,  394.30 , 1684.80 ,     2048 ,     2048 , 1654.70 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F360M ,  FULLSCA , 1239.85 ,  538.51 ,     2048 ,     2048 , 1239.85 , 1510.49 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F360M ,  FULLSCA , 1241.60 ,  540.44 ,     2048 ,     2048 , 1241.60 , 1508.56 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F356W , SUBARRAY ,  406.00 , 1684.80 ,      400 ,      256 ,  169.00 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F356W , SUBARRAY , 1216.10 ,  538.67 ,      400 ,      256 ,  149.10 ,  128.33 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F356W , SUBARRAY , 1217.84 ,  540.55 ,      400 ,      256 ,  150.84 ,  126.45 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F356W ,  FULLSCA ,  406.00 , 1684.80 ,     2048 ,     2048 , 1643.00 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F356W ,  FULLSCA , 1216.10 ,  538.67 ,     2048 ,     2048 , 1216.10 , 1510.33 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F356W ,  FULLSCA , 1217.84 ,  540.55 ,     2048 ,     2048 , 1217.84 , 1508.45 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F410M , SUBARRAY ,  417.30 , 1684.70 ,      400 ,      256 ,  157.70 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F410M , SUBARRAY , 1193.16 ,  538.82 ,      400 ,      256 ,  126.16 ,  128.18 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F410M , SUBARRAY , 1194.90 ,  540.86 ,      400 ,      256 ,  127.90 ,  126.14 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F410M ,  FULLSCA ,  417.30 , 1684.70 ,     2048 ,     2048 , 1631.70 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F410M ,  FULLSCA , 1193.16 ,  538.82 ,     2048 ,     2048 , 1193.16 , 1510.18 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F410M ,  FULLSCA , 1194.90 ,  540.86 ,     2048 ,     2048 , 1194.90 , 1508.14 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F430M , SUBARRAY ,  427.30 , 1684.70 ,      400 ,      256 ,  147.70 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F430M , SUBARRAY , 1172.86 ,  538.75 ,      400 ,      256 ,  105.86 ,  128.25 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F430M , SUBARRAY , 1174.59 ,  540.96 ,      400 ,      256 ,  107.59 ,  126.04 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F430M ,  FULLSCA ,  427.30 , 1684.70 ,     2048 ,     2048 , 1621.70 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F430M ,  FULLSCA , 1172.86 ,  538.75 ,     2048 ,     2048 , 1172.86 , 1510.25 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F430M ,  FULLSCA , 1174.59 ,  540.96 ,     2048 ,     2048 , 1174.59 , 1508.04 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F460M , SUBARRAY ,  444.80 , 1684.70 ,      400 ,      256 ,  130.20 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F460M , SUBARRAY , 1137.33 ,  538.78 ,      400 ,      256 ,   70.33 ,  128.22 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F460M , SUBARRAY , 1139.05 ,  541.12 ,      400 ,      256 ,   72.05 ,  125.88 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F460M ,  FULLSCA ,  444.80 , 1684.70 ,     2048 ,     2048 , 1604.20 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F460M ,  FULLSCA , 1137.33 ,  538.78 ,     2048 ,     2048 , 1137.33 , 1510.22 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F460M ,  FULLSCA , 1139.05 ,  541.12 ,     2048 ,     2048 , 1139.05 , 1507.88 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F480M , SUBARRAY ,  457.00 , 1684.70 ,      400 ,      256 ,  118.00 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F480M , SUBARRAY , 1112.57 ,  538.95 ,      400 ,      256 ,   45.57 ,  128.05 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F480M , SUBARRAY , 1114.28 ,  541.24 ,      400 ,      256 ,   47.28 ,  125.76 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F480M ,  FULLSCA ,  457.00 , 1684.70 ,     2048 ,     2048 , 1592.00 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F480M ,  FULLSCA , 1112.57 ,  538.95 ,     2048 ,     2048 , 1112.57 , 1510.05 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F480M ,  FULLSCA , 1114.28 ,  541.24 ,     2048 ,     2048 , 1114.28 , 1507.76 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F444W , SUBARRAY ,  454.90 , 1684.70 ,      400 ,      256 ,  120.10 ,  145.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
- NRCA4_400X256_MASKLWB_F444W , SUBARRAY , 1116.83 ,  538.92 ,      400 ,      256 ,   49.83 ,  128.08 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+ NRCA4_400X256_MASKLWB_F444W , SUBARRAY , 1118.54 ,  541.22 ,      400 ,      256 ,   51.54 ,  125.78 ,                           NRCA4_FULL_WEDGE_BAR ,         default
     NRCA5_FULL_MASKLWB_F444W ,  FULLSCA ,  454.90 , 1684.70 ,     2048 ,     2048 , 1594.10 , 1684.70 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-    NRCA4_FULL_MASKLWB_F444W ,  FULLSCA , 1116.83 ,  538.92 ,     2048 ,     2048 , 1116.83 , 1510.08 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+    NRCA4_FULL_MASKLWB_F444W ,  FULLSCA , 1118.54 ,  541.22 ,     2048 ,     2048 , 1118.54 , 1507.78 ,                           NRCA4_FULL_WEDGE_BAR ,         default
 NRCA5_400X256_MASKLWB_NARROW , SUBARRAY ,  310.30 , 1684.80 ,      400 ,      256 ,  264.70 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-NRCA4_400X256_MASKLWB_NARROW , SUBARRAY , 1410.35 ,  536.55 ,      400 ,      256 ,  343.35 ,  130.45 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+NRCA4_400X256_MASKLWB_NARROW , SUBARRAY , 1412.18 ,  539.62 ,      400 ,      256 ,  345.18 ,  127.38 ,                           NRCA4_FULL_WEDGE_BAR ,         default
    NRCA5_FULL_MASKLWB_NARROW ,  FULLSCA ,  310.30 , 1684.80 ,     2048 ,     2048 , 1738.70 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
-   NRCA4_FULL_MASKLWB_NARROW ,  FULLSCA , 1410.35 ,  536.55 ,     2048 ,     2048 , 1410.35 , 1512.45 ,                           NRCA4_FULL_WEDGE_BAR ,         default
+   NRCA4_FULL_MASKLWB_NARROW ,  FULLSCA , 1412.18 ,  539.62 ,     2048 ,     2048 , 1412.18 , 1509.38 ,                           NRCA4_FULL_WEDGE_BAR ,         default
 # (deprecated after OSS9.0): Square 320x320 subarray coronagraphic science apertures - LW Bar occulter (Module-A)
                NRCA5_MASKLWB , SUBARRAY ,   443.3 ,  1683.9 ,      320 ,      320 ,   151.7 ,   176.9 ,                           NRCA5_FULL_WEDGE_BAR ,         default
           NRCA5_FULL_MASKLWB ,  FULLSCA ,   443.3 ,  1683.9 ,     2048 ,     2048 ,  1605.7 ,  1683.9 ,                           NRCA5_FULL_WEDGE_BAR ,         default
