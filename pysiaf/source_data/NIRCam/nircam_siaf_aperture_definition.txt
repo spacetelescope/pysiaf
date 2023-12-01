@@ -338,15 +338,15 @@
         NRCA5_FULL_WEDGE_BAR ,  FULLSCA ,  1024.5 ,  1024.5 ,     2048 ,     2048 ,  1024.5 ,  1024.5 ,                                           None ,          master
 # Coronagraphic science and astrometric confirmation-image apertures -- Round occulters(Module-A)
               NRCA2_MASK210R , SUBARRAY ,  712.80 ,  532.50 ,      640 ,      640 ,  321.80 ,  331.50 ,                           NRCA2_FULL_WEDGE_RND ,         default
-              NRCA5_MASK210R , SUBARRAY , 1730.30 , 1673.98 ,      640 ,      640 ,  318.70 ,  320.98 ,                           NRCA5_FULL_WEDGE_RND ,         default
+              NRCA5_MASK210R , SUBARRAY , 1730.30 , 1673.98 ,      640 ,      640 ,  318.70 ,  321.98 ,                           NRCA5_FULL_WEDGE_RND ,         default
          NRCA2_FULL_MASK210R ,  FULLSCA ,  712.80 ,  532.50 ,     2048 ,     2048 ,  712.80 , 1516.50 ,                           NRCA2_FULL_WEDGE_RND ,         default
          NRCA5_FULL_MASK210R ,  FULLSCA , 1730.30 , 1673.98 ,     2048 ,     2048 ,  318.70 , 1673.98 ,                           NRCA5_FULL_WEDGE_RND ,         default
               NRCA5_MASK335R , SUBARRAY , 1407.80 , 1675.60 ,      320 ,      320 ,  150.20 ,  174.60 ,                           NRCA5_FULL_WEDGE_RND ,         default
-              NRCA2_MASK335R , SUBARRAY , 1367.94 ,  532.16 ,      320 ,      320 ,  160.94 ,  160.84 ,                           NRCA2_FULL_WEDGE_RND ,         default
+              NRCA2_MASK335R , SUBARRAY , 1367.94 ,  532.16 ,      320 ,      320 ,  159.94 ,  157.84 ,                           NRCA2_FULL_WEDGE_RND ,         default
          NRCA5_FULL_MASK335R ,  FULLSCA , 1407.80 , 1675.60 ,     2048 ,     2048 ,  641.20 , 1675.60 ,                           NRCA5_FULL_WEDGE_RND ,         default
          NRCA2_FULL_MASK335R ,  FULLSCA , 1367.94 ,  532.16 ,     2048 ,     2048 , 1367.94 , 1516.84 ,                           NRCA2_FULL_WEDGE_RND ,         default
               NRCA5_MASK430R , SUBARRAY , 1084.70 , 1676.20 ,      320 ,      320 ,  151.30 ,  175.20 ,                           NRCA5_FULL_WEDGE_RND ,         default
-              NRCA2_MASK430R , SUBARRAY , 2024.07 ,  532.24 ,      320 ,      320 ,  296.07 ,  160.76 ,                           NRCA2_FULL_WEDGE_RND ,         default
+              NRCA2_MASK430R , SUBARRAY , 2024.07 ,  532.24 ,      320 ,      320 ,  296.07 ,  157.76 ,                           NRCA2_FULL_WEDGE_RND ,         default
          NRCA5_FULL_MASK430R ,  FULLSCA , 1084.70 , 1676.20 ,     2048 ,     2048 ,  964.30 , 1676.20 ,                           NRCA5_FULL_WEDGE_RND ,         default
          NRCA2_FULL_MASK430R ,  FULLSCA , 2024.07 ,  532.24 ,     2048 ,     2048 , 2024.07 , 1516.76 ,                           NRCA2_FULL_WEDGE_RND ,         default
 # Coronagraphic science and astrometric confirmation-image apertures - SW Bar occulter (Module-A)
@@ -385,7 +385,7 @@
           NRCA4_FULL_MASKLWB ,  FULLSCA , 1142.10 ,  541.11 ,     2048 ,     2048 , 1142.10 , 1507.89 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F250M , SUBARRAY ,  338.10 , 1684.80 ,      400 ,      256 ,  236.90 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
  NRCA4_400X256_MASKLWB_F250M , SUBARRAY , 1355.73 ,  539.89 ,      400 ,      256 ,  288.73 ,  127.11 ,                           NRCA4_FULL_WEDGE_BAR ,         default
-    NRCA5_FULL_MASKLWB_F250M ,  FULLSCA ,  338.10 , 1684.80 ,     2048 ,     2048 , 1710.90 , 1685.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
+    NRCA5_FULL_MASKLWB_F250M ,  FULLSCA ,  338.10 , 1684.80 ,     2048 ,     2048 , 1710.90 , 1684.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
     NRCA4_FULL_MASKLWB_F250M ,  FULLSCA , 1355.73 ,  539.89 ,     2048 ,     2048 , 1355.73 , 1509.11 ,                           NRCA4_FULL_WEDGE_BAR ,         default
  NRCA5_400X256_MASKLWB_F300M , SUBARRAY ,  362.50 , 1684.80 ,      400 ,      256 ,  212.50 ,  145.80 ,                           NRCA5_FULL_WEDGE_BAR ,         default
  NRCA4_400X256_MASKLWB_F300M , SUBARRAY , 1306.18 ,  540.13 ,      400 ,      256 ,  239.18 ,  126.87 ,                           NRCA4_FULL_WEDGE_BAR ,         default
