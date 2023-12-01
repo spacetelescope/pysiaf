@@ -210,13 +210,13 @@
                NRCA5_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA5_FULL ,         default
                NRCA5_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA5_FULL ,         default
 # Point-source Imaging and Time Series (Module-B)
-                NRCB1_SUB64P , SUBARRAY , 1882.31 ,  202.78 ,       64 ,       64 ,   32.31 ,   30.22 ,                                     NRCB1_FULL ,         default
-               NRCB1_SUB160P , SUBARRAY , 1882.31 ,  202.78 ,      160 ,      160 ,   80.31 ,   78.22 ,                                     NRCB1_FULL ,         default
-               NRCB1_SUB400P , SUBARRAY , 1882.31 ,  202.78 ,      400 ,      400 ,  234.31 ,  198.22 ,                                     NRCB1_FULL ,         default
+                NRCB1_SUB64P , SUBARRAY , 1886.60 ,  200.72 ,       64 ,       64 ,   36.60 ,   32.28 ,                                     NRCB1_FULL ,         default
+               NRCB1_SUB160P , SUBARRAY , 1886.60 ,  200.72 ,      160 ,      160 ,   84.60 ,   80.28 ,                                     NRCB1_FULL ,         default
+               NRCB1_SUB400P , SUBARRAY , 1886.60 ,  200.72 ,      400 ,      400 ,  238.60 ,  200.28 ,                                     NRCB1_FULL ,         default
                 NRCB5_SUB64P , SUBARRAY , 1975.50 ,   86.50 ,       64 ,       64 ,   32.50 ,   32.50 ,                                     NRCB5_FULL ,         default
                NRCB5_SUB160P , SUBARRAY , 1975.50 ,   86.50 ,      160 ,      160 ,   87.50 ,   74.50 ,                                     NRCB5_FULL ,         default
                NRCB5_SUB400P , SUBARRAY , 1975.50 ,   86.50 ,      400 ,      400 ,  327.50 ,  314.50 ,                                     NRCB5_FULL ,         default
-                 NRCB1_FULLP ,  FULLSCA , 1430.94 ,  675.99 ,     2048 ,     2048 , 1430.94 , 1373.01 ,                                     NRCB1_FULL ,         default
+                 NRCB1_FULLP ,  FULLSCA , 1377.36 ,  672.95 ,     2048 ,     2048 , 1377.36 , 1376.05 ,                                     NRCB1_FULL ,         default
                  NRCB5_FULLP ,  FULLSCA ,  1726.0 ,   318.5 ,     2048 ,     2048 ,  1726.0 ,  1730.5 ,                                     NRCB5_FULL ,         default
              NRCB5_TAPSIMG32 , SUBARRAY ,  2024.5 ,   216.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCB5_FULL ,         default
        NRCB5_TAPSIMG32_F405N , SUBARRAY , 2024.82 , 216.092 ,       32 ,       32 ,   16.82 ,  16.908 ,                                     NRCB5_FULL ,         default
