@@ -685,10 +685,12 @@ class Aperture(object):
                     horizontalalignment='center', rotation=label_rotation,
                     color=ax.lines[-1].get_color())
         if fill:
-            # If a transform kwarg is supplied, pass it through to the fill function too
-            transform_kw = kwargs.get('transform', None)
-            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw)
-
+            if self.observatory == "JWST":
+                # If a transform kwarg is supplied, pass it through to the fill function too
+                transform_kw = kwargs.get('transform', None)
+                ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw) 
+            elif self.observatory == "HST":
+                ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha) 
         if title:
             ax.set_title("{0} frame".format(frame))
         if show_frame_origin:
