@@ -25,7 +25,7 @@ dependencies = [
 dynamic = [
     "version",
 ]
-requires-python = "3.10"
+requires-python = ">=3.10"
 
 [project.readme]
 file = "README.md"
