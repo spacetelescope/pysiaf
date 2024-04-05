@@ -388,20 +388,9 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JSOCOPS-164-165-166 Jira ticket
-            selected_aperture_names = [['NRCALL']+['NRC{}{}_FULL'.format(mod,sca) for mod in ['A','B'] for sca in ['1','2','3','4','5'] ],
-                                       ['NRCA{}_{}'.format(sca,subarray) for sca in ['1','2','3','4','5']  for subarray in ['FULL','SUB160','SUB320','SUB640']],
-                                       ['NRCB{}_{}'.format(sca,subarray) for sca in ['1','2','3','4','5']  for subarray in ['FULL','SUB160','SUB320','SUB640']],
-                                       ['NRCB{}_{}'.format(sca,subarray) for sca in ['1','5']  for subarray in ['FULLP','SUB64P','SUB160P','SUB400P']],
-                                       ['NRCA{}_FULL_WEDGE_RND'.format(sca) for sca in ['1','2','3','4','5']],
-                                       ['NRCA{}_FULL_WEDGE_BAR'.format(sca) for sca in ['1','2','3','4','5']],
-                                       ['NRCA2_MASK210R','NRCA5_MASK210R','NRCA2_TAMASK210R','NRCA2_FSTAMASK210R'],
-                                       ['NRCA5_MASK335R','NRCA2_MASK335R','NRCA5_TAMASK335R','NRCA5_FSTAMASK335R'],
-                                       ['NRCA5_MASK430R','NRCA2_MASK430R','NRCA5_TAMASK430R','NRCA5_FSTAMASK430R'],
-                                       ['NRCA5_400X256_MASKLWB','NRCA4_400X256_MASKLWB','NRCA5_TAMASKLWB','NRCA5_TAMASKLWBL','NRCA5_FSTAMASKLWB',
-                                       'NRCA5_400X256_MASKLWB_NARROW','NRCA5_400X256_MASKLWB_F444W','NRCA5_400X256_MASKLWB_F250M'],
-                                       ['NRCA4_MASKSWB','NRCA5_MASKSWB','NRCA4_TAMASKSWB','NRCA4_TAMASKSWBS','NRCA4_FSTAMASKSWB',
-                                       'NRCA4_MASKSWB_NARROW','NRCA4_MASKSWB_F212N','NRCA4_MASKSWB_F182M']
+            # # make figures for JSOCOPS-276 Jira ticket
+            selected_aperture_names = [['NRCA3_FP1','NRCA3_FP1_SUB8','NRCA3_FP1_SUB64'],
+                                       ['NRCA1_FP6','NRCA1_FP6_SUB8','NRCA1_FP6_SUB64','NRCA1_FP3MIMF']
                                        ]
 
             for selected_aperture_name in selected_aperture_names:
