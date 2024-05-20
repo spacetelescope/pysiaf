@@ -183,8 +183,16 @@
 # Grism Time Series, DHS (Module-A)
              NRCA5_TADHSTS32 , SUBARRAY ,   863.5 ,  1031.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
        NRCA5_TADHS32TS_F405N , SUBARRAY ,  863.43 , 1031.85 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
-    NRCA5_TADHSTS_SCI_F322W2 ,      ROI ,   468.5 ,  1046.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
-     NRCA5_TADHSTS_SCI_F444W ,      ROI ,  1191.5 ,  1046.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
+    NRCA5_TADHSTS_SCI_F322W2 ,      ROI ,   468.0 ,  1046.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
+     NRCA5_TADHSTS_SCI_F444W ,      ROI ,  1191.0 ,  1046.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
+  NRCA5_40STRIPE1_DHS_F322W2 , SUBARRAY ,   468.0 ,  1024.5 ,     2048 ,       36 ,  1581.0 ,    18.5 ,                                     NRCA5_FULL ,         default
+  NRCA5_80STRIPE2_DHS_F322W2 , SUBARRAY ,   468.0 ,  1024.5 ,     2048 ,       38 ,  1581.0 ,    19.5 ,                                     NRCA5_FULL ,         default
+ NRCA5_160STRIPE4_DHS_F322W2 , SUBARRAY ,   468.0 ,  1024.5 ,     2048 ,       39 ,  1581.0 ,    20.5 ,                                     NRCA5_FULL ,         default
+ NRCA5_256STRIPE4_DHS_F322W2 , SUBARRAY ,   468.0 ,  1024.5 ,     2048 ,       63 ,  1581.0 ,    32.5 ,                                     NRCA5_FULL ,         default
+   NRCA5_40STRIPE1_DHS_F444W , SUBARRAY ,  1191.0 ,  1024.5 ,     2048 ,       36 ,   858.0 ,    18.5 ,                                     NRCA5_FULL ,         default
+   NRCA5_80STRIPE2_DHS_F444W , SUBARRAY ,  1191.0 ,  1024.5 ,     2048 ,       38 ,   858.0 ,    19.5 ,                                     NRCA5_FULL ,         default
+  NRCA5_160STRIPE4_DHS_F444W , SUBARRAY ,  1191.0 ,  1024.5 ,     2048 ,       39 ,   858.0 ,    20.5 ,                                     NRCA5_FULL ,         default
+  NRCA5_256STRIPE4_DHS_F444W , SUBARRAY ,  1191.0 ,  1024.5 ,     2048 ,       63 ,   858.0 ,    32.5 ,                                     NRCA5_FULL ,         default
 # WFSC / MIMF Field Points (Module-A)
                 NRCA3_DHSPIL ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,                                     NRCA3_FULL ,         default
           NRCA3_DHSPIL_SUB96 , SUBARRAY ,  1084.0 ,  1194.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCA3_FULL ,         default
