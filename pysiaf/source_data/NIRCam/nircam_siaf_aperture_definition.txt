@@ -182,7 +182,7 @@
              NRCB4_GRISMTS64 , SUBARRAY ,  1046.0 ,   176.0 ,     2048 ,       64 ,  1003.0 ,    33.0 ,               NRCB4_FULL; NRCB5_GRISM64_F322W2 ,     grism_ts_sw
 # Grism Time Series, DHS (Module-A)
              NRCA5_TADHSTS32 , SUBARRAY ,   863.5 ,  1031.5 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
-       NRCA5_TADHS32TS_F405N , SUBARRAY ,  863.43 , 1031.85 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
+       NRCA5_TADHSTS32_F405N , SUBARRAY ,  863.43 , 1031.85 ,       32 ,       32 ,    16.5 ,    16.5 ,                                     NRCA5_FULL ,         default
     NRCA5_TADHSTS_SCI_F322W2 ,      ROI ,   468.0 ,  1046.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
      NRCA5_TADHSTS_SCI_F444W ,      ROI ,  1191.0 ,  1046.5 ,       32 ,       32 ,    16.0 ,    16.5 ,                                     NRCA5_FULL ,         default
   NRCA5_40STRIPE1_DHS_F322W2 , SUBARRAY ,   468.0 ,  1024.5 ,     2048 ,       36 ,  1581.0 ,    18.5 ,                                     NRCA5_FULL ,         default
