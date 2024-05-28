@@ -388,13 +388,15 @@ if emulate_delivery:
 
         create_jira_plots = True
         if create_jira_plots:
-            # # make figures for JWSTSIAF-156 Jira ticket
-            selected_aperture_names = [['NRCA5_TADHSTS32','NRCA5_TADHS32TS_F405N'],
+            # # make figures for JWSTSIAF-276 Jira ticket and for JWSTSIAF-156
+            selected_aperture_names = [['NRCA3_FP1','NRCA3_FP1_SUB8','NRCA3_FP1_SUB64'],
+                                       ['NRCA1_FP6','NRCA1_FP6_SUB8','NRCA1_FP6_SUB64','NRCA1_FP3MIMF'],
+                                       ['NRCA5_TADHSTS32','NRCA5_TADHS32TS_F405N'],
                                        ['NRCA5_TADHSTS_SCI_F322W2','NRCA5_TADHSTS_SCI_F444W','NRCA5_TADHSTS32','NRCA5_FULL'],
                                        ['NRCA5_40STRIPE1_DHS_F322W2','NRCA5_80STRIPE2_DHS_F322W2','NRCA5_160STRIPE4_DHS_F322W2','NRCA5_256STRIPE4_DHS_F322W2'],
                                        ['NRCA5_40STRIPE1_DHS_F444W',   'NRCA5_80STRIPE2_DHS_F444W',  'NRCA5_160STRIPE4_DHS_F444W',  'NRCA5_256STRIPE4_DHS_F444W'],
                                        ['NRCA5_FULL','NRCA5_160STRIPE4_DHS_F322W2','NRCA5_160STRIPE4_DHS_F444W']
-                                       ]
+                                      ]
 
             for selected_aperture_name in selected_aperture_names:
                 compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
