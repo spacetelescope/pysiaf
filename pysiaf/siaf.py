@@ -150,7 +150,7 @@ def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, 
 
 
 def plot_main_apertures(label=False, darkbg=False, detector_channels=False, frame='tel',
-        attitude_matrix=None, **kwargs):
+        attitude_matrix=None, mission='jwst', **kwargs):
     """Plot main/master apertures.
 
     Parameters
@@ -160,58 +160,95 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, fram
         other frames)
     attitude_matrix : 3x3 ndarray
         Rotation matrix representing observatory attitude. Needed for sky frame plots.
+    mission : str
+        observatory name, one of 'JWST', 'HST', or 'Roman'. Case insensitive.
 
     """
 
     if frame not in ['tel', 'sky']:
         raise ValueError("Only the tel or sky frames make sense for plot_main_apertures")
 
-    if darkbg:
-        col_imaging = 'aqua'
-        col_coron = 'lime'
-        col_msa = 'violet'
-    else:
-        col_imaging = 'blue'
-        col_coron = 'green'
-        col_msa = 'magenta'
+    if mission.upper() == 'JWST':
+        if darkbg:
+            col_imaging = 'aqua'
+            col_coron = 'lime'
+            col_msa = 'violet'
+        else:
+            col_imaging = 'blue'
+            col_coron = 'green'
+            col_msa = 'magenta'
 
-    nircam = Siaf('NIRCam')
-    niriss = Siaf('NIRISS')
-    fgs = Siaf('FGS')
-    nirspec = Siaf('NIRSpec')
-    miri = Siaf('MIRI')
+        nircam = Siaf('NIRCam')
+        niriss = Siaf('NIRISS')
+        fgs = Siaf('FGS')
+        nirspec = Siaf('NIRSpec')
+        miri = Siaf('MIRI')
 
-    im_aps = [
-        nircam['NRCA5_FULL'],
-        nircam['NRCB5_FULL'],
-        niriss['NIS_CEN'],
-        miri['MIRIM_ILLUM'],
-        fgs['FGS1_FULL'],
-        fgs['FGS2_FULL']
-    ]
+        im_aps = [
+            nircam['NRCA5_FULL'],
+            nircam['NRCB5_FULL'],
+            niriss['NIS_CEN'],
+            miri['MIRIM_ILLUM'],
+            fgs['FGS1_FULL'],
+            fgs['FGS2_FULL']
+        ]
 
-    for letter in ['A', 'B']:
-        for num in range(5):
-            im_aps.append(nircam['NRC{}{}_FULL'.format(letter, num + 1)])
+        for letter in ['A', 'B']:
+            for num in range(5):
+                im_aps.append(nircam['NRC{}{}_FULL'.format(letter, num + 1)])
 
-    coron_aps = [
-        nircam['NRCA2_MASK210R'],
-        nircam['NRCA4_MASKSWB'],
-        nircam['NRCA5_MASK335R'],
-        nircam['NRCA5_MASK430R'],
-        nircam['NRCA5_MASKLWB'],
-        nircam['NRCB3_MASKSWB'],
-        nircam['NRCB1_MASK210R'],
-        nircam['NRCB5_MASK335R'],
-        nircam['NRCB5_MASK430R'],
-        nircam['NRCB5_MASKLWB'],
-        miri['MIRIM_MASK1065'],
-        miri['MIRIM_MASK1140'],
-        miri['MIRIM_MASK1550'],
-        miri['MIRIM_MASKLYOT']
-    ]
-    msa_aps = [nirspec['NRS_FULL_MSA' + str(n + 1)] for n in range(4)]
-    msa_aps.append(nirspec['NRS_S1600A1_SLIT'])  # square aperture
+        coron_aps = [
+            nircam['NRCA2_MASK210R'],
+            nircam['NRCA4_MASKSWB'],
+            nircam['NRCA5_MASK335R'],
+            nircam['NRCA5_MASK430R'],
+            nircam['NRCA5_MASKLWB'],
+            nircam['NRCB3_MASKSWB'],
+            nircam['NRCB1_MASK210R'],
+            nircam['NRCB5_MASK335R'],
+            nircam['NRCB5_MASK430R'],
+            nircam['NRCB5_MASKLWB'],
+            miri['MIRIM_MASK1065'],
+            miri['MIRIM_MASK1140'],
+            miri['MIRIM_MASK1550'],
+            miri['MIRIM_MASKLYOT']
+        ]
+        msa_aps = [nirspec['NRS_FULL_MSA' + str(n + 1)] for n in range(4)]
+        msa_aps.append(nirspec['NRS_S1600A1_SLIT'])  # square aperture
+    elif mission.upper() == 'HST':
+       if darkbg:
+            col_imaging = 'lightgray'
+            col_coron = 'lime'  # n/a
+            col_msa = 'violet'  # n/a
+       else:
+            col_imaging = 'gray'
+            col_coron = 'green'
+            col_msa = 'magenta'
+
+       hst_siaf = Siaf('hst')
+       hst_si_apnames = ['FGS1', 'FGS2', 'FGS3', 'JWFC1', 'JWFC2', 'IUVIS1', 'IUVIS2', 'OV50', 'ON25', 'OF25']
+       # TODO: add COS 'LNPSA', 'LFPSA'; once pysiaf.plot() supports circular apertures
+       im_aps = [hst_siaf.apertures[n] for n in hst_si_apnames]
+
+       coron_aps = []
+       msa_aps = []
+
+    elif mission.upper() == 'ROMAN':
+        if darkbg:
+            col_imaging = 'orange'
+            col_coron = 'aqua'
+            col_msa = 'violet'  # n/a
+        else:
+            col_imaging = 'orange'
+            col_coron = 'teal'
+            col_msa = 'magenta'
+
+        roman_siaf = Siaf('roman')
+        im_aps = [roman_siaf.apertures[f'WFI{i+1:02d}_FULL'] for i in range(18)]
+        coron_aps = [roman_siaf.apertures['CGI_CEN'], ]
+
+        msa_aps = []
+
 
     for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
         for ap in aplist:
