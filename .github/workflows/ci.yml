@@ -21,4 +21,5 @@ jobs:
         cache: 'pip'
         cache-dependency-path: 'pyproject.toml'
     - run: pip install ".[test]"
+    - run: pip install setuptools
     - run: pytest
