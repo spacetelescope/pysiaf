@@ -17,7 +17,6 @@ dependencies = [
     "lxml>=4.6.4",
     "matplotlib>=3.4.3",
     "numpy>=1.21.4",
-    "numpydoc>=1.1.0",
     "openpyxl>=3.0.9",
     "requests>=2.26.0",
     "scipy>=1.7.2",
@@ -25,6 +24,7 @@ dependencies = [
 dynamic = [
     "version",
 ]
+requires-python = ">=3.10"
 
 [project.readme]
 file = "README.md"
@@ -40,7 +40,7 @@ repository = "https://github.com/spacetelescope/pysiaf"
 
 [project.optional-dependencies]
 test = [
-    'pytest',
+    "pytest",
 ]
 docs = [
     "stsci-rtd-theme",
@@ -48,6 +48,7 @@ docs = [
     "sphinx-automodapi",
     "sphinx>=7.2.5",
     "numpy",
+    "numpydoc>=1.1.0",
     "matplotlib",
     "scipy",
     "tomli; python_version<\"3.11\"",

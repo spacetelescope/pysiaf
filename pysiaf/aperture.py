@@ -1403,7 +1403,7 @@ class Aperture(object):
         Input sky coords should be given in degrees RA and Dec, or equivalent astropy.Quantities
 
         Results are returned as floats with implicit units of arcseconds, for consistency with the
-        other \*_to_tel functions.
+        other \\*_to_tel functions.
 
         """
 
