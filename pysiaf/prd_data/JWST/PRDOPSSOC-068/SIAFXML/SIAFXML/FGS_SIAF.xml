@@ -1,7 +1,7 @@
 <SiafEntries>
-  <!--Generated 2024-10-18T15:11:26.317 utc-->
-  <!--by tsohn-->
-  <!--pysiaf version 0.23.4.dev10+g39813ee.d20241018-->
+  <!--Generated 2024-10-21T15:02:22.478 utc-->
+  <!--by dlong-->
+  <!--pysiaf version 0.13.1.dev357+gb386490.d20241021-->
   <SiafEntry>
     <InstrName>FGS</InstrName>
     <AperName>FGS1_FULL_OSS</AperName>
