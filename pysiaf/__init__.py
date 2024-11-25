@@ -10,12 +10,7 @@ import requests
 # Configure logging
 logger = logging.getLogger(__name__)
 
-from pkg_resources import get_distribution, DistributionNotFound
-try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
-    # package is not installed
-    __version__ = 'unknown'
+from .version import __version__
 
 from .aperture import Aperture, HstAperture, JwstAperture, RomanAperture
 from .constants import JWST_PRD_VERSION, JWST_PRD_DATA_ROOT, JWST_PRD_DATA_ROOT_EXCEL, HST_PRD_VERSION, \
