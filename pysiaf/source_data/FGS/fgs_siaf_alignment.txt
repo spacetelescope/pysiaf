@@ -1,8 +1,9 @@
+
 # FGS alignment parameter reference file for SIAF
 # 
 # This file contains the focal plane alignment parameters calibrated by analyzing NIRISS and NIRCam TA data.
 # 
-# Generated 2023-10-30T00:00:00
+# Generated 2024-10-18
 # by tsohn
 #
 #
@@ -11,5 +12,8 @@
                  FGS1_FULL_OSS , -1.24120427177907 ,  90.44196715266719 , 178.75879572822095 , 206.407 , -697.765
                      FGS2_FULL ,  0.29148280112031 , -90.69066276462223 ,   0.29148280112031 ,  22.865 , -699.280
                  FGS2_FULL_OSS ,  0.29148280112031 ,  89.30933723537777 ,   0.29148280112031 ,  22.865 , -699.280
-                       J-FRAME ,       0.041688872 ,               None ,               None , 180.255 ,  175.783
+                       J-FRAME ,       0.051342419 ,               None ,               None , 196.300 ,  181.806
                        V-FRAME ,               0.0 ,               None ,               None ,   0.000 ,    0.000
+
+
+
