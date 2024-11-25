@@ -84,6 +84,21 @@ Frame transformations (``det``, ``sci``, ``idl``, ``tel`` are supported frames):
     # transform from Science frame to Ideal frame
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
 
+Finding Available Apertures
+***************************
+
+Each Siaf instance has an attribute ``apernames`` giving all available aperture names. There are often many of these::
+
+    siaf = pysiaf.Siaf('NIRSpec')
+    print (len(siaf.apernames))
+    # output: 75
+
+The ``find_apernames`` method allows quick lookup of aperture names matching some substring::
+
+    siaf = pysiaf.Siaf('NIRSpec')
+    siaf.find_apernames('S200')
+    # output: ['NRS_S200A1_SLIT', 'NRS_S200A2_SLIT', 'NRS_S200B1_SLIT']
+    
 
 Using sky transforms
 ********************

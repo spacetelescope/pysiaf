@@ -522,4 +522,9 @@ class Siaf(ApertureCollection):
 
         for ap in self._getFullApertures():
             ap.plot_detector_channels(frame=frame, ax=ax)
-            
+
+    def find_apernames(self, substring):
+        """ Return aperture names containing some substring.
+        Simple utility function to search through names of available apertures.
+        """
+        return [name for name in self.apernames if substring in name]
