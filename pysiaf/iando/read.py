@@ -641,8 +641,8 @@ def read_roman_siaf(siaf_file=None):
         from pysiaf import specpars
 
         if not siaf_file:
-            with importlib_resources.path('pysiaf.prd_data.Roman', 
-                                          'roman_siaf.xml') as siaf_file:
+            source = importlib_resources.files('pysiaf.prd_data.Roman').joinpath('roman_siaf.xml')
+            with importlib_resources.as_file(source) as siaf_file:
                 siaf_file = str(siaf_file)
         else:
                 siaf_file = str(siaf_file)

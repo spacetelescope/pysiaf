@@ -17,9 +17,9 @@ def makeup_polynomial(order = 5):
     a = np.zeros(terms)
 
     np.random.seed(seed=1)
-    a[1] = 0.05 + 0.01 * np.random.rand(1)
+    a[1] = 0.05 + 0.01 * np.random.rand()
     np.random.seed(seed=2)
-    a[2] = 0.0001 * np.random.rand(1)
+    a[2] = 0.0001 * np.random.rand()
     np.random.seed(seed=3)
     a[3:6] = 1.0e-7 * np.random.rand(3)
     np.random.seed(seed=4)
