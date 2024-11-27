@@ -545,7 +545,7 @@ def prepend_rotation_to_polynomial(a, theta, verbose=False):
                 for j in range(m-n-mu, m-mu+1):
                     factor = (-1)**(m-n-mu) * choose(m-j, mu) * choose(j, m-n-mu)
                     cosSin = c**(j+2*mu-m+n) * s**(2*m-2*mu-j-n)
-                    atrotate[m, n] = atrotate[m, n] + factor * cosSin * at[m, j]
+                    atrotate[m, n] = np.squeeze(atrotate[m, n] + factor * cosSin * at[m, j])
                     if verbose:
                         print(m, n, j, factor, 'cos^', j+2*mu-m+n, 'sin^', 2*m-2*mu-j-n, ' A', m, j)
     # Put back in linear layout
