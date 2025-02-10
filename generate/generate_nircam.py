@@ -558,43 +558,30 @@ if emulate_delivery:
                     for sca in ["1", "2", "3", "4", "5"]
                 ],
                 [
-                    "NRCA2_MASK210R",
-                    "NRCA5_MASK210R",
-                    "NRCA2_TAMASK210R",
-                    "NRCA2_FSTAMASK210R",
+                    "NRCA5_{}STRIPE{}_DHS_F322W2".format(pix,stripe)
+                    for pix in ["41", "82", "164", "260"]
+                    for stripe in ["1", "2", "3", "4"]
                 ],
                 [
-                    "NRCA5_MASK335R",
-                    "NRCA2_MASK335R",
-                    "NRCA5_TAMASK335R",
-                    "NRCA5_FSTAMASK335R",
+                    "NRCA5_{}STRIPE{}_DHS_F444W".format(pix,stripe)
+                    for pix in ["41", "82", "164", "260"]
+                    for stripe in ["1", "2", "3", "4"]
                 ],
                 [
-                    "NRCA5_MASK430R",
-                    "NRCA2_MASK430R",
-                    "NRCA5_TAMASK430R",
-                    "NRCA5_FSTAMASK430R",
+                    "NRCA5_{}STRIPE{}_DHS_F322W2".format(pix,stripe)
+                    for pix in ["40", "80", "160", "256"]
+                    for stripe in ["1", "2", "3", "4"]
                 ],
                 [
-                    "NRCA5_400X256_MASKLWB",
-                    "NRCA4_400X256_MASKLWB",
-                    "NRCA5_TAMASKLWB",
-                    "NRCA5_TAMASKLWBL",
-                    "NRCA5_FSTAMASKLWB",
-                    "NRCA5_400X256_MASKLWB_NARROW",
-                    "NRCA5_400X256_MASKLWB_F444W",
-                    "NRCA5_400X256_MASKLWB_F250M",
+                    "NRCA5_{}STRIPE{}_DHS_F444W".format(pix,stripe)
+                    for pix in ["40", "80", "160", "256"]
+                    for stripe in ["1", "2", "3", "4"]
                 ],
                 [
-                    "NRCA4_MASKSWB",
-                    "NRCA5_MASKSWB",
-                    "NRCA4_TAMASKSWB",
-                    "NRCA4_TAMASKSWBS",
-                    "NRCA4_FSTAMASKSWB",
-                    "NRCA4_MASKSWB_NARROW",
-                    "NRCA4_MASKSWB_F212N",
-                    "NRCA4_MASKSWB_F182M",
+                    "NRCA5_TADHSTS_SCI_{}".format(filter)
+                    for filter in ["F322W2", "F444W"]
                 ],
+
             ]
 
             for selected_aperture_name in selected_aperture_names:
