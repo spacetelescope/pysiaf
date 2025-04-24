@@ -527,4 +527,4 @@ class Siaf(ApertureCollection):
         """ Return aperture names containing some substring.
         Simple utility function to search through names of available apertures.
         """
-        return [name for name in self.apernames if substring in name]
+        return [name for name in self.apernames if substring.upper() in name]
