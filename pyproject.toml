@@ -6,7 +6,6 @@ authors = [
 ]
 classifiers = [
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Topic :: Scientific/Engineering :: Astronomy",
@@ -21,6 +20,7 @@ dependencies = [
     "requests>=2.26.0",
     "scipy>=1.7.2",
 ]
+license-files = ["LICENSE.md"]
 dynamic = [
     "version",
 ]
@@ -29,10 +29,6 @@ requires-python = ">=3.10"
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
-
-[project.license]
-file = "LICENSE.md"
-content-type = "text/plain"
 
 [project.urls]
 documentation = "https://pysiaf.readthedocs.io/en/latest/"
