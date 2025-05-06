@@ -454,6 +454,7 @@ ddc_v3 = np.array(
 for AperName in aperture_name_list:
     # if AperName not in detector_layout['AperName']:
     #     continue
+    print(AperName, aperture.V2Ref,ddc_v2,aperture.V3Ref,ddc_v3)
     aperture = aperture_dict[AperName]
     separation_tel_from_ddc_aperture = np.sqrt(
         (aperture.V2Ref - ddc_v2) ** 2 + (aperture.V3Ref - ddc_v3) ** 2
@@ -528,59 +529,129 @@ if emulate_delivery:
         if create_jira_plots:
             # # make figures for JSOCOPS-164-165-166 Jira ticket
             selected_aperture_names = [
-                ["NRCALL"]
+                ["NRCALL_DHS_F322W2"]
                 + [
-                    "NRC{}{}_FULL".format(mod, sca)
-                    for mod in ["A", "B"]
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA{}_{}".format(sca, subarray)
-                    for sca in ["1", "2", "3", "4", "5"]
-                    for subarray in ["FULL", "SUB160", "SUB320", "SUB640"]
-                ],
-                [
-                    "NRCB{}_{}".format(sca, subarray)
-                    for sca in ["1", "2", "3", "4", "5"]
-                    for subarray in ["FULL", "SUB160", "SUB320", "SUB640"]
-                ],
-                [
-                    "NRCB{}_{}".format(sca, subarray)
-                    for sca in ["1", "5"]
-                    for subarray in ["FULLP", "SUB64P", "SUB160P", "SUB400P"]
-                ],
-                [
-                    "NRCA{}_FULL_WEDGE_RND".format(sca)
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA{}_FULL_WEDGE_BAR".format(sca)
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA5_{}STRIPE{}_DHS_F322W2".format(pix,stripe)
-                    for pix in ["41", "82", "164", "260"]
-                    for stripe in ["1", "2", "3", "4"]
-                ],
-                [
-                    "NRCA5_{}STRIPE{}_DHS_F444W".format(pix,stripe)
-                    for pix in ["41", "82", "164", "260"]
-                    for stripe in ["1", "2", "3", "4"]
-                ],
-                [
-                    "NRCA5_{}STRIPE{}_DHS_F322W2".format(pix,stripe)
-                    for pix in ["40", "80", "160", "256"]
-                    for stripe in ["1", "2", "3", "4"]
-                ],
-                [
-                    "NRCA5_{}STRIPE{}_DHS_F444W".format(pix,stripe)
-                    for pix in ["40", "80", "160", "256"]
-                    for stripe in ["1", "2", "3", "4"]
-                ],
-                [
-                    "NRCA5_TADHSTS_SCI_{}".format(filter)
-                    for filter in ["F322W2", "F444W"]
-                ],
+                    "NRCA5_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_260STRIPE4_DHS_F322W2"
+                ]
+                ,
+                ["NRCALL_DHS_F444W"]
+                + [
+                    "NRCA5_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_260STRIPE4_DHS_F444W"
+                ]
 
             ]
 
