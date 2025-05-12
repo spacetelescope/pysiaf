@@ -72,6 +72,13 @@ wedge_file = os.path.join(
 )
 wedge_offsets = Table.read(wedge_file, format="ascii.basic", delimiter=",")
 
+dhs_file = os.path.join(
+    JWST_SOURCE_DATA_ROOT,
+    instrument,
+    "{}_siaf_dhs_offsets.txt".format(instrument.lower()),
+)
+dhs_offsets = Table.read(dhs_file, format="ascii.basic", delimiter=",")
+
 grism_file = os.path.join(
     JWST_SOURCE_DATA_ROOT,
     instrument,
@@ -173,7 +180,7 @@ for AperName in aperture_name_list:
     dependency_type = siaf_aperture_definitions["dependency_type"][index]
 
     if parent_apertures is not None:
-        if dependency_type in ["default", "wedge", "dhspil_wedge"]:
+        if dependency_type in ["default", "wedge", "dhspil_wedge", "DHS"]:
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -198,7 +205,15 @@ for AperName in aperture_name_list:
 
             if dependency_type != "default":
                 sca_name = aperture.AperName[0:5]
-
+            
+            if dependency_type == "DHS":
+                v2_offset = float(
+                dhs_offsets["v2_offset"][dhs_offsets["name"] == sca_name])
+                v3_offset = float(
+                dhs_offsets["v3_offset"][dhs_offsets["name"] == sca_name])
+                aperture.V2Ref += v2_offset
+                aperture.V3Ref += v3_offset
+                
             if dependency_type == "wedge":
                 if (sca_name == "NRCA5") and (
                     ("MASK335R" in aperture.AperName)
@@ -454,7 +469,6 @@ ddc_v3 = np.array(
 for AperName in aperture_name_list:
     # if AperName not in detector_layout['AperName']:
     #     continue
-    print(AperName, aperture.V2Ref,ddc_v2,aperture.V3Ref,ddc_v3)
     aperture = aperture_dict[AperName]
     separation_tel_from_ddc_aperture = np.sqrt(
         (aperture.V2Ref - ddc_v2) ** 2 + (aperture.V3Ref - ddc_v3) ** 2
@@ -663,6 +677,7 @@ if emulate_delivery:
                     tags=tags,
                     selected_aperture_name=selected_aperture_name,
                     mark_ref=True,
+                    ylimits=(-499,-491),
                     filename_appendix=selected_aperture_name[0],
                     label=True,
                 )

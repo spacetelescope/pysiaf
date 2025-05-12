@@ -82,9 +82,6 @@
 # gennaro 2022-07-01
 # Introducing the secondary apertures for coronography
 
-# pbennet 2025-05-05
-# Added DHS apertures
-
                   AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
 #        -------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OSS apertures, for on-board computation of small angle maneuvers
@@ -192,42 +189,45 @@
    NRCA5_82STRIPE2_DHS_F444W , SUBARRAY ,  1187.0 ,   993.7 ,     2048 ,       40 ,   862.0 ,    20.5 ,                                     NRCA5_FULL ,         default
   NRCA5_164STRIPE4_DHS_F444W , SUBARRAY ,  1187.0 ,   993.7 ,     2048 ,       40 ,   862.0 ,    20.5 ,                                     NRCA5_FULL ,         default
   NRCA5_260STRIPE4_DHS_F444W , SUBARRAY ,  1187.0 ,   993.7 ,     2048 ,       64 ,   862.0 ,    32.5 ,                                     NRCA5_FULL ,         default
-   NRCA4_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
-   NRCA4_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
-  NRCA4_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
-  NRCA4_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   186.5 ,                                     NRCA4_FULL ,         default 
-   NRCA2_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
-   NRCA2_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
-  NRCA2_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
-  NRCA2_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   186.5 ,                                     NRCA2_FULL ,         default 
-   NRCA1_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
-   NRCA1_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
-  NRCA1_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
-  NRCA1_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   -22.5 ,                                     NRCA1_FULL ,         default 
-   NRCA3_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
-   NRCA3_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
-  NRCA3_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
-  NRCA3_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   -22.5 ,                                     NRCA3_FULL ,         default 
+   NRCA4_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+   NRCA4_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+  NRCA4_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+  NRCA4_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA4_FULL ,             DHS 
+   NRCA2_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+   NRCA2_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+  NRCA2_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+  NRCA2_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA2_FULL ,             DHS 
+   NRCA1_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+   NRCA1_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+  NRCA1_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+  NRCA1_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA1_FULL ,             DHS 
+   NRCA3_41STRIPE1_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+   NRCA3_82STRIPE2_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+  NRCA3_164STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+  NRCA3_260STRIPE4_DHS_F444W ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA3_FULL ,             DHS 
   NRCA5_41STRIPE1_DHS_F322W2 , SUBARRAY ,   465.0 ,   993.7 ,     2048 ,       40 ,  1584.0 ,    20.5 ,                                     NRCA5_FULL ,         default
   NRCA5_82STRIPE2_DHS_F322W2 , SUBARRAY ,   465.0 ,   993.7 ,     2048 ,       40 ,  1584.0 ,    20.5 ,                                     NRCA5_FULL ,         default
  NRCA5_164STRIPE4_DHS_F322W2 , SUBARRAY ,   465.0 ,   993.7 ,     2048 ,       40 ,  1584.0 ,    20.5 ,                                     NRCA5_FULL ,         default
  NRCA5_260STRIPE4_DHS_F322W2 , SUBARRAY ,   465.0 ,   993.7 ,     2048 ,       64 ,  1584.0 ,    32.5 ,                                     NRCA5_FULL ,         default
-  NRCA4_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
-  NRCA4_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
- NRCA4_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA4_FULL ,         default 
- NRCA4_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   186.5 ,                                     NRCA4_FULL ,         default 
-  NRCA2_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
-  NRCA2_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
- NRCA2_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   174.5 ,                                     NRCA2_FULL ,         default 
- NRCA2_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   186.5 ,                                     NRCA2_FULL ,         default 
-  NRCA1_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
-  NRCA1_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
- NRCA1_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA1_FULL ,         default 
- NRCA1_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   -22.5 ,                                     NRCA1_FULL ,         default 
-  NRCA3_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
-  NRCA3_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
- NRCA3_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,   -10.5 ,                                     NRCA3_FULL ,         default 
- NRCA3_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,   -22.5 ,                                     NRCA3_FULL ,         default 
+  NRCA4_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+  NRCA4_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+ NRCA4_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA4_FULL ,             DHS 
+ NRCA4_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA4_FULL ,             DHS 
+  NRCA2_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+  NRCA2_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+ NRCA2_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA2_FULL ,             DHS 
+ NRCA2_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA2_FULL ,             DHS 
+  NRCA1_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+  NRCA1_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+ NRCA1_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA1_FULL ,             DHS 
+ NRCA1_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA1_FULL ,             DHS 
+  NRCA3_41STRIPE1_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+  NRCA3_82STRIPE2_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+ NRCA3_164STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2024.5 ,     2048 ,       40 ,  1024.5 ,    24.5 ,                                     NRCA3_FULL ,             DHS 
+ NRCA3_260STRIPE4_DHS_F322W2 ,      ROI ,  1024.5 ,  2012.5 ,     2048 ,       64 ,  1024.5 ,    36.5 ,                                     NRCA3_FULL ,             DHS 
+
+#                  AperName , AperType , XDetRef , YDetRef , XSciSize , YSciSize , XSciRef , YSciRef ,                               parent_apertures , dependency_type
+
 # WFSC / MIMF Field Points (Module-A)
                 NRCA3_DHSPIL ,  FULLSCA ,  1084.0 ,  1194.0 ,     2048 ,     2048 ,   965.0 ,  1194.0 ,                                     NRCA3_FULL ,         default
           NRCA3_DHSPIL_SUB96 , SUBARRAY ,  1084.0 ,  1194.0 ,       96 ,       96 ,    48.0 ,    49.0 ,                                     NRCA3_FULL ,         default
