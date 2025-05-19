@@ -1,6 +1,6 @@
-********
+*********
 rotations
-********
+*********
 
 .. automodule:: pysiaf.utils.rotations
     :members:

@@ -1,6 +1,5 @@
 [![Build Status](https://github.com/spacetelescope/pysiaf/workflows/pysiaf%20CI/badge.svg)](https://github.com/spacetelescope/pysiaf/actions)
 [![Documentation Status](https://readthedocs.org/projects/pysiaf/badge/?version=latest)](https://pysiaf.readthedocs.io/en/latest/?badge=latest)
-[![Coverage Status](https://coveralls.io/repos/github/spacetelescope/pysiaf/badge.svg?branch=master)](https://coveralls.io/github/spacetelescope/pysiaf?branch=master)
 [![PyPI version](https://badge.fury.io/py/pysiaf.svg)](https://badge.fury.io/py/pysiaf)
 [![PyPI - License](https://img.shields.io/pypi/l/Django.svg)](https://github.com/spacetelescope/pysiaf/blob/master/LICENSE.md)
 [![DOI](https://zenodo.org/badge/122391513.svg)](https://zenodo.org/badge/latestdoi/122391513)
@@ -59,9 +58,9 @@ Plotting (only a small subset of options is illustrated):
 </p>
 
 ````
-    import matplotlib.pyplot as pl
+    import matplotlib.pyplot as plt
 
-    pl.figure(figsize=(4, 4), facecolor='w', edgecolor='k'); pl.clf()
+    plt.figure(figsize=(4, 4), facecolor='w', edgecolor='k'); plt.clf()
 
     # plot single aperture
     nis_cen.plot()
@@ -69,27 +68,27 @@ Plotting (only a small subset of options is illustrated):
     # plot all apertures in SIAF
     for aperture_name, aperture in siaf.apertures.items():
         aperture.plot()
-    pl.show()
+    plt.show()
 ````
 ````
     # plot 'master' apertures
     from pysiaf.siaf import plot_master_apertures
-    pl.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); pl.clf()
+    plt.figure(figsize=(8, 8), facecolor='w', edgecolor='k'); plt.clf()
     plot_master_apertures(mark_ref=True)
-    pl.show()
+    plt.show()
 ````
 ````
     # plot HST apertures
     siaf = pysiaf.Siaf('HST')
     aperture_names = ['FGS1', 'FGS2', 'FGS3', 'IUVIS1FIX', 'IUVIS2FIX', 'JWFC1FIX', 'JWFC2FIX']
 
-    pl.figure(figsize=(4, 4), facecolor='w', edgecolor='k')
+    plt.figure(figsize=(4, 4), facecolor='w', edgecolor='k')
     for aperture_name in aperture_names:
         siaf[aperture_name].plot(color='r', fill_color='darksalmon', mark_ref=True)
-    ax = pl.gca()
+    ax = plt.gca()
     ax.set_aspect('equal')
     ax.invert_yaxis()
-    pl.show()
+    plt.show()
 
 ````
 
@@ -116,7 +115,7 @@ The STScI Telescopes Branch provides full support of pysiaf for S&OC operational
 
 ### Contributing
 Please open a new issue or new pull request for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome!   
- Do you have feedback and feature requests? Is there something missing you would like to see? Please open an issue or send an email to the maintainers. This package follows the Spacetelescope [Code of Conduct](CODE_OF_CONDUCT.md) strives to provide a welcoming community to all of our users and contributors.
+ Do you have feedback and feature requests? Is there something missing you would like to see? Please open an issue or send an email to the maintainers. This package follows the Space Telescope [Code of Conduct](CODE_OF_CONDUCT.md) strives to provide a welcoming community to all of our users and contributors.
 
 The following describes the typical work flow for contributing to the pysiaf project (adapted from JWQL):
 0. Do not commit any sensitive information (e.g. STScI-internal path structures, machine names, user names, passwords, etc.) to this public repository. Git history cannot be erased.
@@ -133,7 +132,7 @@ The following describes the typical work flow for contributing to the pysiaf pro
 11. Delete your local copy of your branch.
 
 ### Installation  
-This package is supported in python 3.7, 3.8 and 3.9
+This package is supported in python 3.10+
 
 `pip install pysiaf`
 
@@ -141,7 +140,7 @@ Clone the repository:
 `git clone https://github.com/spacetelescope/pysiaf`  
 Install pysiaf:  
 `cd pysiaf`  
-`pip install .` 
+`pip install .`
 
 Install in Develop Mode
 `pip install -e .`
@@ -160,12 +159,5 @@ this can probably be fixed by downgrading the version of lxml, e.g.
     `pip uninstall lxml`  
     `pip install lxml==3.6.4`
 
-If you get an error upon    
-`import pysiaf`  
-that states     
-`ImportError: Failed to import any qt binding`      
-and your computer runs on MacOS Mojave and you installed the tool with `python setup.py install`,
-this can probably be fixed by un-installing and re-installing PyQt5, e.g.            
-`pip uninstall pyqt5`       
-`pip uninstall pyqt5-sip`       
-`pip install pyqt5`     
+pyqt5 installation issues:
+    If using MacOS Mojave, it causes matplotlib to fail without pyqt5. Please take appropriate action to make sure pyqt5 is installed for

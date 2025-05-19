@@ -1,11 +1,11 @@
 *REFERENCE
-ESA-JWST-SCI-NRS-RP-2017-xxx, nIDs [2621]
+ESA-JWST-SCI-NRS-TN-2017-027, NID 480
 
 *AUTHOR
-p_generate_gtp_files.py 1.0.0
+p_generate_gtp_files.py 1.0.1
 
 *DATE
-2019-10-28T10:28:31.237854
+2022-06-09T07:23:16.120347
 
 *VERSION
 2.0.1
@@ -14,7 +14,7 @@ p_generate_gtp_files.py 1.0.0
 GTP
 
 *DESCRIPTION
-GWA Y tilt sensor fit for MIRROR with zero point for NIRS_FM2_05_OTIS_FIT1/
+GWA Y tilt sensor fit for MIRROR with zero point for NRS_COMM_13_NRS019_CAP031_2_FORE_MIRRORrecal
 
 *Unit
 arcsec
@@ -29,9 +29,9 @@ arcsec
 1
 
 *Zeroreadings 1
-0.19639861273448442
+0.1955430360000001
 
 *CoeffsTemperature00 2
-5450.42
--1070.552
+4516.033630681263
+-883.1200859918085
 

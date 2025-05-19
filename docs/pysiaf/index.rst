@@ -29,26 +29,26 @@ How to install
 pysiaf is available on `PyPI <https://pypi.org/project/pysiaf/>`_ and is included in astroconda.
 
 
-`pip install pysiaf`
+pip install pysiaf
 
 Clone the repository:
-`git clone https://github.com/spacetelescope/pysiaf`
+git clone https://github.com/spacetelescope/pysiaf
 Install pysiaf:
-`cd pysiaf`
-`python setup.py install` or
-`pip install .`
+cd pysiaf
+python setup.py install or
+pip install .
 
 Known installation issue
 ************************
 
-If you get an error upon `import pysiaf` that traces back to `import lxml.etree as ET` and states
+If you get an error upon ``import pysiaf`` that traces back to ``import lxml.etree as ET`` and states
 
-`ImportError [...] Library not loaded: libxml2.2.dylib Reason: Incompatible library version: etree.[...] requires version 12.0.0 or later, but libxml2.2.dylib provides version 10.0.0`,
+``ImportError [...] Library not loaded: libxml2.2.dylib Reason: Incompatible library version: etree.[...] requires version 12.0.0 or later, but libxml2.2.dylib provides version 10.0.0``,
 
 this can probably be fixed by downgrading the version of lxml, e.g.
 
-`pip uninstall lxml`
-`pip install lxml==3.6.4`
+``pip uninstall lxml``
+``pip install lxml==3.6.4``
 
 
 User Documentation
@@ -56,9 +56,9 @@ User Documentation
 Example usage:
 
 Check which PRD version is in use:
-`print(pysiaf.JWST_PRD_VERSION)`
+``print(pysiaf.JWST_PRD_VERSION)``
 
-Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames)::
+Frame transformations (``det``, ``sci``, ``idl``, ``tel`` are supported frames)::
 
     import pysiaf
     instrument = 'NIRISS'
@@ -84,12 +84,27 @@ Frame transformations (`det`, `sci`, `idl`, `tel` are supported frames)::
     # transform from Science frame to Ideal frame
     idl_x, idl_y = nis_cen.sci_to_idl(sci_x, sci_y)
 
+Finding Available Apertures
+***************************
+
+Each Siaf instance has an attribute ``apernames`` giving all available aperture names. There are often many of these::
+
+    siaf = pysiaf.Siaf('NIRSpec')
+    print (len(siaf.apernames))
+    # output: 75
+
+The ``find_apernames`` method allows quick lookup of aperture names matching some substring::
+
+    siaf = pysiaf.Siaf('NIRSpec')
+    siaf.find_apernames('S200')
+    # output: ['NRS_S200A1_SLIT', 'NRS_S200A2_SLIT', 'NRS_S200B1_SLIT']
+    
 
 Using sky transforms
 ********************
-Transformations to/from `sky` coordinates (RA, Dec) are also supported, but you have to first define and set an
+Transformations to/from ``sky`` coordinates (RA, Dec) are also supported, but you have to first define and set an
 attitude matrix that represents the observatory orientation with respect to the celestial sphere. This can be done with
-`pysiaf.utils.rotations.attitude_matrix`::
+``pysiaf.utils.rotations.attitude_matrix``::
 
     # find attitude with some coordinates (v2,v3) pointed at (ra, dec) with a given pa
     attmat = pysiaf.utils.rotations.attitude_matrix(v2, v3, ra, dec, pa)
@@ -107,22 +122,22 @@ Reporting Issues / Contributing
 Do you have feedback and feature requests? Is there something missing you would like to see? Please open a new issue or new pull request at https://github.com/spacetelescope/pysiaf for bugs, feedback, or new features you would like to see. If there is an issue you would like to work on, please leave a comment and we will be happy to assist. New contributions and contributors are very welcome! This package follows the STScI `Code of Conduct <https://github.com/spacetelescope/pysiaf/blob/master/CODE_OF_CONDUCT.md>`_ strives to provide a welcoming community to all of our users and contributors.
 
 Coding and other guidelines
-###########################
+***************************
 We strive to adhere to the `STScI Style Guides <https://github.com/spacetelescope/style-guides>`_.
 
 How to make a code contribution
-###############################
+*******************************
 The following describes the typical work flow for contributing to the pysiaf project (adapted from `<https://github.com/spacetelescope/jwql>`_):
 
 #. Do not commit any sensitive information (e.g. STScI-internal path structures, machine names, user names, passwords, etc.) to this public repository. Git history cannot be erased.
-#. Create a fork off of the `spacetelescope` `pysiaf` repository on your personal github space.
+#. Create a fork off of the ``spacetelescope`` ``pysiaf`` repository on your personal github space.
 #. Make a local clone of your fork.
-#. Ensure your personal fork is pointing `upstream` to https://github.com/spacetelescope/pysiaf
-#. Open an issue on `spacetelescope` `pysiaf` that describes the need for and nature of the changes you plan to make. This is not necessary for minor changes and fixes.
+#. Ensure your personal fork is pointing ``upstream`` to https://github.com/spacetelescope/pysiaf
+#. Open an issue on ``spacetelescope`` ``pysiaf`` that describes the need for and nature of the changes you plan to make. This is not necessary for minor changes and fixes.
 #. Create a branch on that personal fork.
 #. Make your software changes.
-#. Push that branch to your personal GitHub repository, i.e. to `origin`.
-#. On the `spacetelescope` `pysiaf` repository, create a pull request that merges the branch into `spacetelescope:master`.
+#. Push that branch to your personal GitHub repository, i.e. to ``origin``.
+#. On the ``spacetelescope`` ``pysiaf`` repository, create a pull request that merges the branch into ``spacetelescope:master``.
 #. Assign a reviewer from the team for the pull request, if you are allowed to do so.
 #. Iterate with the reviewer over any needed changes until the reviewer accepts and merges your branch.
 #. Delete your local copy of your branch.

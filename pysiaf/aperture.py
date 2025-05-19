@@ -14,12 +14,13 @@ Authors
 -------
     - Johannes Sahlmann
 
-References
-----------
+Notes
+-----
     Numerous contributions and code snippets by Colin Cox were incorporated.
     Some methods were adapted from the jwxml package (https://github.com/mperrin/jwxml).
     Some of the polynomial transformation code was adapted from
     (https://github.com/spacetelescope/ramp_simulator/).
+
 
 """
 
@@ -175,15 +176,12 @@ class Aperture(object):
     JWST-STScI-001550.
 
     Transformations between four coordinate systems ("frames") are supported:
-        * `Detector ("det")` :  units of pixels, according to detector read out axes orientation as
-        defined by SIAF. This system generally differs from the JWST-DMS detector frame definition.
 
-        * `Science ("sci")` :   units of pixels, corresponds to DMS coordinate system.
+        * Detector ("det") :  units of pixels, according to detector read out axes orientation as defined by SIAF. This system generally differs from the JWST-DMS detector frame definition.
+        * Science ("sci") :   units of pixels, corresponds to DMS coordinate system.
+        * Ideal ("idl") : units of arcseconds, usually a tangent plane projection with reference point at aperture reference location.
+        * Telescope or V2/V3 ("tel") : units of arcsecs, spherical coordinate system.
 
-        * `Ideal ("idl")` : units of arcseconds, usually a tangent plane projection with reference
-        point at aperture reference location.
-
-        * `Telescope or V2/V3 ("tel")` : units of arcsecs, spherical coordinate system.
 
     Examples
     --------
@@ -288,7 +286,7 @@ class Aperture(object):
         polynomial_coefficients = read.read_siaf_distortion_coefficients(file_name=file_name)
 
         number_of_coefficients = len(polynomial_coefficients)
-        polynomial_degree = np.int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
         self.Sci2IdlDeg = polynomial_degree
 
         # set polynomial coefficients
@@ -328,9 +326,8 @@ class Aperture(object):
             * X[Y]IdlVert1[2,3,4]
             * X[Y]SciScale
 
-        TODO
-        ----
-            Implement exact scale computation
+        .. todo:: Implement exact scale computation
+
 
         """
         if not self._initial_attributes_validated:
@@ -436,7 +433,7 @@ class Aperture(object):
     def corners(self, to_frame, rederive=True):
         """Return coordinates of the aperture vertices in the specified frame.
 
-        The positions refer to the `outside` corners of the corner pixels, not the pixel centers.
+        The positions refer to the outside corners of the corner pixels, not the pixel centers.
 
         Parameters
         ----------
@@ -594,7 +591,7 @@ class Aperture(object):
 
         Returns
         -------
-        path : `matplotlib.path.Path` object
+        path : matplotlib.path.Path object
             Path describing the aperture outline
 
         """
@@ -631,21 +628,20 @@ class Aperture(object):
             alpha parameter for filled aperture
         color : matplotlib-compatible color
             Color specification for this aperture's outline,
-            passed through to `matplotlib.Axes.plot`
+            passed through to matplotlib.Axes.plot
         kwargs : dict
             Dictionary of optional parameters passed to matplotlib
 
-        TODO
-        ----
-        plotting in Sky frame, requires attitude
-        elif system == 'radec':
-                 if attitude_ref is not None:
-                     vertices = np.array(
-                         siaf_rotations.pointing(attitude_ref, self.points_closed.T[0],
-        self.points_closed.T[1])).T
-                     self.path_radec = matplotlib.path.Path(vertices)
-                 else:
-                     error('Please provide attitude_ref')
+        .. todo:: plotting in Sky frame, requires attitude
+
+        #elif system == 'radec':
+        #         if attitude_ref is not None:
+        #             vertices = np.array(
+        #                 siaf_rotations.pointing(attitude_ref, self.points_closed.T[0],
+        #self.points_closed.T[1])).T
+        #             self.path_radec = matplotlib.path.Path(vertices)
+        #         else:
+        #             error('Please provide attitude_ref')
 
         """
         if self.AperType == "TRANSFORM":
@@ -689,10 +685,12 @@ class Aperture(object):
                     horizontalalignment='center', rotation=label_rotation,
                     color=ax.lines[-1].get_color())
         if fill:
-            # If a transform kwarg is supplied, pass it through to the fill function too
-            transform_kw = kwargs.get('transform', None)
-            ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw)
-
+            if self.observatory == "JWST":
+                # If a transform kwarg is supplied, pass it through to the fill function too
+                transform_kw = kwargs.get('transform', None)
+                ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw) 
+            elif self.observatory == "HST":
+                ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha) 
         if title:
             ax.set_title("{0} frame".format(frame))
         if show_frame_origin:
@@ -713,7 +711,7 @@ class Aperture(object):
         Red and blue squares indicate the detector and science frame origin, respectively.
 
         Parameters
-        -----------
+        ----------
         frame : str
             Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
         which : str of list
@@ -723,6 +721,7 @@ class Aperture(object):
         ax : matplotlib.Axes
             Desired destination axes to plot into (If None, current
             axes are inferred from pyplot.)
+
 
         """
         if ax is None:
@@ -769,13 +768,13 @@ class Aperture(object):
         Parameters
         ----------
         frame : str
-            Which coordinate system to plot in: 'tel', 'idl', 'sci', 'det'
+            Which coordinate system to plot in: "tel", "idl", "sci", "det"
         color : matplotlib-compatible color
             Color specification for the amplifier shaded region,
-            passed through to `matplotlib.patches.Polygon` as `facecolor`
+            passed through to matplotlib.patches.Polygon as facecolor
         alpha : float
             Opacity of odd-numbered amplifier region overlays
-            (for even, see `evenoddratio`)
+            (for even, see "evenoddratio")
         evenoddratio : float
             Ratio of opacity between even and odd amplifier region
             overlays
@@ -846,7 +845,7 @@ class Aperture(object):
 
         Returns
         -------
-        x_model, y_model : tuple of `astropy.modeling` models
+        x_model, y_model : tuple of astropy.modeling models
 
         """
         # create the model for the transformation
@@ -890,9 +889,8 @@ class Aperture(object):
         y_model : astropy.modeling.Model
             Correction in y
 
-        TODO
-        ----
-        Clean up part with all_keys = self.__dict__.keys()
+        .. todo:: Clean up part with all_keys = self.__dict__.keys()
+
 
         """
         if from_system not in ['idl', 'sci']:
@@ -910,7 +908,7 @@ class Aperture(object):
         # Get the coefficients for "science" to "ideal" transformation (and back)
 
         # degree of distortion polynomial
-        degree = np.int(getattr(self, 'Sci2IdlDeg'))
+        degree = int(getattr(self, 'Sci2IdlDeg'))
 
         number_of_coefficients = polynomial.number_of_coefficients(degree)
         all_keys = self.__dict__.keys()
@@ -961,11 +959,9 @@ class Aperture(object):
 
         Returns
         -------
-        x_model, y_model : tuple of `astropy.modeling` models
+        x_model, y_model : tuple of astropy.modeling models
 
-        TODO
-        ----
-        (upgrade: use astropy.units to allow any type of input angular unit)
+        .. todo:: upgrade: use astropy.units to allow any type of input angular unit
 
         """
         if verbose:
@@ -1407,7 +1403,7 @@ class Aperture(object):
         Input sky coords should be given in degrees RA and Dec, or equivalent astropy.Quantities
 
         Results are returned as floats with implicit units of arcseconds, for consistency with the
-        other *_to_tel functions.
+        other \\*_to_tel functions.
 
         """
 
@@ -1447,10 +1443,8 @@ class Aperture(object):
     def validate(self):
         """Verify that the instance's attributes fully qualify the aperture.
 
-        TODO
-        ----
         # http: // ssb.stsci.edu / doc / jwst / _modules / jwst / datamodels /
-        wcs_ref_models.html  # DistortionModel.validate
+        #wcs_ref_models.html  # DistortionModel.validate
 
         """
         # from matchcsv.py
@@ -1513,8 +1507,8 @@ class Aperture(object):
         This corresponds to the OSS corner position (x: ColCorner, y: RowCorner).
         The notation for OSS is 1-based, i.e. the lower left corner of a FULL subarray is (1,1)
         """
-        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(np.int_)
-        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(np.int_)
+        col_corner = np.ceil(np.min(self.corners('det')[0])).astype(int)
+        row_corner = np.ceil(np.min(self.corners('det')[1])).astype(int)
         
         return col_corner, row_corner
         
@@ -1686,7 +1680,7 @@ class HstAperture(Aperture):
             np.append(np.arange(len(points_y)), 0)]
 
     def rearrange_fgs_alignment_parameters(self, pa_deg_in, v2_arcsec_in, v3_arcsec_in, direction):
-        """Convert to/from alignment parameters make FGS `look` like a regular camera aperture.
+        """Convert to/from alignment parameters make FGS look like a regular camera aperture.
 
         Parameters
         ----------
@@ -2006,9 +2000,8 @@ class HstAperture(Aperture):
 
         This is after using those V2Ref and V3Ref attributes for TVS matrix update.
 
-        TODO
-        ----
-            - use new rotations.methods
+        .. todo:: use new rotations.methods
+
 
         """
         # reference point in idl frame
@@ -2615,3 +2608,16 @@ def compare_apertures(reference_aperture, comparison_aperture, absolute_toleranc
         print('', file=print_file)
 
     return comparison_table
+
+class RomanAperture(Aperture):
+    """
+    A class that defines the accepted aperture types for
+    the Roman SIAF. This is built upon the pysiaf.aperture.Aperture
+    base class.
+    """
+
+    _accepted_aperture_types = ['FULLSCA', 'COMPOUND']
+
+    def __init__(self):
+        super(RomanAperture, self).__init__()
+        self.observatory = 'Roman'

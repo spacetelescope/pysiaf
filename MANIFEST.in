@@ -1,8 +1,7 @@
-include RELIC-INFO
-exclude pysiaf/version.py
+include README.md
+include CHANGES.rst
+include setup.cfg
+include LICENSE
+include pyproject.toml
 
-# Not recommended: Uncomment below to bundle RELIC during `sdist`
-#
-#recursive-include relic *
-#prune relic/.git
-#prune relic/tests
+recursive-include pysiaf/source_data/ *

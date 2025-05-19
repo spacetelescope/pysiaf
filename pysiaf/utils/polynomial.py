@@ -344,9 +344,12 @@ def invert(A, B, u, v, verbose=False):
 def jacob(a, b, x, y):
     """Calculate relative area using the Jacobian.
 
-               | da_dx   db_dx |
-    Jacobian = |               |
-               | da_dy   db_dy |
+    ```                             ```
+    ```           | da_dx   db_dx | ```
+    ```Jacobian = |               | ```
+    ```           | da_dy   db_dy | ```
+    ```                             ```
+
     Then the relative area is the absolute value of the determinant of the Jacobian.
     x and y will usually be Science coordinates while u and v are Ideal coordinates
 
@@ -361,10 +364,12 @@ def jacob(a, b, x, y):
     y : array
         y pixel position or array of y positions matching the y positions
 
+
     Returns
     -------
     area : array
         area in (u,v) coordinates matching unit area in the (x,y) coordinates.
+
 
     """
     j = dpdx(a, x, y)*dpdy(b, x, y) - dpdx(b, x, y)*dpdy(a, x, y)
@@ -375,7 +380,7 @@ def jacob(a, b, x, y):
 def number_of_coefficients(poly_degree):
     """Return number of coefficients corresponding to polynomial degree."""
     if type(poly_degree) == int:
-        n_coefficients = np.int((poly_degree + 1) * (poly_degree + 2) / 2)
+        n_coefficients = int((poly_degree + 1) * (poly_degree + 2) / 2)
         return n_coefficients
     else:
         raise TypeError('Argument has to be of type int')
@@ -486,7 +491,7 @@ def polynomial_degree(number_of_coefficients):
     if not poly_degree.is_integer():
         raise ValueError('Number of coefficients does not match a valid polynomial degree.')
     else:
-        return np.int(poly_degree)
+        return int(poly_degree)
 
 
 def prepend_rotation_to_polynomial(a, theta, verbose=False):
@@ -540,7 +545,7 @@ def prepend_rotation_to_polynomial(a, theta, verbose=False):
                 for j in range(m-n-mu, m-mu+1):
                     factor = (-1)**(m-n-mu) * choose(m-j, mu) * choose(j, m-n-mu)
                     cosSin = c**(j+2*mu-m+n) * s**(2*m-2*mu-j-n)
-                    atrotate[m, n] = atrotate[m, n] + factor * cosSin * at[m, j]
+                    atrotate[m, n] = np.squeeze(atrotate[m, n] + factor * cosSin * at[m, j])
                     if verbose:
                         print(m, n, j, factor, 'cos^', j+2*mu-m+n, 'sin^', 2*m-2*mu-j-n, ' A', m, j)
     # Put back in linear layout

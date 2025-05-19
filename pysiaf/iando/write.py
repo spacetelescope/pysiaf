@@ -23,11 +23,7 @@ from openpyxl.styles import Alignment
 
 from ..constants import _JWST_TEMPORARY_ROOT
 from ..aperture import PRD_REQUIRED_ATTRIBUTES_ORDERED, SIAF_XML_FIELD_FORMAT, FLOAT_ATTRIBUTES
-
-try:
-    from ..version import __version__
-except ImportError:
-    __version__ = ''
+from .. import __version__
 
 # dictionary used to set field precision in SIAF.XML
 xml_decimal_precision = {}
@@ -60,9 +56,7 @@ def write_jwst_siaf(aperture_collection, filename=None, basepath=None, label=Non
     filenames : list
         list of the filenames written out
 
-    TODO
-    ----
-        test support of astropy Table.write formats (FITS not working)
+    .. todo:: test support of astropy Table.write formats (FITS not working)
 
 
     """

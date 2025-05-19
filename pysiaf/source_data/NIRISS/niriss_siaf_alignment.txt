@@ -1,10 +1,10 @@
 # NIRISS alignment parameter reference file for SIAF
 # 
-# This file contains the focal plane alignment parameters calibrated during FGS-SI alignment.
+# This file contains the focal plane alignment parameters calibrated using NIRISS TA data.
 # 
-# Generated 2018-02-21T01:33:49.873 utc
-# jsahlmann
+# Generated 2023-10-30T00:00:00.000 utc
+# tsohn
 # 
-                      AperName ,        V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,  V2Ref   ,  V3Ref
-                       NIS_CEN , 0.5698701825418142 , -89.69171766828843 ,  0.5698701825418142 , -291.219 , -698.181
-                   NIS_CEN_OSS , 0.5698701825418141 ,  90.30828233171157 , -179.43012981745818 , -291.219 , -698.181
+                      AperName ,      V3IdlYAngle ,        V3SciXAngle ,         V3SciYAngle ,    V2Ref ,    V3Ref
+                       NIS_CEN , 0.56126716610545 , -89.70138692875433 ,    0.56126716610545 , -291.141 , -698.015
+                   NIS_CEN_OSS , 0.56126716610545 ,  90.29861307124567 , -179.43873283389456 , -291.141 , -698.015

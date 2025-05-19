@@ -1,4 +1,5 @@
-stsci_rtd_theme
+stsci-rtd-theme
+sphinx-rtd-theme
 numpy
 matplotlib
 sphinx_automodapi
