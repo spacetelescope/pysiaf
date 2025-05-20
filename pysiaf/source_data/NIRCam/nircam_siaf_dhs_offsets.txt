@@ -1,0 +1,12 @@
+# NIRCam detector parameter definition file for SIAF
+# 
+# This file contains the dos offsets.
+# 
+# Generated 2025-05-
+# by pbennet
+# 
+         name ,  v2_offset ,  v3_offset
+        NRCA4 ,  0.0000000 , -4.4620005
+        NRCA3 ,  0.0000000 ,  1.2025858
+        NRCA2 ,  0.0000000 , -4.7070388
+        NRCA1 ,  0.0000000 ,  0.9079181

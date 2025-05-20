@@ -72,6 +72,13 @@ wedge_file = os.path.join(
 )
 wedge_offsets = Table.read(wedge_file, format="ascii.basic", delimiter=",")
 
+dhs_file = os.path.join(
+    JWST_SOURCE_DATA_ROOT,
+    instrument,
+    "{}_siaf_dhs_offsets.txt".format(instrument.lower()),
+)
+dhs_offsets = Table.read(dhs_file, format="ascii.basic", delimiter=",")
+
 grism_file = os.path.join(
     JWST_SOURCE_DATA_ROOT,
     instrument,
@@ -173,7 +180,7 @@ for AperName in aperture_name_list:
     dependency_type = siaf_aperture_definitions["dependency_type"][index]
 
     if parent_apertures is not None:
-        if dependency_type in ["default", "wedge", "dhspil_wedge"]:
+        if dependency_type in ["default", "wedge", "dhspil_wedge", "DHS"]:
             aperture._parent_apertures = parent_apertures
             parent_aperture = aperture_dict[aperture._parent_apertures]
 
@@ -198,7 +205,15 @@ for AperName in aperture_name_list:
 
             if dependency_type != "default":
                 sca_name = aperture.AperName[0:5]
-
+            
+            if dependency_type == "DHS":
+                v2_offset = numpy.ndarray.item(
+                dhs_offsets["v2_offset"][dhs_offsets["name"] == sca_name])
+                v3_offset = numpy.ndarray.item(
+                dhs_offsets["v3_offset"][dhs_offsets["name"] == sca_name])
+                aperture.V2Ref += v2_offset
+                aperture.V3Ref += v3_offset
+                
             if dependency_type == "wedge":
                 if (sca_name == "NRCA5") and (
                     ("MASK335R" in aperture.AperName)
@@ -206,10 +221,10 @@ for AperName in aperture_name_list:
                 ):
                     # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += "335R430R"
-                v2_offset = float(
+                v2_offset = numpy.ndarray.item(
                     wedge_offsets["v2_offset"][wedge_offsets["name"] == sca_name]
                 )
-                v3_offset = float(
+                v3_offset = numpy.ndarray.item(
                     wedge_offsets["v3_offset"][wedge_offsets["name"] == sca_name]
                 )
                 aperture.V2Ref += v2_offset
@@ -528,73 +543,130 @@ if emulate_delivery:
         if create_jira_plots:
             # # make figures for JSOCOPS-164-165-166 Jira ticket
             selected_aperture_names = [
-                ["NRCALL"]
+                ["NRCALL_DHS_F322W2"]
                 + [
-                    "NRC{}{}_FULL".format(mod, sca)
-                    for mod in ["A", "B"]
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA{}_{}".format(sca, subarray)
-                    for sca in ["1", "2", "3", "4", "5"]
-                    for subarray in ["FULL", "SUB160", "SUB320", "SUB640"]
-                ],
-                [
-                    "NRCB{}_{}".format(sca, subarray)
-                    for sca in ["1", "2", "3", "4", "5"]
-                    for subarray in ["FULL", "SUB160", "SUB320", "SUB640"]
-                ],
-                [
-                    "NRCB{}_{}".format(sca, subarray)
-                    for sca in ["1", "5"]
-                    for subarray in ["FULLP", "SUB64P", "SUB160P", "SUB400P"]
-                ],
-                [
-                    "NRCA{}_FULL_WEDGE_RND".format(sca)
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA{}_FULL_WEDGE_BAR".format(sca)
-                    for sca in ["1", "2", "3", "4", "5"]
-                ],
-                [
-                    "NRCA2_MASK210R",
-                    "NRCA5_MASK210R",
-                    "NRCA2_TAMASK210R",
-                    "NRCA2_FSTAMASK210R",
-                ],
-                [
-                    "NRCA5_MASK335R",
-                    "NRCA2_MASK335R",
-                    "NRCA5_TAMASK335R",
-                    "NRCA5_FSTAMASK335R",
-                ],
-                [
-                    "NRCA5_MASK430R",
-                    "NRCA2_MASK430R",
-                    "NRCA5_TAMASK430R",
-                    "NRCA5_FSTAMASK430R",
-                ],
-                [
-                    "NRCA5_400X256_MASKLWB",
-                    "NRCA4_400X256_MASKLWB",
-                    "NRCA5_TAMASKLWB",
-                    "NRCA5_TAMASKLWBL",
-                    "NRCA5_FSTAMASKLWB",
-                    "NRCA5_400X256_MASKLWB_NARROW",
-                    "NRCA5_400X256_MASKLWB_F444W",
-                    "NRCA5_400X256_MASKLWB_F250M",
-                ],
-                [
-                    "NRCA4_MASKSWB",
-                    "NRCA5_MASKSWB",
-                    "NRCA4_TAMASKSWB",
-                    "NRCA4_TAMASKSWBS",
-                    "NRCA4_FSTAMASKSWB",
-                    "NRCA4_MASKSWB_NARROW",
-                    "NRCA4_MASKSWB_F212N",
-                    "NRCA4_MASKSWB_F182M",
-                ],
+                    "NRCA5_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA5_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA4_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA2_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA1_260STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_41STRIPE1_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_82STRIPE2_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_164STRIPE4_DHS_F322W2"
+                ]
+                + [
+                    "NRCA3_260STRIPE4_DHS_F322W2"
+                ]
+                ,
+                ["NRCALL_DHS_F444W"]
+                + [
+                    "NRCA5_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA5_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA4_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA2_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA1_260STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_41STRIPE1_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_82STRIPE2_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_164STRIPE4_DHS_F444W"
+                ]
+                + [
+                    "NRCA3_260STRIPE4_DHS_F444W"
+                ]
+
             ]
 
             for selected_aperture_name in selected_aperture_names:
@@ -605,6 +677,7 @@ if emulate_delivery:
                     tags=tags,
                     selected_aperture_name=selected_aperture_name,
                     mark_ref=True,
+                    ylimits=(-499,-491),
                     filename_appendix=selected_aperture_name[0],
                     label=True,
                 )
