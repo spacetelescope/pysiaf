@@ -207,9 +207,9 @@ for AperName in aperture_name_list:
                 sca_name = aperture.AperName[0:5]
             
             if dependency_type == "DHS":
-                v2_offset = float(
+                v2_offset = numpy.ndarray.item(
                 dhs_offsets["v2_offset"][dhs_offsets["name"] == sca_name])
-                v3_offset = float(
+                v3_offset = numpy.ndarray.item(
                 dhs_offsets["v3_offset"][dhs_offsets["name"] == sca_name])
                 aperture.V2Ref += v2_offset
                 aperture.V3Ref += v3_offset
@@ -221,10 +221,10 @@ for AperName in aperture_name_list:
                 ):
                     # see https://jira.stsci.edu/browse/JWSTSIAF-77
                     sca_name += "335R430R"
-                v2_offset = float(
+                v2_offset = numpy.ndarray.item(
                     wedge_offsets["v2_offset"][wedge_offsets["name"] == sca_name]
                 )
-                v3_offset = float(
+                v3_offset = numpy.ndarray.item(
                     wedge_offsets["v3_offset"][wedge_offsets["name"] == sca_name]
                 )
                 aperture.V2Ref += v2_offset
