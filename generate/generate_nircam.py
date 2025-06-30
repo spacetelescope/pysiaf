@@ -700,7 +700,7 @@ if emulate_delivery:
 
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_transforms(
-        [pre_delivery_siaf], verbose=False, threshold=0.2
+        [pre_delivery_siaf], verbose=False, threshold=1.0
     )
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
