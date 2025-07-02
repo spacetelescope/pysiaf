@@ -149,35 +149,25 @@ def plot_all_apertures(subarrays=True, showorigin=True, detector_channels=True, 
             aps.plot_detector_channels()
 
 
-def plot_main_apertures(label=False, darkbg=False, detector_channels=False, frame='tel',
-        attitude_matrix=None, mission='jwst', **kwargs):
-    """Plot main/master apertures.
+def get_main_apertures(mission='jwst', frame='tel', **kwargs):
+    """ Return lists of main apertures, sorted into apertures for imaging, spectroscopy, and coronagraphy
+
+    The "main" apertures" per each observatory and instrument are defined in hard-coded lists within
+    this function. In general this includes the major instrument imaging detectors, spectrograph slits,
+    coronagraph apertures, etc.
+
+    This is used in plot_main_apertures, but is provided here as a separate function since these
+    lists of main apertures can be useful in other contexts as well.
+
+    Returns 3 lists of pysiaf Aperture instances
 
     Parameters
     ----------
-    frame : string
-        Either 'tel' or 'sky'. (It does not make sense to plot apertures from multiple instruments in any of the
-        other frames)
-    attitude_matrix : 3x3 ndarray
-        Rotation matrix representing observatory attitude. Needed for sky frame plots.
     mission : str
         observatory name, one of 'JWST', 'HST', or 'Roman'. Case insensitive.
 
     """
-
-    if frame not in ['tel', 'sky']:
-        raise ValueError("Only the tel or sky frames make sense for plot_main_apertures")
-
     if mission.upper() == 'JWST':
-        if darkbg:
-            col_imaging = 'aqua'
-            col_coron = 'lime'
-            col_msa = 'violet'
-        else:
-            col_imaging = 'blue'
-            col_coron = 'green'
-            col_msa = 'magenta'
-
         nircam = Siaf('NIRCam')
         niriss = Siaf('NIRISS')
         fgs = Siaf('FGS')
@@ -192,7 +182,6 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, fram
             fgs['FGS1_FULL'],
             fgs['FGS2_FULL']
         ]
-
         for letter in ['A', 'B']:
             for num in range(5):
                 im_aps.append(nircam['NRC{}{}_FULL'.format(letter, num + 1)])
@@ -213,44 +202,87 @@ def plot_main_apertures(label=False, darkbg=False, detector_channels=False, fram
             miri['MIRIM_MASK1550'],
             miri['MIRIM_MASKLYOT']
         ]
-        msa_aps = [nirspec['NRS_FULL_MSA' + str(n + 1)] for n in range(4)]
-        msa_aps.append(nirspec['NRS_S1600A1_SLIT'])  # square aperture
-    elif mission.upper() == 'HST':
-       if darkbg:
-            col_imaging = 'lightgray'
-            col_coron = 'lime'  # n/a
-            col_msa = 'violet'  # n/a
-       else:
-            col_imaging = 'gray'
-            col_coron = 'green'
-            col_msa = 'magenta'
 
+        spectra_aps = [nirspec['NRS_FULL_MSA' + str(n + 1)] for n in range(4)]
+        for spec_ap_name in ['NRS_S1600A1_SLIT', 'NRS_S200A1_SLIT', 'NRS_S200A2_SLIT', 'NRS_S400A1_SLIT', 'NRS_FULL_IFU']:
+            spectra_aps.append(nirspec[spec_ap_name])
+
+        for i in range(4):
+            spectra_aps.append(miri[f'MIRIFU_CHANNEL{i+1}A'])
+    elif mission.upper() == 'HST':
        hst_siaf = Siaf('hst')
        hst_si_apnames = ['FGS1', 'FGS2', 'FGS3', 'JWFC1', 'JWFC2', 'IUVIS1', 'IUVIS2', 'OV50', 'ON25', 'OF25']
        # TODO: add COS 'LNPSA', 'LFPSA'; once pysiaf.plot() supports circular apertures
        im_aps = [hst_siaf.apertures[n] for n in hst_si_apnames]
 
        coron_aps = []
-       msa_aps = []
+       spectra_aps = []
 
+    elif mission.upper() == 'ROMAN':
+        roman_siaf = Siaf('roman')
+
+        im_aps = [roman_siaf.apertures[f'WFI{i+1:02d}_FULL'] for i in range(18)]
+        coron_aps = [roman_siaf.apertures['CGI_CEN'], ]
+        spectra_aps = []
+
+    return im_aps, spectra_aps, coron_aps
+
+
+def plot_main_apertures(label=False, darkbg=False, detector_channels=False, frame='tel',
+        attitude_matrix=None, mission='jwst', **kwargs):
+    """Plot main/master apertures
+
+    Note, distinct colors are used to indicate imaging, spectroscopy, and coronagraphic
+    apertures. Colors also distinguish between apertures for different missions, for cases
+    in which HST, JWST, and Roman focal planes might be plotted together.
+
+    Parameters
+    ----------
+    frame : string
+        Either 'tel' or 'sky'. (It does not make sense to plot apertures from multiple instruments in any of the
+        other frames)
+    attitude_matrix : 3x3 ndarray
+        Rotation matrix representing observatory attitude. Needed for sky frame plots.
+    mission : str
+        observatory name, one of 'JWST', 'HST', or 'Roman'. Case insensitive.
+
+    """
+
+    if frame not in ['tel', 'sky']:
+        raise ValueError("Only the tel or sky frames make sense for plot_main_apertures")
+
+    im_aps, spectra_aps, coron_aps = get_main_apertures(mission=mission, frame=frame)
+
+    if mission.upper() == 'JWST':
+        if darkbg:
+            col_imaging = 'aqua'
+            col_coron = 'lime'
+            col_spectra = 'violet'
+        else:
+            col_imaging = 'blue'
+            col_coron = 'green'
+            col_spectra = 'magenta'
+    elif mission.upper() == 'HST':
+       if darkbg:
+            col_imaging = 'lightgray'
+            col_coron = 'lime'  # n/a
+            col_spectra = 'violet'  # n/a
+       else:
+            col_imaging = 'gray'
+            col_coron = 'green'
+            col_spectra = 'magenta'
     elif mission.upper() == 'ROMAN':
         if darkbg:
             col_imaging = 'orange'
             col_coron = 'aqua'
-            col_msa = 'violet'  # n/a
+            col_spectra = 'violet'  # n/a
         else:
             col_imaging = 'orange'
             col_coron = 'teal'
-            col_msa = 'magenta'
-
-        roman_siaf = Siaf('roman')
-        im_aps = [roman_siaf.apertures[f'WFI{i+1:02d}_FULL'] for i in range(18)]
-        coron_aps = [roman_siaf.apertures['CGI_CEN'], ]
-
-        msa_aps = []
+            col_spectra = 'magenta'
 
 
-    for aplist, col in zip([im_aps, coron_aps, msa_aps], [col_imaging, col_coron, col_msa]):
+    for aplist, col in zip([im_aps, coron_aps, spectra_aps], [col_imaging, col_coron, col_spectra]):
         for ap in aplist:
 
             if frame=='sky':

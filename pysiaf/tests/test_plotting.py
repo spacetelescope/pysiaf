@@ -16,7 +16,7 @@ import matplotlib.pyplot as pl
 import pytest
 
 from ..constants import JWST_TEMPORARY_DATA_ROOT
-from ..siaf import Siaf, plot_master_apertures
+from ..siaf import Siaf, plot_master_apertures, plot_main_apertures
 
 # @pytest.mark.skip(reason="Need to figure out how to set backend")
 def test_aperture_plotting():
@@ -68,3 +68,20 @@ def test_aperture_plotting():
         pl.savefig(fig_name, transparent=True, bbox_inches='tight', pad_inches=0.05)
 
     assert os.path.isfile(fig_name)
+
+
+def test_plot_main_apertures():
+    save_plot = True
+    plot_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT)
+    if not os.path.isdir(plot_dir):
+        os.makedirs(plot_dir)
+
+    missions = ['hst', 'jwst', 'roman']
+    for mission in missions:
+        pl.figure()
+        plot_main_apertures(mission=mission)
+
+        fig_name = os.path.join(plot_dir, f'main_apertures_{mission}.png')
+        pl.savefig(fig_name, transparent=True, bbox_inches='tight', pad_inches=0.05)
+
+        assert os.path.isfile(fig_name)
