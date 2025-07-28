@@ -1,5 +1,5 @@
 <SiafEntries>
-  <!--Generated 2025-07-25T16:18:21.528 utc-->
+  <!--Generated 2025-07-28T15:54:05.563 utc-->
   <!--by dlaw-->
   <!--pysiaf version 0.2.6.dev870+g8208003.d20250725-->
   <SiafEntry>
@@ -724,7 +724,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_SUB128_V2</AperName>
+    <AperName>MIRIM_SUB128_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>SUBARRAY</AperType>
     <AperShape>QUAD</AperShape>
@@ -964,7 +964,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_SUB64_V2</AperName>
+    <AperName>MIRIM_SUB64_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>SUBARRAY</AperType>
     <AperShape>QUAD</AperShape>
@@ -1204,7 +1204,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_SLITLESSPRISM_V2</AperName>
+    <AperName>MIRIM_SLITLESSPRISM_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>SUBARRAY</AperType>
     <AperShape>QUAD</AperShape>
@@ -1324,7 +1324,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_SLITLESSPRISM_V2S</AperName>
+    <AperName>MIRIM_SLITLESSPRISM_IPS</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>SUBARRAY</AperType>
     <AperShape>QUAD</AperShape>
@@ -7564,7 +7564,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_TASUB128_V2</AperName>
+    <AperName>MIRIM_TASUB128_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>ROI</AperType>
     <AperShape>QUAD</AperShape>
@@ -7804,7 +7804,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_TASUB64_V2</AperName>
+    <AperName>MIRIM_TASUB64_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>ROI</AperType>
     <AperShape>QUAD</AperShape>
@@ -8044,7 +8044,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_TASLITLESSPRISM_V2</AperName>
+    <AperName>MIRIM_TASLITLESSPRISM_IP</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>ROI</AperType>
     <AperShape>QUAD</AperShape>
@@ -8164,7 +8164,7 @@
   </SiafEntry>
   <SiafEntry>
     <InstrName>MIRI</InstrName>
-    <AperName>MIRIM_TASLITLESSPRISM_V2S</AperName>
+    <AperName>MIRIM_TASLITLESSPRISM_IPS</AperName>
     <DDCName>MIRIMAGE_MASKLYOT</DDCName>
     <AperType>ROI</AperType>
     <AperShape>QUAD</AperShape>
