@@ -4,14 +4,14 @@ Comparison: 290 apertures in pre_delivery
 Number of added apertures 9:
 	          AperName      XDetRef      YDetRef     XSciSize     YSciSize      XSciRef      YSciRef        V2Ref        V3Ref
 	Added MIRIM_TASUB128_IP         74.5        952.5           48           48         24.5         24.5  -381.474392  -330.827705
-	Added MIRIM_SUBSLIT       326.13        300.7          140          384        26.13        293.7  -414.847794  -400.425576
-	Added MIRIM_SLITLESSPRISM_IP         46.5        924.5           68          384         34.5        290.5  -378.655692  -334.176968
-	Added MIRIM_SUB64_IP         50.5        810.5           76           64         38.5         32.5  -380.071437  -346.670589
-	Added MIRIM_TASUB64_IP         50.5        810.5           32           32         16.5         16.5  -380.071437  -346.670589
-	Added MIRIM_TASLITLESSPRISM_IP         46.5        991.5           48           48         24.5         24.5  -378.077902  -326.829218
 	Added MIRIM_SUB128_IP         74.5        952.5          132          128         62.5         64.5  -381.474392  -330.827705
+	Added MIRIM_SLITLESSPRISM_IP         46.5        920.5           68          384         34.5        290.5   -378.69009  -334.616068
+	Added MIRIM_SUB64_IP         50.5        810.5           76           64         38.5         32.5  -380.071437  -346.670589
 	Added MIRIM_TASLITLESSPRISM_IPS         38.5        981.5           48           48         24.5         24.5  -377.290229  -328.004341
+	Added MIRIM_TASUB64_IP         50.5        810.5           32           32         16.5         16.5  -380.071437  -346.670589
 	Added MIRIM_SLITLESSPRISM_IPS         38.5        916.5           52          256         26.5        164.5  -377.849946  -335.134436
+	Added MIRIM_SUBSLIT       326.13        300.7          140          384        26.13        293.7  -414.847794  -400.425576
+	Added MIRIM_TASLITLESSPRISM_IP         46.5        987.5           48           48         24.5         24.5  -378.112498  -327.267514
 Number of modified apertures 281. Significant modifications are listed below.
 Differences are reported for any text change
 and fractional differences greater than 1e-06
