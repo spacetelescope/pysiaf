@@ -1,5 +1,5 @@
 Reference:  281 apertures in PRDOPSSOC-068 (index 0 in table below)
-Comparison: 290 apertures in pre_delivery (index 1 in table below)
+Comparison: 292 apertures in pre_delivery (index 1 in table below)
 
              AperName , siaf0_dx_mean , siaf0_dy_mean , siaf1_dx_mean , siaf1_dy_mean , difference_dx_mean , difference_dy_mean
        MIRIM_FULL_OSS ,      0.004194 ,      0.009979 ,      0.004194 ,      0.009979 ,           0.000000 ,           0.000000
