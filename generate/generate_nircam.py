@@ -547,130 +547,9 @@ if emulate_delivery:
         if create_jira_plots:
             # # make figures for JSOCOPS-164-165-166 Jira ticket
             selected_aperture_names = [
-                ["NRCALL_DHS_F322W2"]
-                + [
-                    "NRCA5_41STRIPE1_DHS_F322W2"
-                ]
-                + [
-                    "NRCA5_82STRIPE2_DHS_F322W2"
-                ]
-                + [
-                    "NRCA5_164STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA5_260STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA4_41STRIPE1_DHS_F322W2"
-                ]
-                + [
-                    "NRCA4_82STRIPE2_DHS_F322W2"
-                ]
-                + [
-                    "NRCA4_164STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA4_260STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA2_41STRIPE1_DHS_F322W2"
-                ]
-                + [
-                    "NRCA2_82STRIPE2_DHS_F322W2"
-                ]
-                + [
-                    "NRCA2_164STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA2_260STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA1_41STRIPE1_DHS_F322W2"
-                ]
-                + [
-                    "NRCA1_82STRIPE2_DHS_F322W2"
-                ]
-                + [
-                    "NRCA1_164STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA1_260STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA3_41STRIPE1_DHS_F322W2"
-                ]
-                + [
-                    "NRCA3_82STRIPE2_DHS_F322W2"
-                ]
-                + [
-                    "NRCA3_164STRIPE4_DHS_F322W2"
-                ]
-                + [
-                    "NRCA3_260STRIPE4_DHS_F322W2"
-                ]
-                ,
-                ["NRCALL_DHS_F444W"]
-                + [
-                    "NRCA5_41STRIPE1_DHS_F444W"
-                ]
-                + [
-                    "NRCA5_82STRIPE2_DHS_F444W"
-                ]
-                + [
-                    "NRCA5_164STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA5_260STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA4_41STRIPE1_DHS_F444W"
-                ]
-                + [
-                    "NRCA4_82STRIPE2_DHS_F444W"
-                ]
-                + [
-                    "NRCA4_164STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA4_260STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA2_41STRIPE1_DHS_F444W"
-                ]
-                + [
-                    "NRCA2_82STRIPE2_DHS_F444W"
-                ]
-                + [
-                    "NRCA2_164STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA2_260STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA1_41STRIPE1_DHS_F444W"
-                ]
-                + [
-                    "NRCA1_82STRIPE2_DHS_F444W"
-                ]
-                + [
-                    "NRCA1_164STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA1_260STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA3_41STRIPE1_DHS_F444W"
-                ]
-                + [
-                    "NRCA3_82STRIPE2_DHS_F444W"
-                ]
-                + [
-                    "NRCA3_164STRIPE4_DHS_F444W"
-                ]
-                + [
-                    "NRCA3_260STRIPE4_DHS_F444W"
-                ]
-
+                ["NRCA3_FULL","NRCA3_SUB64P","NRCA3_SUB160P", "NRCA3_SUB400P"],
+                ["NRCA4_FULL","NRCA4_SUB64P","NRCA4_SUB160P", "NRCA4_SUB400P"],
+                ["NRCA5_FULL","NRCA5_SUB64P","NRCA5_SUB160P", "NRCA5_SUB400P","NRCA5_SUB64P_25","NRCA5_SUB160P_25", "NRCA5_SUB400P_25"],
             ]
 
             for selected_aperture_name in selected_aperture_names:
@@ -681,7 +560,6 @@ if emulate_delivery:
                     tags=tags,
                     selected_aperture_name=selected_aperture_name,
                     mark_ref=True,
-                    ylimits=(-499,-491),
                     filename_appendix=selected_aperture_name[0],
                     label=True,
                 )
@@ -701,7 +579,7 @@ if emulate_delivery:
     print('\nRunning aperture_transforms test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_transforms(
         [pre_delivery_siaf], verbose=False, threshold=1.0
-    )
+    ) 
     print('\nRunning aperture_vertices test for pre_delivery_siaf')
     test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
 
