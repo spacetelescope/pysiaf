@@ -11,8 +11,9 @@ import numpy as np
 import pytest
 
 from ..iando import read
-from ..siaf import Siaf, get_jwst_apertures
+from ..siaf import Siaf, get_jwst_apertures, get_main_apertures
 from ..utils.tools import get_grid_coordinates
+from ..aperture import Aperture
 
 @pytest.fixture(scope='module')
 def siaf_objects():
@@ -284,3 +285,13 @@ def test_jwst_sky_transformations(verbose=False):
     # test to/from detector coords, to test all the intermediate transforms too
     # Below still fails
     #assert np.allclose(fgs_aperture.sky_to_det(*fgs_aperture.det_to_sky(d1,d2)), (d1,d2)), "sky_to_det(det_to_sky) was not an identity"
+
+
+def test_get_main_apertures():
+
+    for mission in ['hst', 'jwst', 'roman']:
+        im_aps, spectra_aps, coron_aps = get_main_apertures(mission=mission)
+
+        for ap_list in [im_aps, spectra_aps, coron_aps]:
+            for ap in ap_list:
+                assert isinstance(ap, Aperture), "This should be a list of apertures"
