@@ -549,7 +549,7 @@ if emulate_delivery:
             selected_aperture_names = [
                 ["NRCA3_FULL","NRCA3_SUB64P","NRCA3_SUB160P", "NRCA3_SUB400P"],
                 ["NRCA4_FULL","NRCA4_SUB64P","NRCA4_SUB160P", "NRCA4_SUB400P"],
-                ["NRCA5_FULL","NRCA5_SUB64P","NRCA5_SUB160P", "NRCA5_SUB400P","NRCA5_SUB64P_25","NRCA5_SUB160P_25", "NRCA5_SUB400P_25"],
+                ["NRCA5_FULL","NRCA5_SUB64P","NRCA5_SUB160P", "NRCA5_SUB400P"],
             ]
 
             for selected_aperture_name in selected_aperture_names:

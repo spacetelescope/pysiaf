@@ -257,16 +257,12 @@
                 NRCA3_SUB64P , SUBARRAY ,  2016.5 ,   132.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA3_FULL ,         default
                NRCA3_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA3_FULL ,         default
                NRCA3_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA3_FULL ,         default
-               	NRCA4_SUB64P , SUBARRAY ,  1843.5 ,   239.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA4_FULL ,         default
+                NRCA4_SUB64P , SUBARRAY ,  1843.5 ,   239.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA4_FULL ,         default
                NRCA4_SUB160P , SUBARRAY ,  1843.5 ,   239.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA4_FULL ,         default
                NRCA4_SUB400P , SUBARRAY ,  1843.5 ,   239.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA4_FULL ,         default
-		NRCA5_SUB64P , SUBARRAY ,   971.5 ,    40.0 ,       64 ,       64 ,    32.5 ,    40.0 ,                                     NRCA5_FULL ,         default
-               NRCA5_SUB160P , SUBARRAY ,    80.5 ,    80.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA5_FULL ,         default
-               NRCA5_SUB400P , SUBARRAY ,   200.5 ,   200.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA5_FULL ,         default
-             NRCA5_SUB64P_25 , SUBARRAY ,    82.5 ,  1942.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,         default
-            NRCA5_SUB160P_25 , SUBARRAY ,    82.5 ,  1942.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA5_FULL ,         default
-            NRCA5_SUB400P_25 , SUBARRAY ,   200.5 ,  1847.5 ,      400 ,      400 ,   200.5 ,   200.5 ,                                     NRCA5_FULL ,         default
-
+                NRCA5_SUB64P , SUBARRAY ,    82.5 ,  1942.5 ,       64 ,       64 ,    32.5 ,    32.5 ,                                     NRCA5_FULL ,         default
+               NRCA5_SUB160P , SUBARRAY ,    82.5 ,  1942.5 ,      160 ,      160 ,    80.5 ,    80.5 ,                                     NRCA5_FULL ,         default
+               NRCA5_SUB400P , SUBARRAY ,    82.5 ,  1942.5 ,      400 ,      400 ,   320.5 ,   292.5 ,                                     NRCA5_FULL ,         default
 # Point-source Imaging and Time Series (Module-B)
                 NRCB1_SUB64P , SUBARRAY , 1886.60 ,  200.72 ,       64 ,       64 ,   36.60 ,   32.28 ,                                     NRCB1_FULL ,         default
                NRCB1_SUB160P , SUBARRAY , 1886.60 ,  200.72 ,      160 ,      160 ,   84.60 ,   80.28 ,                                     NRCB1_FULL ,         default
