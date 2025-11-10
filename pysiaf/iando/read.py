@@ -237,7 +237,7 @@ def read_hst_siaf(file=None, version=None):
             # SIAS to SICS X Transformation.
             # SIAS to SICS Y Transformation.
             # SICS to SIAS X Transformation.
-            # SICS to SIAS X Transformation.
+            # SICS to SIAS Y Transformation.
 
             polynomial_coefficients = np.ones((n_polynomial_coefficients, 4)) * -99
             for jj in np.arange(4):

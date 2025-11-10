@@ -1924,7 +1924,7 @@ class HstAperture(Aperture):
 
                 return x_idl_arcsec, y_idl_arcsec
         else:
-            return super(HstAperture, self).idl_to_tel(v2_arcsec, v3_arcsec,
+            return super(HstAperture, self).tel_to_idl(v2_arcsec, v3_arcsec,
                                                        V3IdlYAngle_deg=V3IdlYAngle_deg,
                                                        V2Ref_arcsec=V2Ref_arcsec,
                                                        V3Ref_arcsec=V3Ref_arcsec, method=method,
