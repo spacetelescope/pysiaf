@@ -47,7 +47,7 @@ docs = [
     "numpydoc>=1.1.0",
     "matplotlib",
     "scipy",
-    "tomli; python_version<\"3.11\"",
+    "tomli; python_version<\"3.13\"",
 ]
 
 [build-system]
