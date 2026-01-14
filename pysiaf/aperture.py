@@ -1064,7 +1064,8 @@ class Aperture(object):
             if input_coordinates == 'cartesian':
                 # define cartesian unit vector as in JWST-PLAN-006166, Section 5.7.1.1
                 # then apply 3D rotation matrix to tel
-                unit_vector_idl = rotations.unit_vector_from_cartesian(x=x_idl*u.arcsec, y=y_idl*u.arcsec)
+                unit_vector_idl = rotations.unit_vector_from_cartesian(y=x_idl*u.arcsec, z=y_idl*u.arcsec)
+                unit_vector_idl[1] = aperture.VIdlParity * unit_vector_idl[1]                
 
             if input_coordinates == 'polar':
                 # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
@@ -1175,8 +1176,9 @@ class Aperture(object):
             unit_vector_idl = np.dot(l_matrix, unit_vector_tel)
 
             if output_coordinates == 'cartesian':
-                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[0] * u.rad.to(u.arcsec), unit_vector_idl[
-                1] * u.rad.to(u.arcsec)
+                unit_vector_idl[1] = aperture.VIdlParity * unit_vector_idl[1]
+                x_idl_arcsec, y_idl_arcsec = unit_vector_idl[1] * u.rad.to(u.arcsec), unit_vector_idl[
+                2] * u.rad.to(u.arcsec)
             elif output_coordinates == 'polar':
                 unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
                 x_idl, y_idl = rotations.polar_angles(unit_vector_idl)
