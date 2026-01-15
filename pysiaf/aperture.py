@@ -1186,7 +1186,157 @@ class Aperture(object):
 
             return x_idl_arcsec, y_idl_arcsec
 
+    def idl_to_tel_new(self, x_idl, y_idl, V3IdlYAngle_deg=None, V2Ref_arcsec=None, V3Ref_arcsec=None,
+                   input_coordinates='tangent_plane', 
+                   verbose=False):
+        """Convert from ideal to telescope (V2/V3) coordinate system.
 
+        By default, this implements the planar approximation, which is adequate for most
+        purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
+        point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
+        Also by default, the input coordinates are in a tangent plane with a reference points at the
+        origin (0,0) of the ideal frame. input_coordinates can be set to 'spherical'.
+
+        Parameters
+        ----------
+        x_idl: float
+            ideal X coordinate in arcsec
+        y_idl: float
+            ideal Y coordinate in arcsec
+        V3IdlYAngle_deg: float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation', 'spherical']
+        input_coordinates : str
+            must be one of ['tangent_plane', 'spherical', 'planar']
+
+        Returns
+        -------
+            tuple of floats containing V2, V3 coordinates in arcsec
+
+        """
+
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
+        if V2Ref_arcsec is None:
+            V2Ref_arcsec = self.V2Ref
+        if V3Ref_arcsec is None:
+            V3Ref_arcsec = self.V3Ref
+
+        if verbose:
+            print('Method: {}, input_coordinates {}, output_coordinates={}'.format(
+                method, input_coordinates, output_coordinates))
+            
+        method='spherical' 
+        if method == 'spherical':
+            if input_coordinates == 'tangent_plane':
+                # interpret idl coordinates as on the tangent plane, deproject to get polar angles
+                # then apply 3D rotation matrix to tel
+                xi_idl, eta_idl = projection.deproject_from_tangent_plane(x_idl/3600.0, y_idl/3600.0, 0.0, 0.0)
+                xi_idl=(xi_idl*3600.0)*u.arcsec
+                eta_idl=(eta_idl*3600.0)*u.arcsec
+
+            if input_coordinates == 'polar':
+                # interpret idl coordinates as spherical, i.e. distortion polynomial includes deprojection
+                # unit_vector_idl = rotations.unit(x_idl* u.arcsec.to(u.deg), y_idl* u.arcsec.to(u.deg))
+                xi_idl = x_idl * u.arcsec
+                eta_idl = y_idl * u.arcsec
+            unit_vector_idl = rotations.unit_vector_sky(xi_idl, eta_idl)
+            unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec, V3IdlYAngle_deg)
+
+            # transformation to cartesian unit vector in telescope frame
+            unit_vector_tel = np.dot(np.linalg.inv(l_matrix), unit_vector_idl)
+            # print(unit_vector_tel)
+
+            # get angular coordinates on idealized focal sphere
+            # nu2_arcsec, nu3_arcsec = rotations.v2v3(unit_vector_tel)
+            nu2, nu3 = rotations.polar_angles(unit_vector_tel)
+
+            v2, v3 = nu2.to(u.arcsec).value, nu3.to(u.arcsec).value
+
+        else:
+            raise NotImplementedError
+
+        if self._correct_dva:
+            if (self.observatory == 'HST') and ('FGS' in self.AperName):
+                raise NotImplementedError('DVA correction for HST FGS not supported')
+            return self.correct_for_dva(v2, v3)
+        else:
+            return v2, v3
+
+    def tel_to_idl_new(self, v2_arcsec, v3_arcsec, V3IdlYAngle_deg=None, V2Ref_arcsec=None,
+                   V3Ref_arcsec=None, 
+                   output_coordinates='tangent_plane'):
+        """Convert from telescope (V2/V3) to ideal coordinate system.
+
+        By default, this implements the planar approximation, which is adequate for most
+        purposes but may not be for all. Error is about 1.7 mas at 10 arcminutes from the tangent
+        point. See JWST-STScI-1550 for more details.
+        For higher accuracy, set method='spherical_transformation' in which case 3D matrix rotations
+        are applied.
+
+        Also by default, the output coordinates are in a tangent plane with a reference point at
+        the origin (0,0) of the ideal frame.
+
+        Parameters
+        ----------
+        v2_arcsec : float
+            V2 coordinate in arcsec
+        v3_arcsec : float
+            V3 coordinate in arcsec
+        V3IdlYAngle_deg : float
+            overwrites self.V3IdlYAngle
+        V2Ref_arcsec : float
+            overwrites self.V2Ref
+        V3Ref_arcsec : float
+            overwrites self.V3Ref
+        method : str
+            must be one of ['planar_approximation', 'spherical_transformation']
+        output_coordinates : str
+            must be one of ['tangent_plane', 'spherical']
+
+        Returns
+        -------
+            tuple of floats containing x_idl, y_idl coordinates in arcsec
+
+        """
+        if V2Ref_arcsec is None:
+            V2Ref_arcsec = self.V2Ref
+        if V3Ref_arcsec is None:
+            V3Ref_arcsec = self.V3Ref
+        if V3IdlYAngle_deg is None:
+            V3IdlYAngle_deg = self.V3IdlYAngle
+            
+        method='spherical'
+        if method == 'spherical':
+            unit_vector_tel = rotations.unit_vector_sky(v2_arcsec * u.arcsec, 
+                                                        v3_arcsec * u.arcsec)
+
+            l_matrix = rotations.idl_to_tel_rotation_matrix(V2Ref_arcsec, V3Ref_arcsec,
+                                                            V3IdlYAngle_deg)
+
+            unit_vector_idl = np.dot(l_matrix, unit_vector_tel)
+
+            unit_vector_idl[1] = self.VIdlParity * unit_vector_idl[1]
+            x_idl, y_idl = rotations.polar_angles(unit_vector_idl)
+            x_idl_arcsec, y_idl_arcsec = x_idl.to(u.arcsec).value, y_idl.to(u.arcsec).value
+            
+            if output_coordinates == 'tangent_plane':
+                x_idl, y_idl = projection.project_to_tangent_plane(x_idl_arcsec/3600.0, y_idl_arcsec/3600.0, 0.0, 0.0)
+                x_idl_arcsec = x_idl*u.degree.to(u.arcsec)
+                y_idl_arcsec = y_idl*u.degree.to(u.arcsec)
+
+            return x_idl_arcsec, y_idl_arcsec
+
+    
     def sci_to_idl(self, x_sci, y_sci):
         """Science to ideal frame transformation."""
         x_model, y_model = self.distortion_transform('sci', 'idl')
