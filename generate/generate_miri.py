@@ -534,6 +534,7 @@ for aperture_index, AperName in enumerate(aperture_name_list):
     aperture.DDCName = 'not set'
     aperture.Comment = None
     aperture.UseAfterDate = '2014-01-01'
+    aperture.OSS_Version = '8.4'
 
     master_aperture_name = 'MIRIM_FULL'
     # process master apertures
