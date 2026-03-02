@@ -1,0 +1,76 @@
+Reference:  34 apertures in PRDOPSSOC-072
+Comparison: 34 apertures in pre_delivery
+
+Number of modified apertures 34. Significant modifications are listed below.
+Differences are reported for any text change
+and fractional differences greater than 1e-06
+
+Aperture                        Attribute             Reference            Comparison      Difference    Percent
+FGS1_FULL_OSS                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FULL                     OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FULL_OSS                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FULL                     OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB128LL                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB128DIAG               OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB128CNTR               OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB32LL                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB32DIAG                OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB32CNTR                OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB8LL                   OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB8DIAG                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_SUB8CNTR                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB128LL                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB128DIAG               OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB128CNTR               OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB32LL                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB32DIAG                OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB32CNTR                OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB8LL                   OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB8DIAG                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_SUB8CNTR                 OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FP1MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FP2MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FP3MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FP4MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS1_FP5MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FP1MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FP2MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FP3MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FP4MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+FGS2_FP5MIMF                  OSS_Version                  None                   8.4             N/A        N/A
+
+J-FRAME                       OSS_Version                  None                   8.4             N/A        N/A
+
+V-FRAME                       OSS_Version                  None                   8.4             N/A        N/A
+
