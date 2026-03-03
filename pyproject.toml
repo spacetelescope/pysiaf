@@ -24,7 +24,7 @@ license-files = ["LICENSE.md"]
 dynamic = [
     "version",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [project.readme]
 file = "README.md"
