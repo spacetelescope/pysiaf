@@ -761,6 +761,7 @@ for AperName in aperture_name_list:
     aperture.DDCName = 'not set'
     aperture.Comment = None
     aperture.UseAfterDate = '2014-01-01'
+    aperture.OSS_Version = '8.4'
 
     if aperture.AperType not in ['TRANSFORM']:
         aperture.AperShape = siaf_detector_parameters['AperShape'][0]
