@@ -139,6 +139,7 @@ for AperName in aperture_name_list:
     aperture.complement()
     aperture.Comment = None
     aperture.UseAfterDate = '2014-01-01'
+    aperture.OSS_Version = '8.4'
     aperture_dict[AperName] = aperture
 
 # sort SIAF entries in the order of the aperture definition file
