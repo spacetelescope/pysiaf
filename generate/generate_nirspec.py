@@ -25,6 +25,7 @@ References
 
 
 from collections import OrderedDict
+import argparse
 import os
 
 from astropy.table import Table
@@ -33,13 +34,13 @@ import numpy as np
 import pysiaf
 from pysiaf import iando
 from pysiaf.aperture import DISTORTION_ATTRIBUTES
-from pysiaf.utils import compare, polynomial
+from pysiaf.utils import compare, polynomial, tools
 from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, REPORTS_ROOT, \
     V3_TO_YAN_OFFSET_DEG, JWST_DELIVERY_DATA_ROOT, JWST_PRD_DATA_ROOT
 import generate_reference_files
 
 
-def process_nirspec_aperture(aperture, verbose=False):
+def process_nirspec_aperture(aperture, siaf_aperture_definitions, pcf_data, verbose=False):
     """Set aperture parameters for master apertures and FULLSCA and OSS apertures.
 
     Parameters
@@ -655,366 +656,382 @@ def rows(pcfName, new_pcf_format=False):
 
 
 #############################
-instrument = 'NIRSpec'
-test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
-if not os.path.isdir(test_dir):
-    os.makedirs(test_dir)
-
-# regenerate SIAF reference files if needed
-if 0:
-    generate_reference_files.generate_siaf_detector_layout()
-    generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
-    generate_reference_files.generate_siaf_detector_reference_file(instrument)
-    generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
-
-# DDC name mapping
-ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
-
-# NIRSpec detected parameters, e.g. XDetSize
-siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
-
-# Fundamental aperture definitions: names, types, reference positions, dependencies
-siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
-
-# definition of the master apertures, the 16 SCAs
-detector_layout = iando.read.read_siaf_detector_layout()
-master_aperture_names = detector_layout['AperName'].data
-
-# directory containing reference files delivered by IDT
-source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
-print ('Loading reference files from directory: {}'.format(source_data_dir))
-
-# XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
-tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX_TA.gtp')
-tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY_TA.gtp')
-disperser_mirror_tiltx = read_pcf_gtp(tiltx_gtp_file)
-disperser_mirror_tilty = read_pcf_gtp(tilty_gtp_file)
-
-# TA transforms: mapping of row names in the Calc worksheet to reference files
-pcf_file_mapping = {}
-pcf_file_mapping['491_GWA'] = 'delivery_SCA491toGWA.pcf'
-pcf_file_mapping['492_GWA'] = 'delivery_SCA492toGWA.pcf'
-pcf_file_mapping['CLEAR_GWA_OTE'] = 'delivery_CLEAR_GWA2XanYan.pcf'
-pcf_file_mapping['F110W_GWA_OTE'] = 'delivery_F110W_GWA2XanYan.pcf'
-pcf_file_mapping['F140X_GWA_OTE'] = 'delivery_F140X_GWA2XanYan.pcf'
-pcf_data = {}
-for field in pcf_file_mapping.keys():
-    pcf_data[field] = {}
-    pcf_data[field]['A'], pcf_data[field]['B'], pcf_data[field]['C'], pcf_data[field]['D'] = reorder(os.path.join(source_data_dir, pcf_file_mapping[field]), verbose=True)
-
-# reference file delivered by IDT
-nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertures.fits')
-nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
-nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].data.astype(str).tolist()
-
-# dictionary that maps NIRSpec nomenclature to SIAF nomenclature
-nirspec_slit_apertures_data_mapping = {}
-nirspec_slit_apertures_data_mapping['V2Ref'] = 'RefXPOSKY'
-nirspec_slit_apertures_data_mapping['V3Ref'] = 'RefYPOSKY'
-nirspec_slit_apertures_data_mapping['V3IdlYAngle'] = 'AngleV3'
-
-# compute 'Idl Vertices' from the V2V3 vertices given in nirspec_slit_apertures_data,
-# see Section 5.2 of TR and see Calc worksheet in NIRSpec_SIAF.xlsx
-for index in [1,2,3,4]:
-    nirspec_slit_apertures_data['XIdlVert{}'.format(index)] = -1 * ((nirspec_slit_apertures_data['C{}_XPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefXPOSKY']) * np.cos(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])) - (nirspec_slit_apertures_data['C{}_YPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefYPOSKY']) * np.sin(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])))
-
-    nirspec_slit_apertures_data['YIdlVert{}'.format(index)] = +1 * ((nirspec_slit_apertures_data['C{}_XPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefXPOSKY']) * np.sin(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])) + (nirspec_slit_apertures_data['C{}_YPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefYPOSKY']) * np.cos(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])))
-
-# map aperture names to Fore_*.pcf file names
-fore_pcf_file_mapping = {}
-fore_pcf_file_mapping['NRS_SKY_OTEIP'] = 'OTE.pcf'
-fore_pcf_file_mapping['NRS_CLEAR_OTEIP_MSA_L0'] = 'Fore_CLEAR.pcf'
-fore_pcf_file_mapping['NRS_CLEAR_OTEIP_MSA_L1'] = 'Fore_CLEAR.pcf'
-fore_pcf_file_mapping['NRS_F070LP_OTEIP_MSA_L0'] = 'Fore_F070LP.pcf'
-fore_pcf_file_mapping['NRS_F070LP_OTEIP_MSA_L1'] = 'Fore_F070LP.pcf'
-fore_pcf_file_mapping['NRS_F100LP_OTEIP_MSA_L0'] = 'Fore_F100LP.pcf'
-fore_pcf_file_mapping['NRS_F100LP_OTEIP_MSA_L1'] = 'Fore_F100LP.pcf'
-fore_pcf_file_mapping['NRS_F170LP_OTEIP_MSA_L0'] = 'Fore_F170LP.pcf'
-fore_pcf_file_mapping['NRS_F170LP_OTEIP_MSA_L1'] = 'Fore_F170LP.pcf'
-fore_pcf_file_mapping['NRS_F290LP_OTEIP_MSA_L0'] = 'Fore_F290LP.pcf'
-fore_pcf_file_mapping['NRS_F290LP_OTEIP_MSA_L1'] = 'Fore_F290LP.pcf'
-fore_pcf_file_mapping['NRS_F110W_OTEIP_MSA_L0'] = 'Fore_F110W.pcf'
-fore_pcf_file_mapping['NRS_F110W_OTEIP_MSA_L1'] = 'Fore_F110W.pcf'
-fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L0'] = 'Fore_F140X.pcf'
-fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L1'] = 'Fore_F140X.pcf'
-
-aperture_dict = OrderedDict()
-aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
-
-for AperName in aperture_name_list:
-    # new aperture to be constructed
-    aperture = pysiaf.JwstAperture()
-    aperture.AperName = AperName
-    aperture.InstrName = siaf_detector_parameters['InstrName'][0].upper()
-
-    # index in the aperture definition table
-    aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
-
-    # Retrieve basic aperture parameters from definition files
-    for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
-        # setattr(aperture, attribute, getattr(parent_aperture, attribute))
-        value = siaf_aperture_definitions[attribute][aperture_definitions_index]
-        if np.ma.is_masked(value):
-            value = None
-        setattr(aperture, attribute, value)
-
-    aperture.DDCName = 'not set'
-    aperture.Comment = None
-    aperture.UseAfterDate = '2014-01-01'
-    aperture.OSS_Version = '8.4'
-
-    if aperture.AperType not in ['TRANSFORM']:
-        aperture.AperShape = siaf_detector_parameters['AperShape'][0]
-
-    if aperture.AperType == 'OSS':
-        aperture.VIdlParity = 1
-        aperture.DetSciParity = 1
-        aperture.DetSciYAngle = 0
-
-    if AperName in ['NRS_FULL_MSA', 'NRS_VIGNETTED_MSA']:
-        aperture.VIdlParity = -1
-
-    if aperture.AperType not in ['SLIT', 'TRANSFORM']:
-        aperture.XDetSize = siaf_detector_parameters['XDetSize'][0]
-        aperture.YDetSize = siaf_detector_parameters['YDetSize'][0]
-
-    # process master apertures
-    if AperName in master_aperture_names:
-        detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
-        for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
-            setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
-
-        aperture = process_nirspec_aperture(aperture)
-
-    # SLIT apertures, correspond to physical apertures and other locations in the MSA and SLICER planes
-    # the information on the physical location of each aperture in the MSA plane is not recorded in the SIAF
-    elif AperName in nirspec_slit_aperture_names:
-        index = nirspec_slit_aperture_names.index(AperName)
-
-        # copy parameters from IDT files
-        for attribute in nirspec_slit_apertures_data_mapping.keys():
-            setattr(aperture, attribute, nirspec_slit_apertures_data[nirspec_slit_apertures_data_mapping[attribute]][index])
-
-        # set ideal vertices
-        for attribute in [name for name in nirspec_slit_apertures_data.colnames if 'IdlVert' in name]:
-            setattr(aperture, attribute, nirspec_slit_apertures_data[attribute][index])
-
-    # Target Acquisition Transforms: Transformation coefficients from .pcf files ['491_GWA', '492_GWA',
-    # 'F140X_GWA_OTE', 'F110W_GWA_OTE', 'CLEAR_GWA_OTE']
-    elif AperName in pcf_file_mapping.keys():
-        number_of_coefficients = len(pcf_data[AperName]['A'])
-        polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
-        aperture.Sci2IdlDeg = polynomial_degree
-        k = 0
-        # polynomial coefficients for transformation that goes directly from the GWA pupil plane to the sky
-        for i in range(polynomial_degree + 1):
-            for j in np.arange(i + 1):
-                setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), pcf_data[AperName]['A'][k])
-                setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), pcf_data[AperName]['B'][k])
-                setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), pcf_data[AperName]['C'][k])
-                setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), pcf_data[AperName]['D'][k])
-                k += 1
-
-        # coefficients to apply the reflection in the MIRROR taking into account the correction
-        # to the GWA position as derived from the sensor readings and their calibration relation
-        aperture.XSciScale = float(disperser_mirror_tiltx['CoeffsTemperature00'][0])
-        aperture.YSciScale = float(disperser_mirror_tilty['CoeffsTemperature00'][0])
-        aperture.XSciRef = float(disperser_mirror_tiltx['Zeroreadings'][0])
-        aperture.YSciRef = float(disperser_mirror_tilty['Zeroreadings'][0])
-        aperture.DDCName = 'None'
-
-    # TRANSFORM apertures for the conversion between the OTE image plane and the MSA plane
-    elif aperture.AperType in ['TRANSFORM']:
-
-        # get the name of the applicable Fore_*.pcf file
-        pcf_file = fore_pcf_file_mapping[AperName]
-
-        sequence_string = AperName[-2:]
-        if sequence_string not in ['L0', 'L1']:
-            sequence_string = 'L0'
-
-        # read .pcf file into dictionary
-        fore_pcf = os.path.join(source_data_dir, pcf_file)
-        # print('reading {}'.format(fore_pcf))
-        fore_pcf_data = read_pcf_gtp(fore_pcf)
-
-        # deal with different formats of the .pcf files
-        fore_year = int(fore_pcf_data['DATE'][0][0:4])
-        if fore_year > 2016:
-            new_pcf_format = True
-        else:
-            new_pcf_format = False
-
-        aperture.XSciRef = fore_pcf_data['InputRotationCentre'][0]
-        aperture.YSciRef = fore_pcf_data['InputRotationCentre'][1]
-        aperture.V2Ref = fore_pcf_data['OutputRotationCentre'][0]
-        aperture.V3Ref = fore_pcf_data['OutputRotationCentre'][1]
-        aperture.XSciScale = fore_pcf_data['Factor'][0]
-        aperture.YSciScale = fore_pcf_data['Factor'][1]
-        aperture.V3IdlYAngle = fore_pcf_data['Rotation'][0]
-
-        data = rows(fore_pcf, new_pcf_format=new_pcf_format)
-
-        polynomial_degree = 5
-        aperture.Sci2IdlDeg = polynomial_degree
-        k = 0
-        #  IDT parametric model convention “forward” direction maps to Sci2IdlX
-        for i in range(polynomial_degree + 1):
-            for j in np.arange(i + 1):
-                setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), data[sequence_string]['A'][k])  # *xForward
-                setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), data[sequence_string]['B'][k])  # *yForward
-                setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), data[sequence_string]['C'][k])  # *xBackward
-                setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), data[sequence_string]['D'][k])  # *yBackward
-                k += 1
-
-        aperture.DDCName = 'None'
-
-    aperture_dict[AperName] = aperture
-
-# second pass to set parameters for apertures that depend on other apertures
-for AperName in aperture_name_list:
-    index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
-    aperture = aperture_dict[AperName]
-
-    parent_aperture_name = siaf_aperture_definitions['parent_apertures'][index]
-    if (parent_aperture_name is not None) and (not np.ma.is_masked(parent_aperture_name)):
-        aperture._parent_apertures = parent_aperture_name
-        parent_aperture = aperture_dict[aperture._parent_apertures]
-
-        if aperture.AperType in ['FULLSCA', 'OSS']:
-            aperture = process_nirspec_aperture(aperture, verbose=False)
-
-        if siaf_aperture_definitions['dependency_type'][index] == 'default':
-            aperture.VIdlParity = parent_aperture.VIdlParity
-
-        # first MIMF field point inherits properties from parent SLIT aperture
-        elif siaf_aperture_definitions['dependency_type'][index] == 'FP1MIMF':
-            idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
-            for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes:
-                setattr(aperture, attribute, getattr(parent_aperture, attribute))
-
-    aperture_dict[AperName] = aperture
-
-
-# sort SIAF entries in the order of the aperture definition file
-aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
-
-# third pass to set DDCNames apertures, which depend on other apertures
-ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
-ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
-ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
-for AperName in aperture_name_list:
-    if aperture_dict[AperName].AperType not in ['TRANSFORM']:
-        separation_tel_from_ddc_aperture = np.sqrt((aperture_dict[AperName].V2Ref - ddc_v2)**2 + (aperture_dict[AperName].V3Ref - ddc_v3)**2)
-        aperture_dict[AperName].DDCName = ddc_apername_mapping[ddc_siaf_aperture_names[np.argmin(separation_tel_from_ddc_aperture)]]
-
-######################################
-# SIAF content generation finished
-######################################
-
-aperture_collection = pysiaf.ApertureCollection(aperture_dict)
-
-emulate_delivery = True
-
-if emulate_delivery:
-    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
-    if not os.path.isdir(pre_delivery_dir):
-        os.makedirs(pre_delivery_dir)
-
-    # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
-                                                   file_format=['xml', 'xlsx'])
-
-    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-
-    # compare new SIAF with PRD version
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
-        if compare_to == 'NIRSpec_SIAF_fullsca':
-            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
-                                                                     'NIRSpec_SIAF_fullsca.xml'))
-        elif compare_to == 'NIRSpec_SIAF_bugfix-only':
-            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
-                                                                     'NIRSpec_SIAF_bugfix-only.xml'))
-        elif compare_to == 'PRDOPSSOC-027':
-            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRSpec_SIAF-027.xml'))
-        elif compare_to == 'PRDOPSSOC-M-026':
-            ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
-                pysiaf.JWST_PRD_VERSION, compare_to), 'NIRSpec_SIAF.xml'))
-        else:
-            # compare new SIAF with PRD version
-            ref_siaf = pysiaf.Siaf(instrument)
-
-        tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
-
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
-
-        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags,
-                                           skipped_aperture_type=['TRANSFORM'],
-                                           selected_aperture_name=['NRS1_FP1MIMF', 'NRS1_FP2MIMF', 'NRS1_FP3MIMF', 'NRS2_FP4MIMF', 'NRS2_FP5MIMF'],
-                                           mark_ref=True, xlimits=(100, 700), ylimits=(-700, -100),
-                                           filename_appendix='MIMF_apertures')
-
-        compare.compare_transformation_roundtrip(pre_delivery_siaf,
-                                                 reference_siaf_input=ref_siaf, tags=tags,
-                                                 report_dir=pre_delivery_dir,
-                                                 skipped_aperture_type=['TRANSFORM', 'SLIT'],
-                                                 selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
-
-
-        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags,
-                                           skipped_aperture_type=['TRANSFORM'])
-
-    # run some tests on the new SIAF
-    from pysiaf.tests import test_nirspec
-
-    print('\nRunning regression test of pre_delivery_siaf against IDT test_data:')
-    test_nirspec.test_against_test_data(siaf=pre_delivery_siaf)
-
-    print('\nRunning nirspec_aperture_transforms test for pre_delivery_siaf')
-    test_nirspec.test_nirspec_aperture_transforms(siaf=pre_delivery_siaf, verbose=False)
-
-    print('\nRunning nirspec_slit_transforms test for pre_delivery_siaf')
-    test_nirspec.test_nirspec_slit_transformations(siaf=pre_delivery_siaf, verbose=False)
-
-    new_siaf = pre_delivery_siaf
-
-else:
-    # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
-    [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'])
-    print('SIAFXML written in {}'.format(filename))
-
-    # compare to SIAFXML produced the old way
-    # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
-    ref_siaf = pysiaf.Siaf(instrument)
-    # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
-    # new_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
-    new_siaf = pysiaf.Siaf(instrument, filename)
-
-    report_dir = os.path.join(REPORTS_ROOT, instrument)
-    comparison_aperture_names = [AperName for AperName in aperture_name_list if 'MIMF' in AperName]
-    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
-    #                              aperture.AperType == 'SLIT']
-    # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
-    #                              aperture.AperType in ['FULLSCA', 'OSS']]
-    # comparison_aperture_names = pcf_file_mapping.keys()
-
-    # comparison_aperture_names = ['NRS_SKY_OTEIP']
-    # comparison_aperture_names = ['NRS_SKY_OTEIP']
-    comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS']
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
-    #                      selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
-    #                      selected_aperture_name=['NRS_SKY_OTEIP'])
-    # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
-    #                      selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
-    compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
-    # tools.compare_siaf_xml(ref_siaf, new_siaf)
-
-# selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
-#                           ('MSA' not in AperName) and ('SKY' not in AperName)]
-# # run roundtrip test on all apertures
-# compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
-#                                          selected_aperture_name=selected_aperture_name)
+def main(emulate_delivery, file_formats):
+    instrument = 'NIRSpec'
+    test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
+    if not os.path.isdir(test_dir):
+        os.makedirs(test_dir)
+    
+    # regenerate SIAF reference files if needed
+    if 0:
+        generate_reference_files.generate_siaf_detector_layout()
+        generate_reference_files.generate_initial_siaf_aperture_definitions(instrument)
+        generate_reference_files.generate_siaf_detector_reference_file(instrument)
+        generate_reference_files.generate_siaf_ddc_mapping_reference_file(instrument)
+    
+    # DDC name mapping
+    ddc_apername_mapping = iando.read.read_siaf_ddc_mapping_reference_file(instrument)
+    
+    # NIRSpec detected parameters, e.g. XDetSize
+    siaf_detector_parameters = iando.read.read_siaf_detector_reference_file(instrument)
+    
+    # Fundamental aperture definitions: names, types, reference positions, dependencies
+    siaf_aperture_definitions = iando.read.read_siaf_aperture_definitions(instrument)
+    
+    # definition of the master apertures, the 16 SCAs
+    detector_layout = iando.read.read_siaf_detector_layout()
+    master_aperture_names = detector_layout['AperName'].data
+    
+    # directory containing reference files delivered by IDT
+    source_data_dir = os.path.join(JWST_SOURCE_DATA_ROOT, instrument, 'delivery')
+    print ('Loading reference files from directory: {}'.format(source_data_dir))
+    
+    # XSciRef etc. data for some of the transform apertures, see Section 4.7.1 and Table 1 of JWST-STScI-005921
+    tiltx_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltX_TA.gtp')
+    tilty_gtp_file = os.path.join(source_data_dir, 'disperser_MIRROR_TiltY_TA.gtp')
+    disperser_mirror_tiltx = read_pcf_gtp(tiltx_gtp_file)
+    disperser_mirror_tilty = read_pcf_gtp(tilty_gtp_file)
+    
+    # TA transforms: mapping of row names in the Calc worksheet to reference files
+    pcf_file_mapping = {}
+    pcf_file_mapping['491_GWA'] = 'delivery_SCA491toGWA.pcf'
+    pcf_file_mapping['492_GWA'] = 'delivery_SCA492toGWA.pcf'
+    pcf_file_mapping['CLEAR_GWA_OTE'] = 'delivery_CLEAR_GWA2XanYan.pcf'
+    pcf_file_mapping['F110W_GWA_OTE'] = 'delivery_F110W_GWA2XanYan.pcf'
+    pcf_file_mapping['F140X_GWA_OTE'] = 'delivery_F140X_GWA2XanYan.pcf'
+    pcf_data = {}
+    for field in pcf_file_mapping.keys():
+        pcf_data[field] = {}
+        pcf_data[field]['A'], pcf_data[field]['B'], pcf_data[field]['C'], pcf_data[field]['D'] = reorder(os.path.join(source_data_dir, pcf_file_mapping[field]), verbose=True)
+    
+    # reference file delivered by IDT
+    nirspec_slit_apertures_file = os.path.join(source_data_dir, 'positionsSIAFApertures.fits')
+    nirspec_slit_apertures_data = Table.read(nirspec_slit_apertures_file)
+    nirspec_slit_aperture_names = nirspec_slit_apertures_data['SIAF_NAME'].data.astype(str).tolist()
+    
+    # dictionary that maps NIRSpec nomenclature to SIAF nomenclature
+    nirspec_slit_apertures_data_mapping = {}
+    nirspec_slit_apertures_data_mapping['V2Ref'] = 'RefXPOSKY'
+    nirspec_slit_apertures_data_mapping['V3Ref'] = 'RefYPOSKY'
+    nirspec_slit_apertures_data_mapping['V3IdlYAngle'] = 'AngleV3'
+    
+    # compute 'Idl Vertices' from the V2V3 vertices given in nirspec_slit_apertures_data,
+    # see Section 5.2 of TR and see Calc worksheet in NIRSpec_SIAF.xlsx
+    for index in [1,2,3,4]:
+        nirspec_slit_apertures_data['XIdlVert{}'.format(index)] = -1 * ((nirspec_slit_apertures_data['C{}_XPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefXPOSKY']) * np.cos(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])) - (nirspec_slit_apertures_data['C{}_YPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefYPOSKY']) * np.sin(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])))
+    
+        nirspec_slit_apertures_data['YIdlVert{}'.format(index)] = +1 * ((nirspec_slit_apertures_data['C{}_XPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefXPOSKY']) * np.sin(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])) + (nirspec_slit_apertures_data['C{}_YPOSSKY'.format(index)] - nirspec_slit_apertures_data['RefYPOSKY']) * np.cos(np.deg2rad(nirspec_slit_apertures_data['AngleV3'])))
+    
+    # map aperture names to Fore_*.pcf file names
+    fore_pcf_file_mapping = {}
+    fore_pcf_file_mapping['NRS_SKY_OTEIP'] = 'OTE.pcf'
+    fore_pcf_file_mapping['NRS_CLEAR_OTEIP_MSA_L0'] = 'Fore_CLEAR.pcf'
+    fore_pcf_file_mapping['NRS_CLEAR_OTEIP_MSA_L1'] = 'Fore_CLEAR.pcf'
+    fore_pcf_file_mapping['NRS_F070LP_OTEIP_MSA_L0'] = 'Fore_F070LP.pcf'
+    fore_pcf_file_mapping['NRS_F070LP_OTEIP_MSA_L1'] = 'Fore_F070LP.pcf'
+    fore_pcf_file_mapping['NRS_F100LP_OTEIP_MSA_L0'] = 'Fore_F100LP.pcf'
+    fore_pcf_file_mapping['NRS_F100LP_OTEIP_MSA_L1'] = 'Fore_F100LP.pcf'
+    fore_pcf_file_mapping['NRS_F170LP_OTEIP_MSA_L0'] = 'Fore_F170LP.pcf'
+    fore_pcf_file_mapping['NRS_F170LP_OTEIP_MSA_L1'] = 'Fore_F170LP.pcf'
+    fore_pcf_file_mapping['NRS_F290LP_OTEIP_MSA_L0'] = 'Fore_F290LP.pcf'
+    fore_pcf_file_mapping['NRS_F290LP_OTEIP_MSA_L1'] = 'Fore_F290LP.pcf'
+    fore_pcf_file_mapping['NRS_F110W_OTEIP_MSA_L0'] = 'Fore_F110W.pcf'
+    fore_pcf_file_mapping['NRS_F110W_OTEIP_MSA_L1'] = 'Fore_F110W.pcf'
+    fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L0'] = 'Fore_F140X.pcf'
+    fore_pcf_file_mapping['NRS_F140X_OTEIP_MSA_L1'] = 'Fore_F140X.pcf'
+    
+    aperture_dict = OrderedDict()
+    aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
+    oss_version_parameters = iando.read.read_siaf_oss_version(instrument)
+    
+    for AperName in aperture_name_list:
+        # new aperture to be constructed
+        aperture = pysiaf.JwstAperture()
+        aperture.AperName = AperName
+        aperture.InstrName = siaf_detector_parameters['InstrName'][0].upper()
+    
+        # index in the aperture definition table
+        aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+    
+        # Retrieve basic aperture parameters from definition files
+        for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
+            # setattr(aperture, attribute, getattr(parent_aperture, attribute))
+            value = siaf_aperture_definitions[attribute][aperture_definitions_index]
+            if np.ma.is_masked(value):
+                value = None
+            setattr(aperture, attribute, value)
+    
+        aperture.DDCName = 'not set'
+        aperture.Comment = None
+        aperture.UseAfterDate = '2014-01-01'
+    
+        if aperture.AperType not in ['TRANSFORM']:
+            aperture.AperShape = siaf_detector_parameters['AperShape'][0]
+    
+        if aperture.AperType == 'OSS':
+            aperture.VIdlParity = 1
+            aperture.DetSciParity = 1
+            aperture.DetSciYAngle = 0
+    
+        if AperName in ['NRS_FULL_MSA', 'NRS_VIGNETTED_MSA']:
+            aperture.VIdlParity = -1
+    
+        if aperture.AperType not in ['SLIT', 'TRANSFORM']:
+            aperture.XDetSize = siaf_detector_parameters['XDetSize'][0]
+            aperture.YDetSize = siaf_detector_parameters['YDetSize'][0]
+    
+        # process master apertures
+        if AperName in master_aperture_names:
+            detector_layout_index = detector_layout['AperName'].tolist().index(AperName)
+            for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
+                setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
+    
+            aperture = process_nirspec_aperture(
+                aperture,
+                siaf_aperture_definitions,
+                pcf_data
+            )
+    
+        # SLIT apertures, correspond to physical apertures and other locations in the MSA and SLICER planes
+        # the information on the physical location of each aperture in the MSA plane is not recorded in the SIAF
+        elif AperName in nirspec_slit_aperture_names:
+            index = nirspec_slit_aperture_names.index(AperName)
+    
+            # copy parameters from IDT files
+            for attribute in nirspec_slit_apertures_data_mapping.keys():
+                setattr(aperture, attribute, nirspec_slit_apertures_data[nirspec_slit_apertures_data_mapping[attribute]][index])
+    
+            # set ideal vertices
+            for attribute in [name for name in nirspec_slit_apertures_data.colnames if 'IdlVert' in name]:
+                setattr(aperture, attribute, nirspec_slit_apertures_data[attribute][index])
+    
+        # Target Acquisition Transforms: Transformation coefficients from .pcf files ['491_GWA', '492_GWA',
+        # 'F140X_GWA_OTE', 'F110W_GWA_OTE', 'CLEAR_GWA_OTE']
+        elif AperName in pcf_file_mapping.keys():
+            number_of_coefficients = len(pcf_data[AperName]['A'])
+            polynomial_degree = int((np.sqrt(8 * number_of_coefficients + 1) - 3) / 2)
+            aperture.Sci2IdlDeg = polynomial_degree
+            k = 0
+            # polynomial coefficients for transformation that goes directly from the GWA pupil plane to the sky
+            for i in range(polynomial_degree + 1):
+                for j in np.arange(i + 1):
+                    setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), pcf_data[AperName]['A'][k])
+                    setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), pcf_data[AperName]['B'][k])
+                    setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), pcf_data[AperName]['C'][k])
+                    setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), pcf_data[AperName]['D'][k])
+                    k += 1
+    
+            # coefficients to apply the reflection in the MIRROR taking into account the correction
+            # to the GWA position as derived from the sensor readings and their calibration relation
+            aperture.XSciScale = float(disperser_mirror_tiltx['CoeffsTemperature00'][0])
+            aperture.YSciScale = float(disperser_mirror_tilty['CoeffsTemperature00'][0])
+            aperture.XSciRef = float(disperser_mirror_tiltx['Zeroreadings'][0])
+            aperture.YSciRef = float(disperser_mirror_tilty['Zeroreadings'][0])
+            aperture.DDCName = 'None'
+    
+        # TRANSFORM apertures for the conversion between the OTE image plane and the MSA plane
+        elif aperture.AperType in ['TRANSFORM']:
+    
+            # get the name of the applicable Fore_*.pcf file
+            pcf_file = fore_pcf_file_mapping[AperName]
+    
+            sequence_string = AperName[-2:]
+            if sequence_string not in ['L0', 'L1']:
+                sequence_string = 'L0'
+    
+            # read .pcf file into dictionary
+            fore_pcf = os.path.join(source_data_dir, pcf_file)
+            # print('reading {}'.format(fore_pcf))
+            fore_pcf_data = read_pcf_gtp(fore_pcf)
+    
+            # deal with different formats of the .pcf files
+            fore_year = int(fore_pcf_data['DATE'][0][0:4])
+            if fore_year > 2016:
+                new_pcf_format = True
+            else:
+                new_pcf_format = False
+    
+            aperture.XSciRef = fore_pcf_data['InputRotationCentre'][0]
+            aperture.YSciRef = fore_pcf_data['InputRotationCentre'][1]
+            aperture.V2Ref = fore_pcf_data['OutputRotationCentre'][0]
+            aperture.V3Ref = fore_pcf_data['OutputRotationCentre'][1]
+            aperture.XSciScale = fore_pcf_data['Factor'][0]
+            aperture.YSciScale = fore_pcf_data['Factor'][1]
+            aperture.V3IdlYAngle = fore_pcf_data['Rotation'][0]
+    
+            data = rows(fore_pcf, new_pcf_format=new_pcf_format)
+    
+            polynomial_degree = 5
+            aperture.Sci2IdlDeg = polynomial_degree
+            k = 0
+            #  IDT parametric model convention “forward” direction maps to Sci2IdlX
+            for i in range(polynomial_degree + 1):
+                for j in np.arange(i + 1):
+                    setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), data[sequence_string]['A'][k])  # *xForward
+                    setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), data[sequence_string]['B'][k])  # *yForward
+                    setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), data[sequence_string]['C'][k])  # *xBackward
+                    setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), data[sequence_string]['D'][k])  # *yBackward
+                    k += 1
+    
+            aperture.DDCName = 'None'
+    
+        aperture_dict[AperName] = aperture
+    
+    # second pass to set parameters for apertures that depend on other apertures
+    for AperName in aperture_name_list:
+        index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+        aperture = aperture_dict[AperName]
+    
+        parent_aperture_name = siaf_aperture_definitions['parent_apertures'][index]
+        if (parent_aperture_name is not None) and (not np.ma.is_masked(parent_aperture_name)):
+            aperture._parent_apertures = parent_aperture_name
+            parent_aperture = aperture_dict[aperture._parent_apertures]
+    
+            if aperture.AperType in ['FULLSCA', 'OSS']:
+                aperture = process_nirspec_aperture(aperture, siaf_aperture_definitions, pcf_data, verbose=False)
+    
+            if siaf_aperture_definitions['dependency_type'][index] == 'default':
+                aperture.VIdlParity = parent_aperture.VIdlParity
+    
+            # first MIMF field point inherits properties from parent SLIT aperture
+            elif siaf_aperture_definitions['dependency_type'][index] == 'FP1MIMF':
+                idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1,2,3,4]] + ['YIdlVert{}'.format(i) for i in [1,2,3,4]]
+                for attribute in 'V2Ref V3Ref V3IdlYAngle VIdlParity'.split() + idlvert_attributes:
+                    setattr(aperture, attribute, getattr(parent_aperture, attribute))
+    
+        aperture_dict[AperName] = aperture
+    
+    
+    # sort SIAF entries in the order of the aperture definition file
+    aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
+    
+    # third pass to set DDCNames apertures, which depend on other apertures
+    ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
+    ddc_v2 = np.array([aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
+    ddc_v3 = np.array([aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
+    for AperName in aperture_name_list:
+        if aperture_dict[AperName].AperType not in ['TRANSFORM']:
+            separation_tel_from_ddc_aperture = np.sqrt((aperture_dict[AperName].V2Ref - ddc_v2)**2 + (aperture_dict[AperName].V3Ref - ddc_v3)**2)
+            aperture_dict[AperName].DDCName = ddc_apername_mapping[ddc_siaf_aperture_names[np.argmin(separation_tel_from_ddc_aperture)]]
+    
+    # fourth pass: OSS Version
+    for AperName in aperture_name_list:
+        aperture = aperture_dict[AperName]
+        aperture.OSS_Version = tools.select_oss_version(AperName, oss_version_parameters)
+    
+    ######################################
+    # SIAF content generation finished
+    ######################################
+    
+    aperture_collection = pysiaf.ApertureCollection(aperture_dict)
+    
+    if emulate_delivery:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        if not os.path.isdir(pre_delivery_dir):
+            os.makedirs(pre_delivery_dir)
+    
+        # write the SIAF files to disk
+        filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir,
+                                                       file_format=file_formats)
+    
+        pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    
+        # compare new SIAF with PRD version
+        for compare_to in [pysiaf.JWST_PRD_VERSION]:
+            if compare_to == 'NIRSpec_SIAF_fullsca':
+                ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                         'NIRSpec_SIAF_fullsca.xml'))
+            elif compare_to == 'NIRSpec_SIAF_bugfix-only':
+                ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir,
+                                                                         'NIRSpec_SIAF_bugfix-only.xml'))
+            elif compare_to == 'PRDOPSSOC-027':
+                ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(pre_delivery_dir, 'NIRSpec_SIAF-027.xml'))
+            elif compare_to == 'PRDOPSSOC-M-026':
+                ref_siaf = pysiaf.Siaf(instrument, filename=os.path.join(JWST_PRD_DATA_ROOT.replace(
+                    pysiaf.JWST_PRD_VERSION, compare_to), 'NIRSpec_SIAF.xml'))
+            else:
+                # compare new SIAF with PRD version
+                ref_siaf = pysiaf.Siaf(instrument)
+    
+            tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
+    
+            compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                 fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+    
+            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                               report_dir=pre_delivery_dir, tags=tags,
+                                               skipped_aperture_type=['TRANSFORM'],
+                                               selected_aperture_name=['NRS1_FP1MIMF', 'NRS1_FP2MIMF', 'NRS1_FP3MIMF', 'NRS2_FP4MIMF', 'NRS2_FP5MIMF'],
+                                               mark_ref=True, xlimits=(100, 700), ylimits=(-700, -100),
+                                               filename_appendix='MIMF_apertures')
+    
+            compare.compare_transformation_roundtrip(pre_delivery_siaf,
+                                                     reference_siaf_input=ref_siaf, tags=tags,
+                                                     report_dir=pre_delivery_dir,
+                                                     skipped_aperture_type=['TRANSFORM', 'SLIT'],
+                                                     selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+    
+    
+            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                               report_dir=pre_delivery_dir, tags=tags,
+                                               skipped_aperture_type=['TRANSFORM'])
+    
+        # run some tests on the new SIAF
+        from pysiaf.tests import test_nirspec
+    
+        print('\nRunning regression test of pre_delivery_siaf against IDT test_data:')
+        test_nirspec.test_against_test_data(siaf=pre_delivery_siaf)
+    
+        print('\nRunning nirspec_aperture_transforms test for pre_delivery_siaf')
+        test_nirspec.test_nirspec_aperture_transforms(siaf=pre_delivery_siaf, verbose=False)
+    
+        print('\nRunning nirspec_slit_transforms test for pre_delivery_siaf')
+        test_nirspec.test_nirspec_slit_transformations(siaf=pre_delivery_siaf, verbose=False)
+    
+        new_siaf = pre_delivery_siaf
+    
+    else:
+        # filename = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, label='pysiaf')
+        [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir, file_format=['xml'])
+        print('SIAFXML written in {}'.format(filename))
+    
+        # compare to SIAFXML produced the old way
+        # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir , '{}'.format('NIRISS_SIAF_2017-10-18.xml')))
+        ref_siaf = pysiaf.Siaf(instrument)
+        # ref_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+        # new_siaf = pysiaf.Siaf(instrument, os.path.join(test_dir, 'NIRSpec_SIAF_2018-04-13.xml'))
+        new_siaf = pysiaf.Siaf(instrument, filename)
+    
+        report_dir = os.path.join(REPORTS_ROOT, instrument)
+        comparison_aperture_names = [AperName for AperName in aperture_name_list if 'MIMF' in AperName]
+        # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
+        #                              aperture.AperType == 'SLIT']
+        # comparison_aperture_names = [AperName for AperName, aperture in aperture_dict.items() if
+        #                              aperture.AperType in ['FULLSCA', 'OSS']]
+        # comparison_aperture_names = pcf_file_mapping.keys()
+    
+        # comparison_aperture_names = ['NRS_SKY_OTEIP']
+        # comparison_aperture_names = ['NRS_SKY_OTEIP']
+        comparison_aperture_names = ['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS']
+        # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+        #                      selected_aperture_name=['NRS1_FULL', 'NRS2_FULL', 'NRS1_FULL_OSS', 'NRS2_FULL_OSS'])
+        # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+        #                      selected_aperture_name=['NRS_SKY_OTEIP'])
+        # compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6,
+        #                      selected_aperture_name=comparison_aperture_names, report_dir=report_dir)
+        compare.compare_siaf(new_siaf, reference_siaf_input=ref_siaf, fractional_tolerance=1e-6)
+        # tools.compare_siaf_xml(ref_siaf, new_siaf)
+    
+    # selected_aperture_name = [AperName for AperName in aperture_name_list if ('GWA' not in AperName) and \
+    #                           ('MSA' not in AperName) and ('SKY' not in AperName)]
+    # # run roundtrip test on all apertures
+    # compare.compare_transformation_roundtrip(new_siaf, reference_siaf_input=ref_siaf,
+    #                                          selected_aperture_name=selected_aperture_name)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--no-emulate", action="store_false", help="Do not emulate deliver")
+    parser.add_argument("-f", "--formats", default="xml,xlsx", help="File formats to output. Default is 'xml,xlsx'")
+    args = parser.parse_args()
+
+    main(args.no_emulate, args.formats.split(","))
