@@ -18,6 +18,7 @@ import os
 import re
 
 import numpy as np
+from astropy.io import ascii
 from astropy.table import Table
 from astropy.time import Time
 import lxml.etree as ET
@@ -619,6 +620,34 @@ def read_siaf_xml_field_format_reference_file(instrument=None):
                             '{}_siaf_xml_field_format.txt'.format(instrument.lower()))
 
     return Table.read(filename, format='ascii.basic', delimiter=',')
+
+
+def read_siaf_oss_version(instrument=None):
+    """
+    Reads in the OSS version file as an astropy table, and returns the files associated
+    with the appropriate instrument (if one is provided)
+    
+    Parameters
+    ----------
+    instrument  : str
+        instrument name (case insensitive)
+
+    Returns
+    -------
+    table : astropy table
+    
+    """
+    filename = os.path.join(JWST_SOURCE_DATA_ROOT, "OSS_VERSION_TABLE.txt")
+    try:
+        table = ascii.read(filename, format="fixed_width", header_rows=["name", "dtype"])
+    except Exception as e:
+        print(f"ERROR opening OSS Version data file: {e}")
+
+    if instrument:
+        table = table[table["InstrName"] == instrument.upper()]
+
+    return table
+
 
 def read_roman_siaf(siaf_file=None):
         """

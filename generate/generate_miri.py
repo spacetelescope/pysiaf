@@ -17,6 +17,7 @@ References
 
 """
 from collections import OrderedDict
+import argparse
 import copy
 import os
 
@@ -31,6 +32,7 @@ from pysiaf.constants import JWST_SOURCE_DATA_ROOT, JWST_TEMPORARY_DATA_ROOT, \
 from pysiaf.tests import test_miri
 from pysiaf.utils import compare
 from pysiaf.utils import polynomial
+from pysiaf.utils import tools
 
 import generate_reference_files
 
@@ -479,233 +481,244 @@ def extract_ifu_data(aperture_table):
                                                            - table['V3Ref']
     return table
 
-
-csv_data = get_mirim_coefficients(miri_distortion_file, verbose=False)
-
-number_of_coefficients = len(csv_data['DET_OSS']['A'])
-polynomial_degree = polynomial.polynomial_degree(number_of_coefficients)
-
-# convert to column names in Calc worksheet
-for AperName in csv_data.keys():
-    csv_data[AperName]['dx'] = csv_data[AperName]['Xref']
-    csv_data[AperName]['dy'] = csv_data[AperName]['Yref']
-    csv_data[AperName]['dxIdl'] = csv_data[AperName]['Xref_inv']
-    csv_data[AperName]['dyIdl'] = csv_data[AperName]['Yref_inv']
-    k = 0
-    for i in range(polynomial_degree + 1):
-        for j in np.arange(i + 1):
-            csv_data[AperName]['Sci2IdlX{:d}{:d}'.format(i, j)] = csv_data[AperName]['A'][k]
-            csv_data[AperName]['Sci2IdlY{:d}{:d}'.format(i, j)] = csv_data[AperName]['B'][k]
-            csv_data[AperName]['Idl2SciX{:d}{:d}'.format(i, j)] = csv_data[AperName]['C'][k]
-            csv_data[AperName]['Idl2SciY{:d}{:d}'.format(i, j)] = csv_data[AperName]['D'][k]
-            k += 1
-
-# get IFU aperture definitions
-slice_table = extract_ifu_data(siaf_aperture_definitions)
-
-idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1, 2, 3, 4]] + [
-    'YIdlVert{}'.format(i) for i in [1, 2, 3, 4]]
-
-aperture_dict = OrderedDict()
-aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
-
-for aperture_index, AperName in enumerate(aperture_name_list):
-    # new aperture to be constructed
-    aperture = pysiaf.JwstAperture()
-    aperture.AperName = AperName
-    aperture.InstrName = siaf_detector_parameters['InstrName'][0].upper()
-
-    # index in the aperture definition table
-    aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
-
-    aperture.AperShape = siaf_detector_parameters['AperShape'][0]
-
-    # Retrieve basic aperture parameters from definition files
-    for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
-        value = siaf_aperture_definitions[attribute][aperture_definitions_index]
-        if np.ma.is_masked(value):
-            value = None
-        setattr(aperture, attribute, value)
-
-    if aperture.AperType not in ['COMPOUND', 'SLIT']:
-        for attribute in 'XDetSize YDetSize'.split():
-            setattr(aperture, attribute, siaf_detector_parameters[attribute][0])
-
-    aperture.DDCName = 'not set'
-    aperture.Comment = None
-    aperture.UseAfterDate = '2014-01-01'
-    aperture.OSS_Version = '8.4'
-
-    master_aperture_name = 'MIRIM_FULL'
-    # process master apertures
-    if aperture.AperType not in ['COMPOUND', 'SLIT']:
-
-        if aperture.AperType == 'OSS':
-            aperture.VIdlParity = 1
-            aperture.DetSciYAngle = 0
-            aperture.DetSciParity = 1
-            csv_aperture_name = 'DET_OSS'
-        else:
-            detector_layout_index = detector_layout['AperName'].tolist().index(master_aperture_name)
-            for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
-                setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
-
-            # this is the name given to the pseudo-aperture in the Calc worksheet
-            csv_aperture_name = 'DET_DMF'
-
-        aperture.Sci2IdlDeg = polynomial_degree
-
-        dx = aperture.XDetRef - csv_data[csv_aperture_name]['dx']
-        dy = aperture.YDetRef - csv_data[csv_aperture_name]['dy']
-
-        csv_data[csv_aperture_name]['A_shifted'] = polynomial.shift_coefficients(
-            csv_data[csv_aperture_name]['A'], dx, dy, verbose=False)
-        csv_data[csv_aperture_name]['B_shifted'] = polynomial.shift_coefficients(
-            csv_data[csv_aperture_name]['B'], dx, dy, verbose=False)
-
-        # apply polynomial to get reference location in ideal plane
-        dxIdl = polynomial.poly(csv_data[csv_aperture_name]['A'], dx, dy, order=polynomial_degree)
-        dyIdl = polynomial.poly(csv_data[csv_aperture_name]['B'], dx, dy, order=polynomial_degree)
-
-        csv_data[csv_aperture_name]['C_shifted'] = polynomial.shift_coefficients(
-            csv_data[csv_aperture_name]['C'], dxIdl, dyIdl, verbose=False)
-        csv_data[csv_aperture_name]['D_shifted'] = polynomial.shift_coefficients(
-            csv_data[csv_aperture_name]['D'], dxIdl, dyIdl, verbose=False)
-
-        # set 00 coefficients to zero
-        for coefficient_name in ['{}_shifted'.format(c) for c in 'A B C D'.split()]:
-            csv_data[csv_aperture_name][coefficient_name][0] = 0.
-
+def main(emulate_delivery, file_format):
+    csv_data = get_mirim_coefficients(miri_distortion_file, verbose=False)
+    
+    number_of_coefficients = len(csv_data['DET_OSS']['A'])
+    polynomial_degree = polynomial.polynomial_degree(number_of_coefficients)
+    
+    # convert to column names in Calc worksheet
+    for AperName in csv_data.keys():
+        csv_data[AperName]['dx'] = csv_data[AperName]['Xref']
+        csv_data[AperName]['dy'] = csv_data[AperName]['Yref']
+        csv_data[AperName]['dxIdl'] = csv_data[AperName]['Xref_inv']
+        csv_data[AperName]['dyIdl'] = csv_data[AperName]['Yref_inv']
         k = 0
         for i in range(polynomial_degree + 1):
             for j in np.arange(i + 1):
-                setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['A_shifted'][k])
-                setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['B_shifted'][k])
-                setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['C_shifted'][k])
-                setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['D_shifted'][k])
+                csv_data[AperName]['Sci2IdlX{:d}{:d}'.format(i, j)] = csv_data[AperName]['A'][k]
+                csv_data[AperName]['Sci2IdlY{:d}{:d}'.format(i, j)] = csv_data[AperName]['B'][k]
+                csv_data[AperName]['Idl2SciX{:d}{:d}'.format(i, j)] = csv_data[AperName]['C'][k]
+                csv_data[AperName]['Idl2SciY{:d}{:d}'.format(i, j)] = csv_data[AperName]['D'][k]
                 k += 1
-
-        aperture.V3SciYAngle = csv_data[csv_aperture_name]['yAngle']
-        aperture.V3SciXAngle = csv_data[csv_aperture_name]['xAngle']
-        aperture.V3IdlYAngle = aperture.V3SciYAngle
-        aperture.V2Ref = csv_data[csv_aperture_name]['Xref_inv'] + aperture.VIdlParity * dxIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle))
-        aperture.V3Ref = csv_data[csv_aperture_name]['Yref_inv'] - aperture.VIdlParity * dxIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle))
-
-        # overwrite V3IdlYAngle if set in definition files
-        for attribute in 'V3IdlYAngle'.split():
-            value = siaf_aperture_definitions[attribute][aperture_definitions_index]
-            if np.ma.is_masked(value) is False:
-                setattr(aperture, attribute, value)
-
-        aperture.complement()
-
-    elif AperName in slice_table['AperName']:
-        slice_index = slice_table['AperName'].tolist().index(AperName)
-        for attribute in 'V2Ref V3Ref V3IdlYAngle'.split() + idlvert_attributes:  #
-            setattr(aperture, attribute, slice_table[attribute][slice_index])
+    
+    # get IFU aperture definitions
+    slice_table = extract_ifu_data(siaf_aperture_definitions)
+    
+    idlvert_attributes = ['XIdlVert{}'.format(i) for i in [1, 2, 3, 4]] + [
+        'YIdlVert{}'.format(i) for i in [1, 2, 3, 4]]
+    
+    aperture_dict = OrderedDict()
+    aperture_name_list = siaf_aperture_definitions['AperName'].tolist()
+    oss_version_parameters = iando.read.read_siaf_oss_version(instrument)
+    
+    for aperture_index, AperName in enumerate(aperture_name_list):
+        # new aperture to be constructed
+        aperture = pysiaf.JwstAperture()
+        aperture.AperName = AperName
+        aperture.InstrName = siaf_detector_parameters['InstrName'][0].upper()
+    
+        # index in the aperture definition table
+        aperture_definitions_index = siaf_aperture_definitions['AperName'].tolist().index(AperName)
+    
         aperture.AperShape = siaf_detector_parameters['AperShape'][0]
-        aperture.VIdlParity = -1
+    
+        # Retrieve basic aperture parameters from definition files
+        for attribute in 'XDetRef YDetRef AperType XSciSize YSciSize XSciRef YSciRef'.split():
+            value = siaf_aperture_definitions[attribute][aperture_definitions_index]
+            if np.ma.is_masked(value):
+                value = None
+            setattr(aperture, attribute, value)
+    
+        if aperture.AperType not in ['COMPOUND', 'SLIT']:
+            for attribute in 'XDetSize YDetSize'.split():
+                setattr(aperture, attribute, siaf_detector_parameters[attribute][0])
+    
+        aperture.DDCName = 'not set'
+        aperture.Comment = None
+        aperture.UseAfterDate = '2014-01-01'
+    
+        master_aperture_name = 'MIRIM_FULL'
+        # process master apertures
+        if aperture.AperType not in ['COMPOUND', 'SLIT']:
+    
+            if aperture.AperType == 'OSS':
+                aperture.VIdlParity = 1
+                aperture.DetSciYAngle = 0
+                aperture.DetSciParity = 1
+                csv_aperture_name = 'DET_OSS'
+            else:
+                detector_layout_index = detector_layout['AperName'].tolist().index(master_aperture_name)
+                for attribute in 'DetSciYAngle DetSciParity VIdlParity'.split():
+                    setattr(aperture, attribute, detector_layout[attribute][detector_layout_index])
+    
+                # this is the name given to the pseudo-aperture in the Calc worksheet
+                csv_aperture_name = 'DET_DMF'
+    
+            aperture.Sci2IdlDeg = polynomial_degree
+    
+            dx = aperture.XDetRef - csv_data[csv_aperture_name]['dx']
+            dy = aperture.YDetRef - csv_data[csv_aperture_name]['dy']
+    
+            csv_data[csv_aperture_name]['A_shifted'] = polynomial.shift_coefficients(
+                csv_data[csv_aperture_name]['A'], dx, dy, verbose=False)
+            csv_data[csv_aperture_name]['B_shifted'] = polynomial.shift_coefficients(
+                csv_data[csv_aperture_name]['B'], dx, dy, verbose=False)
+    
+            # apply polynomial to get reference location in ideal plane
+            dxIdl = polynomial.poly(csv_data[csv_aperture_name]['A'], dx, dy, order=polynomial_degree)
+            dyIdl = polynomial.poly(csv_data[csv_aperture_name]['B'], dx, dy, order=polynomial_degree)
+    
+            csv_data[csv_aperture_name]['C_shifted'] = polynomial.shift_coefficients(
+                csv_data[csv_aperture_name]['C'], dxIdl, dyIdl, verbose=False)
+            csv_data[csv_aperture_name]['D_shifted'] = polynomial.shift_coefficients(
+                csv_data[csv_aperture_name]['D'], dxIdl, dyIdl, verbose=False)
+    
+            # set 00 coefficients to zero
+            for coefficient_name in ['{}_shifted'.format(c) for c in 'A B C D'.split()]:
+                csv_data[csv_aperture_name][coefficient_name][0] = 0.
+    
+            k = 0
+            for i in range(polynomial_degree + 1):
+                for j in np.arange(i + 1):
+                    setattr(aperture, 'Sci2IdlX{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['A_shifted'][k])
+                    setattr(aperture, 'Sci2IdlY{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['B_shifted'][k])
+                    setattr(aperture, 'Idl2SciX{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['C_shifted'][k])
+                    setattr(aperture, 'Idl2SciY{:d}{:d}'.format(i, j), csv_data[csv_aperture_name]['D_shifted'][k])
+                    k += 1
+    
+            aperture.V3SciYAngle = csv_data[csv_aperture_name]['yAngle']
+            aperture.V3SciXAngle = csv_data[csv_aperture_name]['xAngle']
+            aperture.V3IdlYAngle = aperture.V3SciYAngle
+            aperture.V2Ref = csv_data[csv_aperture_name]['Xref_inv'] + aperture.VIdlParity * dxIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle))
+            aperture.V3Ref = csv_data[csv_aperture_name]['Yref_inv'] - aperture.VIdlParity * dxIdl * np.sin(np.deg2rad(aperture.V3IdlYAngle)) + dyIdl * np.cos(np.deg2rad(aperture.V3IdlYAngle))
+    
+            # overwrite V3IdlYAngle if set in definition files
+            for attribute in 'V3IdlYAngle'.split():
+                value = siaf_aperture_definitions[attribute][aperture_definitions_index]
+                if np.ma.is_masked(value) is False:
+                    setattr(aperture, attribute, value)
+    
+            aperture.complement()
+    
+        elif AperName in slice_table['AperName']:
+            slice_index = slice_table['AperName'].tolist().index(AperName)
+            for attribute in 'V2Ref V3Ref V3IdlYAngle'.split() + idlvert_attributes:  #
+                setattr(aperture, attribute, slice_table[attribute][slice_index])
+            aperture.AperShape = siaf_detector_parameters['AperShape'][0]
+            aperture.VIdlParity = -1
+    
+        elif AperName == 'MIRIM_SLIT':
+    
+            # get MIRIM_SLIT definitions from source_file
+            mirim_slit_definitions = copy.deepcopy(siaf_aperture_definitions[aperture_index])
+            aperture.V2Ref = mirim_slit_definitions['v2ref']
+            aperture.V3Ref = mirim_slit_definitions['v3ref']
+            for attribute_name in 'VIdlParity V3IdlYAngle'.split():
+                setattr(aperture, attribute_name, mirim_slit_definitions[attribute_name])
+            # the mapping is different from above because now we are treating this as 'true' v2v3 and transform to idl
+            column_name_mapping = {}
+            column_name_mapping['X1'] = 'v2ll'
+            column_name_mapping['Y1'] = 'v3ll'
+            column_name_mapping['X4'] = 'v2lr'
+            column_name_mapping['Y4'] = 'v3lr'
+            column_name_mapping['X3'] = 'v2ur'
+            column_name_mapping['Y3'] = 'v3ur'
+            column_name_mapping['X2'] = 'v2ul'
+            column_name_mapping['Y2'] = 'v3ul'
+            for index in [1, 2, 3, 4]:
+                x_idl, y_idl = aperture.tel_to_idl(mirim_slit_definitions[column_name_mapping['{}{}'.format('X', index)]],
+                                                   mirim_slit_definitions[column_name_mapping['{}{}'.format('Y', index)]])
+                setattr(aperture, '{}IdlVert{}'.format('X', index), x_idl)
+                setattr(aperture, '{}IdlVert{}'.format('Y', index), y_idl)
+        aperture_dict[AperName] = aperture
+    
+    aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
+    
+    # third pass: OSS Version
+    for AperName in aperture_name_list:
+        aperture = aperture_dict[AperName]
+        aperture.OSS_Version = tools.select_oss_version(AperName, oss_version_parameters)
+    
+    # fourth pass to set DDCNames apertures, which depend on other apertures
+    ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
+    ddc_v2 = np.array(
+        [aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
+    ddc_v3 = np.array(
+        [aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
+    for AperName in aperture_name_list:
+        separation_tel_from_ddc_aperture = np.sqrt(
+            (aperture_dict[AperName].V2Ref - ddc_v2) ** 2 + (
+            aperture_dict[AperName].V3Ref - ddc_v3) ** 2)
+        aperture_dict[AperName].DDCName = ddc_apername_mapping[
+            ddc_siaf_aperture_names[np.argmin(separation_tel_from_ddc_aperture)]]
+    
+    
+    ######################################
+    # SIAF content generation finished
+    ######################################
+    
+    aperture_collection = pysiaf.ApertureCollection(aperture_dict)
+    
+    if emulate_delivery:
+        pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
+        if not os.path.isdir(pre_delivery_dir):
+            os.makedirs(pre_delivery_dir)
+    
+        # write the SIAF files to disk
+        filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=file_format)
+    
+        pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
+    
+        compare_against_prd = True
+        compare_against_cdp7b = True
+    
+        print('\nRunning regression test of pre_delivery_siaf against test_data:')
+        test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
+    
+        for compare_to in [pysiaf.JWST_PRD_VERSION]:
+            if compare_to == 'cdp7b':
+                ref_siaf = pysiaf.Siaf(instrument,
+                                       filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
+            else:
+                # compare new SIAF with PRD version
+                ref_siaf = pysiaf.Siaf(instrument)
+    
+            tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
+    
+            compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                 fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
+    
+            compare.compare_transformation_roundtrip(pre_delivery_siaf,
+                                                     reference_siaf_input=ref_siaf, tags=tags,
+                                                     report_dir=pre_delivery_dir)
+    
+            compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
+                                               report_dir=pre_delivery_dir, tags=tags,
+                                               xlimits=(-360, -520), ylimits=(-440, -300))
+    
+        # run some tests on the new SIAF
+        from pysiaf.tests import test_aperture
+        print('\nRunning aperture_transforms test for pre_delivery_siaf')
+        #test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.04)
+        print('\nRunning aperture_vertices test for pre_delivery_siaf')
+        #test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
+    
+    else:
+    
+        test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
+        if not os.path.isdir(test_dir):
+            os.makedirs(test_dir)
+    
+        # write the SIAFXML to disk
+        [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir,
+                                                        file_format=['xml'])
+        print('SIAFXML written in {}'.format(filename))
 
-    elif AperName == 'MIRIM_SLIT':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--no-emulate", action="store_false", help="Do not emulate deliver")
+    parser.add_argument("-f", "--formats", default="xml,xlsx", help="File formats to output. Default is 'xml,xlsx'")
+    args = parser.parse_args()
 
-        # get MIRIM_SLIT definitions from source_file
-        mirim_slit_definitions = copy.deepcopy(siaf_aperture_definitions[aperture_index])
-        aperture.V2Ref = mirim_slit_definitions['v2ref']
-        aperture.V3Ref = mirim_slit_definitions['v3ref']
-        for attribute_name in 'VIdlParity V3IdlYAngle'.split():
-            setattr(aperture, attribute_name, mirim_slit_definitions[attribute_name])
-        # the mapping is different from above because now we are treating this as 'true' v2v3 and transform to idl
-        column_name_mapping = {}
-        column_name_mapping['X1'] = 'v2ll'
-        column_name_mapping['Y1'] = 'v3ll'
-        column_name_mapping['X4'] = 'v2lr'
-        column_name_mapping['Y4'] = 'v3lr'
-        column_name_mapping['X3'] = 'v2ur'
-        column_name_mapping['Y3'] = 'v3ur'
-        column_name_mapping['X2'] = 'v2ul'
-        column_name_mapping['Y2'] = 'v3ul'
-        for index in [1, 2, 3, 4]:
-            x_idl, y_idl = aperture.tel_to_idl(mirim_slit_definitions[column_name_mapping['{}{}'.format('X', index)]],
-                                               mirim_slit_definitions[column_name_mapping['{}{}'.format('Y', index)]])
-            setattr(aperture, '{}IdlVert{}'.format('X', index), x_idl)
-            setattr(aperture, '{}IdlVert{}'.format('Y', index), y_idl)
-    aperture_dict[AperName] = aperture
-
-aperture_dict = OrderedDict(sorted(aperture_dict.items(), key=lambda t: aperture_name_list.index(t[0])))
-
-# third pass to set DDCNames apertures, which depend on other apertures
-ddc_siaf_aperture_names = np.array([key for key in ddc_apername_mapping.keys()])
-ddc_v2 = np.array(
-    [aperture_dict[aperture_name].V2Ref for aperture_name in ddc_siaf_aperture_names])
-ddc_v3 = np.array(
-    [aperture_dict[aperture_name].V3Ref for aperture_name in ddc_siaf_aperture_names])
-for AperName in aperture_name_list:
-    separation_tel_from_ddc_aperture = np.sqrt(
-        (aperture_dict[AperName].V2Ref - ddc_v2) ** 2 + (
-        aperture_dict[AperName].V3Ref - ddc_v3) ** 2)
-    aperture_dict[AperName].DDCName = ddc_apername_mapping[
-        ddc_siaf_aperture_names[np.argmin(separation_tel_from_ddc_aperture)]]
-
-
-######################################
-# SIAF content generation finished
-######################################
-
-aperture_collection = pysiaf.ApertureCollection(aperture_dict)
-
-emulate_delivery = True
-
-if emulate_delivery:
-    pre_delivery_dir = os.path.join(JWST_DELIVERY_DATA_ROOT, instrument)
-    if not os.path.isdir(pre_delivery_dir):
-        os.makedirs(pre_delivery_dir)
-
-    # write the SIAF files to disk
-    filenames = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=pre_delivery_dir, file_format=['xml', 'xlsx'])
-
-    pre_delivery_siaf = pysiaf.Siaf(instrument, basepath=pre_delivery_dir)
-
-    compare_against_prd = True
-    compare_against_cdp7b = True
-
-    print('\nRunning regression test of pre_delivery_siaf against test_data:')
-    test_miri.test_against_test_data(siaf=pre_delivery_siaf, verbose=True)
-
-    for compare_to in [pysiaf.JWST_PRD_VERSION]:
-        if compare_to == 'cdp7b':
-            ref_siaf = pysiaf.Siaf(instrument,
-                                   filename=os.path.join(pre_delivery_dir, 'MIRI_SIAF_cdp7b.xml'))
-        else:
-            # compare new SIAF with PRD version
-            ref_siaf = pysiaf.Siaf(instrument)
-
-        tags = {'reference': compare_to, 'comparison': 'pre_delivery'}
-
-        compare.compare_siaf(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                             fractional_tolerance=1e-6, report_dir=pre_delivery_dir, tags=tags)
-
-        compare.compare_transformation_roundtrip(pre_delivery_siaf,
-                                                 reference_siaf_input=ref_siaf, tags=tags,
-                                                 report_dir=pre_delivery_dir)
-
-        compare.compare_inspection_figures(pre_delivery_siaf, reference_siaf_input=ref_siaf,
-                                           report_dir=pre_delivery_dir, tags=tags,
-                                           xlimits=(-360, -520), ylimits=(-440, -300))
-
-    # run some tests on the new SIAF
-    from pysiaf.tests import test_aperture
-    print('\nRunning aperture_transforms test for pre_delivery_siaf')
-    #test_aperture.test_jwst_aperture_transforms([pre_delivery_siaf], verbose=False, threshold=0.04)
-    print('\nRunning aperture_vertices test for pre_delivery_siaf')
-    #test_aperture.test_jwst_aperture_vertices([pre_delivery_siaf])
-
-else:
-
-    test_dir = os.path.join(JWST_TEMPORARY_DATA_ROOT, instrument, 'generate_test')
-    if not os.path.isdir(test_dir):
-        os.makedirs(test_dir)
-
-    # write the SIAFXML to disk
-    [filename] = pysiaf.iando.write.write_jwst_siaf(aperture_collection, basepath=test_dir,
-                                                    file_format=['xml'])
-    print('SIAFXML written in {}'.format(filename))
+    main(args.no_emulate, args.formats.split(","))

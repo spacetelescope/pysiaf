@@ -247,6 +247,10 @@ class Aperture(object):
         elif (value is None) and (key in ['DDCName']) and (self.AperType in ['TRANSFORM', None]):
             # NIRSpec case
             pass
+        elif key == 'OSS_Version':
+            # OSS Version may be an astropy table, in which case it must be looped in the
+            # output code.
+            pass
         elif (key in INTEGER_ATTRIBUTES) and (type(value) not in [int, np.int64]):
             raise AttributeError('pysiaf Aperture attribute `{}` has to be an integer.'.format(key))
         elif (key in STRING_ATTRIBUTES) and (type(value) not in [str, np.str_]):
