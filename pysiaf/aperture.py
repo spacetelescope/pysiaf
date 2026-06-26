@@ -47,10 +47,10 @@ from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
 # shorthands for supported coordinate systems
 FRAMES = ('det', 'sci', 'idl', 'tel', 'raw', 'sky')
 
-# list of attributes for the distortion coefficients up to degree 9
+# list of attributes for the distortion coefficients up to degree 5
 POLYNOMIAL_COEFFICIENT_NAMES = 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split()
 DISTORTION_ATTRIBUTES = []
-for i in range(9 + 1):
+for i in range(5 + 1):
     for j in np.arange(i + 1):
         for name in POLYNOMIAL_COEFFICIENT_NAMES:
             DISTORTION_ATTRIBUTES.append('{}{:d}{:d}'.format(name, i, j))
@@ -479,15 +479,8 @@ class Aperture(object):
         number_of_coefficients = polynomial.number_of_coefficients(self.Sci2IdlDeg)
         cdict = {}
         for seed in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
-            for s in DISTORTION_ATTRIBUTES:
-                vals = []
-                if seed in s:
-                    try:
-                        vals.append(getattr(self, s))
-                    except AttributeError:
-                        pass
-            cdict[seed] = np.array(vals)[0:number_of_coefficients]
-            
+            cdict[seed] = np.array([getattr(self, s) for s in DISTORTION_ATTRIBUTES if
+                                   seed in s])[0:number_of_coefficients]
         return cdict
 
 
