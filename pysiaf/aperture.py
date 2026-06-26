@@ -479,8 +479,15 @@ class Aperture(object):
         number_of_coefficients = polynomial.number_of_coefficients(self.Sci2IdlDeg)
         cdict = {}
         for seed in 'Sci2IdlX Sci2IdlY Idl2SciX Idl2SciY'.split():
-            cdict[seed] = np.array([getattr(self, s) for s in DISTORTION_ATTRIBUTES if
-                                   seed in s])[0:number_of_coefficients]
+            for s in DISTORTION_ATTRIBUTES:
+                vals = []
+                if seed in s:
+                    try:
+                        vals.append(getattr(self, s))
+                    except AttributeError:
+                        pass
+            cdict[seed] = np.array(vals)[0:number_of_coefficients]
+            
         return cdict
 
 
