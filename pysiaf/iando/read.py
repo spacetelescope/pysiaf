@@ -699,7 +699,7 @@ def read_roman_siaf(siaf_file=None):
                             raise TypeError
                 elif node.tag in aperture.STRING_ATTRIBUTES:
                     value = node.text
-                elif (node.tag in aperture.FLOAT_ATTRIBUTES) or (node.tag in aperture.DISTORTION_ATTRIBUTES):
+                elif node.tag in aperture.FLOAT_ATTRIBUTES:
                     value = float(node.text)
                 # If it has children (which we can test by a simple boolean),
                 # then we need to get things out of it. The only time this will
