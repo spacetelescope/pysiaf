@@ -12,13 +12,13 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "astropy >= 7.0.0, < 8.0.0",
-    "lxml >= 6.0.0, < 7.0.0",
-    "matplotlib >= 3.10.0, < 4.0.0",
-    "numpy >= 2.0.0, < 3.0.0",
-    "openpyxl >= 3.1.5, < 4.0.0",
-    "requests >= 2.32.0, < 3.0.0",
-    "scipy >= 1.15.3, < 2.0.0",
+    "astropy >= 7.0.0",
+    "lxml >= 6.0.0",
+    "matplotlib >= 3.10.0",
+    "numpy >= 2.0.0",
+    "openpyxl >= 3.1.5",
+    "requests >= 2.32.0",
+    "scipy >= 1.15.3",
 ]
 license-files = ["LICENSE.md"]
 dynamic = [
@@ -74,6 +74,7 @@ pysiaf = [
     "source_data/*.txt",
     "tests/test_data/*/*/*/*.fits",
     "tests/test_data/*/*/*/*.txt",
+    "prd_data/Roman/roman_siaf.xml",
 ]
 
 [tool.pytest.ini_options]
