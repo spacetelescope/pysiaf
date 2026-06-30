@@ -42,7 +42,7 @@ import matplotlib
 from .utils import rotations, projection, polynomial
 from .utils.tools import an_to_tel, tel_to_an
 from .iando import read
-from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
+#from .constants import HST_PRD_DATA_ROOT, HST_PRD_VERSION
 
 # shorthands for supported coordinate systems
 FRAMES = ('det', 'sci', 'idl', 'tel', 'raw', 'sky')
@@ -1880,6 +1880,7 @@ class HstAperture(Aperture):
 
             if (method == 'spherical_transformation') and (output_coordinates == 'tangent_plane'):
                 # tangent plane projection using tel boresight
+                # v2/v3_spherical_arcsec never defined
                 v2_tangent_deg, v3_tangent_deg = projection.project_to_tangent_plane(v2_spherical_arcsec * u.arcsec.to(u.deg),
                                                                                      v3_spherical_arcsec * u.arcsec.to(u.deg), 0.0, 0.0)
                 v2_arcsec, v3_arcsec = v2_tangent_deg*3600., v3_tangent_deg*3600.

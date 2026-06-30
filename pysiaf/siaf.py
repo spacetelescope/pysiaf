@@ -19,22 +19,16 @@ References
     (https://github.com/mperrin/jwxml).
 
 """
-from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 import re
-
+import numpy as np 
 from astropy.table import Table
-import numpy as np
 import matplotlib.pyplot as pl
 
 from .iando import read
 
 # from soc_roman_tools
-import sys
 import os
-import ast
-import importlib.resources as importlib_resources
-from xml.etree import ElementTree as ET
 
 
 
