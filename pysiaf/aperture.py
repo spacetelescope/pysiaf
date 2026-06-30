@@ -689,7 +689,7 @@ class Aperture(object):
                     horizontalalignment='center', rotation=label_rotation,
                     color=ax.lines[-1].get_color())
         if fill:
-            if self.observatory == "JWST":
+            if self.observatory in ["JWST", "Roman"]:
                 # If a transform kwarg is supplied, pass it through to the fill function too
                 transform_kw = kwargs.get('transform', None)
                 ax.fill(x2 * scale, y2 * scale, color=fill_color, zorder=-40, alpha=fill_alpha, transform=transform_kw) 
@@ -703,7 +703,7 @@ class Aperture(object):
             x_ref, y_ref = self.reference_point(frame)
             ax.plot([x_ref], [y_ref], marker='+', color=ax.lines[-1].get_color())
 
-        if (frame == 'tel') and (self.observatory == 'JWST'):
+        if (frame == 'tel') and (self.observatory in ['JWST', 'Roman']):
             # ensure V2 increases to the left
             xlim = ax.get_xlim()
             if xlim[0] < xlim[1]:

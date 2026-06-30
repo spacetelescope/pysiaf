@@ -31,6 +31,7 @@ from .iando import read
 
 # from soc_roman_tools
 import sys
+import os
 import ast
 import importlib.resources as importlib_resources
 from xml.etree import ElementTree as ET
@@ -387,7 +388,14 @@ class Siaf(ApertureCollection):
             self.apertures = read.read_hst_siaf()
             self.observatory = 'HST'
         elif self.instrument == 'roman':
-            self.apertures = read.read_roman_siaf()
+            if basepath:
+                if filename:
+                    siaf_file = os.path.join(basepath, filename)
+                else:
+                    siaf_file = os.path.join(basepath, 'roman_siaf.xml')
+            else:
+                siaf_file = None
+            self.apertures = read.read_roman_siaf(siaf_file=siaf_file)
             self.observatory = 'Roman'
         else:
             self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
