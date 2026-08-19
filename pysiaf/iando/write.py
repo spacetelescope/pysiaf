@@ -11,7 +11,6 @@ Authors
 
 """
 
-import ast
 import os
 
 import numpy as np
