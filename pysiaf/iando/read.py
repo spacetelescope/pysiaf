@@ -692,7 +692,7 @@ def read_roman_siaf(siaf_file=None):
                         value = int(node.text)
                     except (TypeError, ValueError) as e:
                         if node.tag == 'DetSciYAngle':
-                            value = np.int(float(node.text))
+                            value = int(float(node.text))
                         elif not node.text:
                             value = None
                         else:

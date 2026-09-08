@@ -1,3 +1,9 @@
+from xml.etree import ElementTree as ET
+import ast
+import numpy as np
+import importlib.resources as importlib_resources
+
+
 class SpecPars():
     """
     Class to contain the aXe-like parameterization of spectroscopic
