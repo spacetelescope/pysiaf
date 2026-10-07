@@ -775,11 +775,11 @@ def unit_vector_from_cartesian(x=None, y=None, z=None):
         z_rad = z
 
     # handle array and scalar inputs
-    if np.array([x_rad]).all() and np.array([y_rad]).all():
+    if z is None:
         unit_vector = np.array([x_rad, y_rad, np.sqrt(1-(x_rad**2+y_rad**2))])
-    elif np.array([y_rad]).all() and np.array([z_rad]).all():
+    elif x is None:
         unit_vector = np.array([np.sqrt(1-(y_rad**2+z_rad**2)), y_rad, z_rad])
-    elif np.array([x_rad]).all() and np.array([z_rad]).all():
+    elif y is None:
         unit_vector = np.array([x_rad, np.sqrt(1-(x_rad**2+z_rad**2)), z_rad])
 
     if np.any(np.isnan(unit_vector)):
