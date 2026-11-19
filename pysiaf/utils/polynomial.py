@@ -12,7 +12,6 @@ from __future__ import absolute_import, print_function, division
 from collections import OrderedDict
 
 import numpy as np
-from scipy import linalg
 
 
 def add_rotation(A, B, theta_deg):
@@ -431,7 +430,7 @@ def polyfit(u, x, y, order):
 
     u is a function u(x,y) being a polynomial of the form
     u = a[i, j] x**(i-j) y**j. x and y can be on a grid or be arbitrary values
-    This version uses scipy.linalg.solve instead of matrix inversion.
+    This version uses numpy.linalg.solve instead of matrix inversion.
     u, x and y must have the same shape and may be 2D grids of values.
 
     Parameters
@@ -469,7 +468,7 @@ def polyfit(u, x, y, order):
         for j in range(terms):
             mat[i, j] = (x ** px[i] * y ** py[i] * x ** px[j] * y ** py[j]).sum()
 
-    coeffs = linalg.solve(mat, vector)
+    coeffs = np.linalg.solve(mat, vector)
     return coeffs
 
 
