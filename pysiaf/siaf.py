@@ -395,6 +395,9 @@ class Siaf(ApertureCollection):
             self.apertures = read.read_jwst_siaf(self.instrument, filename=filename, basepath=basepath)
             self.observatory = 'JWST'
 
+        # ApertureCollection.__init__ ran before the apertures were read
+        self.generate_toc()
+
     def __repr__(self):
         """Return string representation of instance."""
         return "<pysiaf.Siaf object Instrument={} >".format(self.instrument)
