@@ -429,8 +429,12 @@ class Siaf(ApertureCollection):
         :param aperture_name: str or list
         :return:
         """
-        for aper_name in list(aperture_name):
+        if isinstance(aperture_name, str):
+            # list('NAME') would split the name into its characters
+            aperture_name = [aperture_name]
+        for aper_name in aperture_name:
             del self.apertures[aper_name]
+        self.generate_toc()
 
     @property
     def apernames(self):
